@@ -134,7 +134,7 @@ export class LLMService {
                 'X-Title': 'XamSaDine AI'
             },
             body: JSON.stringify({
-                model: config.model || 'openai/gpt-4o',
+                model: config.model || 'meta-llama/llama-3.2-3b-instruct:free',
                 messages: [{ role: 'user', content: prompt }],
                 temperature: config.temperature ?? 0.7,
                 max_tokens: config.maxTokens ?? 1500

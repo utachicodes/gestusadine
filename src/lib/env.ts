@@ -7,6 +7,7 @@ interface EnvConfig {
   VITE_SUPABASE_URL: string;
   VITE_SUPABASE_ANON_KEY: string;
   VITE_ADMIN_EMAIL?: string;
+  VITE_OPENROUTER_API_KEY?: string;
   VITE_API_URL?: string;
 }
 
@@ -32,6 +33,7 @@ function validateEnv(): EnvConfig {
     VITE_SUPABASE_URL: import.meta.env.VITE_SUPABASE_URL,
     VITE_SUPABASE_ANON_KEY: import.meta.env.VITE_SUPABASE_ANON_KEY,
     VITE_ADMIN_EMAIL: import.meta.env.VITE_ADMIN_EMAIL,
+    VITE_OPENROUTER_API_KEY: import.meta.env.VITE_OPENROUTER_API_KEY,
     VITE_API_URL: import.meta.env.VITE_API_URL || 'http://localhost:4000',
   };
 }

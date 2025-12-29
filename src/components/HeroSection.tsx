@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, Sparkles, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
@@ -8,10 +8,36 @@ import { useLanguage } from '@/contexts/LanguageContext';
 
 const HeroSection = () => {
   const [question, setQuestion] = useState('');
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [animatedWords, setAnimatedWords] = useState<string[]>([]);
   const { toast } = useToast();
   const navigate = useNavigate();
   const { user } = useAuth();
   const { t, language } = useLanguage();
+
+  // Split heading into words for animation
+  useEffect(() => {
+    const heading = t('hero.heading');
+    const lines = heading.split('\n');
+    const words: string[] = [];
+    lines.forEach((line, lineIndex) => {
+      if (lineIndex > 0) words.push('\n');
+      words.push(...line.split(' ').filter(w => w.length > 0));
+    });
+    setAnimatedWords(words);
+  }, [t]);
+
+  // Track mouse position for parallax effect
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({
+        x: (e.clientX / window.innerWidth - 0.5) * 20,
+        y: (e.clientY / window.innerHeight - 0.5) * 20,
+      });
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,15 +82,84 @@ const HeroSection = () => {
 
       <div className="container relative z-10">
         <div className="max-w-4xl mx-auto text-center">
-          {/* Main Heading */}
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
-            <span className="inline-block bg-clip-text text-transparent bg-gold-gradient animate-wave whitespace-pre-line">
-              {t('hero.heading')}
-            </span>
+          {/* Main Heading - Interactive & Animated */}
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
+            <div 
+              className="relative inline-block"
+              style={{
+                transform: `perspective(1000px) rotateY(${mousePosition.x * 0.05}deg) rotateX(${-mousePosition.y * 0.05}deg)`,
+                transition: 'transform 0.1s ease-out'
+              }}
+            >
+              {/* Light background behind text for visibility */}
+              <div className="absolute inset-0 bg-white/90 dark:bg-slate-100/90 rounded-2xl blur-2xl -z-10"></div>
+              
+              {/* Animated words */}
+              <div className="relative flex flex-wrap justify-center items-center gap-x-2 md:gap-x-3 gap-y-2">
+                {animatedWords.map((word, index) => {
+                  const isNewLine = word === '\n' || (index > 0 && animatedWords[index - 1] === '\n');
+                  if (word === '\n') return <br key={`break-${index}`} className="w-full" />;
+                  
+                  return (
+                    <span
+                      key={`${word}-${index}`}
+                      className="relative inline-block hero-word group cursor-default"
+                      style={{
+                        animationDelay: `${index * 0.08}s`,
+                        animation: 'fadeInUp 0.8s ease-out forwards',
+                        opacity: 0,
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'scale(1.15) translateY(-8px) rotateZ(2deg)';
+                        e.currentTarget.style.textShadow = '0 4px 12px rgba(0, 0, 0, 0.3), 0 0 24px rgba(0, 0, 0, 0.1)';
+                        e.currentTarget.style.filter = 'brightness(1.1)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'scale(1) translateY(0) rotateZ(0deg)';
+                        e.currentTarget.style.textShadow = '0 2px 8px rgba(0, 0, 0, 0.2)';
+                        e.currentTarget.style.filter = 'brightness(1)';
+                      }}
+                    >
+                      {/* Glow ring effect */}
+                      <span className="absolute inset-0 rounded-lg bg-black/5 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></span>
+                      
+                      {/* Black text */}
+                      <span className="relative text-black font-extrabold tracking-tight">
+                        {word}
+                      </span>
+                      
+                      {/* Shimmer effect on hover */}
+                      <span className="absolute inset-0 bg-gradient-to-r from-transparent via-black/10 to-transparent -skew-x-12 translate-x-[-100%] group-hover:translate-x-[200%] transition-transform duration-1000 pointer-events-none"></span>
+                      
+                      {/* Decorative dot after each word (except last and before line breaks) */}
+                      {index < animatedWords.length - 1 && animatedWords[index + 1] !== '\n' && (
+                        <span className="inline-block w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-white/50 mx-1.5 animate-pulse group-hover:bg-white group-hover:scale-150 transition-all duration-300"></span>
+                      )}
+                    </span>
+                  );
+                })}
+              </div>
+              
+              {/* Floating particles around text */}
+              <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                {[...Array(6)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="absolute w-1 h-1 bg-white/30 rounded-full animate-float"
+                    style={{
+                      left: `${20 + i * 15}%`,
+                      top: `${30 + (i % 2) * 40}%`,
+                      animationDelay: `${i * 0.5}s`,
+                      animationDuration: `${3 + i * 0.5}s`,
+                    }}
+                  ></div>
+                ))}
+              </div>
+            </div>
           </h1>
 
           {/* Subtitle */}
-          <p className="text-xl md:text-2xl text-white/80 mb-12 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-xl md:text-2xl text-white/90 mb-12 max-w-2xl mx-auto leading-relaxed font-medium">
             {t('hero.subtitle')}
           </p>
 
@@ -75,7 +170,7 @@ const HeroSection = () => {
                 type="text"
                 value={question}
                 onChange={(e) => setQuestion(e.target.value)}
-                className="search-input text-islamic-dark placeholder:text-islamic-dark/40 pr-40"
+                className="search-input text-islamic-dark dark:text-slate-100 placeholder:text-islamic-dark/40 dark:placeholder:text-slate-400 pr-40"
                 placeholder={t('chat.placeholder')}
               />
 
@@ -132,7 +227,7 @@ const HeroSection = () => {
       </div>
 
       {/* Bottom Fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-islamic-light to-transparent"></div>
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-islamic-light dark:from-slate-800 to-transparent"></div>
     </section>
   );
 };

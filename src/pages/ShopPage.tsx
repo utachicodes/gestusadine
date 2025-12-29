@@ -42,6 +42,8 @@ interface ProductCardProps {
 }
 
 function ProductCard({ product, isClothing, selectedSize, onSizeSelect, onDragStart, onDragEnd, onAddToCart }: ProductCardProps) {
+    const { t } = useLanguage();
+    
     const handleDragStart = (e: React.DragEvent) => {
         if (isClothing && !selectedSize) {
             e.preventDefault();
@@ -109,7 +111,7 @@ function ProductCard({ product, isClothing, selectedSize, onSizeSelect, onDragSt
                                     className={`px-3 py-1.5 text-xs font-semibold uppercase tracking-wider rounded-lg border transition-all ${
                                         selectedSize === size
                                             ? 'bg-islamic-green text-white border-islamic-green shadow-md'
-                                            : 'bg-transparent text-islamic-dark dark:text-slate-300 border-islamic-dark/30 dark:border-slate-600 hover:border-islamic-green dark:hover:border-islamic-green hover:text-islamic-green dark:hover:text-islamic-green'
+                                            : 'bg-transparent text-islamic-dark dark:text-slate-300 border-islamic-dark/30 dark:border-slate-600 hover:border-islamic-green-600 dark:hover:border-islamic-green hover:text-islamic-green-600 dark:hover:text-islamic-green'
                                     }`}
                                 >
                                     {size}
@@ -117,7 +119,7 @@ function ProductCard({ product, isClothing, selectedSize, onSizeSelect, onDragSt
                             ))}
                         </div>
                         {selectedSize && (
-                            <p className="text-xs text-islamic-green dark:text-islamic-green mt-2 font-medium">
+                            <p className="text-xs text-islamic-green-600 dark:text-islamic-green mt-2 font-medium">
                                 {t('shop.drag_to_cart')}
                             </p>
                         )}
@@ -129,7 +131,7 @@ function ProductCard({ product, isClothing, selectedSize, onSizeSelect, onDragSt
                     </>
                 )}
                 {!isClothing && (
-                    <p className="text-xs text-islamic-green dark:text-islamic-green mt-3 font-medium">
+                    <p className="text-xs text-islamic-green-600 dark:text-islamic-green mt-3 font-medium">
                         {t('shop.drag_to_cart')}
                     </p>
                 )}
@@ -206,16 +208,16 @@ export default function ShopPage() {
         dragImage.style.top = '-1000px';
         dragImage.style.width = '200px';
         dragImage.style.padding = '12px';
-        dragImage.style.background = 'rgba(255, 255, 255, 0.95)';
-        dragImage.style.color = '#047857';
-        dragImage.style.border = '2px solid #047857';
+        dragImage.style.background = 'rgba(239, 239, 236, 0.95)';
+        dragImage.style.color = '#8fa3c4';
+        dragImage.style.border = '2px solid #8fa3c4';
         dragImage.style.borderRadius = '12px';
-        dragImage.style.boxShadow = '0 8px 32px rgba(4, 120, 87, 0.2)';
+        dragImage.style.boxShadow = '0 8px 32px rgba(224, 232, 243, 0.2)';
         dragImage.innerHTML = `
             <div style="display: flex; align-items: center; gap: 10px;">
                 <img src="${product.images?.[0] || ''}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px;" />
                 <div>
-                    <div style="font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: #047857;">${product.name}</div>
+                    <div style="font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: #8fa3c4;">${product.name}</div>
                     <div style="font-size: 12px; font-weight: 700; color: #d97706;">${product.price.toLocaleString()} ${product.currency}</div>
                 </div>
             </div>
@@ -315,7 +317,7 @@ export default function ShopPage() {
             }, 1000);
 
         } catch (error: unknown) {
-            const message = error instanceof Error ? error.message : "Checkout failed";
+            const message = error instanceof Error ? error.message : t('error.checkout_failed');
             toast.error(message);
         }
     };
@@ -335,15 +337,31 @@ export default function ShopPage() {
 
     return (
         <div className="min-h-screen bg-islamic-light dark:bg-slate-900 overflow-y-auto">
-            <section className="container py-10 md:py-16">
-                {/* Header with filters */}
-                <header className="flex flex-col md:flex-row md:items-center md:justify-end gap-6 mb-12 border-b border-islamic-dark/10 dark:border-slate-700 pb-8">
+            <section className="container py-10 md:py-16 space-y-10">
+                {/* Header Section */}
+                <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-4">
+                    <div>
+                        <p className="inline-flex items-center text-xs uppercase tracking-[0.22em] text-islamic-dark/60 dark:text-slate-400 mb-2">
+                            <span className="w-1.5 h-1.5 rounded-full bg-islamic-gold mr-2" />
+                            Shop
+                        </p>
+                        <h1 className="text-3xl md:text-4xl font-bold text-islamic-dark dark:text-slate-100">
+                            Islamic <span className="text-gradient">Store</span>
+                        </h1>
+                        <p className="mt-2 text-islamic-dark/70 dark:text-slate-300 max-w-xl">
+                            Browse and purchase Islamic products, books, and merchandise
+                        </p>
+                    </div>
+                </header>
+
+                {/* Filters Section */}
+                <div className="flex flex-col md:flex-row md:items-center md:justify-end gap-6 mb-12 border-b border-islamic-dark/10 dark:border-slate-700 pb-8">
                     <div className="flex flex-wrap items-center gap-4 text-sm">
                         <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                            <SelectTrigger className="w-[140px] border border-islamic-dark/20 dark:border-slate-700 bg-white dark:bg-slate-800 text-islamic-dark dark:text-slate-100 font-medium text-sm h-10">
+                            <SelectTrigger className="w-[140px] border border-islamic-dark/20 dark:border-slate-700 bg-[#efefec] dark:bg-slate-800 text-islamic-dark dark:text-slate-100 font-medium text-sm h-10">
                                 <SelectValue placeholder={t('shop.category')} />
                             </SelectTrigger>
-                            <SelectContent className="bg-white dark:bg-slate-800 border border-islamic-dark/20 dark:border-slate-700">
+                            <SelectContent className="bg-[#efefec] dark:bg-slate-800 border border-islamic-dark/20 dark:border-slate-700">
                                 <SelectItem value="all">{t('shop.all')}</SelectItem>
                                 {categories.map(cat => (
                                     <SelectItem key={cat} value={cat} className="capitalize">
@@ -354,10 +372,10 @@ export default function ShopPage() {
                         </Select>
 
                         <Select value={sortBy} onValueChange={setSortBy}>
-                            <SelectTrigger className="w-[160px] border border-islamic-dark/20 dark:border-slate-700 bg-white dark:bg-slate-800 text-islamic-dark dark:text-slate-100 font-medium text-sm h-10">
-                                <SelectValue placeholder={t('shop.sort_by')} />
+                            <SelectTrigger className="w-[160px] border border-islamic-dark/20 dark:border-slate-700 bg-[#efefec] dark:bg-slate-800 text-islamic-dark dark:text-slate-100 font-medium text-sm h-10">
+                            <SelectValue placeholder={t('shop.sort_by')} />
                             </SelectTrigger>
-                            <SelectContent className="bg-white dark:bg-slate-800 border border-islamic-dark/20 dark:border-slate-700">
+                            <SelectContent className="bg-[#efefec] dark:bg-slate-800 border border-islamic-dark/20 dark:border-slate-700">
                                 <SelectItem value="default">{t('shop.default')}</SelectItem>
                                 <SelectItem value="price-low">{t('shop.price_low')}</SelectItem>
                                 <SelectItem value="price-high">{t('shop.price_high')}</SelectItem>
@@ -370,25 +388,25 @@ export default function ShopPage() {
                                 <Button
                                     ref={cartButtonRef}
                                     variant="outline"
-                                    className="relative border border-islamic-dark/20 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-islamic-green/10 dark:hover:bg-islamic-green/20 hover:border-islamic-green dark:hover:border-islamic-green h-10 w-10 p-0 transition-all"
+                                    className="relative border border-islamic-dark/20 dark:border-slate-700 bg-[#efefec] dark:bg-slate-800 hover:bg-islamic-green/10 dark:hover:bg-islamic-green/20 hover:border-islamic-green-600 dark:hover:border-islamic-green h-10 w-10 p-0 transition-all"
                                     onDragOver={handleDragOver}
                                     onDragLeave={handleDragLeave}
                                     onDrop={handleDrop}
                                 >
                                     <ShoppingCart className="h-5 w-5 text-islamic-dark dark:text-slate-100" />
                                     {cart.length > 0 && (
-                                        <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 bg-islamic-green text-white text-xs font-bold border-2 border-white dark:border-slate-900">
+                                        <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 bg-islamic-green text-white text-xs font-bold border-2 border-[#efefec] dark:border-slate-900">
                                             {cart.reduce((sum, item) => sum + item.quantity, 0)}
                                         </Badge>
                                     )}
                                     {isDraggingOverCart && (
                                         <div className="absolute inset-0 bg-islamic-green/20 dark:bg-islamic-green/30 flex items-center justify-center border-2 border-islamic-green rounded-lg">
-                                            <span className="text-xs font-semibold text-islamic-green dark:text-islamic-green">{t('shop.drop')}</span>
+                                            <span className="text-xs font-semibold text-islamic-green-600 dark:text-islamic-green">{t('shop.drop')}</span>
                                         </div>
                                     )}
                                 </Button>
                             </DialogTrigger>
-                            <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto bg-white dark:bg-slate-900 border border-islamic-dark/20 dark:border-slate-700">
+                            <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto bg-[#efefec] dark:bg-slate-900 border border-islamic-dark/20 dark:border-slate-700">
                                 <DialogHeader>
                                     <DialogTitle className="text-islamic-dark dark:text-slate-100 font-bold">{t('shop.shopping_cart')}</DialogTitle>
                                     <DialogDescription className="text-islamic-dark/70 dark:text-slate-400">
@@ -477,7 +495,7 @@ export default function ShopPage() {
                             </DialogContent>
                         </Dialog>
                     </div>
-                </header>
+                </div>
 
                 {/* Products Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">

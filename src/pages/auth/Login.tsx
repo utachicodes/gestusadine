@@ -6,7 +6,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/auth/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { motion } from 'framer-motion';
-import { LogIn, UserPlus, Sparkles } from 'lucide-react';
+import { LogIn, UserPlus, Sparkles, Eye, EyeOff } from 'lucide-react';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -14,10 +14,12 @@ const Login = () => {
   const [fullName, setFullName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const { signInWithPassword, signUp } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
   const { t } = useLanguage();
+  const { refreshProfile } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,11 +47,14 @@ const Login = () => {
         setIsSignUp(false); 
       } else {
         await signInWithPassword({ email, password });
+        // Refresh profile to ensure admin status is updated
+        await refreshProfile();
+        // Navigate after profile refresh
+        navigate('/');
         toast({
           title: t('common.success'),
           description: t('login.success_signed_in'),
         });
-        navigate('/');
       }
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : t('login.failed_desc');
@@ -64,7 +69,7 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-gradient-to-b from-sand-50 via-white to-sand-100">
+    <div className="min-h-screen relative overflow-hidden bg-gradient-to-b from-sand-50 via-white to-sand-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="absolute inset-0">
         <div className="absolute -top-24 -left-24 w-96 h-96 bg-islamic-primary-green/10 blur-3xl rounded-full" />
         <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-islamic-primary-gold/10 blur-3xl rounded-full" />
@@ -77,7 +82,7 @@ const Login = () => {
               type="button"
               onClick={() => setIsSignUp(false)}
               className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all ${
-                !isSignUp ? 'bg-white text-islamic-dark border border-islamic-primary-green shadow' : 'bg-sand-200 text-islamic-dark'
+                !isSignUp ? 'bg-[#efefec] dark:bg-slate-800 text-islamic-dark dark:text-slate-100 border border-islamic-primary-green dark:border-islamic-green shadow' : 'bg-sand-200 dark:bg-slate-700 text-islamic-dark dark:text-slate-300'
               }`}
             >
               <LogIn className="w-4 h-4" />
@@ -87,17 +92,17 @@ const Login = () => {
               type="button"
               onClick={() => setIsSignUp(true)}
               className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all ${
-                isSignUp ? 'bg-white text-islamic-dark border border-islamic-primary-gold shadow' : 'bg-sand-200 text-islamic-dark'
+                isSignUp ? 'bg-[#efefec] dark:bg-slate-800 text-islamic-dark dark:text-slate-100 border border-islamic-primary-gold dark:border-islamic-gold shadow' : 'bg-sand-200 dark:bg-slate-700 text-islamic-dark dark:text-slate-300'
               }`}
             >
               <UserPlus className="w-4 h-4" />
               {t('login.sign_up')}
             </button>
           </div>
-          <h1 className="text-3xl md:text-4xl font-bold text-center text-islamic-dark">
+          <h1 className="text-3xl md:text-4xl font-bold text-center text-islamic-dark dark:text-slate-100">
             {isSignUp ? t('login.create_account_title') : t('login.title')}
           </h1>
-          <p className="text-center text-islamic-dark/70 mt-2">
+          <p className="text-center text-islamic-dark/70 dark:text-slate-300 mt-2">
             {isSignUp ? t('login.create_account_subtitle') : t('login.subtitle')}
           </p>
         </motion.div>
@@ -111,7 +116,7 @@ const Login = () => {
         >
           {isSignUp && (
             <div>
-              <label htmlFor="full-name" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="full-name" className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">
                 {t('login.full_name') || 'Full Name'}
               </label>
               <Input
@@ -121,7 +126,7 @@ const Login = () => {
                 autoComplete="name"
                 required={isSignUp}
                 aria-required={isSignUp}
-                className="w-full px-4 py-3 border-gray-300 rounded-lg focus:ring-islamic-primary-green focus:border-islamic-primary-green"
+                className="w-full px-4 py-3 border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 rounded-lg focus:ring-islamic-primary-green focus:border-islamic-primary-green"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 aria-label="Full name"
@@ -129,7 +134,7 @@ const Login = () => {
             </div>
           )}
           <div>
-            <label htmlFor="email-address" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="email-address" className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">
               {t('login.email')}
             </label>
             <Input
@@ -139,28 +144,42 @@ const Login = () => {
               autoComplete="email"
               required
               aria-required="true"
-              className="w-full px-4 py-3 border-gray-300 rounded-lg focus:ring-islamic-primary-green focus:border-islamic-primary-green"
+              className="w-full px-4 py-3 border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 rounded-lg focus:ring-islamic-primary-green focus:border-islamic-primary-green"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               aria-label="Email address"
             />
           </div>
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">
               {t('login.password')}
             </label>
-            <Input
-              id="password"
-              name="password"
-              type="password"
-              autoComplete={isSignUp ? 'new-password' : 'current-password'}
-              required
-              aria-required="true"
-              className="w-full px-4 py-3 border-gray-300 rounded-lg focus:ring-islamic-primary-green focus:border-islamic-primary-green"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              aria-label="Password"
-            />
+            <div className="relative">
+              <Input
+                id="password"
+                name="password"
+                type={showPassword ? 'text' : 'password'}
+                autoComplete={isSignUp ? 'new-password' : 'current-password'}
+                required
+                aria-required="true"
+                className="w-full px-4 py-3 pr-10 border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 rounded-lg focus:ring-islamic-primary-green focus:border-islamic-primary-green"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                aria-label="Password"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-300 transition-colors"
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? (
+                  <EyeOff className="w-5 h-5" />
+                ) : (
+                  <Eye className="w-5 h-5" />
+                )}
+              </button>
+            </div>
           </div>
 
           {!isSignUp && (
@@ -172,12 +191,12 @@ const Login = () => {
                   type="checkbox"
                   className="h-4 w-4 text-islamic-primary-green focus:ring-islamic-primary-green border-gray-300 rounded"
                 />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
+                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900 dark:text-slate-200">
                   {t('login.remember_me')}
                 </label>
               </div>
               <div className="text-sm">
-                <a href="#" className="font-medium text-islamic-primary-green hover:text-islamic-primary-gold">
+                <a href="#" className="font-medium text-islamic-primary-green dark:text-islamic-green hover:text-islamic-primary-gold dark:hover:text-islamic-gold">
                   {t('login.forgot_password')}
                 </a>
               </div>
@@ -187,13 +206,13 @@ const Login = () => {
           <Button
             type="submit"
             disabled={isLoading}
-            className={`w-full py-3 text-sm font-semibold rounded-lg text-islamic-dark bg-white border transition-all ${
-              isSignUp ? 'border-islamic-primary-gold hover:bg-islamic-primary-gold/10' : 'border-islamic-primary-green hover:bg-islamic-primary-green/10'
-            } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-islamic-primary-green active:scale-98`}
+            className={`w-full py-3 text-sm font-semibold rounded-lg text-islamic-dark dark:text-slate-100 bg-[#efefec] dark:bg-slate-800 border transition-all ${
+              isSignUp ? 'border-islamic-primary-gold dark:border-islamic-gold hover:bg-islamic-primary-gold/10 dark:hover:bg-islamic-gold/20' : 'border-islamic-primary-green dark:border-islamic-green hover:bg-islamic-primary-green/10 dark:hover:bg-islamic-green/20'
+            } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-islamic-primary-green dark:focus:ring-islamic-green active:scale-98`}
           >
             {isLoading ? (
               <div className="flex items-center justify-center gap-3">
-                <div className="h-5 w-5 border-2 border-islamic-dark border-t-transparent rounded-full animate-spin" />
+                <div className="h-5 w-5 border-2 border-islamic-dark dark:border-slate-300 border-t-transparent rounded-full animate-spin" />
                 <span>{t('login.processing')}</span>
               </div>
             ) : (
@@ -204,14 +223,14 @@ const Login = () => {
       </div>
 
       {isLoading && (
-        <div className="fixed inset-0 bg-white/60 backdrop-blur-sm flex items-center justify-center">
+        <div className="fixed inset-0 bg-[#efefec]/60 dark:bg-slate-900/80 backdrop-blur-sm flex items-center justify-center">
           <div className="flex items-center gap-3">
             <div className="flex space-x-1">
-              <div className="h-2 w-2 bg-islamic-primary-green rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-              <div className="h-2 w-2 bg-islamic-primary-gold rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-              <div className="h-2 w-2 bg-islamic-primary-teal rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+              <div className="h-2 w-2 bg-islamic-primary-green dark:bg-islamic-green rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+              <div className="h-2 w-2 bg-islamic-primary-gold dark:bg-islamic-gold rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+              <div className="h-2 w-2 bg-islamic-primary-teal dark:bg-teal-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
             </div>
-            <span className="text-sm text-islamic-dark/80">{t('login.processing')}</span>
+            <span className="text-sm text-islamic-dark/80 dark:text-slate-200">{t('login.processing')}</span>
           </div>
         </div>
       )}

@@ -18,38 +18,65 @@ function getSupabaseAdmin() {
 // Default configuration
 const DEFAULT_CONFIG: SystemConfig = {
     agents: {
-        fiqh: {
-            agentId: 'fiqh',
+        'agent-fiqh': {
+            agentId: 'agent-fiqh',
             agentName: 'Fiqh Reasoning Agent',
+            modelId: 'meta-llama/llama-3.3-70b-instruct:free',
+            systemPrompt: 'You are the Fiqh Reasoning Agent. Analyze questions from an Islamic jurisprudence perspective, providing reasoning based on Quran, Sunnah, and scholarly consensus (Ijma). Be methodical and reference authentic sources.',
+            temperature: 0.3,
             llmConfig: {
-                provider: 'openai',
-                model: 'gpt-4',
+                provider: 'openrouter',
+                model: 'meta-llama/llama-3.3-70b-instruct:free',
                 temperature: 0.3,
                 maxTokens: 2000
             },
-            enabled: true
+            enabled: true,
+            knowledgeBase: 'agent-fiqh'
         },
-        aqeedah: {
-            agentId: 'aqeedah',
+        'agent-aqeedah': {
+            agentId: 'agent-aqeedah',
             agentName: 'Aqeedah Boundary Agent',
+            modelId: 'meta-llama/llama-3.1-405b-instruct:free',
+            systemPrompt: 'You are the Aqeedah Boundary Agent. Ensure that responses align with orthodox Islamic creed and theology. Flag any potential theological issues and maintain boundaries of proper belief.',
+            temperature: 0.2,
             llmConfig: {
-                provider: 'openai',
-                model: 'gpt-3.5-turbo',
-                temperature: 0.1,
-                maxTokens: 1000
-            },
-            enabled: true
-        },
-        context: {
-            agentId: 'context',
-            agentName: 'Contemporary Context Agent',
-            llmConfig: {
-                provider: 'openai',
-                model: 'gpt-4',
-                temperature: 0.5,
+                provider: 'openrouter',
+                model: 'meta-llama/llama-3.1-405b-instruct:free',
+                temperature: 0.2,
                 maxTokens: 1500
             },
-            enabled: true
+            enabled: true,
+            knowledgeBase: 'agent-aqeedah'
+        },
+        'agent-humility': {
+            agentId: 'agent-humility',
+            agentName: 'Humility & Abstention Agent',
+            modelId: 'meta-llama/llama-3.2-3b-instruct:free',
+            systemPrompt: 'You are the Humility & Abstention Agent. When knowledge is uncertain or requires specialized scholarship, recommend abstention (tawaqquf) and humility. Acknowledge the limits of understanding.',
+            temperature: 0.4,
+            llmConfig: {
+                provider: 'openrouter',
+                model: 'meta-llama/llama-3.2-3b-instruct:free',
+                temperature: 0.4,
+                maxTokens: 1500
+            },
+            enabled: true,
+            knowledgeBase: 'agent-humility'
+        },
+        'agent-context': {
+            agentId: 'agent-context',
+            agentName: 'Contemporary Context Agent',
+            modelId: 'nousresearch/hermes-3-llama-3.1-405b:free',
+            systemPrompt: 'You are the Contemporary Context Agent. Provide contemporary context and real-world application of Islamic principles. Connect classical knowledge with modern circumstances while maintaining authenticity.',
+            temperature: 0.6,
+            llmConfig: {
+                provider: 'openrouter',
+                model: 'nousresearch/hermes-3-llama-3.1-405b:free',
+                temperature: 0.6,
+                maxTokens: 1500
+            },
+            enabled: true,
+            knowledgeBase: 'agent-context'
         }
     },
     lastUpdated: new Date().toISOString()

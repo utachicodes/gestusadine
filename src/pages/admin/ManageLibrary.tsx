@@ -1,10 +1,10 @@
 import * as React from "react";
 import { useState } from "react";
-import { 
-  BookOpen, 
-  Plus, 
-  Search, 
-  Edit, 
+import {
+  BookOpen,
+  Plus,
+  Search,
+  Edit,
   Trash2,
   Upload,
   Download,
@@ -41,18 +41,88 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Switch } from "@/components/ui/switch";
-import { MOCK_BOOKS } from "@/lib/mock-data";
 import type { DigitalBook, BookCategory, BookLanguage, BookFormat } from "@/types/ecosystem";
 import { toast } from "sonner";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { supabase } from "@/lib/supabase";
+import { useEffect } from "react";
 
 export default function ManageLibrary() {
-  const [books, setBooks] = useState<DigitalBook[]>(MOCK_BOOKS);
+  const { t } = useLanguage();
+  const [books, setBooks] = useState<DigitalBook[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedBook, setSelectedBook] = useState<DigitalBook | null>(null);
   const [formData, setFormData] = useState<Partial<DigitalBook>>({});
+  const [loading, setLoading] = useState(true);
+  const [uploadingFile, setUploadingFile] = useState(false);
+  const [uploadingCover, setUploadingCover] = useState(false);
+
+  useEffect(() => {
+    loadBooks();
+  }, []);
+
+  const loadBooks = async () => {
+    setLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('digital_books')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setBooks(data || []);
+    } catch (error: any) {
+      console.error('Failed to load books:', error);
+      toast.error('Failed to load books');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleFileUpload = async (file: File, type: 'book' | 'cover') => {
+    if (type === 'book') {
+      setUploadingFile(true);
+    } else {
+      setUploadingCover(true);
+    }
+
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Math.random()}.${fileExt}`;
+      const folder = type === 'book' ? 'library' : 'library-covers';
+      const filePath = `${folder}/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('library')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data } = supabase.storage
+        .from('library')
+        .getPublicUrl(filePath);
+
+      if (type === 'book') {
+        setFormData({ ...formData, file_url: data.publicUrl });
+      } else {
+        setFormData({ ...formData, cover_image_url: data.publicUrl });
+      }
+
+      toast.success(`${type === 'book' ? 'File' : 'Cover'} uploaded successfully`);
+    } catch (error: any) {
+      console.error(`Failed to upload ${type}:`, error);
+      toast.error(`Failed to upload ${type}`);
+    } finally {
+      if (type === 'book') {
+        setUploadingFile(false);
+      } else {
+        setUploadingCover(false);
+      }
+    }
+  };
 
   const filteredBooks = books.filter(book =>
     book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -113,7 +183,7 @@ export default function ManageLibrary() {
     setIsDeleteDialogOpen(true);
   };
 
-  const handleSaveAdd = () => {
+  const handleSaveAdd = async () => {
     // Validate required fields
     if (!formData.title || !formData.author || !formData.file_url) {
       toast.error('Missing required fields', {
@@ -122,38 +192,50 @@ export default function ManageLibrary() {
       return;
     }
 
-    const newBook: DigitalBook = {
-      id: `book-${Date.now()}`,
-      title: formData.title || '',
-      author: formData.author || '',
-      description: formData.description || '',
-      category: formData.category as BookCategory || 'general',
-      language: formData.language as BookLanguage || 'en',
-      format: formData.format as BookFormat || 'pdf',
-      file_url: formData.file_url || '',
-      cover_image_url: formData.cover_image_url,
-      page_count: formData.page_count,
-      file_size_mb: formData.file_size_mb,
-      isbn: formData.isbn,
-      publisher: formData.publisher,
-      publication_year: formData.publication_year,
-      downloads: 0,
-      featured: formData.featured || false,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    };
-    
-    setBooks([newBook, ...books]);
-    setIsAddDialogOpen(false);
-    setFormData({});
-    toast.success('Book added successfully', {
-      description: `${newBook.title} has been added to the library`
-    });
+    try {
+      const bookData = {
+        title: formData.title || '',
+        author: formData.author || '',
+        description: formData.description || '',
+        category: formData.category as BookCategory || 'general',
+        language: formData.language as BookLanguage || 'en',
+        format: formData.format as BookFormat || 'pdf',
+        file_url: formData.file_url || '',
+        cover_image_url: formData.cover_image_url || null,
+        page_count: formData.page_count || null,
+        file_size_mb: formData.file_size_mb || null,
+        isbn: formData.isbn || null,
+        publisher: formData.publisher || null,
+        publication_year: formData.publication_year || null,
+        downloads: 0,
+        featured: formData.featured || false,
+      };
+
+      const { data, error } = await supabase
+        .from('digital_books')
+        .insert([bookData])
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      setIsAddDialogOpen(false);
+      setFormData({});
+      await loadBooks();
+      toast.success('Book added successfully', {
+        description: `${bookData.title} has been added to the library`
+      });
+    } catch (error: any) {
+      console.error('Failed to add book:', error);
+      toast.error('Failed to add book', {
+        description: error.message
+      });
+    }
   };
 
-  const handleSaveEdit = () => {
+  const handleSaveEdit = async () => {
     if (!selectedBook) return;
-    
+
     // Validate required fields
     if (!formData.title || !formData.author || !formData.file_url) {
       toast.error('Missing required fields', {
@@ -161,47 +243,108 @@ export default function ManageLibrary() {
       });
       return;
     }
-    
-    setBooks(books.map(book => 
-      book.id === selectedBook.id 
-        ? { ...book, ...formData, updated_at: new Date().toISOString() }
-        : book
-    ));
-    
-    setIsEditDialogOpen(false);
-    setSelectedBook(null);
-    setFormData({});
-    toast.success('Book updated successfully', {
-      description: `${formData.title} has been updated`
-    });
+
+    try {
+      const bookData = {
+        title: formData.title || '',
+        author: formData.author || '',
+        description: formData.description || '',
+        category: formData.category as BookCategory || 'general',
+        language: formData.language as BookLanguage || 'en',
+        format: formData.format as BookFormat || 'pdf',
+        file_url: formData.file_url || '',
+        cover_image_url: formData.cover_image_url || null,
+        page_count: formData.page_count || null,
+        file_size_mb: formData.file_size_mb || null,
+        isbn: formData.isbn || null,
+        publisher: formData.publisher || null,
+        publication_year: formData.publication_year || null,
+        featured: formData.featured || false,
+      };
+
+      const { error } = await supabase
+        .from('digital_books')
+        .update(bookData)
+        .eq('id', selectedBook.id);
+
+      if (error) throw error;
+
+      setIsEditDialogOpen(false);
+      setSelectedBook(null);
+      setFormData({});
+      await loadBooks();
+      toast.success('Book updated successfully', {
+        description: `${bookData.title} has been updated`
+      });
+    } catch (error: any) {
+      console.error('Failed to update book:', error);
+      toast.error('Failed to update book', {
+        description: error.message
+      });
+    }
   };
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
     if (!selectedBook) return;
-    
-    const bookTitle = selectedBook.title;
-    setBooks(books.filter(book => book.id !== selectedBook.id));
-    setIsDeleteDialogOpen(false);
-    setSelectedBook(null);
-    toast.success('Book deleted successfully', {
-      description: `${bookTitle} has been removed from the library`
-    });
+
+    try {
+      // Delete associated files from storage
+      if (selectedBook.file_url && selectedBook.file_url.includes('library/')) {
+        const filePath = selectedBook.file_url.split('/library/')[1];
+        if (filePath) {
+          await supabase.storage.from('library').remove([`library/${filePath}`]);
+        }
+      }
+      if (selectedBook.cover_image_url && selectedBook.cover_image_url.includes('library-covers/')) {
+        const coverPath = selectedBook.cover_image_url.split('/library-covers/')[1];
+        if (coverPath) {
+          await supabase.storage.from('library').remove([`library-covers/${coverPath}`]);
+        }
+      }
+
+      // Delete database entry
+      const { error } = await supabase
+        .from('digital_books')
+        .delete()
+        .eq('id', selectedBook.id);
+
+      if (error) throw error;
+
+      const bookTitle = selectedBook.title;
+      setIsDeleteDialogOpen(false);
+      setSelectedBook(null);
+      await loadBooks();
+      toast.success('Book deleted successfully', {
+        description: `${bookTitle} and associated files have been removed`
+      });
+    } catch (error: any) {
+      console.error('Failed to delete book:', error);
+      toast.error('Failed to delete book', {
+        description: error.message
+      });
+    }
   };
 
-  const toggleFeatured = (bookId: string) => {
+  const toggleFeatured = async (bookId: string) => {
     const book = books.find(b => b.id === bookId);
     if (!book) return;
-    
-    setBooks(books.map(b =>
-      b.id === bookId
-        ? { ...b, featured: !b.featured, updated_at: new Date().toISOString() }
-        : b
-    ));
-    
-    toast.info(
-      book.featured ? 'Removed from featured' : 'Added to featured',
-      { description: book.title }
-    );
+
+    try {
+      const { error } = await supabase
+        .from('digital_books')
+        .update({ featured: !book.featured })
+        .eq('id', bookId);
+
+      if (error) throw error;
+      await loadBooks();
+      toast.info(
+        book.featured ? 'Removed from featured' : 'Added to featured',
+        { description: book.title }
+      );
+    } catch (error: any) {
+      console.error('Failed to toggle featured:', error);
+      toast.error('Failed to update featured status');
+    }
   };
 
   const BookForm = () => (
@@ -247,7 +390,7 @@ export default function ManageLibrary() {
             onValueChange={(value) => setFormData({ ...formData, category: value as BookCategory })}
           >
             <SelectTrigger>
-              <SelectValue placeholder="Select category" />
+              <SelectValue placeholder={t('admin.select_category')} />
             </SelectTrigger>
             <SelectContent>
               {categoryOptions.map((option) => (
@@ -266,7 +409,7 @@ export default function ManageLibrary() {
             onValueChange={(value) => setFormData({ ...formData, language: value as BookLanguage })}
           >
             <SelectTrigger>
-              <SelectValue placeholder="Select language" />
+              <SelectValue placeholder={t('admin.select_language')} />
             </SelectTrigger>
             <SelectContent>
               {languageOptions.map((option) => (
@@ -285,7 +428,7 @@ export default function ManageLibrary() {
             onValueChange={(value) => setFormData({ ...formData, format: value as BookFormat })}
           >
             <SelectTrigger>
-              <SelectValue placeholder="Select format" />
+              <SelectValue placeholder={t('admin.select_format')} />
             </SelectTrigger>
             <SelectContent>
               {formatOptions.map((option) => (
@@ -306,21 +449,65 @@ export default function ManageLibrary() {
             value={formData.file_url || ''}
             onChange={(e) => setFormData({ ...formData, file_url: e.target.value })}
             placeholder="/books/filename.pdf"
+            className="flex-1"
           />
-          <Button variant="outline" size="icon">
-            <Upload className="h-4 w-4" />
-          </Button>
+          <label className="cursor-pointer">
+            <input
+              type="file"
+              accept=".pdf,.epub,.mobi,.mp3,.mp4"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) handleFileUpload(file, 'book');
+              }}
+            />
+            <Button
+              type="button"
+              variant="outline"
+              disabled={uploadingFile}
+              className="whitespace-nowrap"
+            >
+              <Upload className="h-4 w-4 mr-2" />
+              {uploadingFile ? 'Uploading...' : 'Upload'}
+            </Button>
+          </label>
         </div>
       </div>
 
       <div className="space-y-2">
         <Label htmlFor="cover_image_url">Cover Image URL</Label>
-        <Input
-          id="cover_image_url"
-          value={formData.cover_image_url || ''}
-          onChange={(e) => setFormData({ ...formData, cover_image_url: e.target.value })}
-          placeholder="https://example.com/cover.jpg"
-        />
+        <div className="flex gap-2">
+          <Input
+            id="cover_image_url"
+            value={formData.cover_image_url || ''}
+            onChange={(e) => setFormData({ ...formData, cover_image_url: e.target.value })}
+            placeholder="https://example.com/cover.jpg"
+            className="flex-1"
+          />
+          <label className="cursor-pointer">
+            <input
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) handleFileUpload(file, 'cover');
+              }}
+            />
+            <Button
+              type="button"
+              variant="outline"
+              disabled={uploadingCover}
+              className="whitespace-nowrap"
+            >
+              <Upload className="h-4 w-4 mr-2" />
+              {uploadingCover ? 'Uploading...' : 'Upload'}
+            </Button>
+          </label>
+        </div>
+        {formData.cover_image_url && (
+          <img src={formData.cover_image_url} alt="Cover preview" className="mt-2 h-32 w-24 object-cover rounded" />
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -376,7 +563,7 @@ export default function ManageLibrary() {
             id="publisher"
             value={formData.publisher || ''}
             onChange={(e) => setFormData({ ...formData, publisher: e.target.value })}
-            placeholder="Publisher name"
+            placeholder={t('admin.publisher_name')}
           />
         </div>
       </div>
@@ -448,7 +635,7 @@ export default function ManageLibrary() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-islamic-green dark:text-islamic-green">
+              <div className="text-3xl font-bold text-islamic-green-600 dark:text-islamic-green">
                 {books.reduce((sum, b) => sum + b.downloads, 0).toLocaleString()}
               </div>
             </CardContent>
@@ -491,92 +678,92 @@ export default function ManageLibrary() {
           </CardHeader>
           <CardContent>
             <div className="rounded-md border border-islamic-gold/20">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[50px]"></TableHead>
-                  <TableHead>Title</TableHead>
-                  <TableHead>Author</TableHead>
-                  <TableHead>Category</TableHead>
-                  <TableHead>Language</TableHead>
-                  <TableHead>Format</TableHead>
-                  <TableHead>Downloads</TableHead>
-                  <TableHead>Featured</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredBooks.length === 0 ? (
+              <Table>
+                <TableHeader>
                   <TableRow>
-                    <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
-                      No books found
-                    </TableCell>
+                    <TableHead className="w-[50px]"></TableHead>
+                    <TableHead>Title</TableHead>
+                    <TableHead>Author</TableHead>
+                    <TableHead>Category</TableHead>
+                    <TableHead>Language</TableHead>
+                    <TableHead>Format</TableHead>
+                    <TableHead>Downloads</TableHead>
+                    <TableHead>Featured</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
-                ) : (
-                  filteredBooks.map((book) => (
-                    <TableRow key={book.id}>
-                      <TableCell>
-                        {book.cover_image_url ? (
-                          <img
-                            src={book.cover_image_url}
-                            alt={book.title}
-                            className="w-10 h-10 rounded object-cover"
-                          />
-                        ) : (
-                          <div className="w-10 h-10 rounded bg-muted flex items-center justify-center">
-                            <BookOpen className="h-5 w-5 text-muted-foreground" />
-                          </div>
-                        )}
-                      </TableCell>
-                      <TableCell className="font-medium">
-                        <div className="max-w-xs truncate">{book.title}</div>
-                      </TableCell>
-                      <TableCell>{book.author}</TableCell>
-                      <TableCell>
-                        <Badge variant="secondary">
-                          {categoryOptions.find(c => c.value === book.category)?.label}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline">
-                          {languageOptions.find(l => l.value === book.language)?.label}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline">{book.format.toUpperCase()}</Badge>
-                      </TableCell>
-                      <TableCell>{book.downloads.toLocaleString()}</TableCell>
-                      <TableCell>
-                        <Switch
-                          checked={book.featured}
-                          onCheckedChange={() => toggleFeatured(book.id)}
-                        />
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex justify-end gap-2">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => handleEdit(book)}
-                          >
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => handleDelete(book)}
-                          >
-                            <Trash2 className="h-4 w-4 text-destructive" />
-                          </Button>
-                        </div>
+                </TableHeader>
+                <TableBody>
+                  {filteredBooks.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
+                        No books found
                       </TableCell>
                     </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          </div>
-        </CardContent>
+                  ) : (
+                    filteredBooks.map((book) => (
+                      <TableRow key={book.id}>
+                        <TableCell>
+                          {book.cover_image_url ? (
+                            <img
+                              src={book.cover_image_url}
+                              alt={book.title}
+                              className="w-10 h-10 rounded object-cover"
+                            />
+                          ) : (
+                            <div className="w-10 h-10 rounded bg-muted flex items-center justify-center">
+                              <BookOpen className="h-5 w-5 text-muted-foreground" />
+                            </div>
+                          )}
+                        </TableCell>
+                        <TableCell className="font-medium">
+                          <div className="max-w-xs truncate">{book.title}</div>
+                        </TableCell>
+                        <TableCell>{book.author}</TableCell>
+                        <TableCell>
+                          <Badge variant="secondary">
+                            {categoryOptions.find(c => c.value === book.category)?.label}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant="outline">
+                            {languageOptions.find(l => l.value === book.language)?.label}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant="outline">{book.format.toUpperCase()}</Badge>
+                        </TableCell>
+                        <TableCell>{book.downloads.toLocaleString()}</TableCell>
+                        <TableCell>
+                          <Switch
+                            checked={book.featured}
+                            onCheckedChange={() => toggleFeatured(book.id)}
+                          />
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex justify-end gap-2">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => handleEdit(book)}
+                            >
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => handleDelete(book)}
+                            >
+                              <Trash2 className="h-4 w-4 text-destructive" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+          </CardContent>
         </Card>
       </section>
 
@@ -637,7 +824,7 @@ export default function ManageLibrary() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </>
+    </div>
   );
 }
 

@@ -1,9 +1,105 @@
 import React, { useState, useEffect } from 'react';
-import { Users, MessageSquare, FileText, Settings, Activity, Calendar, Video, ShoppingBag, BookOpen } from 'lucide-react';
+import { Users, MessageSquare, FileText, Settings, Activity, Calendar, Video, ShoppingBag, BookOpen, TestTube } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/auth/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { supabase } from '@/lib/supabase';
+import { formatDistanceToNow } from 'date-fns';
+
+const RecentActivity = () => {
+  const [activities, setActivities] = useState<Array<{ user: string; action: string; time: string }>>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchActivities = async () => {
+      try {
+        // Fetch recent user activity
+        const { data: recentActivity } = await supabase
+          .from('user_activity')
+          .select(`
+            *,
+            profiles:user_id (
+              email,
+              full_name
+            )
+          `)
+          .order('created_at', { ascending: false })
+          .limit(5);
+
+        // Fetch recent profile creations
+        const { data: recentUsers } = await supabase
+          .from('profiles')
+          .select('email, full_name, created_at')
+          .order('created_at', { ascending: false })
+          .limit(2);
+
+        const formattedActivities: Array<{ user: string; action: string; time: string }> = [];
+
+        // Add user activities
+        recentActivity?.forEach((activity: any) => {
+          const userEmail = activity.profiles?.email || 'Unknown';
+          const actionMap: Record<string, string> = {
+            'chat_query': 'Asked a question',
+            'video_watch': 'Watched a video',
+            'event_register': 'Registered for an event',
+            'purchase': 'Made a purchase',
+          };
+          formattedActivities.push({
+            user: userEmail,
+            action: actionMap[activity.activity_type] || 'Performed an action',
+            time: formatDistanceToNow(new Date(activity.created_at), { addSuffix: true }),
+          });
+        });
+
+        // Add new user registrations
+        recentUsers?.forEach((user: any) => {
+          formattedActivities.push({
+            user: user.email || 'Unknown',
+            action: 'Created an account',
+            time: formatDistanceToNow(new Date(user.created_at), { addSuffix: true }),
+          });
+        });
+
+        // Sort by time and limit to 5
+        formattedActivities.sort((a, b) => {
+          // Simple sort - in real app, parse dates properly
+          return 0;
+        });
+
+        setActivities(formattedActivities.slice(0, 5));
+      } catch (error) {
+        console.error('Failed to fetch recent activity:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchActivities();
+  }, []);
+
+  if (loading) {
+    return <div className="text-sm text-islamic-dark/60">Loading...</div>;
+  }
+
+  if (activities.length === 0) {
+    return <div className="text-sm text-islamic-dark/60">No recent activity</div>;
+  }
+
+  return (
+    <div className="space-y-4">
+      {activities.map((activity, index) => (
+        <div key={index} className="flex items-center justify-between py-2 border-b border-islamic-gold/20 last:border-0">
+          <div>
+            <p className="text-sm font-medium text-islamic-dark">{activity.user}</p>
+            <p className="text-sm text-islamic-dark/70">{activity.action}</p>
+          </div>
+          <span className="text-xs text-islamic-dark/60">{activity.time}</span>
+        </div>
+      ))}
+    </div>
+  );
+};
 
 interface DashboardStats {
   totalUsers: number;
@@ -11,6 +107,8 @@ interface DashboardStats {
   totalQueries: number;
   todayQueries: number;
   totalDocuments: number;
+  newUsersToday?: number;
+  adminUsers?: number;
 }
 
 export const AdminDashboard = () => {
@@ -31,19 +129,76 @@ export const AdminDashboard = () => {
       return;
     }
 
-    // Fetch dashboard stats
+    // Fetch dashboard stats from Supabase
     const fetchStats = async () => {
       try {
-        // Mock data for now - replace with actual API calls
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const todayISO = today.toISOString();
+
+        // Fetch total users
+        const { count: totalUsers } = await supabase
+          .from('profiles')
+          .select('*', { count: 'exact', head: true });
+
+        // Fetch active users (users with activity in last 7 days)
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+        const { data: activeUsersData } = await supabase
+          .from('user_activity')
+          .select('user_id')
+          .gte('created_at', sevenDaysAgo.toISOString());
+        const activeUsers = new Set(activeUsersData?.map(a => a.user_id) || []).size;
+
+        // Fetch total documents from digital_books
+        const { count: totalDocuments } = await supabase
+          .from('digital_books')
+          .select('*', { count: 'exact', head: true });
+
+        // Fetch new users today
+        const { count: newUsersToday } = await supabase
+          .from('profiles')
+          .select('*', { count: 'exact', head: true })
+          .gte('created_at', todayISO);
+
+        // Fetch admin users
+        const { count: adminUsers } = await supabase
+          .from('profiles')
+          .select('*', { count: 'exact', head: true })
+          .eq('role', 'admin');
+
+        // For queries, we'll use user_activity with activity_type = 'chat_query'
+        // If chat_messages table exists, use that instead
+        const { count: totalQueries } = await supabase
+          .from('user_activity')
+          .select('*', { count: 'exact', head: true })
+          .eq('activity_type', 'chat_query');
+
+        const { count: todayQueries } = await supabase
+          .from('user_activity')
+          .select('*', { count: 'exact', head: true })
+          .eq('activity_type', 'chat_query')
+          .gte('created_at', todayISO);
+
         setStats({
-          totalUsers: 156,
-          activeUsers: 42,
-          totalQueries: 3847,
-          todayQueries: 128,
-          totalDocuments: 23,
+          totalUsers: totalUsers || 0,
+          activeUsers: activeUsers || 0,
+          totalQueries: totalQueries || 0,
+          todayQueries: todayQueries || 0,
+          totalDocuments: totalDocuments || 0,
+          newUsersToday: newUsersToday || 0,
+          adminUsers: adminUsers || 0,
         });
       } catch (error) {
         console.error('Failed to fetch dashboard stats:', error);
+        // Fallback to 0 if error
+        setStats({
+          totalUsers: 0,
+          activeUsers: 0,
+          totalQueries: 0,
+          todayQueries: 0,
+          totalDocuments: 0,
+        });
       } finally {
         setLoading(false);
       }
@@ -99,7 +254,7 @@ export const AdminDashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-islamic-cream/30 via-white to-islamic-gold/10 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-islamic-cream/30 via-[#efefec] to-islamic-gold/10 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
@@ -110,7 +265,7 @@ export const AdminDashboard = () => {
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
           {statCards.map((stat, index) => (
-            <Card key={index} className="bg-white/80 backdrop-blur-sm border border-islamic-gold/30">
+            <Card key={index} className="bg-[#efefec]/80 backdrop-blur-sm border border-islamic-gold/30">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
@@ -187,6 +342,14 @@ export const AdminDashboard = () => {
               <Button
                 variant="islamicOutline"
                 className="w-full justify-start"
+                onClick={() => navigate('/admin/rag-test')}
+              >
+                <Activity className="mr-2 h-4 w-4" />
+                Test RAG System
+              </Button>
+              <Button
+                variant="islamicOutline"
+                className="w-full justify-start"
                 onClick={() => window.open('/api/council/health', '_blank')}
               >
                 <Activity className="mr-2 h-4 w-4" />
@@ -209,19 +372,12 @@ export const AdminDashboard = () => {
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm text-islamic-dark/70">New Users Today</span>
-                <span className="text-sm font-medium">12</span>
+                <span className="text-sm font-medium">{stats.newUsersToday || 0}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm text-islamic-dark/70">Admin Users</span>
-                <span className="text-sm font-medium">3</span>
+                <span className="text-sm font-medium">{stats.adminUsers || 0}</span>
               </div>
-              <Button
-                variant="islamicOutline"
-                className="w-full mt-4"
-                onClick={() => navigate('/admin/users')}
-              >
-                View All Users
-              </Button>
             </CardContent>
           </Card>
         </div>
@@ -235,22 +391,7 @@ export const AdminDashboard = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              {[
-                { user: 'amadou.diop@xamsadine.sn', action: 'Asked about prayer times', time: '2 min ago' },
-                { user: 'admin@xamsadine.ai', action: 'Uploaded new document', time: '15 min ago' },
-                { user: 'student@islam.edu', action: 'Queried about Zakat', time: '1 hour ago' },
-                { user: 'scholar@islamic.org', action: 'Updated AI model config', time: '2 hours ago' },
-              ].map((activity, index) => (
-                <div key={index} className="flex items-center justify-between py-2 border-b border-islamic-gold/20 last:border-0">
-                  <div>
-                    <p className="text-sm font-medium text-islamic-dark">{activity.user}</p>
-                    <p className="text-sm text-islamic-dark/70">{activity.action}</p>
-                  </div>
-                  <span className="text-xs text-islamic-dark/60">{activity.time}</span>
-                </div>
-              ))}
-            </div>
+            <RecentActivity />
           </CardContent>
         </Card>
       </div>

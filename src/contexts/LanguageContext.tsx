@@ -11,7 +11,7 @@ interface LanguageContextType {
 const translations = {
   en: {
     'chat.placeholder': 'Ask me anything about Islam...',
-    'chat.welcome': 'Welcome to XamSaDine AI',
+    'chat.welcome': 'Asalamu alaikum, I am Anisah',
     'chat.welcome.subtitle': 'Get authentic Islamic answers from multiple scholarly perspectives.',
     'chat.thinking': 'Thinking...',
     'chat.error': 'Failed to get response. Please try again.',
@@ -92,7 +92,7 @@ const translations = {
     'nav.home': 'Home',
     // Hero
     'hero.heading': 'Islamic Knowledge\nAt Your Fingertips',
-    'hero.subtitle': 'Ask questions and get answers from multiple scholarly sources.',
+    'hero.subtitle': 'Your complete Islamic platform: scholarly guidance, daily inspiration, digital library, products, events, and media.',
     'hero.popular': 'Popular:',
     'hero.ask_now': 'Ask Now',
     // Footer
@@ -150,11 +150,38 @@ const translations = {
     // NotFound
     'notfound.title': '404',
     'notfound.message': 'Oops! Page not found',
-    'notfound.return_home': 'Return to Home'
+    'notfound.return_home': 'Return to Home',
+    // Dashboard
+    'dashboard.todays_reminder': 'Today\'s Reminder',
+    'dashboard.todays_prayer_times': 'Today\'s Prayer Times',
+    'dashboard.todays_action': 'Today\'s Action',
+    'dashboard.hadith_of_the_day': 'Hadith of the Day',
+    'dashboard.source_authentic_hadith': 'Source: Authentic Hadith',
+    'dashboard.prayer_times': 'Prayer Times',
+    'dashboard.enable_location': 'Enable location to see prayer times',
+    'dashboard.prayer.fajr': 'Fajr',
+    'dashboard.prayer.dhuhr': 'Dhuhr',
+    'dashboard.prayer.asr': 'Asr',
+    'dashboard.prayer.maghrib': 'Maghrib',
+    'dashboard.prayer.isha': 'Isha',
+    'dashboard.action_text': 'Take a moment to reflect on today\'s ayah. Recite it in your prayers and contemplate its meaning throughout the day.',
+    'dashboard.hadith_text': 'The Prophet (peace be upon him) said: \'The best of people are those who are most beneficial to people.\'',
+    // Admin
+    'admin.select_category': 'Select category',
+    'admin.select_language': 'Select language',
+    'admin.select_format': 'Select format',
+    'admin.publisher_name': 'Publisher name',
+    // Errors
+    'error.registration_failed': 'Registration failed',
+    'error.checkout_failed': 'Checkout failed',
+    'error.search_failed': 'Search failed',
+    'error.upload_failed': 'Upload failed',
+    'error.delete_failed': 'Could not delete document.',
+    'error.delete_document': 'Delete document'
   },
   fr: {
     'chat.placeholder': 'Demandez-moi quoi que ce soit sur l\'Islam...',
-    'chat.welcome': 'Bienvenue sur XamSaDine AI',
+    'chat.welcome': 'Asalamu alaikum, je suis Anisah',
     'chat.welcome.subtitle': 'Obtenez des réponses islamiques authentiques de multiples perspectives savantes.',
     'chat.thinking': 'Réflexion...',
     'chat.error': 'Échec de la réponse. Veuillez réessayer.',
@@ -235,7 +262,7 @@ const translations = {
     'nav.home': 'Accueil',
     // Hero
     'hero.heading': 'Connaissance Islamique\nÀ Portée de Main',
-    'hero.subtitle': 'Posez vos questions et obtenez des réponses de plusieurs sources savantes.',
+    'hero.subtitle': 'Votre plateforme islamique complète : conseils savants, inspiration quotidienne, bibliothèque numérique, produits, événements et médias.',
     'hero.popular': 'Populaire :',
     'hero.ask_now': 'Poser maintenant',
     // Footer
@@ -293,11 +320,38 @@ const translations = {
     // NotFound
     'notfound.title': '404',
     'notfound.message': 'Oups ! Page introuvable',
-    'notfound.return_home': "Retour à l'accueil"
+    'notfound.return_home': "Retour à l'accueil",
+    // Dashboard
+    'dashboard.todays_reminder': 'Rappel du jour',
+    'dashboard.todays_prayer_times': 'Heures de prière du jour',
+    'dashboard.todays_action': 'Action du jour',
+    'dashboard.hadith_of_the_day': 'Hadith du jour',
+    'dashboard.source_authentic_hadith': 'Source : Hadith authentique',
+    'dashboard.prayer_times': 'Heures de prière',
+    'dashboard.enable_location': 'Activez la localisation pour voir les heures de prière',
+    'dashboard.prayer.fajr': 'Fajr',
+    'dashboard.prayer.dhuhr': 'Dhuhr',
+    'dashboard.prayer.asr': 'Asr',
+    'dashboard.prayer.maghrib': 'Maghrib',
+    'dashboard.prayer.isha': 'Isha',
+    'dashboard.action_text': 'Prenez un moment pour réfléchir à l\'ayah du jour. Récitez-la dans vos prières et méditez sur sa signification tout au long de la journée.',
+    'dashboard.hadith_text': 'Le Prophète (paix sur lui) a dit : \'Les meilleurs des gens sont ceux qui sont les plus bénéfiques aux gens.\'',
+    // Admin
+    'admin.select_category': 'Sélectionner la catégorie',
+    'admin.select_language': 'Sélectionner la langue',
+    'admin.select_format': 'Sélectionner le format',
+    'admin.publisher_name': 'Nom de l\'éditeur',
+    // Errors
+    'error.registration_failed': 'Échec de l\'inscription',
+    'error.checkout_failed': 'Échec du paiement',
+    'error.search_failed': 'Échec de la recherche',
+    'error.upload_failed': 'Échec du téléchargement',
+    'error.delete_failed': 'Impossible de supprimer le document.',
+    'error.delete_document': 'Supprimer le document'
   },
   wo: {
     'chat.placeholder': 'Nan ma wax lé l\'Islaam...',
-    'chat.welcome': 'Barkël XamSaDine AI',
+    'chat.welcome': 'Asalamu alaikum, man Anisah la',
     'chat.welcome.subtitle': 'Wañ japp ndax mi jëmm ju Iislaam ji yore wax yu bari xam-xam.',
     'chat.thinking': 'Mi nangu tànn...',
     'chat.error': 'Wula ju topp. Jàppleen ndax.',
@@ -378,7 +432,7 @@ const translations = {
     'nav.home': 'Kër',
     // Hero
     'hero.heading': 'Xam-xam bu Islaam\nCi Sa Loxo',
-    'hero.subtitle': 'Laajal te jël tontu yi jóllale ay xam-xamkat yu bari.',
+    'hero.subtitle': 'Sa plateforme bu Islam bu wóor : cër yu xam-xamkat, cër yu bés-bés, dal bu digital, jëmm, jëf, ak media.',
     'hero.popular': 'Lu ñu bëgg:',
     'hero.ask_now': 'Laaj leegi',
     // Footer
@@ -436,7 +490,34 @@ const translations = {
     // NotFound
     'notfound.title': '404',
     'notfound.message': 'Wacc! Xët bi gisul',
-    'notfound.return_home': 'Dellusi kër'
+    'notfound.return_home': 'Dellusi kër',
+    // Dashboard
+    'dashboard.todays_reminder': 'Cuqalub bés bii',
+    'dashboard.todays_prayer_times': 'Waxtu yi njulli ci bés bii',
+    'dashboard.todays_action': 'Jëf bu bés bii',
+    'dashboard.hadith_of_the_day': 'Hadith bu bés bii',
+    'dashboard.source_authentic_hadith': 'Jëmm: Hadith bu dëggu',
+    'dashboard.prayer_times': 'Waxtu yi njulli',
+    'dashboard.enable_location': 'Jëkk bët ngir gis waxtu yi njulli',
+    'dashboard.prayer.fajr': 'Fajr',
+    'dashboard.prayer.dhuhr': 'Dhuhr',
+    'dashboard.prayer.asr': 'Asr',
+    'dashboard.prayer.maghrib': 'Maghrib',
+    'dashboard.prayer.isha': 'Isha',
+    'dashboard.action_text': 'Jël benn waxtu ngir xalaat ci aaya bu tey. Waxal ko ci sa njulli ak xalaat ci li mu tekki ci bés bii.',
+    'dashboard.hadith_text': 'Yonent bi (jàmm ak moom) nee na: \'Nit ñi gën a baax ñooñu ñi gën a jariñu nit ñi.\'',
+    // Admin
+    'admin.select_category': 'Tànn kategori',
+    'admin.select_language': 'Tànn làkk',
+    'admin.select_format': 'Tànn format',
+    'admin.publisher_name': 'Tur bu sàkk mbind',
+    // Errors
+    'error.registration_failed': 'Jëkk da faaw',
+    'error.checkout_failed': 'Jënd da faaw',
+    'error.search_failed': 'Seet da faaw',
+    'error.upload_failed': 'Yeb da faaw',
+    'error.delete_failed': 'Mënul sàkk mbind bi.',
+    'error.delete_document': 'Sàkk mbind'
   },
 };
 

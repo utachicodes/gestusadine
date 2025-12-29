@@ -1,6 +1,7 @@
 import { openRouterClient, COUNCIL_MODELS } from './openrouter-client';
 import { ragService } from '../rag-service/rag.service';
 import { logger } from '../../shared/logger';
+import { configService } from '../config-service/config.service';
 
 export interface CouncilMember {
     id: string;
@@ -9,6 +10,7 @@ export interface CouncilMember {
     modelId: string;
     systemPrompt: string;
     temperature: number;
+    knowledgeBase?: string; // Specific document collection for this agent
 }
 
 export interface MemberResponse {
@@ -38,66 +40,99 @@ export interface ConsensusResult {
 }
 
 export class LLMCouncil {
-    private members: CouncilMember[];
+    private members: CouncilMember[] = [];
+    private initialized: boolean = false;
 
     constructor() {
-        // Initialize 4 diverse council members with different perspectives
-        this.members = [
+        // Initialize on construction (async handled separately)
+        this.initialize().catch(err => {
+            logger.error('Failed to initialize LLM Council:', err);
+        });
+    }
+
+    /**
+     * Initialize council members from config service
+     */
+    async initialize(): Promise<void> {
+        if (this.initialized) return;
+
+        try {
+            console.log('[LLMCouncil] Loading agent configurations...');
+            const agentConfigs = await configService.getAllAgents();
+
+            // Transform agent configs to council members
+            this.members = Object.entries(agentConfigs).map(([id, config]: [string, any]) => {
+                // Default system prompts for Fiqh agents
+                const defaultPrompts: Record<string, string> = {
+                    'agent-fiqh': 'You are the Fiqh Reasoning Agent. Analyze questions from an Islamic jurisprudence perspective, providing reasoning based on Quran, Sun nah, and scholarly consensus (Ijma). Be methodical and reference authentic sources.',
+                    'agent-aqeedah': 'You are the Aqeedah Boundary Agent. Ensure that responses align with orthodox Islamic creed and theology. Flag any potential theological issues and maintain boundaries of proper belief.',
+                    'agent-humility': 'You are the Humility & Abstention Agent. When knowledge is uncertain or requires specialized scholarship, recommend abstention (tawaqquf) and humility. Acknowledge the limits of understanding.',
+                    'agent-context': 'You are the Contemporary Context Agent. Provide contemporary context and real-world application of Islamic principles. Connect classical knowledge with modern circumstances while maintaining authenticity.'
+                };
+
+                return {
+                    id,
+                    name: config.agentName,
+                    role: config.agentId || id,
+                    modelId: config.modelId || config.llmConfig?.model || 'meta-llama/llama-3.2-3b-instruct:free',
+                    systemPrompt: config.systemPrompt || defaultPrompts[id] || defaultPrompts['agent-fiqh'],
+                    temperature: config.temperature || config.llmConfig?.temperature || 0.5,
+                    knowledgeBase: config.knowledgeBase
+                };
+            });
+
+            // Fallback to defaults if no config loaded
+            if (this.members.length === 0) {
+                console.error('[LLMCouncil] CRITICAL: No agents configured in Config Service. Chat will not function.');
+                // Do NOT use default fake agents. We want real errors if config is missing.
+                this.initialized = false;
+                return;
+            }
+
+            this.initialized = true;
+            console.log(`[LLMCouncil] Successfully initialized with ${this.members.length} agents`);
+        } catch (error: any) {
+            console.error('[LLMCouncil] CRITICAL: Failed to initialize:', error);
+            this.initialized = false;
+        }
+    }
+
+    /**
+     * Get default Fiqh epistemic agents
+     */
+    private getDefaultFiqhAgents(): CouncilMember[] {
+        return [
             {
-                id: 'member-logic',
-                name: 'The Analyst',
-                role: 'Logic & Data Expert',
-                modelId: COUNCIL_MODELS['gpt-4o'].id, // Fast, precise reasoning
-                systemPrompt: `You are The Analyst, a logic and data expert. Your role in the Council is to:
-1. Analyze queries using pure logic, structured reasoning, and empirical data
-2. Break down complex problems into components
-3. Identify patterns and relationships
-4. Provide evidence-based conclusions
-5. Keep responses concise and data-driven
-When reviewing peers, focus on logical consistency and evidence quality.`,
+                id: 'agent-fiqh',
+                name: 'Fiqh Reasoning Agent',
+                role: 'Islamic Jurisprudence Expert',
+                modelId: 'meta-llama/llama-3.2-3b-instruct:free',
+                systemPrompt: 'You are the Fiqh Reasoning Agent. Analyze questions from an Islamic jurisprudence perspective, providing reasoning based on Quran, Sunnah, and scholarly consensus (Ijma).',
+                temperature: 0.3
+            },
+            {
+                id: 'agent-aqeedah',
+                name: 'Aqeedah Boundary Agent',
+                role: 'Islamic Creed Guardian',
+                modelId: 'meta-llama/llama-3.2-3b-instruct:free',
+                systemPrompt: 'You are the Aqeedah Boundary Agent. Ensure that responses align with orthodox Islamic creed and theology.',
                 temperature: 0.2
             },
             {
-                id: 'member-creativity',
-                name: 'The Visionary',
-                role: 'Creative & Innovation Expert',
-                modelId: COUNCIL_MODELS['claude-opus'].id, // Nuanced, creative thinking
-                systemPrompt: `You are The Visionary, a creative and innovation expert. Your role in the Council is to:
-1. Approach problems with lateral thinking and out-of-the-box creativity
-2. Suggest novel solutions and future possibilities
-3. Use metaphors and analogies to illuminate concepts
-4. Identify unconventional approaches others may miss
-5. Balance innovation with feasibility
-When reviewing peers, assess the originality and potential impact of ideas.`,
-                temperature: 0.8
+                id: 'agent-humility',
+                name: 'Humility & Abstention Agent',
+                role: 'Epistemic Humility Expert',
+                modelId: 'meta-llama/llama-3.2-3b-instruct:free',
+                systemPrompt: 'You are the Humility & Abstention Agent. When knowledge is uncertain, recommend abstention (tawaqquf) and humility.',
+                temperature: 0.4
             },
             {
-                id: 'member-ethics',
-                name: 'The Guardian',
-                role: 'Ethics & Wellbeing Expert',
-                systemPrompt: `You are The Guardian, an ethics and wellbeing expert. Your role in the Council is to:
-1. Evaluate the ethical implications of solutions
-2. Consider impact on human wellbeing and dignity
-3. Identify potential harms and unintended consequences
-4. Advocate for fairness and inclusion
-5. Assess alignment with values and principles
-When reviewing peers, evaluate ethical considerations and societal impact.`,
-                modelId: COUNCIL_MODELS['mistral-large'].id,
+                id: 'agent-context',
+                name: 'Contemporary Context Agent',
+                role: 'Modern Application Expert',
+                modelId: 'meta-llama/llama-3.2-3b-instruct:free',
+                systemPrompt: 'You are the Contemporary Context Agent. Provide contemporary context and real-world application of Islamic principles.',
                 temperature: 0.6
-            },
-            {
-                id: 'member-critic',
-                name: 'The Verifier',
-                role: 'Critical Analysis Expert',
-                systemPrompt: `You are The Verifier, a critical analysis expert. Your role in the Council is to:
-1. Scrutinize all claims and assumptions
-2. Play devil's advocate to test ideas
-3. Identify logical fallacies and weaknesses
-4. Challenge consensus when warranted
-5. Ensure quality and rigor
-When reviewing peers, provide constructive criticism and identify improvement opportunities.`,
-                modelId: COUNCIL_MODELS['llama-3-70b'].id,
-                temperature: 0.5
             }
         ];
     }
@@ -110,10 +145,34 @@ When reviewing peers, provide constructive criticism and identify improvement op
         const councilLogger = logger.prefixed('LLMCouncil');
         councilLogger.info(`Processing query: "${query}"`);
 
-        // Step 1: Retrieve relevant documents from RAG if available
+        // Ensure council is initialized
+        if (!this.initialized) {
+            councilLogger.info('Council not initialized, attempting initialization...');
+            await this.initialize();
+            if (!this.initialized) {
+                throw new Error('Failed to initialize Council Agents. Please check Admin Config.');
+            }
+        }
+
+        // Check if we have active members
+        if (this.members.length === 0) {
+            throw new Error('No active Council Members found. Enable agents in Admin Config.');
+        }
+
+        // Step 1: Retrieve relevant documents from RAG if not provided
         let contextText = '';
         if (ragContext) {
             contextText = `\n\nRelevant context from knowledge base:\n${ragContext}`;
+        } else {
+            // Get general RAG context
+            try {
+                const ragResult = await ragService.search(query, 5);
+                if (ragResult.context) {
+                    contextText = `\n\nRelevant context from knowledge base:\n${ragResult.context}`;
+                }
+            } catch (error: any) {
+                councilLogger.warn('RAG context retrieval failed:', error.message);
+            }
         }
 
         const fullPrompt = `${query}${contextText}`;
@@ -121,7 +180,7 @@ When reviewing peers, provide constructive criticism and identify improvement op
         // Step 2: Get initial responses from all council members
         councilLogger.info('Gathering initial responses from council members...');
         const initialResponses = await Promise.all(
-            this.members.map(member => this.getMemberResponse(member, fullPrompt))
+            this.members.map(member => this.getMemberResponse(member, fullPrompt, query))
         );
 
         // Step 3: Conduct peer reviews
@@ -150,10 +209,28 @@ When reviewing peers, provide constructive criticism and identify improvement op
 
     /**
      * Get response from a single council member
+     * Each agent can use its own knowledge base if specified
      */
-    private async getMemberResponse(member: CouncilMember, prompt: string): Promise<MemberResponse> {
+    private async getMemberResponse(member: CouncilMember, prompt: string, originalQuery: string): Promise<MemberResponse> {
         try {
             console.log(`[Council] ${member.name} is analyzing...`);
+
+            // If agent has a specific knowledge base, get relevant context
+            let agentContext = '';
+            if (member.knowledgeBase) {
+                try {
+                    // Search RAG specifically for this agent's knowledge base
+                    const ragResult = await ragService.search(originalQuery, 3, member.knowledgeBase);
+                    if (ragResult.context) {
+                        agentContext = `\n\n[EXCLUSIVE KNOWLEDGE BASE: ${member.knowledgeBase}]\nUse the following authentic sources strictly associated with your role:\n${ragResult.context}\n\n`;
+                        console.log(`[Council] ${member.name} found ${ragResult.sources.length} docs in KB: ${member.knowledgeBase}`);
+                    }
+                } catch (error: any) {
+                    console.warn(`[Council] Failed to get KB context for ${member.name}:`, error.message);
+                }
+            }
+
+            const finalPrompt = agentContext ? `${prompt}\n\n${agentContext}` : prompt;
 
             const messages = [
                 {
@@ -162,7 +239,7 @@ When reviewing peers, provide constructive criticism and identify improvement op
                 },
                 {
                     role: 'user' as const,
-                    content: prompt
+                    content: finalPrompt
                 }
             ];
 

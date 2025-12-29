@@ -12,7 +12,8 @@ import {
   Users,
   FileText,
   Circle,
-  Globe
+  Globe,
+  TestTube
 } from 'lucide-react';
 import { useAuth } from '@/auth/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -20,11 +21,16 @@ import { useLanguage } from '@/contexts/LanguageContext';
 export const Sidebar = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { signOut, isAdmin } = useAuth();
+  const { signOut, isAdmin, refreshProfile } = useAuth();
   const { t, language, setLanguage } = useLanguage();
+  
+  // Refresh profile on mount to ensure admin status is up to date
+  React.useEffect(() => {
+    refreshProfile();
+  }, [refreshProfile]);
 
-  const handleSignOut = async () => {
-    await signOut();
+  const handleSignOut = () => {
+    signOut();
     navigate('/');
   };
 
@@ -84,6 +90,12 @@ export const Sidebar = () => {
       adminOnly: true
     },
     { 
+      icon: TestTube, 
+      label: 'RAG Test', 
+      path: '/admin/rag-test',
+      adminOnly: true
+    },
+    { 
       icon: Settings, 
       label: t('nav.settings'), 
       path: '/language',
@@ -94,7 +106,7 @@ export const Sidebar = () => {
   const filteredItems = navItems.filter(item => !item.adminOnly || isAdmin);
 
   return (
-    <aside className="w-64 bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm border-r border-islamic-cream/50 dark:border-slate-700/50 h-screen sticky top-0 flex flex-col">
+    <aside className="w-64 bg-[#efefec]/90 dark:bg-slate-800/90 backdrop-blur-sm border-r border-islamic-cream/50 dark:border-slate-700/50 h-screen sticky top-0 flex flex-col">
       {/* Logo */}
       <div className="p-6 border-b border-islamic-cream/50">
         <Link to="/dashboard" className="flex items-center">
@@ -118,7 +130,7 @@ export const Sidebar = () => {
               to={item.path}
               className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
                 isActive
-                  ? 'bg-islamic-green/10 dark:bg-islamic-green/20 text-islamic-green dark:text-islamic-green border border-islamic-green/20 dark:border-islamic-green/30'
+                  ? 'bg-islamic-green/10 dark:bg-islamic-green/20 text-islamic-green-600 dark:text-islamic-green border border-islamic-green/20 dark:border-islamic-green/30'
                   : 'text-islamic-dark/70 dark:text-slate-300 hover:bg-islamic-cream/30 dark:hover:bg-slate-700/50 hover:text-islamic-dark dark:hover:text-slate-100'
               }`}
             >

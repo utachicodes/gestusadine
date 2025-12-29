@@ -33,39 +33,39 @@ export const CircleKnowledge = () => {
   const { toast } = useToast();
   const [models, setModels] = useState<Model[]>([
     {
-      id: '1',
-      name: 'Hanafi Scholar',
+      id: 'agent-fiqh',
+      name: 'Fiqh Reasoning Agent',
       provider: 'openrouter',
-      modelId: 'anthropic/claude-3-haiku',
-      role: 'hanafi_fiqh',
-      knowledgeBase: 'hanafi_kb',
+      modelId: 'meta-llama/llama-3.2-3b-instruct:free',
+      role: 'fiqh_reasoning',
+      knowledgeBase: 'islamic_jurisprudence',
       isActive: true,
     },
     {
-      id: '2',
-      name: 'Maliki Scholar',
+      id: 'agent-aqeedah',
+      name: 'Aqeedah Boundary Agent',
       provider: 'openrouter',
-      modelId: 'anthropic/claude-3-haiku',
-      role: 'maliki_fiqh',
-      knowledgeBase: 'maliki_kb',
+      modelId: 'meta-llama/llama-3.2-3b-instruct:free',
+      role: 'aqeedah_guardian',
+      knowledgeBase: 'islamic_creed',
       isActive: true,
     },
     {
-      id: '3',
-      name: 'Shafi\'i Scholar',
+      id: 'agent-humility',
+      name: 'Humility & Abstention Agent',
       provider: 'openrouter',
-      modelId: 'anthropic/claude-3-haiku',
-      role: 'shafi_fiqh',
-      knowledgeBase: 'shafi_kb',
+      modelId: 'meta-llama/llama-3.2-3b-instruct:free',
+      role: 'epistemic_humility',
+      knowledgeBase: 'islamic_scholarship',
       isActive: true,
     },
     {
-      id: '4',
-      name: 'Hanbali Scholar',
+      id: 'agent-context',
+      name: 'Contemporary Context Agent',
       provider: 'openrouter',
-      modelId: 'anthropic/claude-3-haiku',
-      role: 'hanbali_fiqh',
-      knowledgeBase: 'hanbali_kb',
+      modelId: 'meta-llama/llama-3.2-3b-instruct:free',
+      role: 'contemporary_application',
+      knowledgeBase: 'modern_islamic_context',
       isActive: true,
     },
   ]);
@@ -77,38 +77,38 @@ export const CircleKnowledge = () => {
       date.setDate(date.getDate() - daysAgo);
       return date.toISOString().split('T')[0];
     };
-    
+
     return [
       {
-        id: 'hanafi_kb',
-        name: 'Hanafi Fiqh Knowledge Base',
-        description: 'Islamic jurisprudence according to Hanafi school of thought',
-        documents: 1250,
+        id: 'islamic_jurisprudence',
+        name: 'Islamic Jurisprudence Knowledge Base',
+        description: 'Comprehensive fiqh rulings from Quran, Sunnah, and scholarly consensus',
+        documents: 2450,
         lastUpdated: getRecentDate(1),
         language: 'en',
       },
       {
-        id: 'maliki_kb',
-        name: 'Maliki Fiqh Knowledge Base',
-        description: 'Islamic jurisprudence according to Maliki school of thought',
-        documents: 980,
+        id: 'islamic_creed',
+        name: 'Islamic Creed (Aqeedah) Knowledge Base',
+        description: 'Orthodox Islamic theology and foundational beliefs',
+        documents: 890,
         lastUpdated: getRecentDate(2),
         language: 'en',
       },
       {
-        id: 'shafi_kb',
-        name: 'Shafi\'i Fiqh Knowledge Base',
-        description: 'Islamic jurisprudence according to Shafi\'i school of thought',
-        documents: 1100,
-        lastUpdated: getRecentDate(1),
+        id: 'islamic_scholarship',
+        name: 'Islamic Scholarship Knowledge Base',
+        description: 'Scholarly works on epistemic limits and proper methodology',
+        documents: 650,
+        lastUpdated: getRecentDate(3),
         language: 'en',
       },
       {
-        id: 'hanbali_kb',
-        name: 'Hanbali Fiqh Knowledge Base',
-        description: 'Islamic jurisprudence according to Hanbali school of thought',
-        documents: 890,
-        lastUpdated: getRecentDate(3),
+        id: 'modern_islamic_context',
+        name: 'Contemporary Islamic Context Knowledge Base',
+        description: 'Application of Islamic principles in modern contexts',
+        documents: 1200,
+        lastUpdated: getRecentDate(1),
         language: 'en',
       },
     ];
@@ -133,7 +133,7 @@ export const CircleKnowledge = () => {
   const handleSaveModel = () => {
     if (!editingModel) return;
 
-    setModels(prev => prev.map(m => 
+    setModels(prev => prev.map(m =>
       m.id === editingModel.id ? editingModel : m
     ));
     setEditingModel(null);
@@ -263,14 +263,14 @@ export const CircleKnowledge = () => {
                           <Input
                             id="name"
                             value={editingModel.name}
-                            onChange={(e) => setEditingModel({...editingModel, name: e.target.value})}
+                            onChange={(e) => setEditingModel({ ...editingModel, name: e.target.value })}
                           />
                         </div>
                         <div>
                           <Label htmlFor="provider">Provider</Label>
                           <Select
                             value={editingModel.provider}
-                            onValueChange={(value) => setEditingModel({...editingModel, provider: value})}
+                            onValueChange={(value) => setEditingModel({ ...editingModel, provider: value })}
                           >
                             <SelectTrigger>
                               <SelectValue />
@@ -287,24 +287,23 @@ export const CircleKnowledge = () => {
                           <Input
                             id="modelId"
                             value={editingModel.modelId}
-                            onChange={(e) => setEditingModel({...editingModel, modelId: e.target.value})}
+                            onChange={(e) => setEditingModel({ ...editingModel, modelId: e.target.value })}
                           />
                         </div>
                         <div>
                           <Label htmlFor="role">Role</Label>
                           <Select
                             value={editingModel.role}
-                            onValueChange={(value) => setEditingModel({...editingModel, role: value})}
+                            onValueChange={(value) => setEditingModel({ ...editingModel, role: value })}
                           >
                             <SelectTrigger>
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="hanafi_fiqh">Hanafi Fiqh Scholar</SelectItem>
-                              <SelectItem value="maliki_fiqh">Maliki Fiqh Scholar</SelectItem>
-                              <SelectItem value="shafi_fiqh">Shafi'i Fiqh Scholar</SelectItem>
-                              <SelectItem value="hanbali_fiqh">Hanbali Fiqh Scholar</SelectItem>
-                              <SelectItem value="general_islam">General Islamic Scholar</SelectItem>
+                              <SelectItem value="fiqh_reasoning">Fiqh Reasoning Agent</SelectItem>
+                              <SelectItem value="aqeedah_guardian">Aqeedah Boundary Agent</SelectItem>
+                              <SelectItem value="epistemic_humility">Humility & Abstention Agent</SelectItem>
+                              <SelectItem value="contemporary_application">Contemporary Context Agent</SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
@@ -365,7 +364,7 @@ export const CircleKnowledge = () => {
                     <Input
                       id="new-name"
                       value={newModel.name}
-                      onChange={(e) => setNewModel({...newModel, name: e.target.value})}
+                      onChange={(e) => setNewModel({ ...newModel, name: e.target.value })}
                       placeholder="e.g., Quran Expert"
                     />
                   </div>
@@ -373,7 +372,7 @@ export const CircleKnowledge = () => {
                     <Label htmlFor="new-provider">Provider</Label>
                     <Select
                       value={newModel.provider}
-                      onValueChange={(value) => setNewModel({...newModel, provider: value})}
+                      onValueChange={(value) => setNewModel({ ...newModel, provider: value })}
                     >
                       <SelectTrigger>
                         <SelectValue />
@@ -390,7 +389,7 @@ export const CircleKnowledge = () => {
                     <Input
                       id="new-modelId"
                       value={newModel.modelId}
-                      onChange={(e) => setNewModel({...newModel, modelId: e.target.value})}
+                      onChange={(e) => setNewModel({ ...newModel, modelId: e.target.value })}
                       placeholder="e.g., anthropic/claude-3-haiku"
                     />
                   </div>
@@ -398,17 +397,16 @@ export const CircleKnowledge = () => {
                     <Label htmlFor="new-role">Role</Label>
                     <Select
                       value={newModel.role}
-                      onValueChange={(value) => setNewModel({...newModel, role: value})}
+                      onValueChange={(value) => setNewModel({ ...newModel, role: value })}
                     >
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="hanafi_fiqh">Hanafi Fiqh Scholar</SelectItem>
-                        <SelectItem value="maliki_fiqh">Maliki Fiqh Scholar</SelectItem>
-                        <SelectItem value="shafi_fiqh">Shafi'i Fiqh Scholar</SelectItem>
-                        <SelectItem value="hanbali_fiqh">Hanbali Fiqh Scholar</SelectItem>
-                        <SelectItem value="general_islam">General Islamic Scholar</SelectItem>
+                        <SelectItem value="fiqh_reasoning">Fiqh Reasoning Agent</SelectItem>
+                        <SelectItem value="aqeedah_guardian">Aqeedah Boundary Agent</SelectItem>
+                        <SelectItem value="epistemic_humility">Humility & Abstention Agent</SelectItem>
+                        <SelectItem value="contemporary_application">Contemporary Context Agent</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -463,7 +461,7 @@ export const CircleKnowledge = () => {
                     <Input
                       id="kb-name"
                       value={newKB.name}
-                      onChange={(e) => setNewKB({...newKB, name: e.target.value})}
+                      onChange={(e) => setNewKB({ ...newKB, name: e.target.value })}
                       placeholder="e.g., Quranic Sciences Knowledge Base"
                     />
                   </div>
@@ -472,7 +470,7 @@ export const CircleKnowledge = () => {
                     <Textarea
                       id="kb-description"
                       value={newKB.description}
-                      onChange={(e) => setNewKB({...newKB, description: e.target.value})}
+                      onChange={(e) => setNewKB({ ...newKB, description: e.target.value })}
                       placeholder="Describe the purpose and scope of this knowledge base"
                     />
                   </div>
@@ -480,7 +478,7 @@ export const CircleKnowledge = () => {
                     <Label htmlFor="kb-language">Language</Label>
                     <Select
                       value={newKB.language}
-                      onValueChange={(value) => setNewKB({...newKB, language: value})}
+                      onValueChange={(value) => setNewKB({ ...newKB, language: value })}
                     >
                       <SelectTrigger>
                         <SelectValue />

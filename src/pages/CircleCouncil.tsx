@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useCouncil, ConsensusResult, Document, RAGResult } from '@/hooks/use-council';
+import { useLanguage } from '@/contexts/LanguageContext';
 import {
     CouncilQueryForm,
     CouncilMembersDisplay,
@@ -30,6 +31,7 @@ import {
 
 const CirclePage: React.FC = () => {
     const { toast } = useToast();
+    const { t } = useLanguage();
     const location = useLocation();
     const council = useCouncil();
     const [activeResult, setActiveResult] = React.useState<ConsensusResult | null>(null);
@@ -115,7 +117,7 @@ const CirclePage: React.FC = () => {
             const results = await council.searchRAG({ query: searchQuery });
             setSearchResults(results);
         } catch (error: unknown) {
-            const message = error instanceof Error ? error.message : 'Search failed';
+            const message = error instanceof Error ? error.message : t('error.search_failed');
             toast({
                 title: 'Error',
                 description: message,
@@ -133,7 +135,7 @@ const CirclePage: React.FC = () => {
                 variant: 'default'
             });
         } catch (error: unknown) {
-            const message = error instanceof Error ? error.message : 'Failed to delete document';
+            const message = error instanceof Error ? error.message : t('error.delete_failed');
             toast({
                 title: 'Error',
                 description: message,
@@ -143,9 +145,9 @@ const CirclePage: React.FC = () => {
     };
 
     return (
-        <div className="flex-1 min-h-screen bg-gradient-to-br from-islamic-cream/30 via-white to-islamic-gold/10">
+        <div className="flex-1 min-h-screen bg-gradient-to-br from-islamic-cream/30 via-[#efefec] to-islamic-gold/10">
             {/* Header Section */}
-            <div className="border-b border-islamic-gold/20 bg-white/50 backdrop-blur-sm sticky top-0 z-10">
+            <div className="border-b border-islamic-gold/20 bg-[#efefec]/50 backdrop-blur-sm sticky top-0 z-10">
                 <div className="max-w-7xl mx-auto px-4 py-8">
                     <div className="flex items-center justify-between mb-4">
                         <div>
@@ -154,7 +156,7 @@ const CirclePage: React.FC = () => {
                                 Circle of Knowledge
                             </h1>
                             <p className="text-islamic-dark/70 mt-2 max-w-2xl">
-                                The LLM Council: A distributed multi-agent consensus system where four expert models collaborate to answer your questions with diverse perspectives and rigorous peer review.
+                                The Circle of Knowledge: A multi-agent epistemic architecture for Islamic scholarly reasoning, combining Fiqh jurisprudence, Aqeedah boundaries, epistemic humility, and contemporary context.
                             </p>
                         </div>
                     </div>
@@ -215,7 +217,7 @@ const CirclePage: React.FC = () => {
 
                             <div className="lg:col-span-2">
                                 {council.isProcessing && (
-                                    <Card className="border-islamic-gold/30 bg-gradient-to-br from-islamic-cream/50 to-white">
+                                    <Card className="border-islamic-gold/30 bg-gradient-to-br from-islamic-cream/50 to-[#efefec]">
                                         <CardContent className="pt-8">
                                             <div className="text-center space-y-4">
                                                 <div className="inline-block">
@@ -233,7 +235,7 @@ const CirclePage: React.FC = () => {
                                 {activeResult && !council.isProcessing && (
                                     <div className="space-y-6">
                                         {/* Synthesis Result */}
-                                        <Card className="border-islamic-gold/30 bg-gradient-to-br from-islamic-cream/50 to-white">
+                                        <Card className="border-islamic-gold/30 bg-gradient-to-br from-islamic-cream/50 to-[#efefec]">
                                             <CardHeader>
                                                 <CardTitle className="text-islamic-dark">Council Consensus</CardTitle>
                                                 <CardDescription>Synthesized response from all members</CardDescription>
@@ -285,7 +287,7 @@ const CirclePage: React.FC = () => {
 
                     {/* Members Tab */}
                     <TabsContent value="members" className="space-y-6">
-                        <Card className="border-islamic-gold/30 bg-gradient-to-br from-islamic-cream/30 to-white">
+                        <Card className="border-islamic-gold/30 bg-gradient-to-br from-islamic-cream/30 to-[#efefec]">
                             <CardHeader>
                                 <CardTitle className="text-islamic-dark flex items-center gap-2">
                                     <Users className="w-5 h-5 text-islamic-gold" />
@@ -306,32 +308,32 @@ const CirclePage: React.FC = () => {
                         {/* Member Roles Description */}
                         <Card className="border-islamic-gold/30">
                             <CardHeader>
-                                <CardTitle className="text-islamic-dark">How the Council Works</CardTitle>
+                                <CardTitle className="text-islamic-dark">Epistemic Architecture</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                                        <h4 className="font-semibold text-blue-900 mb-2">The Analyst (Logic)</h4>
+                                        <h4 className="font-semibold text-blue-900 mb-2">Fiqh Reasoning Agent</h4>
                                         <p className="text-blue-800 text-sm">
-                                            Analyzes questions using structured logic, data, and evidence-based reasoning.
+                                            Analyzes questions from an Islamic jurisprudence perspective, providing reasoning based on Quran, Sunnah, and scholarly consensus (Ijma).
                                         </p>
                                     </div>
                                     <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
-                                        <h4 className="font-semibold text-purple-900 mb-2">The Visionary (Creativity)</h4>
+                                        <h4 className="font-semibold text-purple-900 mb-2">Aqeedah Boundary Agent</h4>
                                         <p className="text-purple-800 text-sm">
-                                            Explores innovative solutions and out-of-the-box thinking with metaphors and future perspectives.
+                                            Ensures responses align with orthodox Islamic creed and theology. Flags potential theological issues and maintains boundaries of proper belief.
                                         </p>
                                     </div>
                                     <div className="p-4 bg-green-50 rounded-lg border border-green-200">
-                                        <h4 className="font-semibold text-green-900 mb-2">The Guardian (Ethics)</h4>
+                                        <h4 className="font-semibold text-green-900 mb-2">Humility & Abstention Agent</h4>
                                         <p className="text-green-800 text-sm">
-                                            Evaluates ethical implications, human impact, and emotional intelligence considerations.
+                                            Recommends epistemic humility and abstention (tawaqquf) when knowledge is uncertain or requires specialized scholarship.
                                         </p>
                                     </div>
                                     <div className="p-4 bg-orange-50 rounded-lg border border-orange-200">
-                                        <h4 className="font-semibold text-orange-900 mb-2">The Verifier (Critic)</h4>
+                                        <h4 className="font-semibold text-orange-900 mb-2">Contemporary Context Agent</h4>
                                         <p className="text-orange-800 text-sm">
-                                            Scrutinizes claims, identifies weaknesses, and plays devil's advocate for rigor.
+                                            Provides contemporary context and real-world application of Islamic principles while maintaining authenticity to classical knowledge.
                                         </p>
                                     </div>
                                 </div>
@@ -464,7 +466,7 @@ const CirclePage: React.FC = () => {
                                         onChange={e => setSearchQuery(e.target.value)}
                                         onKeyPress={e => e.key === 'Enter' && handleSearchRAG()}
                                         placeholder="Search documents..."
-                                        className="flex-1 px-4 py-2 border border-islamic-gold/30 rounded-lg bg-white text-islamic-dark placeholder-islamic-dark/50 focus:outline-none focus:border-islamic-gold"
+                                        className="flex-1 px-4 py-2 border border-islamic-gold/30 rounded-lg bg-[#efefec] text-islamic-dark placeholder-islamic-dark/50 focus:outline-none focus:border-islamic-gold"
                                     />
                                     <button
                                         onClick={handleSearchRAG}

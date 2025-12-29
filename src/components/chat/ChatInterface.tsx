@@ -148,16 +148,16 @@ export const ChatInterface = () => {
   }, [messages]);
 
   return (
-    <div className="flex-1 flex flex-col h-screen bg-white">
+    <div className="flex-1 flex flex-col h-screen bg-[#efefec] dark:bg-slate-900">
       {/* Messages - Claude-inspired clean design */}
       <div className="flex-1 overflow-y-auto">
         <div className="max-w-3xl mx-auto w-full">
           {messages.length === 0 ? (
-            <div className="h-full flex flex-col items-center justify-center min-h-[60vh] px-4">
+            <div className="h-full flex flex-col items-center justify-center min-h-[60vh] px-4 dark:bg-slate-900">
               <div className="text-center max-w-2xl">
                 <img 
                   src="/logo.png" 
-                  alt="XamSaDine AI" 
+                  alt="Anisah" 
                   className="h-16 w-auto object-contain mx-auto mb-8 brightness-110 dark:brightness-0 dark:invert"
                 />
                 <h3 className="text-2xl font-semibold text-gray-900 dark:text-slate-100 mb-2">
@@ -167,17 +167,17 @@ export const ChatInterface = () => {
                   {t('chat.welcome.subtitle')}
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                  <div className="p-4 rounded-lg bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700">
+                  <div className="p-4 rounded-lg bg-gray-50 dark:bg-slate-800/50 border border-gray-100 dark:border-slate-700">
                     <div className="font-medium text-gray-900 dark:text-slate-100 mb-1">{t('chat.feature1.title')}</div>
-                    <p className="text-gray-600 dark:text-slate-300 text-xs">{t('chat.feature1.desc')}</p>
+                    <p className="text-gray-600 dark:text-slate-400 text-xs">{t('chat.feature1.desc')}</p>
                   </div>
-                  <div className="p-4 rounded-lg bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700">
+                  <div className="p-4 rounded-lg bg-gray-50 dark:bg-slate-800/50 border border-gray-100 dark:border-slate-700">
                     <div className="font-medium text-gray-900 dark:text-slate-100 mb-1">{t('chat.feature2.title')}</div>
-                    <p className="text-gray-600 dark:text-slate-300 text-xs">{t('chat.feature2.desc')}</p>
+                    <p className="text-gray-600 dark:text-slate-400 text-xs">{t('chat.feature2.desc')}</p>
                   </div>
-                  <div className="p-4 rounded-lg bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700">
+                  <div className="p-4 rounded-lg bg-gray-50 dark:bg-slate-800/50 border border-gray-100 dark:border-slate-700">
                     <div className="font-medium text-gray-900 dark:text-slate-100 mb-1">{t('chat.feature3.title')}</div>
-                    <p className="text-gray-600 dark:text-slate-300 text-xs">{t('chat.feature3.desc')}</p>
+                    <p className="text-gray-600 dark:text-slate-400 text-xs">{t('chat.feature3.desc')}</p>
                   </div>
                 </div>
               </div>
@@ -202,7 +202,7 @@ export const ChatInterface = () => {
                   <div
                     key={message.id}
                     className={`group px-4 py-4 hover:bg-gray-50/50 dark:hover:bg-slate-800/50 transition-colors ${
-                      message.role === 'user' ? 'bg-gray-50/30 dark:bg-slate-800/30' : ''
+                      message.role === 'user' ? 'bg-gray-50/30 dark:bg-slate-800/30' : 'dark:bg-slate-900'
                     }`}
                   >
                     <div className="max-w-3xl mx-auto flex gap-4">
@@ -210,7 +210,7 @@ export const ChatInterface = () => {
                         <div className="flex-shrink-0 mt-1">
                           <img 
                             src="/logo.png" 
-                            alt="XamSaDine AI" 
+                            alt="Anisah" 
                             className="h-8 w-8 object-contain brightness-110 dark:brightness-0 dark:invert"
                           />
                         </div>
@@ -225,14 +225,14 @@ export const ChatInterface = () => {
                               <div className="text-xs font-semibold mb-2 text-gray-700 dark:text-slate-300">
                                 {t('chat.council_consensus')}
                               </div>
-                              <div className="text-xs space-y-2 text-gray-600 dark:text-slate-400">
+                              <div className="text-xs space-y-2 text-gray-600 dark:text-slate-300">
                                 <div>
-                                  <strong>{t('chat.council_members')}:</strong> {message.council.members.join(', ')}
+                                  <strong className="dark:text-slate-200">{t('chat.council_members')}:</strong> <span className="dark:text-slate-300">{message.council.members.join(', ')}</span>
                                 </div>
                                 {message.council.reasoning && message.council.reasoning.length > 0 && (
                                   <div>
-                                    <strong>{t('chat.council_reasoning')}:</strong>
-                                    <ul className="list-disc list-inside ml-2 mt-1 space-y-1">
+                                    <strong className="dark:text-slate-200">{t('chat.council_reasoning')}:</strong>
+                                    <ul className="list-disc list-inside ml-2 mt-1 space-y-1 dark:text-slate-300">
                                       {message.council.reasoning.map((point, idx) => (
                                         <li key={idx}>{point}</li>
                                       ))}
@@ -255,7 +255,7 @@ export const ChatInterface = () => {
                   </div>
                 ))}
                 {isLoading && (
-                  <div className="group px-4 py-4 hover:bg-gray-50/50 dark:hover:bg-slate-800/50 transition-colors">
+                  <div className="group px-4 py-4 hover:bg-gray-50/50 dark:hover:bg-slate-800/50 dark:bg-slate-900 transition-colors">
                     <div className="max-w-3xl mx-auto flex gap-4">
                       <div className="flex-shrink-0 mt-1">
                         <img 
@@ -285,7 +285,7 @@ export const ChatInterface = () => {
       </div>
 
       {/* Input - Claude-inspired */}
-      <div className="border-t border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900">
+      <div className="border-t border-gray-200 dark:border-slate-700 bg-[#efefec] dark:bg-slate-900">
         <div className="max-w-3xl mx-auto px-4 py-4">
           <form onSubmit={handleSubmit} className="relative">
             <div className="flex items-end gap-2 bg-gray-50 dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 focus-within:border-islamic-primary-green focus-within:ring-1 focus-within:ring-islamic-primary-green/20 transition-all">

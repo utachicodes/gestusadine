@@ -12,9 +12,12 @@ export default function EventsPage() {
     const { t } = useLanguage();
     const [events, setEvents] = useState<Event[]>([]);
     const [loading, setLoading] = useState(true);
+    const [registering, setRegistering] = useState<Record<string, boolean>>({});
+    const [registeredEvents, setRegisteredEvents] = useState<Set<string>>(new Set());
 
     useEffect(() => {
         loadEvents();
+        loadRegistrations();
     }, []);
 
     const loadEvents = async () => {
@@ -37,13 +40,30 @@ export default function EventsPage() {
         })();
     };
 
+    const loadRegistrations = async () => {
+        try {
+            const registrations = await EcosystemService.getMyRegistrations();
+            const eventIds = new Set(registrations.map((r: any) => r.event_id || r.id));
+            setRegisteredEvents(eventIds);
+        } catch (error) {
+            // Silently fail
+        }
+    };
+
     const handleRegister = async (eventId: string) => {
+        if (registering[eventId] || registeredEvents.has(eventId)) return;
+        
+        setRegistering(prev => ({ ...prev, [eventId]: true }));
+        
         try {
             await EcosystemService.registerForEvent(eventId);
-            toast.success("Successfully registered for event!");
+            setRegisteredEvents(prev => new Set([...prev, eventId]));
+            toast.success(t('events.registered') || "Successfully registered for event!");
         } catch (error: unknown) {
-            const message = error instanceof Error ? error.message : "Registration failed";
+            const message = error instanceof Error ? error.message : t('error.registration_failed');
             toast.error(message);
+        } finally {
+            setRegistering(prev => ({ ...prev, [eventId]: false }));
         }
     };
 
@@ -52,14 +72,14 @@ export default function EventsPage() {
             <section className="container py-10 md:py-16 space-y-10">
                 <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                     <div>
-                        <p className="inline-flex items-center text-xs uppercase tracking-[0.22em] text-islamic-dark/60 mb-2">
+                        <p className="inline-flex items-center text-xs uppercase tracking-[0.22em] text-islamic-dark/60 dark:text-slate-400 mb-2">
                             <span className="w-1.5 h-1.5 rounded-full bg-islamic-gold mr-2" />
                             {t('events.title')}
                         </p>
-                        <h1 className="text-3xl md:text-4xl font-bold text-islamic-dark">
+                        <h1 className="text-3xl md:text-4xl font-bold text-islamic-dark dark:text-slate-100">
                             {t('events.subtitle')}
                         </h1>
-                        <p className="mt-2 text-islamic-dark/70 max-w-xl">
+                        <p className="mt-2 text-islamic-dark/70 dark:text-slate-300 max-w-xl">
                             {t('events.intro')}
                         </p>
                     </div>
@@ -88,7 +108,7 @@ export default function EventsPage() {
 
                                 <div className="space-y-2 text-sm">
                                     <div className="flex items-center gap-2 text-islamic-dark/70">
-                                        <MapPin size={16} className="text-islamic-green" />
+                                        <MapPin size={16} className="text-islamic-green-600" />
                                         <span>{event.location_name || 'Online'}</span>
                                     </div>
                                     {event.max_attendees && (
@@ -100,8 +120,18 @@ export default function EventsPage() {
                                 </div>
                             </div>
                             <div className="p-6 pt-0">
-                                <Button className="w-full btn-islamic" onClick={() => handleRegister(event.id)}>
-                                    <Calendar className="mr-2 h-4 w-4" /> {t('events.register')}
+                                <Button 
+                                    className="w-full btn-islamic" 
+                                    onClick={() => handleRegister(event.id)}
+                                    disabled={registering[event.id] || registeredEvents.has(event.id)}
+                                >
+                                    <Calendar className="mr-2 h-4 w-4" /> 
+                                    {registering[event.id] 
+                                        ? (t('login.processing') || 'Processing...')
+                                        : registeredEvents.has(event.id)
+                                        ? t('events.registered')
+                                        : t('events.register')
+                                    }
                                 </Button>
                             </div>
                         </div>

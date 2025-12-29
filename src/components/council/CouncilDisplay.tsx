@@ -89,7 +89,7 @@ export const ConsensusScoreDisplay: React.FC<ConsensusScoreDisplayProps> = ({ sc
     };
 
     return (
-        <Card className="border-islamic-gold/30 bg-gradient-to-br from-islamic-cream/50 to-white">
+        <Card className="border-islamic-gold/30 bg-gradient-to-br from-islamic-cream/50 to-[#efefec]">
             <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-islamic-dark">
                     <TrendingUp className="w-5 h-5" />
@@ -185,7 +185,7 @@ export const CouncilQueryForm: React.FC<CouncilQueryFormProps> = ({ onSubmit, is
                     onChange={e => setQuery(e.target.value)}
                     placeholder="Ask a complex question and let the Council analyze it from multiple perspectives..."
                     disabled={isLoading}
-                    className="w-full p-4 border border-islamic-gold/30 rounded-lg bg-white text-islamic-dark placeholder-islamic-dark/50 focus:outline-none focus:border-islamic-gold focus:ring-2 focus:ring-islamic-gold/20 disabled:opacity-50 disabled:cursor-not-allowed resize-none"
+                    className="w-full p-4 border border-islamic-gold/30 rounded-lg bg-[#efefec] text-islamic-dark placeholder-islamic-dark/50 focus:outline-none focus:border-islamic-gold focus:ring-2 focus:ring-islamic-gold/20 disabled:opacity-50 disabled:cursor-not-allowed resize-none"
                     rows={4}
                 />
             </div>
@@ -248,7 +248,7 @@ export const DocumentUploadForm: React.FC<DocumentUploadFormProps> = ({ onSubmit
                     onChange={e => setFormData({ ...formData, title: e.target.value, docId: e.target.value.toLowerCase().replace(/\s+/g, '-') })}
                     placeholder="Document title"
                     disabled={isLoading}
-                    className="w-full px-4 py-2 border border-islamic-gold/30 rounded-lg bg-white text-islamic-dark placeholder-islamic-dark/50 focus:outline-none focus:border-islamic-gold disabled:opacity-50"
+                    className="w-full px-4 py-2 border border-islamic-gold/30 rounded-lg bg-[#efefec] text-islamic-dark placeholder-islamic-dark/50 focus:outline-none focus:border-islamic-gold disabled:opacity-50"
                 />
             </div>
             <div>
@@ -259,7 +259,7 @@ export const DocumentUploadForm: React.FC<DocumentUploadFormProps> = ({ onSubmit
                     onChange={e => setFormData({ ...formData, source: e.target.value })}
                     placeholder="Document source (e.g., Islamic Text, Legal Document)"
                     disabled={isLoading}
-                    className="w-full px-4 py-2 border border-islamic-gold/30 rounded-lg bg-white text-islamic-dark placeholder-islamic-dark/50 focus:outline-none focus:border-islamic-gold disabled:opacity-50"
+                    className="w-full px-4 py-2 border border-islamic-gold/30 rounded-lg bg-[#efefec] text-islamic-dark placeholder-islamic-dark/50 focus:outline-none focus:border-islamic-gold disabled:opacity-50"
                 />
             </div>
             <div>
@@ -268,14 +268,13 @@ export const DocumentUploadForm: React.FC<DocumentUploadFormProps> = ({ onSubmit
                     value={formData.category}
                     onChange={e => setFormData({ ...formData, category: e.target.value })}
                     disabled={isLoading}
-                    className="w-full px-4 py-2 border border-islamic-gold/30 rounded-lg bg-white text-islamic-dark focus:outline-none focus:border-islamic-gold disabled:opacity-50"
+                    className="w-full px-4 py-2 border border-islamic-gold/30 rounded-lg bg-[#efefec] text-islamic-dark focus:outline-none focus:border-islamic-gold disabled:opacity-50"
                 >
-                    <option value="general">General</option>
-                    <option value="islamic">Islamic</option>
-                    <option value="fiqh">Fiqh</option>
-                    <option value="quran">Quran</option>
-                    <option value="hadith">Hadith</option>
-                    <option value="legal">Legal</option>
+                    <option value="general">General (All Agents)</option>
+                    <option value="agent-fiqh">Fiqh Reasoning Agent</option>
+                    <option value="agent-aqeedah">Aqeedah Boundary Agent</option>
+                    <option value="agent-humility">Humility & Abstention Agent</option>
+                    <option value="agent-context">Contemporary Context Agent</option>
                 </select>
             </div>
             <div>
@@ -285,7 +284,7 @@ export const DocumentUploadForm: React.FC<DocumentUploadFormProps> = ({ onSubmit
                     onChange={e => setFormData({ ...formData, content: e.target.value })}
                     placeholder="Paste document content here"
                     disabled={isLoading}
-                    className="w-full p-4 border border-islamic-gold/30 rounded-lg bg-white text-islamic-dark placeholder-islamic-dark/50 focus:outline-none focus:border-islamic-gold disabled:opacity-50 resize-none"
+                    className="w-full p-4 border border-islamic-gold/30 rounded-lg bg-[#efefec] text-islamic-dark placeholder-islamic-dark/50 focus:outline-none focus:border-islamic-gold disabled:opacity-50 resize-none"
                     rows={6}
                 />
             </div>

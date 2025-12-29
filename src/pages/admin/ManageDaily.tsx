@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BookOpen, Plus, Edit, Trash2, Sparkles, HelpCircle } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { toast } from 'sonner';
+import { supabase } from '@/lib/supabase';
 import { apiFetch } from '@/lib/api';
 
 interface DailyAyah {
@@ -89,64 +90,108 @@ export default function ManageDaily() {
   const loadData = async () => {
     setLoading(true);
     try {
-      // For now, use mock data. Later, replace with actual API calls
-      setAyahs([
-        {
-          id: '1',
-          reference: 'Al-Baqarah 2:286',
-          arabic: 'لَا يُكَلِّفُ ٱللَّهُ نَفْسًا إِلَّا وُسْعَهَا',
-          translation_en: 'Allah does not burden a soul beyond what it can bear.',
-          translation_fr: "Allah n'impose à aucune âme une charge supérieure à sa capacité.",
-          translation_wo: 'Yàlla du jël ci koro jigeen walla góor lu gën sàmm ndigalu moom.',
-        },
-      ]);
-      setDuas([
-        {
-          id: '1',
-          arabic: 'رَبِّ زِدْنِي عِلْمًا',
-          translation_en: 'My Lord, increase me in knowledge.',
-          translation_fr: 'Seigneur, augmente-moi en science.',
-          translation_wo: 'Ya Rabb, yokkal ma xam-xam.',
-        },
-      ]);
-      setFacts([
-        {
-          id: '1',
-          fact_en: 'The five daily prayers were made obligatory during the Night Journey (al-Isrāʾ wal-Miʿrāj).',
-          fact_fr: 'Les cinq prières obligatoires rythment la journée du musulman, de l\'aube à la nuit.',
-          fact_wo: 'Njulli juroom-ñaari waxtuñ bi lay setlu bésu musulmaan.',
-        },
-      ]);
-      setQuizzes([
-        {
-          id: '1',
-          language: 'en',
-          difficulty: 'easy',
-          question: 'How many daily obligatory prayers are there in Islam?',
-          options: ['Three', 'Five', 'Seven'],
-          correct: 'Five',
-          hint: 'Think of Fajr, Dhuhr, ʿAsr, Maghrib, ʿIshāʾ.',
-        },
-      ]);
-    } catch (error) {
+      const today = new Date().toISOString().split('T')[0];
+      
+      // Load today's content or most recent
+      const { data: content, error } = await supabase
+        .from('daily_content')
+        .select('*')
+        .order('date', { ascending: false })
+        .limit(100);
+
+      if (error) throw error;
+
+      // Separate by content type
+      const ayahsData = (content || [])
+        .filter(c => c.content_type === 'ayah')
+        .map(c => ({
+          id: c.id,
+          reference: c.reference || '',
+          arabic: c.arabic || '',
+          translation_en: c.translation_en || '',
+          translation_fr: c.translation_fr || '',
+          translation_wo: c.translation_wo || '',
+        }));
+
+      const duasData = (content || [])
+        .filter(c => c.content_type === 'dua')
+        .map(c => ({
+          id: c.id,
+          arabic: c.arabic || '',
+          translation_en: c.translation_en || '',
+          translation_fr: c.translation_fr || '',
+          translation_wo: c.translation_wo || '',
+        }));
+
+      const factsData = (content || [])
+        .filter(c => c.content_type === 'fact')
+        .map(c => ({
+          id: c.id,
+          fact_en: c.fact_en || '',
+          fact_fr: c.fact_fr || '',
+          fact_wo: c.fact_wo || '',
+        }));
+
+      const quizzesData = (content || [])
+        .filter(c => c.content_type === 'quiz')
+        .map(c => ({
+          id: c.id,
+          language: c.language || 'en',
+          difficulty: c.difficulty || 'easy',
+          question: c.question || '',
+          options: Array.isArray(c.options) ? c.options : [],
+          correct: c.correct || '',
+          hint: c.hint || '',
+        }));
+
+      setAyahs(ayahsData);
+      setDuas(duasData);
+      setFacts(factsData);
+      setQuizzes(quizzesData);
+    } catch (error: any) {
+      console.error('Failed to load daily content:', error);
       toast.error('Failed to load daily content');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleAyahSubmit = (e: React.FormEvent) => {
+  const handleAyahSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (editingId) {
-      setAyahs(ayahs.map(a => a.id === editingId ? { ...ayahForm, id: editingId } : a));
-      toast.success('Ayah updated successfully');
-    } else {
-      setAyahs([...ayahs, { ...ayahForm, id: Date.now().toString() }]);
-      toast.success('Ayah added successfully');
+    try {
+      const today = new Date().toISOString().split('T')[0];
+      const contentData = {
+        content_type: 'ayah',
+        date: today,
+        reference: ayahForm.reference,
+        arabic: ayahForm.arabic,
+        translation_en: ayahForm.translation_en,
+        translation_fr: ayahForm.translation_fr,
+        translation_wo: ayahForm.translation_wo,
+      };
+
+      if (editingId) {
+        const { error } = await supabase
+          .from('daily_content')
+          .update(contentData)
+          .eq('id', editingId);
+        if (error) throw error;
+        toast.success('Ayah updated successfully');
+      } else {
+        const { error } = await supabase
+          .from('daily_content')
+          .insert([contentData]);
+        if (error) throw error;
+        toast.success('Ayah added successfully');
+      }
+      await loadData();
+      setIsCreating(false);
+      setEditingId(null);
+      setAyahForm({ reference: '', arabic: '', translation_en: '', translation_fr: '', translation_wo: '' });
+    } catch (error: any) {
+      console.error('Failed to save ayah:', error);
+      toast.error(error.message || 'Failed to save ayah');
     }
-    setIsCreating(false);
-    setEditingId(null);
-    setAyahForm({ reference: '', arabic: '', translation_en: '', translation_fr: '', translation_wo: '' });
   };
 
   const handleDuaSubmit = (e: React.FormEvent) => {
@@ -177,27 +222,60 @@ export default function ManageDaily() {
     setFactForm({ fact_en: '', fact_fr: '', fact_wo: '' });
   };
 
-  const handleQuizSubmit = (e: React.FormEvent) => {
+  const handleQuizSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (editingId) {
-      setQuizzes(quizzes.map(q => q.id === editingId ? { ...quizForm, id: editingId } : q));
-      toast.success('Quiz updated successfully');
-    } else {
-      setQuizzes([...quizzes, { ...quizForm, id: Date.now().toString() }]);
-      toast.success('Quiz added successfully');
+    try {
+      const today = new Date().toISOString().split('T')[0];
+      const contentData = {
+        content_type: 'quiz',
+        date: today,
+        language: quizForm.language,
+        difficulty: quizForm.difficulty,
+        question: quizForm.question,
+        options: quizForm.options,
+        correct: quizForm.correct,
+        hint: quizForm.hint,
+      };
+
+      if (editingId) {
+        const { error } = await supabase
+          .from('daily_content')
+          .update(contentData)
+          .eq('id', editingId);
+        if (error) throw error;
+        toast.success('Quiz updated successfully');
+      } else {
+        const { error } = await supabase
+          .from('daily_content')
+          .insert([contentData]);
+        if (error) throw error;
+        toast.success('Quiz added successfully');
+      }
+      await loadData();
+      setIsCreating(false);
+      setEditingId(null);
+      setQuizForm({ language: 'en', difficulty: 'easy', question: '', options: ['', '', ''], correct: '', hint: '' });
+    } catch (error: any) {
+      console.error('Failed to save quiz:', error);
+      toast.error(error.message || 'Failed to save quiz');
     }
-    setIsCreating(false);
-    setEditingId(null);
-    setQuizForm({ language: 'en', difficulty: 'easy', question: '', options: ['', '', ''], correct: '', hint: '' });
   };
 
-  const handleDelete = (type: 'ayah' | 'dua' | 'fact' | 'quiz', id: string) => {
-    if (confirm('Are you sure you want to delete this item?')) {
-      if (type === 'ayah') setAyahs(ayahs.filter(a => a.id !== id));
-      if (type === 'dua') setDuas(duas.filter(d => d.id !== id));
-      if (type === 'fact') setFacts(facts.filter(f => f.id !== id));
-      if (type === 'quiz') setQuizzes(quizzes.filter(q => q.id !== id));
+  const handleDelete = async (type: 'ayah' | 'dua' | 'fact' | 'quiz', id: string) => {
+    if (!confirm('Are you sure you want to delete this item?')) return;
+    
+    try {
+      const { error } = await supabase
+        .from('daily_content')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+      await loadData();
       toast.success('Item deleted successfully');
+    } catch (error: any) {
+      console.error('Failed to delete item:', error);
+      toast.error('Failed to delete item');
     }
   };
 
@@ -256,7 +334,7 @@ export default function ManageDaily() {
                 }}
                 className={`flex items-center gap-2 px-6 py-3 border-b-2 transition-colors ${
                   activeTab === tab.id
-                    ? 'border-islamic-green text-islamic-green font-semibold'
+                    ? 'border-islamic-green-600 text-islamic-green-600 font-semibold'
                     : 'border-transparent text-islamic-dark/60 hover:text-islamic-dark'
                 }`}
               >
@@ -269,7 +347,7 @@ export default function ManageDaily() {
 
         {/* Form */}
         {isCreating && (
-          <Card className="bg-white/90 backdrop-blur-sm border border-islamic-gold/30">
+          <Card className="bg-[#efefec]/90 backdrop-blur-sm border border-islamic-gold/30">
             <CardHeader>
               <CardTitle>
                 {editingId ? 'Edit' : 'Add New'} {tabs.find(t => t.id === activeTab)?.label}
@@ -488,7 +566,7 @@ export default function ManageDaily() {
         {/* List */}
         <div className="space-y-4">
           {activeTab === 'ayah' && ayahs.map(ayah => (
-            <Card key={ayah.id} className="bg-white/90 backdrop-blur-sm">
+            <Card key={ayah.id} className="bg-[#efefec]/90 backdrop-blur-sm">
               <CardContent className="p-6">
                 <div className="flex justify-between items-start">
                   <div className="flex-1">
@@ -510,7 +588,7 @@ export default function ManageDaily() {
           ))}
 
           {activeTab === 'dua' && duas.map(dua => (
-            <Card key={dua.id} className="bg-white/90 backdrop-blur-sm">
+            <Card key={dua.id} className="bg-[#efefec]/90 backdrop-blur-sm">
               <CardContent className="p-6">
                 <div className="flex justify-between items-start">
                   <div className="flex-1">
@@ -531,7 +609,7 @@ export default function ManageDaily() {
           ))}
 
           {activeTab === 'fact' && facts.map(fact => (
-            <Card key={fact.id} className="bg-white/90 backdrop-blur-sm">
+            <Card key={fact.id} className="bg-[#efefec]/90 backdrop-blur-sm">
               <CardContent className="p-6">
                 <div className="flex justify-between items-start">
                   <div className="flex-1">
@@ -551,12 +629,12 @@ export default function ManageDaily() {
           ))}
 
           {activeTab === 'quiz' && quizzes.map(quiz => (
-            <Card key={quiz.id} className="bg-white/90 backdrop-blur-sm">
+            <Card key={quiz.id} className="bg-[#efefec]/90 backdrop-blur-sm">
               <CardContent className="p-6">
                 <div className="flex justify-between items-start">
                   <div className="flex-1">
                     <div className="flex gap-2 mb-2">
-                      <span className="text-xs px-2 py-1 bg-islamic-green/10 text-islamic-green rounded">{quiz.language}</span>
+                      <span className="text-xs px-2 py-1 bg-islamic-green/10 text-islamic-green-600 rounded">{quiz.language}</span>
                       <span className="text-xs px-2 py-1 bg-islamic-gold/10 text-islamic-gold rounded">{quiz.difficulty}</span>
                     </div>
                     <h3 className="font-semibold text-islamic-dark mb-2">{quiz.question}</h3>

@@ -26,21 +26,21 @@ export default {
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
 				islamic: {
-					// Rich, sophisticated emerald greens
+					// Light blue color scheme
 					green: {
-						DEFAULT: '#047857', // emerald-700
-						light: '#10b981', // emerald-500
-						dark: '#064e3b', // emerald-900
-						50: '#ecfdf5',
-						100: '#d1fae5',
-						200: '#a7f3d0',
-						300: '#6ee7b7',
-						400: '#34d399',
-						500: '#10b981',
-						600: '#059669',
-						700: '#047857',
-						800: '#065f46',
-						900: '#064e3b',
+						DEFAULT: '#e0e8f3', // light blue base
+						light: '#c5d4e8', // slightly darker
+						dark: '#8fa3c4', // darker for contrast
+						50: '#f0f4f9',
+						100: '#e0e8f3',
+						200: '#c5d4e8',
+						300: '#a8bdd9',
+						400: '#8fa3c4',
+						500: '#7689af',
+						600: '#5d6f9a',
+						700: '#4a5a7d',
+						800: '#3a4660',
+						900: '#2a3343',
 					},
 					// Vibrant teal accents
 					teal: {
@@ -74,21 +74,21 @@ export default {
 						800: '#1e40af',
 						900: '#1e3a8a',
 					},
-					// Luxurious gold
+					// Black color scheme
 					gold: {
-						DEFAULT: '#c8a24a',
-						light: '#e0c36a',
-						dark: '#8c6a1f',
-						50: '#fbf7e6',
-						100: '#f5edc8',
-						200: '#eadc92',
-						300: '#dec55f',
-						400: '#d4b24b',
-						500: '#c8a24a',
-						600: '#b58b3c',
-						700: '#9a6f2f',
-						800: '#7a5425',
-						900: '#5f3f1c',
+						DEFAULT: '#000000',
+						light: '#404040',
+						dark: '#000000',
+						50: '#f5f5f5',
+						100: '#e5e5e5',
+						200: '#cccccc',
+						300: '#999999',
+						400: '#666666',
+						500: '#404040',
+						600: '#333333',
+						700: '#1a1a1a',
+						800: '#0d0d0d',
+						900: '#000000',
 					},
 					// Soft neutral cream
 					cream: {
@@ -106,6 +106,22 @@ export default {
 					light: {
 						DEFAULT: '#f8fafc', // slate-50
 						dark: '#f1f5f9', // slate-100
+					},
+					// Custom off-white
+					'off-white': {
+						DEFAULT: '#efefec',
+					},
+					// Primary green (now light blue)
+					'primary-green': {
+						DEFAULT: '#8fa3c4', // darker shade for contrast
+						light: '#e0e8f3', // base light blue
+						dark: '#5d6f9a', // darker for text
+					},
+					// Primary gold (now black)
+					'primary-gold': {
+						DEFAULT: '#000000',
+						light: '#404040',
+						dark: '#000000',
 					}
 				},
 				primary: {
@@ -270,11 +286,11 @@ export default {
 			},
 			backgroundImage: {
 				'islamic-pattern': "url('/pattern.svg')",
-				'hero-gradient': 'linear-gradient(135deg, #047857 0%, #0d9488 50%, #1e40af 100%)',
-				'hero-gradient-alt': 'linear-gradient(to bottom right, rgba(4, 120, 87, 0.95), rgba(13, 148, 136, 0.9), rgba(30, 64, 175, 0.95))',
-				'card-gradient': 'linear-gradient(135deg, #10b981 0%, #14b8a6 100%)',
-				'gold-gradient': 'linear-gradient(90deg, #c8a24a 0%, #e0c36a 50%, #c8a24a 100%)',
-				'mesh-gradient': 'radial-gradient(at 40% 20%, rgba(4, 120, 87, 0.3) 0px, transparent 50%), radial-gradient(at 80% 0%, rgba(13, 148, 136, 0.3) 0px, transparent 50%), radial-gradient(at 0% 50%, rgba(30, 64, 175, 0.3) 0px, transparent 50%), radial-gradient(at 80% 50%, rgba(200, 162, 74, 0.22) 0px, transparent 50%), radial-gradient(at 0% 100%, rgba(4, 120, 87, 0.2) 0px, transparent 50%)',
+				'hero-gradient': 'linear-gradient(135deg, #8fa3c4 0%, #7689af 50%, #1e40af 100%)',
+				'hero-gradient-alt': 'linear-gradient(to bottom right, rgba(224, 232, 243, 0.95), rgba(143, 163, 196, 0.9), rgba(30, 64, 175, 0.95))',
+				'card-gradient': 'linear-gradient(135deg, #8fa3c4 0%, #7689af 100%)',
+				'gold-gradient': 'linear-gradient(90deg, #000000 0%, #404040 50%, #000000 100%)',
+				'mesh-gradient': 'radial-gradient(at 40% 20%, rgba(224, 232, 243, 0.3) 0px, transparent 50%), radial-gradient(at 80% 0%, rgba(143, 163, 196, 0.3) 0px, transparent 50%), radial-gradient(at 0% 50%, rgba(30, 64, 175, 0.3) 0px, transparent 50%), radial-gradient(at 80% 50%, rgba(200, 162, 74, 0.22) 0px, transparent 50%), radial-gradient(at 0% 100%, rgba(224, 232, 243, 0.2) 0px, transparent 50%)',
 				'shimmer-gradient': 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent)'
 			}
 		}

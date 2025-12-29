@@ -18,7 +18,7 @@ const LanguageToggle: React.FC<LanguageToggleProps> = ({ value, onChange }) => {
   const items: LanguageCode[] = ["wo", "fr", "en"];
 
   return (
-    <div className="inline-flex items-center rounded-full bg-white/70 backdrop-blur-md border border-sand-300/70 px-1 py-1 shadow-card">
+    <div className="inline-flex items-center rounded-full bg-[#efefec]/70 backdrop-blur-md border border-sand-300/70 px-1 py-1 shadow-card">
       <LayoutGroup>
         {items.map((code) => {
           const selected = code === value;

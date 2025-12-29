@@ -22,7 +22,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   return (
     <div
       className={cn(
-        "bg-white/80 backdrop-blur-sm border border-islamic-gold/30 rounded-lg px-6 py-10 text-center",
+        "bg-[#efefec]/80 backdrop-blur-sm border border-islamic-gold/30 rounded-lg px-6 py-10 text-center",
         className
       )}
     >

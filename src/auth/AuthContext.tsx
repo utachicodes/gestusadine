@@ -22,6 +22,7 @@ type AuthState = {
   signInWithPassword: (params: { email: string; password: string }) => Promise<void>;
   signUp: (params: { email: string; password: string; fullName: string }) => Promise<{ error: AuthError | null }>;
   signOut: () => Promise<void>;
+  refreshProfile: () => Promise<void>;
 };
 
 const AuthContext = React.createContext<AuthState | undefined>(undefined);
@@ -45,14 +46,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [profile, setProfile] = React.useState<UserProfile | null>(null);
   const [loading, setLoading] = React.useState(true);
 
-  // Fetch user profile from database
+  // Fetch user profile from database with timeout
   const fetchUserProfile = React.useCallback(async (userId: string) => {
     try {
-      const { data, error } = await supabase
+      // Add timeout to prevent hanging
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Profile fetch timeout')), 3000)
+      );
+      
+      const fetchPromise = supabase
         .from('profiles')
         .select('*')
         .eq('id', userId)
         .single();
+
+      const { data, error } = await Promise.race([fetchPromise, timeoutPromise]) as any;
 
       if (error) throw error;
       return data as UserProfile;
@@ -70,14 +78,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setSession(session);
     
     if (session?.user) {
-      try {
-        const userProfile = await fetchUserProfile(session.user.id);
-        setProfile(userProfile);
-      } catch (error) {
-        console.error('Error fetching profile in auth state change:', error);
-        // Continue even if profile fetch fails
-        setProfile(null);
-      }
+      // Fetch profile immediately - important for admin checks
+      fetchUserProfile(session.user.id)
+        .then((userProfile) => {
+          setProfile(userProfile);
+        })
+        .catch((error) => {
+          if (import.meta.env.DEV) {
+            console.error('Error fetching profile in auth state change:', error);
+          }
+          // Continue even if profile fetch fails
+          setProfile(null);
+        });
     } else {
       setProfile(null);
     }
@@ -100,15 +112,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
         
         if (session) {
-          try {
-            const userProfile = await fetchUserProfile(session.user.id);
-            if (mounted) {
-              setProfile(userProfile);
-            }
-          } catch (error) {
-            console.error('Error fetching profile:', error);
-            // Continue even if profile fetch fails
-          }
+          // Fetch profile in background without blocking
+          fetchUserProfile(session.user.id)
+            .then((userProfile) => {
+              if (mounted) {
+                setProfile(userProfile);
+              }
+            })
+            .catch((error) => {
+              if (import.meta.env.DEV) {
+                console.error('Error fetching profile:', error);
+              }
+              // Continue even if profile fetch fails
+            });
         }
         
         if (mounted) {
@@ -194,15 +210,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const signOut = React.useCallback(async () => {
-    setLoading(true);
-    try {
-      const { error } = await supabase.auth.signOut();
-      if (error) throw error;
-      setProfile(null);
-    } finally {
-      setLoading(false);
-    }
+    // Clear state immediately for instant UI feedback
+    setProfile(null);
+    setSession(null);
+    setLoading(false);
+    
+    // Sign out in background without blocking
+    supabase.auth.signOut().catch((error) => {
+      if (import.meta.env.DEV) {
+        console.error('Sign out error:', error);
+      }
+      // Continue even if sign out fails - state is already cleared
+    });
   }, []);
+
+  const refreshProfile = React.useCallback(async () => {
+    if (session?.user) {
+      try {
+        const userProfile = await fetchUserProfile(session.user.id);
+        setProfile(userProfile);
+      } catch (error) {
+        if (import.meta.env.DEV) {
+          console.error('Error refreshing profile:', error);
+        }
+      }
+    }
+  }, [session, fetchUserProfile]);
 
   const isAdmin = React.useMemo(() => {
     return getUserRole(session?.user ?? null, profile) === 'admin';
@@ -218,8 +251,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       signInWithPassword,
       signUp,
       signOut,
+      refreshProfile,
     }),
-    [session, profile, isAdmin, loading, signInWithPassword, signUp, signOut]
+    [session, profile, isAdmin, loading, signInWithPassword, signUp, signOut, refreshProfile]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

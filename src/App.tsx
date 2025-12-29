@@ -32,6 +32,7 @@ import ManageProducts from "./pages/admin/ManageProducts";
 import ManageDaily from "./pages/admin/ManageDaily";
 import Library from "./pages/Library";
 import ManageLibrary from "./pages/admin/ManageLibrary";
+import RAGTest from "./pages/admin/RAGTest";
 
 const queryClient = new QueryClient();
 
@@ -212,6 +213,16 @@ const App = () => (
                     <ProtectedRoute adminOnly>
                       <DashboardLayout>
                         <ManageLibrary />
+                      </DashboardLayout>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/rag-test"
+                  element={
+                    <ProtectedRoute adminOnly>
+                      <DashboardLayout>
+                        <RAGTest />
                       </DashboardLayout>
                     </ProtectedRoute>
                   }

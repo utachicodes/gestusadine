@@ -1,6 +1,6 @@
 import fs from 'fs/promises';
 import path from 'path';
-import { openRouterClient } from '../llm-service/openrouter-client.ts';
+import { freeEmbeddingService } from '../embedding-service.ts';
 import { logger } from '../../shared/logger.ts';
 import { createClient } from '@supabase/supabase-js';
 
@@ -273,6 +273,9 @@ export class RAGService {
     async init() {
         await this.vectorStore.init();
         await this.documentManager.init();
+        // Initialize free embedding service
+        await freeEmbeddingService.initialize();
+        logger.info('[RAG] Using free embedding service:', freeEmbeddingService.getModelInfo());
     }
 
     /**
@@ -310,7 +313,7 @@ export class RAGService {
 
         for (let i = 0; i < chunks.length; i++) {
             try {
-                const embedding = await openRouterClient.getEmbedding(chunks[i]);
+                const embedding = await freeEmbeddingService.getEmbedding(chunks[i]);
                 entries.push({
                     id: `${docId}_${i}`,
                     docId,
@@ -348,10 +351,10 @@ export class RAGService {
     /**
      * Search for relevant context using semantic similarity
      */
-    async search(query: string, topK: number = 5): Promise<RAGResult> {
+    async search(query: string, topK: number = 5, category?: string): Promise<RAGResult> {
         try {
-            // Get embedding for query
-            const queryEmbedding = await openRouterClient.getEmbedding(query);
+            // Get embedding for query (using free embedding service)
+            const queryEmbedding = await freeEmbeddingService.getEmbedding(query);
 
             // Search vector store
             const results = await this.vectorStore.search(queryEmbedding, topK);
@@ -364,14 +367,29 @@ export class RAGService {
                 };
             }
 
-            // Build context from top results
-            const contextParts = results.map(r => `[${r.entry.metadata.title}]\n${r.entry.text}`);
+            // Filter results by category if provided
+            let filteredResults = results;
+            if (category && category !== 'general') {
+                filteredResults = results.filter(r => r.entry.metadata.category === category);
+                // If filtering removed all results, return empty (strict isolation)
+                // Or fallback? User wants strict isolation ("IT'S ALL OF THEM").
+                if (filteredResults.length === 0) {
+                    return {
+                        context: '',
+                        sources: [],
+                        relevanceScore: 0
+                    };
+                }
+            }
+
+            // Build context from top filtered results
+            const contextParts = filteredResults.map(r => `[${r.entry.metadata.title}]\n${r.entry.text}`);
             const context = contextParts.join('\n\n---\n\n');
 
             // Extract unique sources
             const sourcesSet = new Set<string>();
             const sources: Array<{ title: string; source: string }> = [];
-            for (const result of results) {
+            for (const result of filteredResults) {
                 const key = `${result.entry.metadata.title}|${result.entry.metadata.source}`;
                 if (!sourcesSet.has(key)) {
                     sourcesSet.add(key);
@@ -384,7 +402,7 @@ export class RAGService {
 
             // Average relevance score
             const relevanceScore =
-                results.reduce((sum, r) => sum + Math.max(0, r.score), 0) / results.length;
+                filteredResults.reduce((sum, r) => sum + Math.max(0, r.score), 0) / filteredResults.length;
 
             return {
                 context,

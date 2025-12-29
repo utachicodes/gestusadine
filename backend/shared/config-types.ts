@@ -10,8 +10,12 @@ export interface LLMConfig {
 export interface AgentConfig {
     agentId: string;
     agentName: string;
+    modelId?: string; // OpenRouter model ID
+    systemPrompt?: string; // Custom system prompt
+    temperature?: number; // LLM temperature setting
     llmConfig: LLMConfig;
     enabled: boolean;
+    knowledgeBase?: string;
 }
 
 export interface SystemConfig {

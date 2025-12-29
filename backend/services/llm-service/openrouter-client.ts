@@ -33,39 +33,39 @@ export interface ModelConfig {
     costPer1kCompletion: number;
 }
 
-// Available models on OpenRouter for the Council
+// Available models on OpenRouter for the Council (Free Tier)
 export const COUNCIL_MODELS: Record<string, ModelConfig> = {
-    'claude-opus': {
-        id: 'anthropic/claude-3-opus',
-        displayName: 'Claude 3 Opus',
-        provider: 'Anthropic',
-        contextWindow: 200000,
-        costPer1kPrompt: 0.015,
-        costPer1kCompletion: 0.075
-    },
-    'gpt-4o': {
-        id: 'openai/gpt-4o',
-        displayName: 'GPT-4o',
-        provider: 'OpenAI',
-        contextWindow: 128000,
-        costPer1kPrompt: 0.005,
-        costPer1kCompletion: 0.015
-    },
-    'mistral-large': {
-        id: 'mistralai/mistral-large',
-        displayName: 'Mistral Large',
-        provider: 'Mistral AI',
-        contextWindow: 32000,
-        costPer1kPrompt: 0.002,
-        costPer1kCompletion: 0.006
-    },
-    'llama-3-70b': {
-        id: 'meta-llama/llama-3-70b-instruct',
-        displayName: 'Llama 3 70B',
+    'llama-3.2-3b': {
+        id: 'meta-llama/llama-3.2-3b-instruct:free',
+        displayName: 'Llama 3.2 3B Instruct (Free)',
         provider: 'Meta',
-        contextWindow: 8000,
-        costPer1kPrompt: 0.0008,
-        costPer1kCompletion: 0.001
+        contextWindow: 8192,
+        costPer1kPrompt: 0,
+        costPer1kCompletion: 0
+    },
+    'llama-3.1-8b': {
+        id: 'meta-llama/llama-3.1-8b-instruct:free',
+        displayName: 'Llama 3.1 8B Instruct (Free)',
+        provider: 'Meta',
+        contextWindow: 131072,
+        costPer1kPrompt: 0,
+        costPer1kCompletion: 0
+    },
+    'gemma-7b': {
+        id: 'google/gemma-7b-it:free',
+        displayName: 'Gemma 7B IT (Free)',
+        provider: 'Google',
+        contextWindow: 8192,
+        costPer1kPrompt: 0,
+        costPer1kCompletion: 0
+    },
+    'phi-3-mini': {
+        id: 'microsoft/phi-3-mini-128k-instruct:free',
+        displayName: 'Phi-3 Mini 128K (Free)',
+        provider: 'Microsoft',
+        contextWindow: 128000,
+        costPer1kPrompt: 0,
+        costPer1kCompletion: 0
     }
 };
 
@@ -81,7 +81,10 @@ export class OpenRouterClient {
         this.title = title;
 
         if (!this.apiKey) {
-            console.warn('OPENROUTER_API_KEY not configured. OpenRouter calls will fail.');
+            console.error('CRITICAL: OPENROUTER_API_KEY is missing. Chat functionality will fail.');
+            // We cannot proceed without an API key even for free models
+        } else {
+            console.log('OpenRouter Client initialized with API Key');
         }
     }
 

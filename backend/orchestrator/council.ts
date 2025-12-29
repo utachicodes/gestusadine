@@ -3,66 +3,141 @@ import { llmService } from '../services/llm-service/llm.service';
 import { CouncilAgentResponse, SynthesisResult } from '../shared/types';
 import { LLMConfig } from '../shared/config-types';
 import { ragService } from '../services/rag-service/rag.service';
+import { configService } from '../services/config-service/config.service';
 
 export class CouncilOrchestrator {
     private agents: CouncilAgent[];
     private debateConfig: LLMConfig;
+    private initialized: boolean = false;
 
     constructor() {
-        // Define common model config (can be customized per agent in a real app)
-        const modelConfig: LLMConfig = {
-            provider: 'openrouter',
-            model: 'openai/gpt-4o', // Effective reasoning model
-            apiKey: process.env.OPENROUTER_API_KEY,
-            temperature: 0.7
-        };
-
-        // Initialize the Council Members
-        this.agents = [
-            new CouncilAgent(
-                'agent-logic',
-                'The Analyst (Logic)',
-                'You are The Analyst. Analyze the query using pure logic, data, and cause-and-effect reasoning. Be objective and structured.',
-                { ...modelConfig, temperature: 0.2 }
-            ),
-            new CouncilAgent(
-                'agent-creativity',
-                'The Visionary (Creativity)',
-                'You are The Visionary. Approach the problem with out-of-the-box thinking, metaphors, and future-oriented possibilities. Be inspiring.',
-                { ...modelConfig, temperature: 0.9 }
-            ),
-            new CouncilAgent(
-                'agent-ethics',
-                'The Guardian (Ethics)',
-                'You are The Guardian. Focus on the ethical implications, human impact, emotional intelligence, and moral responsibility of the answer.',
-                modelConfig
-            ),
-            new CouncilAgent(
-                'agent-critic',
-                'The Verifier (Critic)',
-                'You are The Verifier. Scrutinize facts, check for inconsistencies, and play devil\'s advocate against common assumptions. Be rigorous.',
-                { ...modelConfig, temperature: 0.5 }
-            )
-        ];
-
+        this.agents = [];
         this.debateConfig = {
             provider: 'openrouter',
-            model: 'anthropic/claude-3-opus', // High context window and nuance for synthesis
+            model: 'meta-llama/llama-3.1-8b-instruct:free',
             apiKey: process.env.OPENROUTER_API_KEY,
             temperature: 0.5
         };
+    }
+
+    /**
+     * Initialize council with agent configurations from config service
+     */
+    async initialize(): Promise<void> {
+        if (this.initialized) return;
+
+        console.log('[Council] Initializing with dynamic agent configurations...');
+
+        // Load agent configurations from config service
+        const agentConfigs = await configService.getAllAgents();
+
+        // Define the expected Fiqh agents
+        const fiqhAgentIds = ['agent-fiqh', 'agent-aqeedah', 'agent-humility', 'agent-context'];
+
+        // Create agents from configuration
+        this.agents = [];
+        for (const agentId of fiqhAgentIds) {
+            const config = agentConfigs[agentId];
+            if (config) {
+                const llmConfig: LLMConfig = {
+                    provider: 'openrouter',
+                    model: config.modelId || 'meta-llama/llama-3.2-3b-instruct:free',
+                    apiKey: process.env.OPENROUTER_API_KEY,
+                    temperature: config.temperature || 0.5
+                };
+
+                this.agents.push(new CouncilAgent(
+                    agentId,
+                    config.agentName,
+                    config.systemPrompt || this.getDefaultAgentConfig(agentId).systemPrompt,
+                    llmConfig
+                ));
+
+                console.log(`[Council] Loaded ${config.agentName} with model ${llmConfig.model}`);
+            } else {
+                console.warn(`[Council] No configuration found for ${agentId}, using defaults`);
+                // Fallback to default if not configured
+                const defaultConfig = this.getDefaultAgentConfig(agentId);
+                this.agents.push(new CouncilAgent(
+                    defaultConfig.id,
+                    defaultConfig.name,
+                    defaultConfig.systemPrompt,
+                    defaultConfig.llmConfig
+                ));
+            }
+        }
+
+        this.initialized = true;
+        console.log(`[Council] Initialized with ${this.agents.length} agents`);
+    }
+
+    /**
+     * Get default configuration for an agent (fallback)
+     */
+    private getDefaultAgentConfig(agentId: string) {
+        const defaults: Record<string, any> = {
+            'agent-fiqh': {
+                id: 'agent-fiqh',
+                name: 'Fiqh Reasoning Agent',
+                systemPrompt: 'You are the Fiqh Reasoning Agent. Analyze questions from an Islamic jurisprudence perspective, providing reasoning based on Quran, Sunnah, and scholarly consensus (Ijma).',
+                llmConfig: {
+                    provider: 'openrouter',
+                    model: 'meta-llama/llama-3.2-3b-instruct:free',
+                    apiKey: process.env.OPENROUTER_API_KEY,
+                    temperature: 0.3
+                }
+            },
+            'agent-aqeedah': {
+                id: 'agent-aqeedah',
+                name: 'Aqeedah Boundary Agent',
+                systemPrompt: 'You are the Aqeedah Boundary Agent. Ensure that responses align with orthodox Islamic creed and theology.',
+                llmConfig: {
+                    provider: 'openrouter',
+                    model: 'meta-llama/llama-3.2-3b-instruct:free',
+                    apiKey: process.env.OPENROUTER_API_KEY,
+                    temperature: 0.2
+                }
+            },
+            'agent-humility': {
+                id: 'agent-humility',
+                name: 'Humility & Abstention Agent',
+                systemPrompt: 'You are the Humility & Abstention Agent. When knowledge is uncertain, recommend abstention (tawaqquf) and humility.',
+                llmConfig: {
+                    provider: 'openrouter',
+                    model: 'meta-llama/llama-3.2-3b-instruct:free',
+                    apiKey: process.env.OPENROUTER_API_KEY,
+                    temperature: 0.4
+                }
+            },
+            'agent-context': {
+                id: 'agent-context',
+                name: 'Contemporary Context Agent',
+                systemPrompt: 'You are the Contemporary Context Agent. Provide contemporary context and real-world application of Islamic principles.',
+                llmConfig: {
+                    provider: 'openrouter',
+                    model: 'meta-llama/llama-3.2-3b-instruct:free',
+                    apiKey: process.env.OPENROUTER_API_KEY,
+                    temperature: 0.6
+                }
+            }
+        };
+
+        return defaults[agentId] || defaults['agent-fiqh'];
     }
 
     async processQuery(query: string): Promise<SynthesisResult> {
         console.log(`[Council] Convening for query: "${query}"`);
 
         // 1. Gather Context (RAG)
-        const retrievedChunks = await ragService.query(query, 5);
-        const contextSummary = retrievedChunks.length > 0
-            ? `Retrieved Context:\n${retrievedChunks.join('\n\n')}`
-            : "No specific documents found in Knowledge Base.";
+        const ragResult = await ragService.search(query, 5);
+        const contextSummary = ragResult.context || "No specific documents found in Knowledge Base.";
 
-        console.log(`[Council] Retrieved ${retrievedChunks.length} chunks of context.`);
+        console.log(`[Council] Retrieved context with relevance score: ${ragResult.relevanceScore.toFixed(2)}`);
+
+        // Ensure agents are initialized
+        if (!this.initialized) {
+            await this.initialize();
+        }
 
         // 2. Parallel Council Deliberation
         const agentPromises = this.agents.map(agent => agent.process(query, contextSummary));

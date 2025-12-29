@@ -100,12 +100,12 @@
   0%, 100% {
     transform: scale(1);
     opacity: 1;
-    box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   }
   50% {
     transform: scale(1.1);
     opacity: 0.7;
-    box-shadow: 0 0 20px rgba(245, 158, 11, 0.8);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
   }
 }
 
@@ -134,11 +134,95 @@
 }
 
 @keyframes wave {
+   0%, 100% {
+     transform: translateY(0);
+   }
+   50% {
+     transform: translateY(-10px);
+   }
+ }
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes float {
   0%, 100% {
-    transform: translateY(0);
+    transform: translateY(0) translateX(0);
+    opacity: 0.3;
   }
   50% {
-    transform: translateY(-10px);
+    transform: translateY(-20px) translateX(10px);
+    opacity: 0.8;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%) skewX(-12deg);
+  }
+  100% {
+    transform: translateX(200%) skewX(-12deg);
+  }
+}
+
+.hero-word {
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+  will-change: transform, filter;
+}
+
+.hero-word:hover {
+  z-index: 10;
+}
+
+/* Enhanced animations for hero section */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.8) rotateX(90deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotateX(0deg);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) translateX(0) scale(1);
+    opacity: 0.4;
+  }
+  33% {
+    transform: translateY(-15px) translateX(8px) scale(1.1);
+    opacity: 0.7;
+  }
+  66% {
+    transform: translateY(-25px) translateX(-5px) scale(0.9);
+    opacity: 0.6;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%) skewX(-12deg);
+  }
+  100% {
+    transform: translateX(200%) skewX(-12deg);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .hero-word {
+    font-size: 0.9em;
   }
 }
   * {
@@ -201,7 +285,7 @@
   }
 
   .dark .bg-islamic-green\/10 {
-    background-color: rgba(16, 185, 129, 0.15) !important;
+    background-color: rgba(224, 232, 243, 0.15) !important;
   }
 
   .dark .bg-islamic-blue\/5 {
@@ -209,11 +293,11 @@
   }
 
   .dark .bg-islamic-gold\/10 {
-    background-color: rgba(245, 158, 11, 0.15) !important;
+    background-color: rgba(0, 0, 0, 0.15) !important;
   }
 
   .dark .bg-islamic-gold\/5 {
-    background-color: rgba(245, 158, 11, 0.1) !important;
+    background-color: rgba(0, 0, 0, 0.1) !important;
   }
 
   .dark .bg-islamic-cream\/30 {
@@ -254,6 +338,10 @@
 
   .dark .bg-white {
     @apply bg-slate-900;
+  }
+  
+  .bg-white {
+    background-color: #efefec !important;
   }
 
   .dark .border-gray-200 {
@@ -310,16 +398,16 @@
   /* Premium Glassmorphic Card */
   .islamic-card {
     @apply relative overflow-hidden rounded-2xl transition-all duration-300;
-    background: rgba(255, 255, 255, 0.7);
+    background: rgba(239, 239, 236, 0.7);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 8px 32px 0 rgba(4, 120, 87, 0.08), 
+    border: 1px solid rgba(239, 239, 236, 0.3);
+    box-shadow: 0 8px 32px 0 rgba(224, 232, 243, 0.08), 
                 0 2px 8px 0 rgba(0, 0, 0, 0.04);
   }
   
   .islamic-card:hover {
-    box-shadow: 0 12px 48px 0 rgba(4, 120, 87, 0.12), 
+    box-shadow: 0 12px 48px 0 rgba(224, 232, 243, 0.12), 
                 0 4px 16px 0 rgba(0, 0, 0, 0.06);
     transform: translateY(-1px);
   }
@@ -373,7 +461,7 @@
   /* Gradient Text */
   .text-gradient {
     @apply bg-clip-text text-transparent;
-    background-image: linear-gradient(90deg, #10b981 0%, #14b8a6 50%, #10b981 100%);
+    background-image: linear-gradient(90deg, #8fa3c4 0%, #7689af 50%, #8fa3c4 100%);
     background-size: 200% auto;
     animation: gradient-shift 8s ease infinite;
   }
@@ -381,26 +469,26 @@
   /* Premium Search Input */
   .search-input {
     @apply w-full rounded-full py-4 px-6 text-base;
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(239, 239, 236, 0.9);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
-    border: 2px solid rgba(16, 185, 129, 0.2);
-    box-shadow: 0 4px 24px rgba(4, 120, 87, 0.08);
+    border: 2px solid rgba(224, 232, 243, 0.2);
+    box-shadow: 0 4px 24px rgba(224, 232, 243, 0.08);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
   .search-input:focus {
     outline: none;
-    border-color: #10b981;
-    box-shadow: 0 8px 32px rgba(4, 120, 87, 0.15), 
-                0 0 0 4px rgba(16, 185, 129, 0.15);
+    border-color: #8fa3c4;
+    box-shadow: 0 8px 32px rgba(224, 232, 243, 0.15), 
+                0 0 0 4px rgba(224, 232, 243, 0.15);
   }
 
   /* Premium Button - Primary */
   .btn-islamic {
     @apply px-8 py-4 font-semibold rounded-full text-white shadow-lg transition-all duration-300 transform;
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    box-shadow: 0 10px 25px rgba(4, 120, 87, 0.25), 
+    background: linear-gradient(135deg, #8fa3c4 0%, #7689af 100%);
+    box-shadow: 0 10px 25px rgba(224, 232, 243, 0.25), 
                 0 4px 12px rgba(0, 0, 0, 0.1);
     position: relative;
     overflow: hidden;
@@ -409,11 +497,11 @@
   .btn-islamic::before {
     @apply absolute inset-0 opacity-0 transition-opacity duration-300;
     content: '';
-    background: linear-gradient(135deg, #14b8a6 0%, #10b981 100%);
+    background: linear-gradient(135deg, #a8bdd9 0%, #8fa3c4 100%);
   }
   
   .btn-islamic:hover {
-    box-shadow: 0 15px 35px rgba(4, 120, 87, 0.35), 
+    box-shadow: 0 15px 35px rgba(224, 232, 243, 0.35), 
                 0 6px 16px rgba(0, 0, 0, 0.12);
   }
   
@@ -428,15 +516,15 @@
   /* Premium Button - Outlined */
   .btn-islamic-outlined {
     @apply px-8 py-3.5 font-semibold rounded-full bg-transparent transition-all duration-300;
-    color: #10b981;
-    border: 2px solid #10b981;
-    background: rgba(16, 185, 129, 0.05);
-    box-shadow: 0 4px 12px rgba(4, 120, 87, 0.1);
+    color: #8fa3c4;
+    border: 2px solid #8fa3c4;
+    background: rgba(224, 232, 243, 0.05);
+    box-shadow: 0 4px 12px rgba(224, 232, 243, 0.1);
   }
   
   .btn-islamic-outlined:hover {
-    background: rgba(16, 185, 129, 0.1);
-    box-shadow: 0 6px 20px rgba(4, 120, 87, 0.2);
+    background: rgba(224, 232, 243, 0.1);
+    box-shadow: 0 6px 20px rgba(224, 232, 243, 0.2);
     transform: translateY(-1px);
   }
   
@@ -452,7 +540,7 @@
   .topic-card::after {
     @apply absolute bottom-0 left-0 right-0 h-1 transform scale-x-0 transition-transform duration-300 origin-left;
     content: '';
-    background: linear-gradient(90deg, #10b981 0%, #14b8a6 100%);
+    background: linear-gradient(90deg, #8fa3c4 0%, #7689af 100%);
   }
   
   .topic-card:hover {
@@ -466,7 +554,7 @@
   /* Loading Animation */
   .loading-dot {
     @apply w-3 h-3 rounded-full mx-1;
-    background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+    background: linear-gradient(135deg, #000000 0%, #404040 100%);
     animation: pulse-glow 1.4s ease-in-out infinite;
   }
   
@@ -485,16 +573,16 @@
   
   /* Glow Effect */
   .glow {
-    box-shadow: 0 0 20px rgba(16, 185, 129, 0.4), 
-                0 0 40px rgba(16, 185, 129, 0.2);
+    box-shadow: 0 0 20px rgba(224, 232, 243, 0.4), 
+                0 0 40px rgba(224, 232, 243, 0.2);
   }
   
   /* Glass Panel */
   .glass-panel {
-    background: rgba(255, 255, 255, 0.8);
+    background: rgba(239, 239, 236, 0.8);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    box-shadow: 0 8px 32px 0 rgba(4, 120, 87, 0.1);
+    border: 1px solid rgba(239, 239, 236, 0.5);
+    box-shadow: 0 8px 32px 0 rgba(224, 232, 243, 0.1);
   }
 }

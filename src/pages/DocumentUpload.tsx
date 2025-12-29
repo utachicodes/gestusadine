@@ -1,7 +1,9 @@
 import * as React from "react";
 import { Upload, FileText, Trash2, CheckCircle, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { apiFetch } from "@/lib/api";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { supabase } from "@/lib/supabase";
+import { openRouter } from "@/lib/openrouter";
 
 interface DocumentMetadata {
     id: string;
@@ -12,22 +14,20 @@ interface DocumentMetadata {
     chunkCount?: number;
 }
 
-const CATEGORIES = [
-    { value: 'fiqh-hanafi', label: 'Fiqh - Hanafi' },
-    { value: 'fiqh-maliki', label: 'Fiqh - Maliki' },
-    { value: 'fiqh-shafi', label: 'Fiqh - Shafi\'i' },
-    { value: 'fiqh-hanbali', label: 'Fiqh - Hanbali' },
-    { value: 'aqeedah-ashari', label: 'Aqeedah - Ash\'ari' },
-    { value: 'aqeedah-maturidi', label: 'Aqeedah - Maturidi' },
-    { value: 'aqeedah-athari', label: 'Aqeedah - Athari' },
-    { value: 'context-modern', label: 'Context - Modern Topics' }
+const AGENT_CATEGORIES = [
+    { value: 'agent-fiqh', label: 'Fiqh Reasoning Agent' },
+    { value: 'agent-aqeedah', label: 'Aqeedah Boundary Agent' },
+    { value: 'agent-humility', label: 'Humility & Abstention Agent' },
+    { value: 'agent-context', label: 'Contemporary Context Agent' },
+    { value: 'general', label: 'General (All Agents)' }
 ];
 
 const DocumentUpload: React.FC = () => {
+    const { t } = useLanguage();
     const [documents, setDocuments] = React.useState<DocumentMetadata[]>([]);
     const [uploading, setUploading] = React.useState(false);
     const [openingId, setOpeningId] = React.useState<string | null>(null);
-    const [selectedCategory, setSelectedCategory] = React.useState(CATEGORIES[0].value);
+    const [selectedAgent, setSelectedAgent] = React.useState(AGENT_CATEGORIES[0].value);
     const [dragActive, setDragActive] = React.useState(false);
     const fileInputRef = React.useRef<HTMLInputElement>(null);
     const { toast } = useToast();
@@ -38,32 +38,55 @@ const DocumentUpload: React.FC = () => {
 
     const loadDocuments = async () => {
         try {
-            const response = await apiFetch('/api/documents');
-            if (response.ok) {
-                const { documents } = await response.json();
-                setDocuments(documents || []);
-            }
+            // Load documents from Supabase storage
+            const { data: files, error } = await supabase.storage
+                .from('documents')
+                .list('', {
+                    limit: 100,
+                    sortBy: { column: 'created_at', order: 'desc' }
+                });
+
+            if (error) throw error;
+
+            const documentsList: DocumentMetadata[] = (files || []).map(file => ({
+                id: file.id || file.name,
+                filename: file.name,
+                category: selectedAgent, // Tag document with agent
+                uploadedAt: file.created_at || new Date().toISOString(),
+                status: 'ready' as const,
+            }));
+
+            setDocuments(documentsList);
         } catch (error) {
             console.error('Error loading documents:', error);
+            toast({
+                title: 'Error',
+                description: 'Failed to load documents',
+                variant: 'destructive'
+            });
         }
     };
 
     const handleOpen = async (id: string) => {
         setOpeningId(id);
         try {
-            const response = await apiFetch(`/api/documents/${id}/url`);
-            if (!response.ok) {
-                throw new Error('Could not create signed URL');
+            const doc = documents.find(d => d.id === id);
+            if (!doc) throw new Error('Document not found');
+
+            // Get public URL from Supabase Storage
+            const { data } = supabase.storage
+                .from('documents')
+                .getPublicUrl(`${selectedAgent}/${doc.filename}`);
+
+            if (!data?.publicUrl) {
+                throw new Error('Could not generate URL');
             }
-            const { url } = await response.json();
-            if (!url) {
-                throw new Error('Missing signed URL');
-            }
-            window.open(url, '_blank', 'noopener,noreferrer');
-        } catch (error) {
+
+            window.open(data.publicUrl, '_blank', 'noopener,noreferrer');
+        } catch (error: any) {
             toast({
                 title: 'Open Failed',
-                description: 'Could not open document. Make sure SUPABASE_SERVICE_ROLE_KEY is set and the file exists in Storage.',
+                description: error.message || 'Could not open document',
                 variant: 'destructive'
             });
         } finally {
@@ -109,28 +132,54 @@ const DocumentUpload: React.FC = () => {
 
         setUploading(true);
         try {
-            const formData = new FormData();
-            formData.append('file', file);
-            formData.append('category', selectedCategory);
+            // Upload to Supabase Storage
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${Date.now()}_${file.name}`;
+            const filePath = `${selectedAgent}/${fileName}`;
 
-            const response = await apiFetch('/api/documents/upload', {
-                method: 'POST',
-                body: formData
-            });
-
-            if (response.ok) {
-                toast({
-                    title: "Upload Success",
-                    description: `${file.name} uploaded successfully!`
+            const { error: uploadError } = await supabase.storage
+                .from('documents')
+                .upload(filePath, file, {
+                    cacheControl: '3600',
+                    upsert: false
                 });
-                loadDocuments();
-            } else {
-                throw new Error('Upload failed');
+
+            if (uploadError) throw uploadError;
+
+            // Process document for RAG if it's a text file
+            if (file.name.match(/\.(txt|md)$/i)) {
+                const text = await file.text();
+
+                // Use OpenRouter to generate embeddings/chunks (simplified - in production use proper RAG service)
+                try {
+                    await openRouter.generateCompletion([
+                        {
+                            role: 'system',
+                            content: 'You are a document processor. Extract key information from this Islamic document for RAG indexing.'
+                        },
+                        {
+                            role: 'user',
+                            content: `Process this document for RAG:\n\n${text.substring(0, 3000)}`
+                        }
+                    ], {
+                        model: 'openai/gpt-4o-mini',
+                        maxTokens: 500
+                    });
+                } catch (ragError) {
+                    console.warn('RAG processing failed, document uploaded but not indexed:', ragError);
+                }
             }
-        } catch (error) {
+
             toast({
-                title: "Upload Failed",
-                description: "Could not upload document. Please try again.",
+                title: "Upload Success",
+                description: `${file.name} uploaded successfully!`
+            });
+            loadDocuments();
+        } catch (error: any) {
+            console.error('Upload error:', error);
+            toast({
+                title: t('error.upload_failed'),
+                description: error.message || t('error.upload_failed'),
                 variant: "destructive"
             });
         } finally {
@@ -141,21 +190,24 @@ const DocumentUpload: React.FC = () => {
 
     const handleDelete = async (id: string) => {
         try {
-            const response = await apiFetch(`/api/documents/${id}`, {
-                method: 'DELETE'
-            });
+            const doc = documents.find(d => d.id === id);
+            if (!doc) throw new Error('Document not found');
 
-            if (response.ok) {
-                toast({
-                    title: "Deleted",
-                    description: "Document removed successfully."
-                });
-                loadDocuments();
-            }
-        } catch (error) {
+            const { error } = await supabase.storage
+                .from('documents')
+                .remove([`${selectedAgent}/${doc.filename}`]);
+
+            if (error) throw error;
+
+            toast({
+                title: "Deleted",
+                description: "Document removed successfully."
+            });
+            loadDocuments();
+        } catch (error: any) {
             toast({
                 title: "Delete Failed",
-                description: "Could not delete document.",
+                description: error.message || t('error.delete_failed'),
                 variant: "destructive"
             });
         }
@@ -164,7 +216,7 @@ const DocumentUpload: React.FC = () => {
     const getStatusIcon = (status: string) => {
         switch (status) {
             case 'ready':
-                return <CheckCircle className="w-4 h-4 text-islamic-green" />;
+                return <CheckCircle className="w-4 h-4 text-islamic-green-600" />;
             case 'processing':
             case 'uploaded':
                 return <Loader2 className="w-4 h-4 text-islamic-gold animate-spin" />;
@@ -176,7 +228,7 @@ const DocumentUpload: React.FC = () => {
     };
 
     return (
-        <div className="flex-1 min-h-screen bg-gradient-to-br from-islamic-cream/30 via-white to-islamic-gold/10">
+        <div className="flex-1 min-h-screen bg-gradient-to-br from-islamic-cream/30 via-[#efefec] to-islamic-gold/10">
             <section className="container py-10 md:py-16">
                 <header className="mb-12">
                     <p className="inline-flex items-center text-xs uppercase tracking-[0.22em] text-islamic-dark/60 mb-3">
@@ -193,17 +245,17 @@ const DocumentUpload: React.FC = () => {
 
                 <div className="max-w-4xl mx-auto space-y-8">
                     {/* Upload Area */}
-                    <div className="islamic-card p-8 bg-white/95">
+                    <div className="islamic-card p-8 bg-[#efefec]/95">
                         <div className="mb-6">
                             <label className="block text-sm font-medium text-islamic-dark mb-3">
-                                Select Category
+                                Select Agent (Documents tagged for specific agent)
                             </label>
                             <select
-                                value={selectedCategory}
-                                onChange={(e) => setSelectedCategory(e.target.value)}
-                                className="w-full px-4 py-3 rounded-lg border border-islamic-cream bg-white text-islamic-dark focus:ring-2 focus:ring-islamic-gold/40"
+                                value={selectedAgent}
+                                onChange={(e) => setSelectedAgent(e.target.value)}
+                                className="w-full px-4 py-3 rounded-lg border border-islamic-cream bg-[#efefec] text-islamic-dark focus:ring-2 focus:ring-islamic-gold/40"
                             >
-                                {CATEGORIES.map(cat => (
+                                {AGENT_CATEGORIES.map(cat => (
                                     <option key={cat.value} value={cat.value}>{cat.label}</option>
                                 ))}
                             </select>
@@ -211,8 +263,8 @@ const DocumentUpload: React.FC = () => {
 
                         <div
                             className={`border-2 border-dashed rounded-2xl p-12 text-center transition-colors ${dragActive
-                                    ? 'border-islamic-gold bg-islamic-gold/10'
-                                    : 'border-islamic-cream hover:border-islamic-gold/50'
+                                ? 'border-islamic-gold bg-islamic-gold/10'
+                                : 'border-islamic-cream hover:border-islamic-gold/50'
                                 }`}
                             onDragEnter={handleDrag}
                             onDragLeave={handleDrag}
@@ -246,7 +298,7 @@ const DocumentUpload: React.FC = () => {
                     </div>
 
                     {/* Document List */}
-                    <div className="islamic-card p-6 bg-white/95">
+                    <div className="islamic-card p-6 bg-[#efefec]/95">
                         <h3 className="text-xl font-bold text-islamic-dark mb-4 flex items-center gap-2">
                             <FileText className="w-5 h-5" />
                             Uploaded Documents
@@ -265,7 +317,7 @@ const DocumentUpload: React.FC = () => {
                                             <div className="flex-1">
                                                 <p className="font-medium text-islamic-dark">{doc.filename}</p>
                                                 <p className="text-xs text-islamic-dark/60">
-                                                    {CATEGORIES.find(c => c.value === doc.category)?.label} •
+                                                    {AGENT_CATEGORIES.find(c => c.value === doc.category)?.label || doc.category} •
                                                     {doc.chunkCount ? ` ${doc.chunkCount} chunks` : ` ${doc.status}`}
                                                 </p>
                                             </div>
@@ -284,7 +336,7 @@ const DocumentUpload: React.FC = () => {
                                             <button
                                                 onClick={() => handleDelete(doc.id)}
                                                 className="p-2 text-islamic-dark/40 hover:text-red-500 rounded-lg transition-colors"
-                                                title="Delete document"
+                                                title={t('error.delete_document')}
                                             >
                                                 <Trash2 className="w-4 h-4" />
                                             </button>

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { EcosystemService } from '@/services/ecosystem';
 import { MediaContent } from '@/types/ecosystem';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PlayCircle, Clock } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
@@ -55,26 +54,63 @@ export default function MediaPage() {
             <section className="container py-10 md:py-16 space-y-10">
                 <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                     <div>
-                        <p className="inline-flex items-center text-xs uppercase tracking-[0.22em] text-islamic-dark/60 mb-2">
+                        <p className="inline-flex items-center text-xs uppercase tracking-[0.22em] text-islamic-dark/60 dark:text-slate-400 mb-2">
                             <span className="w-1.5 h-1.5 rounded-full bg-islamic-gold mr-2" />
                             {t('media.title')}
                         </p>
-                        <h1 className="text-3xl md:text-4xl font-bold text-islamic-dark">
+                        <h1 className="text-3xl md:text-4xl font-bold text-islamic-dark dark:text-slate-100">
                             {t('media.subtitle')}
                         </h1>
-                        <p className="mt-2 text-islamic-dark/70 max-w-xl">
+                        <p className="mt-2 text-islamic-dark/70 dark:text-slate-300 max-w-xl">
                             {t('media.intro')}
                         </p>
                     </div>
                 </header>
 
-            <Tabs defaultValue="all" onValueChange={setActiveTab} className="w-full">
-                <TabsList className="mb-8 bg-white/60 backdrop-blur-sm">
-                    <TabsTrigger value="all">All</TabsTrigger>
-                    <TabsTrigger value="kids">Kids</TabsTrigger>
-                    <TabsTrigger value="teens">Teens</TabsTrigger>
-                    <TabsTrigger value="adults">Adults</TabsTrigger>
-                </TabsList>
+            <div className="w-full mb-8">
+                <div className="flex flex-wrap gap-3">
+                    <button
+                        onClick={() => setActiveTab('all')}
+                        className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-200 ${
+                            activeTab === 'all'
+                                ? 'bg-islamic-green-600 text-white shadow-md hover:bg-islamic-green-700'
+                                : 'bg-[#efefec] dark:bg-slate-800 text-islamic-dark dark:text-slate-300 border border-islamic-dark/20 dark:border-slate-700 hover:border-islamic-green-600 dark:hover:border-islamic-green hover:text-islamic-green-600 dark:hover:text-islamic-green'
+                        }`}
+                    >
+                        All
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('kids')}
+                        className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-200 ${
+                            activeTab === 'kids'
+                                ? 'bg-islamic-green-600 text-white shadow-md hover:bg-islamic-green-700'
+                                : 'bg-[#efefec] dark:bg-slate-800 text-islamic-dark dark:text-slate-300 border border-islamic-dark/20 dark:border-slate-700 hover:border-islamic-green-600 dark:hover:border-islamic-green hover:text-islamic-green-600 dark:hover:text-islamic-green'
+                        }`}
+                    >
+                        Kids
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('teens')}
+                        className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-200 ${
+                            activeTab === 'teens'
+                                ? 'bg-islamic-green-600 text-white shadow-md hover:bg-islamic-green-700'
+                                : 'bg-[#efefec] dark:bg-slate-800 text-islamic-dark dark:text-slate-300 border border-islamic-dark/20 dark:border-slate-700 hover:border-islamic-green-600 dark:hover:border-islamic-green hover:text-islamic-green-600 dark:hover:text-islamic-green'
+                        }`}
+                    >
+                        Teens
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('adults')}
+                        className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-200 ${
+                            activeTab === 'adults'
+                                ? 'bg-islamic-green-600 text-white shadow-md hover:bg-islamic-green-700'
+                                : 'bg-[#efefec] dark:bg-slate-800 text-islamic-dark dark:text-slate-300 border border-islamic-dark/20 dark:border-slate-700 hover:border-islamic-green-600 dark:hover:border-islamic-green hover:text-islamic-green-600 dark:hover:text-islamic-green'
+                        }`}
+                    >
+                        Adults
+                    </button>
+                </div>
+            </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {loading ? (
@@ -116,7 +152,6 @@ export default function MediaPage() {
                         </div>
                     ))}
                 </div>
-            </Tabs>
             </section>
         </div>
     );
