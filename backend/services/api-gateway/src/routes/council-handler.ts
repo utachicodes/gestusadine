@@ -4,6 +4,7 @@ import { ragService } from '../../../../services/rag-service/rag.service';
 import { logger } from '../../../../shared/logger';
 import { Validator } from '../../../../shared/validator';
 import { translationClient } from '../../../translation-service/client';
+import { Source } from '../../../../services/rag-service/types';
 
 const routeLogger = logger.prefixed('CouncilRoute');
 
@@ -25,18 +26,25 @@ export async function askCouncil(req: Request, res: Response) {
         routeLogger.info(`Processing query: "${validatedQuery}"`);
 
         let ragContext = '';
+        let sources: Source[] = [];
         if (useRAG) {
-            routeLogger.info('Retrieving RAG context...');
-            const ragResult = await ragService.search(validatedQuery, topK);
-            ragContext = ragResult.context;
-            routeLogger.debug(`Found ${ragResult.sources.length} relevant sources`);
+            try {
+                routeLogger.info('Retrieving RAG context...');
+                const ragResult = await ragService.search(validatedQuery, topK);
+                ragContext = ragResult.context;
+                sources = ragResult.sources;
+                routeLogger.info(`Found ${sources.length} relevant sources for the query.`);
+            } catch (ragError: any) {
+                routeLogger.error('RAG service failed', ragError);
+                // Non-fatal error: proceed without RAG context
+            }
         }
 
         const result = await llmCouncil.processQuery(validatedQuery, ragContext);
 
         res.json({
             success: true,
-            data: result
+            data: { ...result, sources }
         });
     } catch (error: any) {
         routeLogger.error('Error processing query', error);
@@ -325,9 +333,18 @@ export async function askCouncilWolof(req: Request, res: Response) {
 
         // Process with Council
         let ragContext = '';
+        let sources: Source[] = [];
         if (useRAG) {
-            const ragResult = await ragService.search(frenchQuery, topK);
-            ragContext = ragResult.context;
+            try {
+                routeLogger.info('Retrieving RAG context for Wolof query...');
+                const ragResult = await ragService.search(frenchQuery, topK);
+                ragContext = ragResult.context;
+                sources = ragResult.sources;
+                routeLogger.info(`Found ${sources.length} relevant sources for the Wolof query.`);
+            } catch (ragError: any) {
+                routeLogger.error('RAG service failed for Wolof query', ragError);
+                // Non-fatal error: proceed without RAG context
+            }
         }
 
         const councilResult = await llmCouncil.processQuery(frenchQuery, ragContext);
@@ -347,7 +364,8 @@ export async function askCouncilWolof(req: Request, res: Response) {
                 synthesisResultFrench: councilResult.synthesisResult,
                 originalQueryWolof: validatedQuery,
                 originalQueryFrench: frenchQuery,
-                language: 'wolof'
+                language: 'wolof',
+                sources
             }
         });
     } catch (error: any) {
