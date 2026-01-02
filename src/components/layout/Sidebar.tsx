@@ -13,7 +13,8 @@ import {
   FileText,
   Circle,
   Globe,
-  TestTube
+  TestTube,
+  Mic
 } from 'lucide-react';
 import { useAuth } from '@/auth/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -69,6 +70,12 @@ export const Sidebar = () => {
       icon: BookOpen, 
       label: t('nav.library'), 
       path: '/library',
+      adminOnly: false
+    },
+    { 
+      icon: Mic, 
+      label: 'Qirah', 
+      path: '/tarteel',
       adminOnly: false
     },
     { 
@@ -170,4 +177,3 @@ export const Sidebar = () => {
     </aside>
   );
 };
-

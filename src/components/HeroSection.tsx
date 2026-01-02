@@ -65,20 +65,20 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="relative pt-32 pb-40 overflow-hidden">
-      {/* Mesh Gradient Background */}
-      <div className="absolute inset-0 bg-mesh-gradient opacity-35"></div>
+    <section className="relative pt-32 pb-44 overflow-hidden">
+      {/* Sky Gradient Background */}
+      <div className="absolute inset-0 bg-hero-gradient-alt opacity-90"></div>
+      <div className="absolute inset-0 bg-mesh-gradient opacity-25"></div>
 
-      {/* Main Gradient Overlay */}
-      <div className="absolute inset-0 bg-hero-gradient-alt"></div>
+      {/* Animated Clouds */}
+      <div className="absolute -top-10 left-[-10%] w-[42rem] h-[16rem] rounded-[6rem] bg-white/40 blur-3xl animate-float" />
+      <div className="absolute top-8 right-[-12%] w-[38rem] h-[14rem] rounded-[6rem] bg-white/35 blur-3xl animate-float animation-delay-2000" />
+      <div className="absolute top-[36%] left-[-8%] w-[28rem] h-[12rem] rounded-[6rem] bg-white/25 blur-2xl animate-float animation-delay-4000" />
 
-      {/* Animated Floating Orbs */}
-      <div className="absolute top-24 right-[12%] w-72 h-72 bg-islamic-teal-400 rounded-full filter blur-2xl opacity-20 animate-blob"></div>
-      <div className="absolute bottom-24 left-[12%] w-64 h-64 bg-islamic-gold-400 rounded-full filter blur-2xl opacity-18 animate-blob animation-delay-2000"></div>
-      <div className="absolute top-44 left-[22%] w-60 h-60 bg-islamic-blue-400 rounded-full filter blur-2xl opacity-14 animate-blob animation-delay-4000"></div>
-
-      {/* Pattern Overlay */}
-      <div className="absolute inset-0 pattern-bg opacity-10"></div>
+      {/* Soft glow orbs */}
+      <div className="absolute top-24 right-[12%] w-72 h-72 bg-white/20 rounded-full filter blur-2xl opacity-50 animate-blob"></div>
+      <div className="absolute bottom-24 left-[12%] w-64 h-64 bg-white/16 rounded-full filter blur-2xl opacity-40 animate-blob animation-delay-2000"></div>
+      <div className="absolute top-44 left-[22%] w-60 h-60 bg-white/14 rounded-full filter blur-2xl opacity-35 animate-blob animation-delay-4000"></div>
 
       <div className="container relative z-10">
         <div className="max-w-4xl mx-auto text-center">
@@ -163,6 +163,23 @@ const HeroSection = () => {
             {t('hero.subtitle')}
           </p>
 
+          {/* CTA Buttons */}
+          <div className="flex items-center justify-center gap-4 mb-10">
+            <Button
+              className="btn-islamic px-6 py-3"
+              onClick={() => navigate('/dashboard')}
+            >
+              {t('hero.get_started')}
+            </Button>
+            <Button
+              variant="outline"
+              className="px-6 py-3 rounded-full bg-white/40 backdrop-blur border-white/50 text-islamic-dark hover:bg-white/60"
+              onClick={() => navigate('/media')}
+            >
+              {t('hero.watch_video')}
+            </Button>
+          </div>
+
           {/* Search Form */}
           <form onSubmit={handleSubmit} className="relative max-w-3xl mx-auto mb-8">
             <div className="relative">
@@ -218,6 +235,23 @@ const HeroSection = () => {
 
                 <span className="relative">{term}</span>
               </button>
+            ))}
+          </div>
+
+          {/* Floating hashtag chips */}
+          <div className="pointer-events-none">
+            {['#Fiqh', '#Qurʼan', '#Hadith', '#Maliki', '#Dua', '#Seerah'].map((tag, i) => (
+              <div
+                key={tag}
+                className="absolute px-3 py-1.5 rounded-full bg-white/80 text-islamic-dark text-sm shadow glass-panel floating-element"
+                style={{
+                  left: `${8 + i * 15}%`,
+                  top: i % 2 === 0 ? '18%' : '68%',
+                  transform: `rotate(${i % 2 === 0 ? -8 : 8}deg)`,
+                }}
+              >
+                {tag}
+              </div>
             ))}
           </div>
 

@@ -46,6 +46,7 @@ import chatRoutes from "./chat.js";
 import { videoRoutes } from "../../video-service/src/routes/video.routes.js";
 import { eventRoutes } from "../../event-service/src/routes/event.routes.js";
 import { commerceRoutes } from "../../commerce-service/src/routes/commerce.routes.js"; // Direct import for monolith
+import { tarteelRoutes } from "./routes/tarteel.ts";
 
 // Catch unhandled promise rejections
 process.on("unhandledRejection", (reason: any, promise) => {
@@ -78,6 +79,8 @@ if (existsSync(distPath)) {
 }
 
 // Initialize services
+app.use('/api/tarteel', tarteelRoutes);
+
 configService.loadConfig().then(() => {
   console.log('✅ Config service initialized');
 }).catch((err: any) => {

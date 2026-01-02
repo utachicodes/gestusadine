@@ -33,6 +33,7 @@ import ManageDaily from "./pages/admin/ManageDaily";
 import Library from "./pages/Library";
 import ManageLibrary from "./pages/admin/ManageLibrary";
 import RAGTest from "./pages/admin/RAGTest";
+import Tarteel from "./pages/Tarteel";
 
 const queryClient = new QueryClient();
 
@@ -203,6 +204,16 @@ const App = () => (
                     <ProtectedRoute>
                       <DashboardLayout>
                         <Library />
+                      </DashboardLayout>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/tarteel"
+                  element={
+                    <ProtectedRoute>
+                      <DashboardLayout>
+                        <Tarteel />
                       </DashboardLayout>
                     </ProtectedRoute>
                   }

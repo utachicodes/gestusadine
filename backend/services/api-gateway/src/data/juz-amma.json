@@ -1,0 +1,3756 @@
+[
+  {
+    "id": 78,
+    "name": "النبإ",
+    "transliteration": "An-Naba",
+    "translation": "The Tidings",
+    "type": "meccan",
+    "total_verses": 40,
+    "verses": [
+      {
+        "id": 1,
+        "text": "عَمَّ يَتَسَآءَلُونَ",
+        "translation": "About what are they asking one another",
+        "transliteration": "AAamma yatasaaloona"
+      },
+      {
+        "id": 2,
+        "text": "عَنِ ٱلنَّبَإِ ٱلۡعَظِيمِ",
+        "translation": "About the great news",
+        "transliteration": "AAani alnnabai alAAatheemi"
+      },
+      {
+        "id": 3,
+        "text": "ٱلَّذِي هُمۡ فِيهِ مُخۡتَلِفُونَ",
+        "translation": "That over which they are in disagreement",
+        "transliteration": "Allathee hum feehi mukhtalifoona"
+      },
+      {
+        "id": 4,
+        "text": "كَلَّا سَيَعۡلَمُونَ",
+        "translation": "No! They are going to know",
+        "transliteration": "Kalla sayaAAlamoona"
+      },
+      {
+        "id": 5,
+        "text": "ثُمَّ كَلَّا سَيَعۡلَمُونَ",
+        "translation": "Then, no! They are going to know",
+        "transliteration": "Thumma kalla sayaAAlamoona"
+      },
+      {
+        "id": 6,
+        "text": "أَلَمۡ نَجۡعَلِ ٱلۡأَرۡضَ مِهَٰدٗا",
+        "translation": "Have We not made the earth a resting place",
+        "transliteration": "Alam najAAali alarda mihadan"
+      },
+      {
+        "id": 7,
+        "text": "وَٱلۡجِبَالَ أَوۡتَادٗا",
+        "translation": "And the mountains as stakes",
+        "transliteration": "Waaljibala awtadan"
+      },
+      {
+        "id": 8,
+        "text": "وَخَلَقۡنَٰكُمۡ أَزۡوَٰجٗا",
+        "translation": "And We created you in pairs",
+        "transliteration": "Wakhalaqnakum azwajan"
+      },
+      {
+        "id": 9,
+        "text": "وَجَعَلۡنَا نَوۡمَكُمۡ سُبَاتٗا",
+        "translation": "And made your sleep [a means for] rest",
+        "transliteration": "WajaAAalna nawmakum subatan"
+      },
+      {
+        "id": 10,
+        "text": "وَجَعَلۡنَا ٱلَّيۡلَ لِبَاسٗا",
+        "translation": "And made the night as clothing",
+        "transliteration": "WajaAAalna allayla libasan"
+      },
+      {
+        "id": 11,
+        "text": "وَجَعَلۡنَا ٱلنَّهَارَ مَعَاشٗا",
+        "translation": "And made the day for livelihood",
+        "transliteration": "WajaAAalna alnnahara maAAashan"
+      },
+      {
+        "id": 12,
+        "text": "وَبَنَيۡنَا فَوۡقَكُمۡ سَبۡعٗا شِدَادٗا",
+        "translation": "And constructed above you seven strong [heavens]",
+        "transliteration": "Wabanayna fawqakum sabAAan shidadan"
+      },
+      {
+        "id": 13,
+        "text": "وَجَعَلۡنَا سِرَاجٗا وَهَّاجٗا",
+        "translation": "And made [therein] a burning lamp",
+        "transliteration": "WajaAAalna sirajan wahhajan"
+      },
+      {
+        "id": 14,
+        "text": "وَأَنزَلۡنَا مِنَ ٱلۡمُعۡصِرَٰتِ مَآءٗ ثَجَّاجٗا",
+        "translation": "And sent down, from the rain clouds, pouring water",
+        "transliteration": "Waanzalna mina almuAAsirati maan thajjajan"
+      },
+      {
+        "id": 15,
+        "text": "لِّنُخۡرِجَ بِهِۦ حَبّٗا وَنَبَاتٗا",
+        "translation": "That We may bring forth thereby grain and vegetation",
+        "transliteration": "Linukhrija bihi habban wanabatan"
+      },
+      {
+        "id": 16,
+        "text": "وَجَنَّـٰتٍ أَلۡفَافًا",
+        "translation": "And gardens of entwined growth",
+        "transliteration": "Wajannatin alfafan"
+      },
+      {
+        "id": 17,
+        "text": "إِنَّ يَوۡمَ ٱلۡفَصۡلِ كَانَ مِيقَٰتٗا",
+        "translation": "Indeed, the Day of Judgement is an appointed time",
+        "transliteration": "Inna yawma alfasli kana meeqatan"
+      },
+      {
+        "id": 18,
+        "text": "يَوۡمَ يُنفَخُ فِي ٱلصُّورِ فَتَأۡتُونَ أَفۡوَاجٗا",
+        "translation": "The Day the Horn is blown and you will come forth in multitudes",
+        "transliteration": "Yawma yunfakhu fee alssoori fatatoona afwajan"
+      },
+      {
+        "id": 19,
+        "text": "وَفُتِحَتِ ٱلسَّمَآءُ فَكَانَتۡ أَبۡوَٰبٗا",
+        "translation": "And the heaven is opened and will become gateways",
+        "transliteration": "Wafutihati alssamao fakanat abwaban"
+      },
+      {
+        "id": 20,
+        "text": "وَسُيِّرَتِ ٱلۡجِبَالُ فَكَانَتۡ سَرَابًا",
+        "translation": "And the mountains are removed and will be [but] a mirage",
+        "transliteration": "Wasuyyirati aljibalu fakanat saraban"
+      },
+      {
+        "id": 21,
+        "text": "إِنَّ جَهَنَّمَ كَانَتۡ مِرۡصَادٗا",
+        "translation": "Indeed, Hell has been lying in wait",
+        "transliteration": "Inna jahannama kanat mirsadan"
+      },
+      {
+        "id": 22,
+        "text": "لِّلطَّـٰغِينَ مَـَٔابٗا",
+        "translation": "For the transgressors, a place of return",
+        "transliteration": "Lilttagheena maaban"
+      },
+      {
+        "id": 23,
+        "text": "لَّـٰبِثِينَ فِيهَآ أَحۡقَابٗا",
+        "translation": "In which they will remain for ages [unending]",
+        "transliteration": "Labitheena feeha ahqaban"
+      },
+      {
+        "id": 24,
+        "text": "لَّا يَذُوقُونَ فِيهَا بَرۡدٗا وَلَا شَرَابًا",
+        "translation": "They will not taste therein [any] coolness or drink",
+        "transliteration": "La yathooqoona feeha bardan wala sharaban"
+      },
+      {
+        "id": 25,
+        "text": "إِلَّا حَمِيمٗا وَغَسَّاقٗا",
+        "translation": "Except scalding water and [foul] purulence",
+        "transliteration": "Illa hameeman waghassaqan"
+      },
+      {
+        "id": 26,
+        "text": "جَزَآءٗ وِفَاقًا",
+        "translation": "An appropriate recompense",
+        "transliteration": "Jazaan wifaqan"
+      },
+      {
+        "id": 27,
+        "text": "إِنَّهُمۡ كَانُواْ لَا يَرۡجُونَ حِسَابٗا",
+        "translation": "Indeed, they were not expecting an account",
+        "transliteration": "Innahum kanoo la yarjoona hisaban"
+      },
+      {
+        "id": 28,
+        "text": "وَكَذَّبُواْ بِـَٔايَٰتِنَا كِذَّابٗا",
+        "translation": "And denied Our verses with [emphatic] denial",
+        "transliteration": "Wakaththaboo biayatina kiththaban"
+      },
+      {
+        "id": 29,
+        "text": "وَكُلَّ شَيۡءٍ أَحۡصَيۡنَٰهُ كِتَٰبٗا",
+        "translation": "But all things We have enumerated in writing",
+        "transliteration": "Wakulla shayin ahsaynahu kitaban"
+      },
+      {
+        "id": 30,
+        "text": "فَذُوقُواْ فَلَن نَّزِيدَكُمۡ إِلَّا عَذَابًا",
+        "translation": "So taste [the penalty], and never will We increase you except in torment",
+        "transliteration": "Fathooqoo falan nazeedakum illa AAathaban"
+      },
+      {
+        "id": 31,
+        "text": "إِنَّ لِلۡمُتَّقِينَ مَفَازًا",
+        "translation": "Indeed, for the righteous is attainment",
+        "transliteration": "Inna lilmuttaqeena mafazan"
+      },
+      {
+        "id": 32,
+        "text": "حَدَآئِقَ وَأَعۡنَٰبٗا",
+        "translation": "Gardens and grapevines",
+        "transliteration": "Hadaiqa waaAAnaban"
+      },
+      {
+        "id": 33,
+        "text": "وَكَوَاعِبَ أَتۡرَابٗا",
+        "translation": "And full-breasted [companions] of equal age",
+        "transliteration": "WakawaAAiba atraban"
+      },
+      {
+        "id": 34,
+        "text": "وَكَأۡسٗا دِهَاقٗا",
+        "translation": "And a full cup",
+        "transliteration": "Wakasan dihaqan"
+      },
+      {
+        "id": 35,
+        "text": "لَّا يَسۡمَعُونَ فِيهَا لَغۡوٗا وَلَا كِذَّـٰبٗا",
+        "translation": "No ill speech will they hear therein or any falsehood",
+        "transliteration": "La yasmaAAoona feeha laghwan wala kiththaban"
+      },
+      {
+        "id": 36,
+        "text": "جَزَآءٗ مِّن رَّبِّكَ عَطَآءً حِسَابٗا",
+        "translation": "[As] reward from your Lord, [a generous] gift [made due by] account",
+        "transliteration": "Jazaan min rabbika AAataan hisaban"
+      },
+      {
+        "id": 37,
+        "text": "رَّبِّ ٱلسَّمَٰوَٰتِ وَٱلۡأَرۡضِ وَمَا بَيۡنَهُمَا ٱلرَّحۡمَٰنِۖ لَا يَمۡلِكُو��َ مِنۡهُ خِطَابٗا",
+        "translation": "[From] the Lord of the heavens and the earth and whatever is between them, the Most Merciful. They possess not from Him [authority for] speech",
+        "transliteration": "Rabbi alssamawati waalardi wama baynahuma alrrahmani la yamlikoona minhu khitaban"
+      },
+      {
+        "id": 38,
+        "text": "يَوۡمَ يَقُومُ ٱلرُّوحُ وَٱلۡمَلَـٰٓئِكَةُ صَفّٗاۖ لَّا يَتَكَلَّمُونَ إِلَّا مَنۡ أَذِنَ لَهُ ٱلرَّحۡمَٰنُ وَقَالَ صَوَابٗا",
+        "translation": "The Day that the Spirit and the angels will stand in rows, they will not speak except for one whom the Most Merciful permits, and he will say what is correct",
+        "transliteration": "Yawma yaqoomu alrroohu waalmalaikatu saffan la yatakallamoona illa man athina lahu alrrahmanu waqala sawaban"
+      },
+      {
+        "id": 39,
+        "text": "ذَٰلِكَ ٱلۡيَوۡمُ ٱلۡحَقُّۖ فَمَن شَآءَ ٱتَّخَذَ إِلَىٰ رَبِّهِۦ مَـَٔابًا",
+        "translation": "That is the True Day; so he who wills may take to his Lord a [way of] return",
+        "transliteration": "Thalika alyawmu alhaqqu faman shaa ittakhatha ila rabbihi maaban"
+      },
+      {
+        "id": 40,
+        "text": "إِنَّآ أَنذَرۡنَٰكُمۡ عَذَابٗا قَرِيبٗا يَوۡمَ يَنظُرُ ٱلۡمَرۡءُ مَا قَدَّمَتۡ يَدَاهُ وَيَقُولُ ٱلۡكَافِرُ يَٰلَيۡتَنِي كُنتُ تُرَٰبَۢا",
+        "translation": "Indeed, We have warned you of a near punishment on the Day when a man will observe what his hands have put forth and the disbeliever will say, \"Oh, I wish that I were dust",
+        "transliteration": "Inna antharnakum AAathaban qareeban yawma yanthuru almaro ma qaddamat yadahu wayaqoolu alkafiru ya laytanee kuntu turaban"
+      }
+    ]
+  },
+  {
+    "id": 79,
+    "name": "النازعات",
+    "transliteration": "An-Nazi'at",
+    "translation": "Those who drag forth",
+    "type": "meccan",
+    "total_verses": 46,
+    "verses": [
+      {
+        "id": 1,
+        "text": "وَٱلنَّـٰزِعَٰتِ غَرۡقٗا",
+        "translation": "By those [angels] who extract with violence",
+        "transliteration": "WaalnnaziAAati gharqan"
+      },
+      {
+        "id": 2,
+        "text": "وَٱلنَّـٰشِطَٰتِ نَشۡطٗا",
+        "translation": "And [by] those who remove with ease",
+        "transliteration": "Waalnnashitati nashtan"
+      },
+      {
+        "id": 3,
+        "text": "وَٱلسَّـٰبِحَٰتِ سَبۡحٗا",
+        "translation": "And [by] those who glide [as if] swimming",
+        "transliteration": "Waalssabihati sabhan"
+      },
+      {
+        "id": 4,
+        "text": "فَٱلسَّـٰبِقَٰتِ سَبۡقٗا",
+        "translation": "And those who race each other in a race",
+        "transliteration": "Faalssabiqati sabqan"
+      },
+      {
+        "id": 5,
+        "text": "فَٱلۡمُدَبِّرَٰتِ أَمۡرٗا",
+        "translation": "And those who arrange [each] matter",
+        "transliteration": "Faalmudabbirati amran"
+      },
+      {
+        "id": 6,
+        "text": "يَوۡمَ تَرۡجُفُ ٱلرَّاجِفَةُ",
+        "translation": "On the Day the blast [of the Horn] will convulse [creation]",
+        "transliteration": "Yawma tarjufu alrrajifatu"
+      },
+      {
+        "id": 7,
+        "text": "تَتۡبَعُهَا ٱلرَّادِفَةُ",
+        "translation": "There will follow it the subsequent [one]",
+        "transliteration": "TatbaAAuha alrradifatu"
+      },
+      {
+        "id": 8,
+        "text": "قُلُوبٞ يَوۡمَئِذٖ وَاجِفَةٌ",
+        "translation": "Hearts, that Day, will tremble",
+        "transliteration": "Quloobun yawmaithin wajifatun"
+      },
+      {
+        "id": 9,
+        "text": "أَبۡصَٰرُهَا خَٰشِعَةٞ",
+        "translation": "Their eyes humbled",
+        "transliteration": "Absaruha khashiAAatun"
+      },
+      {
+        "id": 10,
+        "text": "يَقُولُونَ أَءِنَّا لَمَرۡدُودُونَ فِي ٱلۡحَافِرَةِ",
+        "translation": "They are [presently] saying, \"Will we indeed be returned to [our] former state [of life]",
+        "transliteration": "Yaqooloona ainna lamardoodoona fee alhafirati"
+      },
+      {
+        "id": 11,
+        "text": "أَءِذَا كُنَّا عِظَٰمٗا نَّخِرَةٗ",
+        "translation": "Even if we should be decayed bones",
+        "transliteration": "Aitha kunna AAithaman nakhiratan"
+      },
+      {
+        "id": 12,
+        "text": "قَالُواْ تِلۡكَ إِذٗا كَرَّةٌ خَاسِرَةٞ",
+        "translation": "They say, \"That, then, would be a losing return",
+        "transliteration": "Qaloo tilka ithan karratun khasiratun"
+      },
+      {
+        "id": 13,
+        "text": "فَإِنَّمَا هِيَ زَجۡرَةٞ وَٰحِدَةٞ",
+        "translation": "Indeed, it will be but one shout",
+        "transliteration": "Fainnama hiya zajratun wahidatun"
+      },
+      {
+        "id": 14,
+        "text": "فَإِذَا هُم بِٱلسَّاهِرَةِ",
+        "translation": "And suddenly they will be [alert] upon the earth's surface",
+        "transliteration": "Faitha hum bialssahirati"
+      },
+      {
+        "id": 15,
+        "text": "هَلۡ أَتَىٰكَ حَدِيثُ مُوسَىٰٓ",
+        "translation": "Has there reached you the story of Moses",
+        "transliteration": "Hal ataka hadeethu moosa"
+      },
+      {
+        "id": 16,
+        "text": "إِذۡ نَادَىٰهُ رَبُّهُۥ بِٱلۡوَادِ ٱلۡمُقَدَّسِ طُوًى",
+        "translation": "When his Lord called to him in the sacred valley of Tuwa",
+        "transliteration": "Ith nadahu rabbuhu bialwadi almuqaddasi tuwan"
+      },
+      {
+        "id": 17,
+        "text": "ٱذۡهَبۡ إِلَىٰ فِرۡعَوۡنَ إِنَّهُۥ طَغَىٰ",
+        "translation": "Go to Pharaoh. Indeed, he has transgressed",
+        "transliteration": "Ithhab ila firAAawna innahu tagha"
+      },
+      {
+        "id": 18,
+        "text": "فَقُلۡ هَل لَّكَ إِلَىٰٓ أَن تَزَكَّىٰ",
+        "translation": "And say to him, 'Would you [be willing to] purify yourself",
+        "transliteration": "Faqul hal laka ila an tazakka"
+      },
+      {
+        "id": 19,
+        "text": "وَأَهۡدِيَكَ إِلَىٰ رَبِّكَ فَتَخۡشَىٰ",
+        "translation": "And let me guide you to your Lord so you would fear [Him]",
+        "transliteration": "Waahdiyaka ila rabbika fatakhsha"
+      },
+      {
+        "id": 20,
+        "text": "فَأَرَىٰهُ ٱلۡأٓيَةَ ٱلۡكُبۡرَىٰ",
+        "translation": "And he showed him the greatest sign",
+        "transliteration": "Faarahu alayata alkubra"
+      },
+      {
+        "id": 21,
+        "text": "فَكَذَّبَ وَعَصَىٰ",
+        "translation": "But Pharaoh denied and disobeyed",
+        "transliteration": "Fakaththaba waAAasa"
+      },
+      {
+        "id": 22,
+        "text": "ثُمَّ أَدۡبَرَ يَسۡعَىٰ",
+        "translation": "Then he turned his back, striving",
+        "transliteration": "Thumma adbara yasAAa"
+      },
+      {
+        "id": 23,
+        "text": "فَحَشَرَ فَنَادَىٰ",
+        "translation": "And he gathered [his people] and called out",
+        "transliteration": "Fahashara fanada"
+      },
+      {
+        "id": 24,
+        "text": "فَقَالَ أَنَا۠ رَبُّكُمُ ٱلۡأَعۡلَىٰ",
+        "translation": "And said, \"I am your most exalted lord",
+        "transliteration": "Faqala ana rabbukumu alaAAla"
+      },
+      {
+        "id": 25,
+        "text": "فَأَخَذَهُ ٱللَّهُ نَكَالَ ٱلۡأٓخِرَةِ وَٱلۡأُولَىٰٓ",
+        "translation": "So Allah seized him in exemplary punishment for the last and the first [transgression]",
+        "transliteration": "Faakhathahu Allahu nakala alakhirati waaloola"
+      },
+      {
+        "id": 26,
+        "text": "إِنَّ فِي ذَٰلِكَ لَعِبۡرَةٗ لِّمَن يَخۡشَىٰٓ",
+        "translation": "Indeed in that is a warning for whoever would fear [Allah]",
+        "transliteration": "Inna fee thalika laAAibratan liman yakhsha"
+      },
+      {
+        "id": 27,
+        "text": "ءَأَنتُمۡ أَشَدُّ خَلۡقًا أَمِ ٱلسَّمَآءُۚ بَنَىٰهَا",
+        "translation": "Are you a more difficult creation or is the heaven? Allah constructed it",
+        "transliteration": "Aantum ashaddu khalqan ami alssamao banaha"
+      },
+      {
+        "id": 28,
+        "text": "رَفَعَ سَمۡكَهَا فَسَوَّىٰهَا",
+        "translation": "He raised its ceiling and proportioned it",
+        "transliteration": "RafaAAa samkaha fasawwaha"
+      },
+      {
+        "id": 29,
+        "text": "وَأَغۡطَشَ لَيۡلَهَا وَأَخۡرَجَ ضُحَىٰهَا",
+        "translation": "And He darkened its night and extracted its brightness",
+        "transliteration": "Waaghtasha laylaha waakhraja duhaha"
+      },
+      {
+        "id": 30,
+        "text": "وَٱلۡأَرۡضَ بَعۡدَ ذَٰلِكَ دَحَىٰهَآ",
+        "translation": "And after that He spread the earth",
+        "transliteration": "Waalarda baAAda thalika dahaha"
+      },
+      {
+        "id": 31,
+        "text": "أَخۡرَجَ مِنۡهَا مَآءَهَا وَمَرۡعَىٰهَا",
+        "translation": "He extracted from it its water and its pasture",
+        "transliteration": "Akhraja minha maaha wamarAAaha"
+      },
+      {
+        "id": 32,
+        "text": "وَٱلۡجِبَالَ أَرۡسَىٰهَا",
+        "translation": "And the mountains He set firmly",
+        "transliteration": "Waaljibala arsaha"
+      },
+      {
+        "id": 33,
+        "text": "مَتَٰعٗا لَّكُمۡ وَلِأَنۡعَٰمِكُمۡ",
+        "translation": "As provision for you and your grazing livestock",
+        "transliteration": "MataAAan lakum walianAAamikum"
+      },
+      {
+        "id": 34,
+        "text": "فَإِذَا جَآءَتِ ٱلطَّآمَّةُ ٱلۡكُبۡرَىٰ",
+        "translation": "But when there comes the greatest Overwhelming Calamity",
+        "transliteration": "Faitha jaati alttammatu alkubra"
+      },
+      {
+        "id": 35,
+        "text": "يَوۡمَ يَتَذَكَّرُ ٱلۡإِنسَٰنُ مَا سَعَىٰ",
+        "translation": "The Day when man will remember that for which he strove",
+        "transliteration": "Yawma yatathakkaru alinsanu ma saAAa"
+      },
+      {
+        "id": 36,
+        "text": "وَبُرِّزَتِ ٱلۡجَحِيمُ لِمَن يَرَىٰ",
+        "translation": "And Hellfire will be exposed for [all] those who see",
+        "transliteration": "Waburrizati aljaheemu liman yara"
+      },
+      {
+        "id": 37,
+        "text": "فَأَمَّا مَن طَغَىٰ",
+        "translation": "So as for he who transgressed",
+        "transliteration": "Faamma man tagha"
+      },
+      {
+        "id": 38,
+        "text": "وَءَاثَرَ ٱلۡحَيَوٰةَ ٱلدُّنۡيَا",
+        "translation": "And preferred the life of the world",
+        "transliteration": "Waathara alhayata alddunya"
+      },
+      {
+        "id": 39,
+        "text": "فَإِنَّ ٱلۡجَحِيمَ هِيَ ٱلۡمَأۡوَىٰ",
+        "translation": "Then indeed, Hellfire will be [his] refuge",
+        "transliteration": "Fainna aljaheema hiya almawa"
+      },
+      {
+        "id": 40,
+        "text": "وَأَمَّا مَنۡ خَافَ مَقَامَ رَبِّهِۦ وَنَهَى ٱلنَّفۡسَ عَنِ ٱلۡهَوَىٰ",
+        "translation": "But as for he who feared the position of his Lord and prevented the soul from [unlawful] inclination",
+        "transliteration": "Waama man khafa maqama rabbihi wanaha alnnafsa AAani alhawa"
+      },
+      {
+        "id": 41,
+        "text": "فَإِنَّ ٱلۡجَنَّةَ هِيَ ٱلۡمَأۡو��ىٰ",
+        "translation": "Then indeed, Paradise will be [his] refuge",
+        "transliteration": "Fainna aljannata hiya almawa"
+      },
+      {
+        "id": 42,
+        "text": "يَسۡـَٔلُونَكَ عَنِ ٱلسَّاعَةِ أَيَّانَ مُرۡسَىٰهَا",
+        "translation": "They ask you, [O Muhammad], about the Hour: when is its arrival",
+        "transliteration": "Yasaloonaka AAani alssaAAati ayyana mursaha"
+      },
+      {
+        "id": 43,
+        "text": "فِيمَ أَنتَ مِن ذِكۡرَىٰهَآ",
+        "translation": "In what [position] are you that you should mention it",
+        "transliteration": "Feema anta min thikraha"
+      },
+      {
+        "id": 44,
+        "text": "إِلَىٰ رَبِّكَ مُنتَهَىٰهَآ",
+        "translation": "To your Lord is its finality",
+        "transliteration": "Ila rabbika muntahaha"
+      },
+      {
+        "id": 45,
+        "text": "إِنَّمَآ أَنتَ مُنذِرُ مَن يَخۡشَىٰهَا",
+        "translation": "You are only a warner for those who fear it",
+        "transliteration": "Innama anta munthiru man yakhshaha"
+      },
+      {
+        "id": 46,
+        "text": "كَأَنَّهُمۡ يَوۡمَ يَرَوۡنَهَا لَمۡ يَلۡبَثُوٓاْ إِلَّا عَشِيَّةً أَوۡ ضُحَىٰهَا",
+        "translation": "It will be, on the Day they see it, as though they had not remained [in the world] except for an afternoon or a morning thereof",
+        "transliteration": "Kaannahum yawma yarawnaha lam yalbathoo illa AAashiyyatan aw duhaha"
+      }
+    ]
+  },
+  {
+    "id": 80,
+    "name": "عبس",
+    "transliteration": "'Abasa",
+    "translation": "He Frowned",
+    "type": "meccan",
+    "total_verses": 42,
+    "verses": [
+      {
+        "id": 1,
+        "text": "عَبَسَ وَتَوَلَّىٰٓ",
+        "translation": "The Prophet frowned and turned away",
+        "transliteration": "AAabasa watawalla"
+      },
+      {
+        "id": 2,
+        "text": "أَن جَآءَهُ ٱلۡأَعۡمَىٰ",
+        "translation": "Because there came to him the blind man, [interrupting]",
+        "transliteration": "An jaahu alaAAma"
+      },
+      {
+        "id": 3,
+        "text": "وَمَا يُدۡرِيكَ لَعَلَّهُۥ يَزَّكَّىٰٓ",
+        "translation": "But what would make you perceive, [O Muhammad], that perhaps he might be purified",
+        "transliteration": "Wama yudreeka laAAallahu yazzakka"
+      },
+      {
+        "id": 4,
+        "text": "أَوۡ يَذَّكَّرُ فَتَنفَعَهُ ٱلذِّكۡرَىٰٓ",
+        "translation": "Or be reminded and the remembrance would benefit him",
+        "transliteration": "Aw yaththakkaru fatanfaAAahu alththikra"
+      },
+      {
+        "id": 5,
+        "text": "أَمَّا مَنِ ٱسۡتَغۡنَىٰ",
+        "translation": "As for he who thinks himself without need",
+        "transliteration": "Amma mani istaghna"
+      },
+      {
+        "id": 6,
+        "text": "فَأَنتَ لَهُۥ تَصَدَّىٰ",
+        "translation": "To him you give attention",
+        "transliteration": "Faanta lahu tasadda"
+      },
+      {
+        "id": 7,
+        "text": "وَمَا عَلَيۡكَ أَلَّا يَزَّكَّىٰ",
+        "translation": "And not upon you [is any blame] if he will not be purified",
+        "transliteration": "Wama AAalayka alla yazzakka"
+      },
+      {
+        "id": 8,
+        "text": "وَأَمَّا مَن جَآءَكَ يَسۡعَىٰ",
+        "translation": "But as for he who came to you striving [for knowledge]",
+        "transliteration": "Waamma man jaaka yasAAa"
+      },
+      {
+        "id": 9,
+        "text": "وَهُوَ يَخۡشَىٰ",
+        "translation": "While he fears [Allah]",
+        "transliteration": "Wahuwa yakhsha"
+      },
+      {
+        "id": 10,
+        "text": "فَأَنتَ عَنۡهُ تَلَهَّىٰ",
+        "translation": "From him you are distracted",
+        "transliteration": "Faanta AAanhu talahha"
+      },
+      {
+        "id": 11,
+        "text": "كَلَّآ إِنَّهَا تَذۡكِرَةٞ",
+        "translation": "No! Indeed, these verses are a reminder",
+        "transliteration": "Kalla innaha tathkiratun"
+      },
+      {
+        "id": 12,
+        "text": "فَمَن شَآءَ ذَكَرَهُۥ",
+        "translation": "So whoever wills may remember it",
+        "transliteration": "Faman shaa thakarahu"
+      },
+      {
+        "id": 13,
+        "text": "فِي صُحُفٖ مُّكَرَّمَةٖ",
+        "translation": "[It is recorded] in honored sheets",
+        "transliteration": "Fee suhufin mukarramatin"
+      },
+      {
+        "id": 14,
+        "text": "مَّرۡفُوعَةٖ مُّطَهَّرَةِۭ",
+        "translation": "Exalted and purified",
+        "transliteration": "MarfooAAatin mutahharatin"
+      },
+      {
+        "id": 15,
+        "text": "بِأَيۡدِي سَفَرَةٖ",
+        "translation": "[Carried] by the hands of messenger-angels",
+        "transliteration": "Biaydee safaratin"
+      },
+      {
+        "id": 16,
+        "text": "كِرَامِۭ بَرَرَةٖ",
+        "translation": "Noble and dutiful",
+        "transliteration": "Kiramin bararatin"
+      },
+      {
+        "id": 17,
+        "text": "قُتِلَ ٱلۡإِنسَٰنُ مَآ أَكۡفَرَهُۥ",
+        "translation": "Cursed is man; how disbelieving is he",
+        "transliteration": "Qutila alinsanu ma akfarahu"
+      },
+      {
+        "id": 18,
+        "text": "مِنۡ أَيِّ شَيۡءٍ خَلَقَهُۥ",
+        "translation": "From what substance did He create him",
+        "transliteration": "Min ayyi shayin khalaqahu"
+      },
+      {
+        "id": 19,
+        "text": "مِن نُّطۡفَةٍ خَلَقَهُۥ فَقَدَّرَهُۥ",
+        "translation": "From a sperm-drop He created him and destined for him",
+        "transliteration": "Min nutfatin khalaqahu faqaddarahu"
+      },
+      {
+        "id": 20,
+        "text": "ثُمَّ ٱلسَّبِيلَ يَسَّرَهُۥ",
+        "translation": "Then He eased the way for him",
+        "transliteration": "Thumma alssabeela yassarahu"
+      },
+      {
+        "id": 21,
+        "text": "ثُمَّ أَمَاتَهُۥ فَأَقۡبَرَهُۥ",
+        "translation": "Then He causes his death and provides a grave for him",
+        "transliteration": "Thumma amatahu faaqbarahu"
+      },
+      {
+        "id": 22,
+        "text": "ثُمَّ إِذَا شَآءَ أَنشَرَهُۥ",
+        "translation": "Then when He wills, He will resurrect him",
+        "transliteration": "Thumma itha shaa ansharahu"
+      },
+      {
+        "id": 23,
+        "text": "كَلَّا لَمَّا يَقۡضِ مَآ أَمَرَهُۥ",
+        "translation": "No! Man has not yet accomplished what He commanded him",
+        "transliteration": "Kalla lamma yaqdi ma amarahu"
+      },
+      {
+        "id": 24,
+        "text": "فَلۡيَنظُرِ ٱلۡإِنسَٰنُ إِلَىٰ طَعَامِهِۦٓ",
+        "translation": "Then let mankind look at his food",
+        "transliteration": "Falyanthuri alinsanu ila taAAamihi"
+      },
+      {
+        "id": 25,
+        "text": "أَنَّا صَبَبۡنَا ٱلۡمَآءَ صَبّٗا",
+        "translation": "How We poured down water in torrents",
+        "transliteration": "Anna sababna almaa sabban"
+      },
+      {
+        "id": 26,
+        "text": "ثُمَّ شَقَقۡنَا ٱلۡأَرۡضَ شَقّٗا",
+        "translation": "Then We broke open the earth, splitting [it with sprouts]",
+        "transliteration": "Thumma shaqaqna alarda shaqqan"
+      },
+      {
+        "id": 27,
+        "text": "فَأَنۢبَتۡنَا فِيهَا حَبّٗا",
+        "translation": "And caused to grow within it grain",
+        "transliteration": "Faanbatna feeha habban"
+      },
+      {
+        "id": 28,
+        "text": "وَعِنَبٗا وَقَضۡبٗا",
+        "translation": "And grapes and herbage",
+        "transliteration": "WaAAinaban waqadban"
+      },
+      {
+        "id": 29,
+        "text": "وَزَيۡتُونٗا وَنَخۡلٗا",
+        "translation": "And olive and palm trees",
+        "transliteration": "Wazaytoonan wanakhlan"
+      },
+      {
+        "id": 30,
+        "text": "وَحَدَآئِقَ غُلۡبٗا",
+        "translation": "And gardens of dense shrubbery",
+        "transliteration": "Wahadaiqa ghulban"
+      },
+      {
+        "id": 31,
+        "text": "وَفَٰكِهَةٗ وَأَبّٗا",
+        "translation": "And fruit and grass",
+        "transliteration": "Wafakihatan waabban"
+      },
+      {
+        "id": 32,
+        "text": "مَّتَٰعٗا لَّكُمۡ وَلِأَنۡعَٰمِكُمۡ",
+        "translation": "[As] enjoyment for you and your grazing livestock",
+        "transliteration": "MataAAan lakum walianAAamikum"
+      },
+      {
+        "id": 33,
+        "text": "فَإِذَا جَآءَتِ ٱلصَّآخَّةُ",
+        "translation": "But when there comes the Deafening Blast",
+        "transliteration": "Faitha jaati alssakhkhatu"
+      },
+      {
+        "id": 34,
+        "text": "يَوۡمَ يَفِرُّ ٱلۡمَرۡءُ مِنۡ أَخِيهِ",
+        "translation": "On the Day a man will flee from his brother",
+        "transliteration": "Yawma yafirru almaro min akheehi"
+      },
+      {
+        "id": 35,
+        "text": "وَأُمِّهِۦ وَأَبِيهِ",
+        "translation": "And his mother and his father",
+        "transliteration": "Waommihi waabeehi"
+      },
+      {
+        "id": 36,
+        "text": "وَصَٰحِبَتِهِۦ وَبَنِيهِ",
+        "translation": "And his wife and his children",
+        "transliteration": "Wasahibatihi wabaneehi"
+      },
+      {
+        "id": 37,
+        "text": "لِكُلِّ ٱمۡرِيٕٖ مِّنۡهُمۡ يَوۡمَئِذٖ شَأۡنٞ يُغۡنِيهِ",
+        "translation": "For every man, that Day, will be a matter adequate for him",
+        "transliteration": "Likulli imriin minhum yawmaithin shanun yughneehi"
+      },
+      {
+        "id": 38,
+        "text": "وُجُوهٞ يَوۡمَئِذٖ مُّسۡفِرَةٞ",
+        "translation": "[Some] faces, that Day, will be bright",
+        "transliteration": "Wujoohun yawmaithin musfiratun"
+      },
+      {
+        "id": 39,
+        "text": "ضَاحِكَةٞ مُّسۡتَبۡشِرَةٞ",
+        "translation": "Laughing, rejoicing at good news",
+        "transliteration": "Dahikatun mustabshiratun"
+      },
+      {
+        "id": 40,
+        "text": "وَوُجُوهٞ يَوۡمَئِذٍ عَلَيۡهَا غَبَرَةٞ",
+        "translation": "And [other] faces, that Day, will have upon them dust",
+        "transliteration": "Wawujoohun yawmaithin AAalayha ghabaratun"
+      },
+      {
+        "id": 41,
+        "text": "تَرۡهَقُهَا قَتَرَةٌ",
+        "translation": "Blackness will cover them",
+        "transliteration": "Tarhaquha qataratun"
+      },
+      {
+        "id": 42,
+        "text": "أُوْلَـٰٓئِكَ هُمُ ٱلۡكَفَرَةُ ٱلۡفَجَرَةُ",
+        "translation": "Those are the disbelievers, the wicked ones",
+        "transliteration": "Olaika humu alkafaratu alfajaratu"
+      }
+    ]
+  },
+  {
+    "id": 81,
+    "name": "التكوير",
+    "transliteration": "At-Takwir",
+    "translation": "The Overthrowing",
+    "type": "meccan",
+    "total_verses": 29,
+    "verses": [
+      {
+        "id": 1,
+        "text": "إِذَا ٱلشَّمۡسُ كُوِّرَتۡ",
+        "translation": "When the sun is wrapped up [in darkness]",
+        "transliteration": "Itha alshshamsu kuwwirat"
+      },
+      {
+        "id": 2,
+        "text": "وَإِذَا ٱلنُّجُومُ ٱنكَدَرَتۡ",
+        "translation": "And when the stars fall, dispersing",
+        "transliteration": "Waitha alnnujoomu inkadarat"
+      },
+      {
+        "id": 3,
+        "text": "وَإِذَا ٱلۡجِبَالُ سُيِّرَتۡ",
+        "translation": "And when the mountains are removed",
+        "transliteration": "Waitha aljibalu suyyirat"
+      },
+      {
+        "id": 4,
+        "text": "وَإِذَا ٱلۡعِشَارُ عُطِّلَتۡ",
+        "translation": "And when full-term she-camels are neglected",
+        "transliteration": "Waitha alAAisharu AAuttilat"
+      },
+      {
+        "id": 5,
+        "text": "وَإِذَا ٱلۡوُحُوشُ حُشِرَتۡ",
+        "translation": "And when the wild beasts are gathered",
+        "transliteration": "Waitha alwuhooshu hushirat"
+      },
+      {
+        "id": 6,
+        "text": "وَإِذَا ٱلۡبِحَارُ سُجِّرَتۡ",
+        "translation": "And when the seas are filled with flame",
+        "transliteration": "Waitha albiharu sujjirat"
+      },
+      {
+        "id": 7,
+        "text": "وَإِذَا ٱلنُّفُوسُ زُوِّجَتۡ",
+        "translation": "And when the souls are paired",
+        "transliteration": "Waitha alnnufoosu zuwwijat"
+      },
+      {
+        "id": 8,
+        "text": "وَإِذَا ٱلۡمَوۡءُۥدَةُ سُئِلَتۡ",
+        "translation": "And when the girl [who was] buried alive is asked",
+        "transliteration": "Waitha almawoodatu suilat"
+      },
+      {
+        "id": 9,
+        "text": "بِأَيِّ ذَنۢبٖ قُتِلَتۡ",
+        "translation": "For what sin she was killed",
+        "transliteration": "Biayyi thanbin qutilat"
+      },
+      {
+        "id": 10,
+        "text": "وَإِذَا ٱلصُّحُفُ نُشِرَتۡ",
+        "translation": "And when the pages are made public",
+        "transliteration": "Waitha alssuhufu nushirat"
+      },
+      {
+        "id": 11,
+        "text": "وَإِذَا ٱلسَّمَآءُ كُشِطَتۡ",
+        "translation": "And when the sky is stripped away",
+        "transliteration": "Waitha alssamao kushitat"
+      },
+      {
+        "id": 12,
+        "text": "وَإِذَا ٱلۡجَحِيمُ سُعِّرَتۡ",
+        "translation": "And when Hellfire is set ablaze",
+        "transliteration": "Waitha aljaheemu suAAAAirat"
+      },
+      {
+        "id": 13,
+        "text": "وَإِذَا ٱلۡجَنَّةُ أُزۡلِفَتۡ",
+        "translation": "And when Paradise is brought near",
+        "transliteration": "Waitha aljannatu ozlifat"
+      },
+      {
+        "id": 14,
+        "text": "عَلِمَتۡ نَفۡسٞ مَّآ أَحۡضَرَتۡ",
+        "translation": "A soul will [then] know what it has brought [with it]",
+        "transliteration": "AAalimat nafsun ma ahdarat"
+      },
+      {
+        "id": 15,
+        "text": "فَلَآ أُقۡسِمُ بِٱلۡخُنَّسِ",
+        "translation": "So I swear by the retreating stars",
+        "transliteration": "Fala oqsimu bialkhunnasi"
+      },
+      {
+        "id": 16,
+        "text": "ٱلۡجَوَارِ ٱلۡكُنَّسِ",
+        "translation": "Those that run [their courses] and disappear",
+        "transliteration": "Aljawari alkunnasi"
+      },
+      {
+        "id": 17,
+        "text": "وَٱلَّيۡلِ إِذَا عَسۡعَسَ",
+        "translation": "And by the night as it closes in",
+        "transliteration": "Waallayli itha AAasAAasa"
+      },
+      {
+        "id": 18,
+        "text": "وَٱلصُّبۡحِ إِذَا تَنَفَّسَ",
+        "translation": "And by the dawn when it breathes",
+        "transliteration": "Waalssubhi itha tanaffasa"
+      },
+      {
+        "id": 19,
+        "text": "إِنَّهُۥ لَقَوۡلُ رَسُولٖ كَرِيمٖ",
+        "translation": "[That] indeed, the Qur'an is a word [conveyed by] a noble messenger",
+        "transliteration": "Innahu laqawlu rasoolin kareemin"
+      },
+      {
+        "id": 20,
+        "text": "ذِي قُوَّةٍ عِندَ ذِي ٱلۡعَرۡشِ مَكِينٖ",
+        "translation": "[Who is] possessed of power and with the Owner of the Throne, secure [in position]",
+        "transliteration": "Thee quwwatin AAinda thee alAAarshi makeenin"
+      },
+      {
+        "id": 21,
+        "text": "مُّطَاعٖ ثَمَّ أَمِينٖ",
+        "translation": "Obeyed there [in the heavens] and trustworthy",
+        "transliteration": "MutaAAin thamma ameenin"
+      },
+      {
+        "id": 22,
+        "text": "وَمَا صَاحِبُكُم بِمَجۡنُونٖ",
+        "translation": "And your companion is not [at all] mad",
+        "transliteration": "Wama sahibukum bimajnoonin"
+      },
+      {
+        "id": 23,
+        "text": "وَلَقَدۡ رَءَاهُ بِٱلۡأُفُقِ ٱلۡمُبِينِ",
+        "translation": "And he has already seen Gabriel in the clear horizon",
+        "transliteration": "Walaqad raahu bialofuqi almubeeni"
+      },
+      {
+        "id": 24,
+        "text": "وَمَا هُوَ عَلَى ٱلۡغَيۡبِ بِضَنِينٖ",
+        "translation": "And Muhammad is not a withholder of [knowledge of] the unseen",
+        "transliteration": "Wama huwa AAala alghaybi bidaneenin"
+      },
+      {
+        "id": 25,
+        "text": "وَمَا هُوَ بِقَوۡلِ شَيۡطَٰنٖ رَّجِيمٖ",
+        "translation": "And the Qur'an is not the word of a devil, expelled [from the heavens]",
+        "transliteration": "Wama huwa biqawli shaytanin rajeemin"
+      },
+      {
+        "id": 26,
+        "text": "فَأَيۡنَ تَذۡهَبُونَ",
+        "translation": "So where are you going",
+        "transliteration": "Faayna tathhaboona"
+      },
+      {
+        "id": 27,
+        "text": "إِنۡ هُوَ إِلَّا ذِكۡرٞ لِّلۡعَٰلَمِينَ",
+        "translation": "It is not except a reminder to the worlds",
+        "transliteration": "In huwa illa thikrun lilAAalameena"
+      },
+      {
+        "id": 28,
+        "text": "لِمَن شَآءَ مِنكُمۡ أَن يَسۡتَقِيمَ",
+        "translation": "For whoever wills among you to take a right course",
+        "transliteration": "Liman shaa minkum an yastaqeema"
+      },
+      {
+        "id": 29,
+        "text": "وَمَا تَشَآءُونَ إِلَّآ أَن يَشَآءَ ٱللَّهُ رَبُّ ٱلۡعَٰلَمِينَ",
+        "translation": "And you do not will except that Allah wills - Lord of the worlds",
+        "transliteration": "Wama tashaoona illa an yashaa Allahu rabbu alAAalameena"
+      }
+    ]
+  },
+  {
+    "id": 82,
+    "name": "الإنفطار",
+    "transliteration": "Al-Infitar",
+    "translation": "The Cleaving",
+    "type": "meccan",
+    "total_verses": 19,
+    "verses": [
+      {
+        "id": 1,
+        "text": "إِذَا ٱلسَّمَآءُ ٱنفَطَرَتۡ",
+        "translation": "When the sky breaks apart",
+        "transliteration": "Itha alssamao infatarat"
+      },
+      {
+        "id": 2,
+        "text": "وَإِذَا ٱلۡكَوَاكِبُ ٱنتَثَرَتۡ",
+        "translation": "And when the stars fall, scattering",
+        "transliteration": "Waitha alkawakibu intatharat"
+      },
+      {
+        "id": 3,
+        "text": "وَإِذَا ٱلۡبِحَارُ فُجِّرَتۡ",
+        "translation": "And when the seas are erupted",
+        "transliteration": "Waitha albiharu fujjirat"
+      },
+      {
+        "id": 4,
+        "text": "وَإِذَا ٱلۡقُبُورُ بُعۡثِرَتۡ",
+        "translation": "And when the [contents of] graves are scattered",
+        "transliteration": "Waitha alqubooru buAAthirat"
+      },
+      {
+        "id": 5,
+        "text": "عَلِمَتۡ نَفۡسٞ مَّا قَدَّمَتۡ وَأَخَّرَتۡ",
+        "translation": "A soul will [then] know what it has put forth and kept back",
+        "transliteration": "AAalimat nafsun ma qaddamat waakhkharat"
+      },
+      {
+        "id": 6,
+        "text": "يَـٰٓأَيُّهَا ٱلۡإِنسَٰنُ مَا غَرَّكَ بِرَبِّكَ ٱلۡكَرِيمِ",
+        "translation": "O mankind, what has deceived you concerning your Lord, the Generous",
+        "transliteration": "Ya ayyuha alinsanu ma gharraka birabbika alkareemi"
+      },
+      {
+        "id": 7,
+        "text": "ٱلَّذِي خَلَقَكَ فَسَوَّىٰكَ فَعَدَلَكَ",
+        "translation": "Who created you, proportioned you, and balanced you",
+        "transliteration": "Allathee khalaqaka fasawwaka faAAadalaka"
+      },
+      {
+        "id": 8,
+        "text": "فِيٓ أَيِّ صُورَةٖ مَّا شَآءَ رَكَّبَكَ",
+        "translation": "In whatever form He willed has He assembled you",
+        "transliteration": "Fee ayyi sooratin ma shaa rakkabaka"
+      },
+      {
+        "id": 9,
+        "text": "كَلَّا بَلۡ تُكَذِّبُونَ بِٱلدِّينِ",
+        "translation": "No! But you deny the Recompense",
+        "transliteration": "Kalla bal tukaththiboona bialddeeni"
+      },
+      {
+        "id": 10,
+        "text": "وَإِنَّ عَلَيۡكُمۡ لَحَٰفِظِينَ",
+        "translation": "And indeed, [appointed] over you are keepers",
+        "transliteration": "Wainna AAalaykum lahafitheena"
+      },
+      {
+        "id": 11,
+        "text": "كِرَامٗا كَٰتِبِينَ",
+        "translation": "Noble and recording",
+        "transliteration": "Kiraman katibeena"
+      },
+      {
+        "id": 12,
+        "text": "يَعۡلَمُونَ مَا تَفۡعَلُونَ",
+        "translation": "They know whatever you do",
+        "transliteration": "YaAAlamoona ma tafAAaloona"
+      },
+      {
+        "id": 13,
+        "text": "إِنَّ ٱلۡأَبۡرَارَ لَفِي نَعِيمٖ",
+        "translation": "Indeed, the righteous will be in pleasure",
+        "transliteration": "Inna alabrara lafee naAAeemin"
+      },
+      {
+        "id": 14,
+        "text": "وَإِنَّ ٱلۡفُجَّارَ لَفِي جَحِيمٖ",
+        "translation": "And indeed, the wicked will be in Hellfire",
+        "transliteration": "Wainna alfujjara lafee jaheemin"
+      },
+      {
+        "id": 15,
+        "text": "يَصۡلَوۡنَهَا يَوۡمَ ٱلدِّينِ",
+        "translation": "They will [enter to] burn therein on the Day of Recompense",
+        "transliteration": "Yaslawnaha yawma alddeeni"
+      },
+      {
+        "id": 16,
+        "text": "وَمَا هُمۡ عَنۡهَا بِغَآئِبِينَ",
+        "translation": "And never therefrom will they be absent",
+        "transliteration": "Wama hum AAanha bighaibeena"
+      },
+      {
+        "id": 17,
+        "text": "وَمَآ أَدۡرَىٰكَ مَا يَوۡمُ ٱلدِّينِ",
+        "translation": "And what can make you know what is the Day of Recompense",
+        "transliteration": "Wama adraka ma yawmu alddeeni"
+      },
+      {
+        "id": 18,
+        "text": "ثُمَّ مَآ أَدۡرَىٰكَ مَا يَوۡمُ ٱلدِّينِ",
+        "translation": "Then, what can make you know what is the Day of Recompense",
+        "transliteration": "Thumma ma adraka ma yawmu alddeeni"
+      },
+      {
+        "id": 19,
+        "text": "يَوۡمَ لَا تَمۡلِكُ نَفۡسٞ لِّنَفۡسٖ شَيۡـٔٗاۖ وَٱلۡأَمۡرُ يَوۡمَئِذٖ لِّلَّهِ",
+        "translation": "It is the Day when a soul will not possess for another soul [power to do] a thing; and the command, that Day, is [entirely] with Allah",
+        "transliteration": "Yawma la tamliku nafsun linafsin shayan waalamru yawmaithin lillahi"
+      }
+    ]
+  },
+  {
+    "id": 83,
+    "name": "المطففين",
+    "transliteration": "Al-Mutaffifin",
+    "translation": "The Defrauding",
+    "type": "meccan",
+    "total_verses": 36,
+    "verses": [
+      {
+        "id": 1,
+        "text": "وَيۡلٞ لِّلۡمُطَفِّفِينَ",
+        "translation": "Woe to those who give less [than due]",
+        "transliteration": "Waylun lilmutaffifeena"
+      },
+      {
+        "id": 2,
+        "text": "ٱلَّذِينَ إِذَا ٱكۡتَالُواْ عَلَى ٱلنَّاسِ يَسۡتَوۡفُونَ",
+        "translation": "Who, when they take a measure from people, take in full",
+        "transliteration": "Allatheena itha iktaloo AAala alnnasi yastawfoona"
+      },
+      {
+        "id": 3,
+        "text": "وَإِذَا كَالُوهُمۡ أَو وَّزَنُوهُمۡ يُخۡسِرُونَ",
+        "translation": "But if they give by measure or by weight to them, they cause loss",
+        "transliteration": "Waitha kaloohum aw wazanoohum yukhsiroona"
+      },
+      {
+        "id": 4,
+        "text": "أَلَا يَظُنُّ أُوْلَـٰٓئِكَ أَنَّهُم مَّبۡعُوثُونَ",
+        "translation": "Do they not think that they will be resurrected",
+        "transliteration": "Ala yathunnu olaika annahum mabAAoothoona"
+      },
+      {
+        "id": 5,
+        "text": "لِيَوۡمٍ عَظِيمٖ",
+        "translation": "For a tremendous Day",
+        "transliteration": "Liyawmin AAatheemin"
+      },
+      {
+        "id": 6,
+        "text": "يَوۡمَ يَقُومُ ٱلنَّاسُ لِرَبِّ ٱلۡعَٰلَمِينَ",
+        "translation": "The Day when mankind will stand before the Lord of the worlds",
+        "transliteration": "Yawma yaqoomu alnnasu lirabbi alAAalameena"
+      },
+      {
+        "id": 7,
+        "text": "كَلَّآ إِنَّ كِتَٰبَ ٱلۡفُجَّارِ لَفِي سِجِّينٖ",
+        "translation": "No! Indeed, the record of the wicked is in sijjeen",
+        "transliteration": "Kalla inna kitaba alfujjari lafee sijjeenin"
+      },
+      {
+        "id": 8,
+        "text": "وَمَآ أَدۡرَىٰكَ مَا سِجِّينٞ",
+        "translation": "And what can make you know what is sijjeen",
+        "transliteration": "Wama adraka ma sijjeenun"
+      },
+      {
+        "id": 9,
+        "text": "كِتَٰبٞ مَّرۡقُومٞ",
+        "translation": "It is [their destination recorded in] a register inscribed",
+        "transliteration": "Kitabun marqoomun"
+      },
+      {
+        "id": 10,
+        "text": "وَيۡلٞ يَوۡمَئِذٖ لِّلۡمُكَذِّبِينَ",
+        "translation": "Woe, that Day, to the deniers",
+        "transliteration": "Waylun yawmaithin lilmukaththibeena"
+      },
+      {
+        "id": 11,
+        "text": "ٱلَّذِينَ يُكَذِّبُونَ بِيَوۡمِ ٱلدِّينِ",
+        "translation": "Who deny the Day of Recompense",
+        "transliteration": "Allatheena yukaththiboona biyawmi alddeeni"
+      },
+      {
+        "id": 12,
+        "text": "وَمَا يُكَذِّبُ بِهِۦٓ إِلَّا كُلُّ مُعۡتَدٍ أَثِيمٍ",
+        "translation": "And none deny it except every sinful transgressor",
+        "transliteration": "Wama yukaththibu bihi illa kullu muAAtadin atheemin"
+      },
+      {
+        "id": 13,
+        "text": "إِذَا تُتۡلَىٰ عَلَيۡهِ ءَايَٰتُنَا قَالَ أَسَٰطِيرُ ٱلۡأَوَّلِينَ",
+        "translation": "When Our verses are recited to him, he says, \"Legends of the former peoples",
+        "transliteration": "Itha tutla AAalayhi ayatuna qala asateeru alawwaleena"
+      },
+      {
+        "id": 14,
+        "text": "كَلَّاۖ بَلۡۜ رَانَ عَلَىٰ قُلُوبِهِم مَّا كَانُواْ يَكۡسِبُونَ",
+        "translation": "No! Rather, the stain has covered their hearts of that which they were earning",
+        "transliteration": "Kalla bal rana AAala quloobihim ma kanoo yaksiboona"
+      },
+      {
+        "id": 15,
+        "text": "كَلَّآ إِنَّهُمۡ عَن رَّبِّهِمۡ يَوۡمَئِذٖ لَّمَحۡجُوبُونَ",
+        "translation": "No! Indeed, from their Lord, that Day, they will be partitioned",
+        "transliteration": "Kalla innahum AAan rabbihim yawmaithin lamahjooboona"
+      },
+      {
+        "id": 16,
+        "text": "ثُمَّ إِنَّهُمۡ لَصَالُواْ ٱلۡجَحِيمِ",
+        "translation": "Then indeed, they will [enter and] burn in Hellfire",
+        "transliteration": "Thumma innahum lasaloo aljaheemi"
+      },
+      {
+        "id": 17,
+        "text": "ثُمَّ يُقَالُ هَٰذَا ٱلَّذِي كُنتُم بِهِۦ تُكَذِّبُونَ",
+        "translation": "Then it will be said [to them], \"This is what you used to deny",
+        "transliteration": "Thumma yuqalu hatha allathee kuntum bihi tukaththiboona"
+      },
+      {
+        "id": 18,
+        "text": "كَلَّآ إِنَّ كِتَٰبَ ٱلۡأَبۡرَارِ لَفِي عِلِّيِّينَ",
+        "translation": "No! Indeed, the record of the righteous is in 'illiyyun",
+        "transliteration": "Kalla inna kitaba alabrari lafee AAilliyyeena"
+      },
+      {
+        "id": 19,
+        "text": "وَمَآ أَدۡرَىٰكَ مَا عِلِّيُّونَ",
+        "translation": "And what can make you know what is 'illiyyun",
+        "transliteration": "Wama adraka ma AAilliyyoona"
+      },
+      {
+        "id": 20,
+        "text": "كِتَٰبٞ مَّرۡقُومٞ",
+        "translation": "It is [their destination recorded in] a register inscribed",
+        "transliteration": "Kitabun marqoomun"
+      },
+      {
+        "id": 21,
+        "text": "يَشۡهَدُهُ ٱلۡمُقَرَّبُونَ",
+        "translation": "Which is witnessed by those brought near [to Allah]",
+        "transliteration": "Yashhaduhu almuqarraboona"
+      },
+      {
+        "id": 22,
+        "text": "إِنَّ ٱلۡأَبۡرَارَ لَفِي نَعِيمٍ",
+        "translation": "Indeed, the righteous will be in pleasure",
+        "transliteration": "Inna alabrara lafee naAAeemin"
+      },
+      {
+        "id": 23,
+        "text": "عَلَى ٱلۡأَرَآئِكِ يَنظُرُونَ",
+        "translation": "On adorned couches, observing",
+        "transliteration": "AAala alaraiki yanthuroona"
+      },
+      {
+        "id": 24,
+        "text": "تَعۡرِفُ فِي وُجُوهِهِمۡ نَضۡرَةَ ٱلنَّعِيمِ",
+        "translation": "You will recognize in their faces the radiance of pleasure",
+        "transliteration": "TaAArifu fee wujoohihim nadrata alnnaAAeemi"
+      },
+      {
+        "id": 25,
+        "text": "يُسۡقَوۡنَ مِن رَّحِيقٖ مَّخۡتُومٍ",
+        "translation": "They will be given to drink [pure] wine [which was] sealed",
+        "transliteration": "Yusqawna min raheeqin makhtoomin"
+      },
+      {
+        "id": 26,
+        "text": "خِتَٰمُهُۥ مِسۡكٞۚ وَفِي ذَٰلِكَ فَلۡيَتَنَافَسِ ٱلۡمُتَنَٰفِسُونَ",
+        "translation": "The last of it is musk. So for this let the competitors compete",
+        "transliteration": "Khitamuhu miskun wafee thalika falyatanafasi almutanafisoona"
+      },
+      {
+        "id": 27,
+        "text": "وَمِزَاجُهُۥ مِن تَسۡنِيمٍ",
+        "translation": "And its mixture is of Tasneem",
+        "transliteration": "Wamizajuhu min tasneemin"
+      },
+      {
+        "id": 28,
+        "text": "عَيۡنٗا يَشۡرَبُ بِهَا ٱلۡمُقَرَّبُونَ",
+        "translation": "A spring from which those near [to Allah] drink",
+        "transliteration": "AAaynan yashrabu biha almuqarraboona"
+      },
+      {
+        "id": 29,
+        "text": "إِنَّ ٱلَّذِينَ أَجۡرَمُواْ كَانُواْ مِنَ ٱلَّذِينَ ءَامَنُواْ يَضۡحَكُونَ",
+        "translation": "Indeed, those who committed crimes used to laugh at those who believed",
+        "transliteration": "Inna allatheena ajramoo kanoo mina allatheena amanoo yadhakoona"
+      },
+      {
+        "id": 30,
+        "text": "وَإِذَا مَرُّواْ بِهِمۡ يَتَغَامَزُونَ",
+        "translation": "And when they passed by them, they would exchange derisive glances",
+        "transliteration": "Waitha marroo bihim yataghamazoona"
+      },
+      {
+        "id": 31,
+        "text": "وَإِذَا ٱنقَلَبُوٓاْ إِلَىٰٓ أَهۡلِهِمُ ٱنقَلَبُواْ فَكِهِينَ",
+        "translation": "And when they returned to their people, they would return jesting",
+        "transliteration": "Waitha inqalaboo ila ahlihimu inqalaboo fakiheena"
+      },
+      {
+        "id": 32,
+        "text": "وَإِذَا رَأَوۡهُمۡ قَالُوٓاْ إِنَّ هَـٰٓؤُلَآءِ لَضَآلُّونَ",
+        "translation": "And when they saw them, they would say, \"Indeed, those are truly lost",
+        "transliteration": "Waitha raawhum qaloo inna haolai ladalloona"
+      },
+      {
+        "id": 33,
+        "text": "وَمَآ أُرۡسِلُواْ عَلَيۡهِمۡ حَٰفِظِينَ",
+        "translation": "But they had not been sent as guardians over them",
+        "transliteration": "Wama orsiloo AAalayhim hafitheena"
+      },
+      {
+        "id": 34,
+        "text": "فَٱلۡيَوۡمَ ٱلَّذِينَ ءَامَنُواْ مِنَ ٱلۡكُفَّارِ يَضۡحَكُونَ",
+        "translation": "So Today those who believed are laughing at the disbelievers",
+        "transliteration": "Faalyawma allatheena amanoo mina alkuffari yadhakoona"
+      },
+      {
+        "id": 35,
+        "text": "عَلَى ٱلۡأَرَآئِكِ يَنظُرُونَ",
+        "translation": "On adorned couches, observing",
+        "transliteration": "AAala alaraiki yanthuroona"
+      },
+      {
+        "id": 36,
+        "text": "هَلۡ ثُوِّبَ ٱلۡكُفَّارُ مَا كَانُواْ يَفۡعَلُونَ",
+        "translation": "Have the disbelievers [not] been rewarded [this Day] for what they used to do",
+        "transliteration": "Hal thuwwiba alkuffaru ma kanoo yafAAaloona"
+      }
+    ]
+  },
+  {
+    "id": 84,
+    "name": "الإنشقاق",
+    "transliteration": "Al-Inshiqaq",
+    "translation": "The Sundering",
+    "type": "meccan",
+    "total_verses": 25,
+    "verses": [
+      {
+        "id": 1,
+        "text": "إِذَا ٱلسَّمَآءُ ٱنشَقَّتۡ",
+        "translation": "When the sky has split [open]",
+        "transliteration": "Itha alssamao inshaqqat"
+      },
+      {
+        "id": 2,
+        "text": "وَأَذِنَتۡ لِرَبِّهَا وَحُقَّتۡ",
+        "translation": "And has responded to its Lord and was obligated [to do so]",
+        "transliteration": "Waathinat lirabbiha wahuqqat"
+      },
+      {
+        "id": 3,
+        "text": "وَإِذَا ٱلۡأَرۡضُ مُدَّتۡ",
+        "translation": "And when the earth has been extended",
+        "transliteration": "Waitha alardu muddat"
+      },
+      {
+        "id": 4,
+        "text": "وَأَلۡقَتۡ مَا فِيهَا وَتَخَلَّتۡ",
+        "translation": "And has cast out that within it and relinquished [it]",
+        "transliteration": "Waalqat ma feeha watakhallat"
+      },
+      {
+        "id": 5,
+        "text": "وَأَذِنَتۡ لِرَبِّهَا وَحُقَّتۡ",
+        "translation": "And has responded to its Lord and was obligated [to do so]",
+        "transliteration": "Waathinat lirabbiha wahuqqat"
+      },
+      {
+        "id": 6,
+        "text": "يَـٰٓأَيُّهَا ٱلۡإِنسَٰنُ إِنَّكَ كَادِحٌ إِلَىٰ رَبِّكَ كَدۡحٗا فَمُلَٰقِيهِ",
+        "translation": "O mankind, indeed you are laboring toward your Lord with [great] exertion and will meet it",
+        "transliteration": "Ya ayyuha alinsanu innaka kadihun ila rabbika kadhan famulaqeehi"
+      },
+      {
+        "id": 7,
+        "text": "فَأَمَّا مَنۡ أُوتِيَ كِتَٰبَهُۥ بِيَمِينِهِۦ",
+        "translation": "Then as for he who is given his record in his right hand",
+        "transliteration": "Faama man ootiya kitabahu biyameenihi"
+      },
+      {
+        "id": 8,
+        "text": "فَسَوۡفَ يُحَاسَبُ حِسَابٗا يَسِيرٗا",
+        "translation": "He will be judged with an easy account",
+        "transliteration": "Fasawfa yuhasabu hisaban yaseeran"
+      },
+      {
+        "id": 9,
+        "text": "وَيَنقَلِبُ إِلَىٰٓ أَهۡلِهِۦ مَسۡرُورٗا",
+        "translation": "And return to his people in happiness",
+        "transliteration": "Wayanqalibu ila ahlihi masrooran"
+      },
+      {
+        "id": 10,
+        "text": "وَأَمَّا مَنۡ أُوتِيَ كِتَٰبَهُۥ وَرَآءَ ظَهۡرِهِۦ",
+        "translation": "But as for he who is given his record behind his back",
+        "transliteration": "Waamma man ootiya kitabahu waraa thahrihi"
+      },
+      {
+        "id": 11,
+        "text": "فَسَوۡفَ يَدۡعُواْ ثُبُورٗا",
+        "translation": "He will cry out for destruction",
+        "transliteration": "Fasawfa yadAAoo thubooran"
+      },
+      {
+        "id": 12,
+        "text": "وَيَصۡلَىٰ سَعِيرًا",
+        "translation": "And [enter to] burn in a Blaze",
+        "transliteration": "Wayasla saAAeeran"
+      },
+      {
+        "id": 13,
+        "text": "إِنَّهُۥ كَانَ فِيٓ أَهۡلِهِۦ مَسۡرُورًا",
+        "translation": "Indeed, he had [once] been among his people in happiness",
+        "transliteration": "Innahu kana fee ahlihi masrooran"
+      },
+      {
+        "id": 14,
+        "text": "إِنَّهُۥ ظَنَّ أَن لَّن يَحُورَ",
+        "translation": "Indeed, he had thought he would never return [to Allah]",
+        "transliteration": "Innahu thanna an lan yahoora"
+      },
+      {
+        "id": 15,
+        "text": "بَلَىٰٓۚ إِنَّ رَبَّهُۥ كَانَ بِهِۦ ب��صِيرٗا",
+        "translation": "But yes! Indeed, his Lord was ever of him, Seeing",
+        "transliteration": "Bala inna rabbahu kana bihi baseeran"
+      },
+      {
+        "id": 16,
+        "text": "فَلَآ أُقۡسِمُ بِٱلشَّفَقِ",
+        "translation": "So I swear by the twilight glow",
+        "transliteration": "Fala oqsimu bialshshafaqi"
+      },
+      {
+        "id": 17,
+        "text": "وَٱلَّيۡلِ وَمَا وَسَقَ",
+        "translation": "And [by] the night and what it envelops",
+        "transliteration": "Waallayli wama wasaqa"
+      },
+      {
+        "id": 18,
+        "text": "وَٱلۡقَمَرِ إِذَا ٱتَّسَقَ",
+        "translation": "And [by] the moon when it becomes full",
+        "transliteration": "Waalqamari itha ittasaqa"
+      },
+      {
+        "id": 19,
+        "text": "لَتَرۡكَبُنَّ طَبَقًا عَن طَبَقٖ",
+        "translation": "[That] you will surely experience state after state",
+        "transliteration": "Latarkabunna tabaqan AAan tabaqin"
+      },
+      {
+        "id": 20,
+        "text": "فَمَا لَهُمۡ لَا يُؤۡمِنُونَ",
+        "translation": "So what is [the matter] with them [that] they do not believe",
+        "transliteration": "Fama lahum la yuminoona"
+      },
+      {
+        "id": 21,
+        "text": "وَإِذَا قُرِئَ عَلَيۡهِمُ ٱلۡقُرۡءَانُ لَا يَسۡجُدُونَۤ۩",
+        "translation": "And when the Qur'an is recited to them, they do not prostrate [to Allah]",
+        "transliteration": "Waitha quria AAalayhimu alquranu la yasjudoona"
+      },
+      {
+        "id": 22,
+        "text": "بَلِ ٱلَّذِينَ كَفَرُواْ يُكَذِّبُونَ",
+        "translation": "But those who have disbelieved deny",
+        "transliteration": "Bali allatheena kafaroo yukaththiboona"
+      },
+      {
+        "id": 23,
+        "text": "وَٱللَّهُ أَعۡلَمُ بِمَا يُوعُونَ",
+        "translation": "And Allah is most knowing of what they keep within themselves",
+        "transliteration": "WaAllahu aAAlamu bima yooAAoona"
+      },
+      {
+        "id": 24,
+        "text": "فَبَشِّرۡهُم بِعَذَابٍ أَلِيمٍ",
+        "translation": "So give them tidings of a painful punishment",
+        "transliteration": "Fabashshirhum biAAathabin aleemin"
+      },
+      {
+        "id": 25,
+        "text": "إِلَّا ٱلَّذِينَ ءَامَنُواْ وَعَمِلُواْ ٱلصَّـٰلِحَٰتِ لَهُمۡ أَجۡرٌ غَيۡرُ مَمۡنُونِۭ",
+        "translation": "Except for those who believe and do righteous deeds. For them is a reward uninterrupted",
+        "transliteration": "Illa allatheena amanoo waAAamiloo alssalihati lahum ajrun ghayru mamnoonin"
+      }
+    ]
+  },
+  {
+    "id": 85,
+    "name": "البروج",
+    "transliteration": "Al-Buruj",
+    "translation": "The Mansions of the Stars",
+    "type": "meccan",
+    "total_verses": 22,
+    "verses": [
+      {
+        "id": 1,
+        "text": "وَٱلسَّمَآءِ ذَاتِ ٱلۡبُرُوجِ",
+        "translation": "By the sky containing great stars",
+        "transliteration": "Waalssamai thati alburooji"
+      },
+      {
+        "id": 2,
+        "text": "وَٱلۡيَوۡمِ ٱلۡمَوۡعُودِ",
+        "translation": "And [by] the promised Day",
+        "transliteration": "Waalyawmi almawAAoodi"
+      },
+      {
+        "id": 3,
+        "text": "وَشَاهِدٖ وَمَشۡهُودٖ",
+        "translation": "And [by] the witness and what is witnessed",
+        "transliteration": "Washahidin wamashhoodin"
+      },
+      {
+        "id": 4,
+        "text": "قُتِلَ أَصۡحَٰبُ ٱلۡأُخۡدُودِ",
+        "translation": "Cursed were the companions of the trench",
+        "transliteration": "Qutila ashabu alukhdoodi"
+      },
+      {
+        "id": 5,
+        "text": "ٱلنَّارِ ذَاتِ ٱلۡوَقُودِ",
+        "translation": "[Containing] the fire full of fuel",
+        "transliteration": "Alnnari thati alwaqoodi"
+      },
+      {
+        "id": 6,
+        "text": "إِذۡ هُمۡ عَلَيۡهَا قُعُودٞ",
+        "translation": "When they were sitting near it",
+        "transliteration": "Ith hum AAalayha quAAoodun"
+      },
+      {
+        "id": 7,
+        "text": "وَهُمۡ عَلَىٰ مَا يَفۡعَلُونَ بِٱلۡمُؤۡمِنِينَ شُهُودٞ",
+        "translation": "And they, to what they were doing against the believers, were witnesses",
+        "transliteration": "Wahum AAala ma yafAAaloona bialmumineena shuhoodun"
+      },
+      {
+        "id": 8,
+        "text": "وَمَا نَقَمُواْ مِنۡهُمۡ إِلَّآ أَن يُؤۡمِنُواْ بِٱللَّهِ ٱلۡعَزِيزِ ٱلۡحَمِيدِ",
+        "translation": "And they resented them not except because they believed in Allah, the Exalted in Might, the Praiseworthy",
+        "transliteration": "Wama naqamoo minhum illa an yuminoo biAllahi alAAazeezi alhameedi"
+      },
+      {
+        "id": 9,
+        "text": "ٱلَّذِي لَهُۥ مُلۡكُ ٱلسَّمَٰوَٰتِ وَٱلۡأَرۡضِۚ وَٱللَّهُ عَلَىٰ كُلِّ شَيۡءٖ شَهِيدٌ",
+        "translation": "To whom belongs the dominion of the heavens and the earth. And Allah, over all things, is Witness",
+        "transliteration": "Allathee lahu mulku alssamawati waalardi waAllahu AAala kulli shayin shaheedun"
+      },
+      {
+        "id": 10,
+        "text": "إِنَّ ٱلَّذِينَ فَتَنُواْ ٱلۡمُؤۡمِنِينَ وَٱلۡمُؤۡمِنَٰتِ ثُمَّ لَمۡ يَتُوبُواْ فَلَهُمۡ عَذَابُ جَهَنَّمَ وَلَهُمۡ عَذَابُ ٱلۡحَرِيقِ",
+        "translation": "Indeed, those who have tortured the believing men and believing women and then have not repented will have the punishment of Hell, and they will have the punishment of the Burning Fire",
+        "transliteration": "Inna allatheena fatanoo almumineena waalmuminati thumma lam yatooboo falahum AAathabu jahannama walahum AAathabu alhareeqi"
+      },
+      {
+        "id": 11,
+        "text": "إِنَّ ٱلَّذِينَ ءَامَنُواْ وَعَمِلُواْ ٱلصَّـٰلِحَٰتِ لَهُمۡ جَنَّـٰتٞ تَجۡرِي مِن تَحۡتِهَا ٱلۡأَنۡهَٰرُۚ ذَٰلِكَ ٱلۡفَوۡزُ ٱلۡكَبِيرُ",
+        "translation": "Indeed, those who have believed and done righteous deeds will have gardens beneath which rivers flow. That is the great attainment",
+        "transliteration": "Inna allatheena amanoo waAAamiloo alssalihati lahum jannatun tajree min tahtiha alanharu thalika alfawzu alkabeeru"
+      },
+      {
+        "id": 12,
+        "text": "إِنَّ بَطۡشَ رَبِّكَ لَشَدِيدٌ",
+        "translation": "Indeed, the vengeance of your Lord is severe",
+        "transliteration": "Inna batsha rabbika lashadeedun"
+      },
+      {
+        "id": 13,
+        "text": "إِنَّهُۥ هُوَ يُبۡدِئُ وَيُعِيدُ",
+        "translation": "Indeed, it is He who originates [creation] and repeats",
+        "transliteration": "Innahu huwa yubdio wayuAAeedu"
+      },
+      {
+        "id": 14,
+        "text": "وَهُوَ ٱلۡغَفُورُ ٱلۡوَدُودُ",
+        "translation": "And He is the Forgiving, the Affectionate",
+        "transliteration": "Wahuwa alghafooru alwadoodu"
+      },
+      {
+        "id": 15,
+        "text": "ذُو ٱلۡعَرۡشِ ٱلۡمَجِيدُ",
+        "translation": "Honorable Owner of the Throne",
+        "transliteration": "Thoo alAAarshi almajeedi"
+      },
+      {
+        "id": 16,
+        "text": "فَعَّالٞ لِّمَا يُرِيدُ",
+        "translation": "Effecter of what He intends",
+        "transliteration": "FaAAAAalun lima yureedu"
+      },
+      {
+        "id": 17,
+        "text": "هَلۡ أَتَىٰكَ حَدِيثُ ٱلۡجُنُودِ",
+        "translation": "Has there reached you the story of the soldiers",
+        "transliteration": "Hal ataka hadeethu aljunoodi"
+      },
+      {
+        "id": 18,
+        "text": "فِرۡعَوۡنَ وَثَمُودَ",
+        "translation": "[Those of] Pharaoh and Thamud",
+        "transliteration": "FirAAawna wathamooda"
+      },
+      {
+        "id": 19,
+        "text": "بَلِ ٱلَّذِينَ كَفَرُواْ فِي تَكۡذِيبٖ",
+        "translation": "But they who disbelieve are in [persistent] denial",
+        "transliteration": "Bali allatheena kafaroo fee taktheebin"
+      },
+      {
+        "id": 20,
+        "text": "وَٱللَّهُ مِن وَرَآئِهِم مُّحِيطُۢ",
+        "translation": "While Allah encompasses them from behind",
+        "transliteration": "WaAllahu min waraihim muheetun"
+      },
+      {
+        "id": 21,
+        "text": "بَلۡ هُوَ قُرۡءَانٞ مَّجِيدٞ",
+        "translation": "But this is an honored Qur'an",
+        "transliteration": "Bal huwa quranun majeedun"
+      },
+      {
+        "id": 22,
+        "text": "فِي لَوۡحٖ مَّحۡفُوظِۭ",
+        "translation": "[Inscribed] in a Preserved Slate",
+        "transliteration": "Fee lawhin mahfoothin"
+      }
+    ]
+  },
+  {
+    "id": 86,
+    "name": "الطارق",
+    "transliteration": "At-Tariq",
+    "translation": "The Nightcommer",
+    "type": "meccan",
+    "total_verses": 17,
+    "verses": [
+      {
+        "id": 1,
+        "text": "وَٱلسَّمَآءِ وَٱلطَّارِقِ",
+        "translation": "By the sky and the night comer",
+        "transliteration": "Waalssamai waalttariqi"
+      },
+      {
+        "id": 2,
+        "text": "وَمَآ أَدۡرَىٰكَ مَا ٱلطَّارِقُ",
+        "translation": "And what can make you know what is the night comer",
+        "transliteration": "Wama adraka ma alttariqu"
+      },
+      {
+        "id": 3,
+        "text": "ٱلنَّجۡمُ ٱلثَّاقِبُ",
+        "translation": "It is the piercing star",
+        "transliteration": "Alnnajmu alththaqibu"
+      },
+      {
+        "id": 4,
+        "text": "إِن كُلُّ نَفۡسٖ لَّمَّا عَلَيۡهَا حَافِظٞ",
+        "translation": "There is no soul but that it has over it a protector",
+        "transliteration": "In kullu nafsin lamma AAalayha hafithun"
+      },
+      {
+        "id": 5,
+        "text": "فَلۡيَنظُرِ ٱلۡإِنسَٰنُ مِمَّ خُلِقَ",
+        "translation": "So let man observe from what he was created",
+        "transliteration": "Falyanthuri alinsanu mimma khuliqa"
+      },
+      {
+        "id": 6,
+        "text": "خُلِقَ مِن مَّآءٖ دَافِقٖ",
+        "translation": "He was created from a fluid, ejected",
+        "transliteration": "Khuliqa min main dafiqin"
+      },
+      {
+        "id": 7,
+        "text": "يَخۡرُجُ مِنۢ بَيۡنِ ٱلصُّلۡبِ وَٱلتَّرَآئِبِ",
+        "translation": "Emerging from between the backbone and the ribs",
+        "transliteration": "Yakhruju min bayni alssulbi waalttaraibi"
+      },
+      {
+        "id": 8,
+        "text": "إِنَّهُۥ عَلَىٰ رَجۡعِهِۦ لَقَادِرٞ",
+        "translation": "Indeed, Allah, to return him [to life], is Able",
+        "transliteration": "Innahu AAala rajAAihi laqadirun"
+      },
+      {
+        "id": 9,
+        "text": "يَوۡمَ تُبۡلَى ٱلسَّرَآئِرُ",
+        "translation": "The Day when secrets will be put on trial",
+        "transliteration": "Yawma tubla alssarairu"
+      },
+      {
+        "id": 10,
+        "text": "فَمَا لَهُۥ مِن قُوَّةٖ وَلَا نَاصِرٖ",
+        "translation": "Then man will have no power or any helper",
+        "transliteration": "Fama lahu min quwwatin wala nasirin"
+      },
+      {
+        "id": 11,
+        "text": "وَٱلسَّمَآءِ ذَاتِ ٱلرَّجۡعِ",
+        "translation": "By the sky which returns [rain]",
+        "transliteration": "Waalssamai thati alrrajAAi"
+      },
+      {
+        "id": 12,
+        "text": "وَٱلۡأَرۡضِ ذَاتِ ٱلصَّدۡعِ",
+        "translation": "And [by] the earth which cracks open",
+        "transliteration": "Waalardi thati alssadAAi"
+      },
+      {
+        "id": 13,
+        "text": "إِنَّهُۥ لَقَوۡلٞ فَصۡلٞ",
+        "translation": "Indeed, the Qur'an is a decisive statement",
+        "transliteration": "Innahu laqawlun faslun"
+      },
+      {
+        "id": 14,
+        "text": "وَمَا هُوَ بِٱلۡهَزۡلِ",
+        "translation": "And it is not amusement",
+        "transliteration": "Wama huwa bialhazli"
+      },
+      {
+        "id": 15,
+        "text": "إِنَّهُمۡ يَكِيدُونَ كَيۡدٗا",
+        "translation": "Indeed, they are planning a plan",
+        "transliteration": "Innahum yakeedoona kaydan"
+      },
+      {
+        "id": 16,
+        "text": "وَأَكِيدُ كَيۡدٗا",
+        "translation": "But I am planning a plan",
+        "transliteration": "Waakeedu kaydan"
+      },
+      {
+        "id": 17,
+        "text": "فَمَهِّلِ ٱلۡكَٰفِرِينَ أَمۡهِلۡهُمۡ رُوَيۡدَۢا",
+        "translation": "So allow time for the disbelievers. Leave them awhile",
+        "transliteration": "Famahhili alkafireena amhilhum ruwaydan"
+      }
+    ]
+  },
+  {
+    "id": 87,
+    "name": "الأعلى",
+    "transliteration": "Al-A'la",
+    "translation": "The Most High",
+    "type": "meccan",
+    "total_verses": 19,
+    "verses": [
+      {
+        "id": 1,
+        "text": "سَبِّحِ ٱسۡمَ رَبِّكَ ٱلۡأَعۡلَى",
+        "translation": "Exalt the name of your Lord, the Most High",
+        "transliteration": "Sabbihi isma rabbika alaAAla"
+      },
+      {
+        "id": 2,
+        "text": "ٱلَّذِي خَلَقَ فَسَوَّىٰ",
+        "translation": "Who created and proportioned",
+        "transliteration": "Allathee khalaqa fasawwa"
+      },
+      {
+        "id": 3,
+        "text": "وَٱلَّذِي قَدَّرَ فَهَدَىٰ",
+        "translation": "And who destined and [then] guided",
+        "transliteration": "Waallathee qaddara fahada"
+      },
+      {
+        "id": 4,
+        "text": "وَٱلَّذِيٓ أَخۡرَجَ ٱلۡمَرۡعَىٰ",
+        "translation": "And who brings out the pasture",
+        "transliteration": "Waallathee akhraja almarAAa"
+      },
+      {
+        "id": 5,
+        "text": "فَجَعَلَهُۥ غُثَآءً أَحۡوَىٰ",
+        "translation": "And [then] makes it black stubble",
+        "transliteration": "FajaAAalahu ghuthaan ahwa"
+      },
+      {
+        "id": 6,
+        "text": "سَنُقۡرِئُكَ فَلَا تَنسَىٰٓ",
+        "translation": "We will make you recite, [O Muhammad], and you will not forget",
+        "transliteration": "Sanuqrioka fala tansa"
+      },
+      {
+        "id": 7,
+        "text": "إِلَّا مَا شَآءَ ٱللَّهُۚ إِنَّهُۥ يَعۡلَمُ ٱلۡجَهۡرَ وَمَا يَخۡفَىٰ",
+        "translation": "Except what Allah should will. Indeed, He knows what is declared and what is hidden",
+        "transliteration": "Illa ma shaa Allahu innahu yaAAlamu aljahra wama yakhfa"
+      },
+      {
+        "id": 8,
+        "text": "وَنُيَسِّرُكَ لِلۡيُسۡرَىٰ",
+        "translation": "And We will ease you toward ease",
+        "transliteration": "Wanuyassiruka lilyusra"
+      },
+      {
+        "id": 9,
+        "text": "فَذَكِّرۡ إِن نَّفَعَتِ ٱلذِّكۡرَىٰ",
+        "translation": "So remind, if the reminder should benefit",
+        "transliteration": "Fathakkir in nafaAAati alththikra"
+      },
+      {
+        "id": 10,
+        "text": "سَيَذَّكَّرُ مَن يَخۡشَىٰ",
+        "translation": "He who fears [Allah] will be reminded",
+        "transliteration": "Sayaththakkaru man yakhsha"
+      },
+      {
+        "id": 11,
+        "text": "وَيَتَجَنَّبُهَا ٱلۡأَشۡقَى",
+        "translation": "But the wretched one will avoid it",
+        "transliteration": "Wayatajannabuha alashqa"
+      },
+      {
+        "id": 12,
+        "text": "ٱلَّذِي يَصۡلَى ٱلنَّارَ ٱلۡكُبۡرَىٰ",
+        "translation": "[He] who will [enter and] burn in the greatest Fire",
+        "transliteration": "Allathee yasla alnnara alkubra"
+      },
+      {
+        "id": 13,
+        "text": "ثُمَّ لَا يَمُوتُ فِيهَا وَلَا يَحۡيَىٰ",
+        "translation": "Neither dying therein nor living",
+        "transliteration": "Thumma la yamootu feeha wala yahya"
+      },
+      {
+        "id": 14,
+        "text": "قَدۡ أَفۡلَحَ مَن تَزَكَّىٰ",
+        "translation": "He has certainly succeeded who purifies himself",
+        "transliteration": "Qad aflaha man tazakka"
+      },
+      {
+        "id": 15,
+        "text": "وَذَكَرَ ٱسۡمَ رَبِّهِۦ فَصَلَّىٰ",
+        "translation": "And mentions the name of his Lord and prays",
+        "transliteration": "Wathakara isma rabbihi fasalla"
+      },
+      {
+        "id": 16,
+        "text": "بَلۡ تُؤۡثِرُونَ ٱلۡحَيَوٰةَ ٱلدُّنۡيَا",
+        "translation": "But you prefer the worldly life",
+        "transliteration": "Bal tuthiroona alhayata alddunya"
+      },
+      {
+        "id": 17,
+        "text": "وَٱلۡأٓخِرَةُ خَيۡرٞ وَأَبۡقَىٰٓ",
+        "translation": "While the Hereafter is better and more enduring",
+        "transliteration": "Waalakhiratu khayrun waabqa"
+      },
+      {
+        "id": 18,
+        "text": "إِنَّ هَٰذَا لَفِي ٱلصُّحُفِ ٱلۡأُولَىٰ",
+        "translation": "Indeed, this is in the former scriptures",
+        "transliteration": "Inna hatha lafee alssuhufi aloola"
+      },
+      {
+        "id": 19,
+        "text": "صُحُفِ إِبۡرَٰهِيمَ وَمُوسَىٰ",
+        "translation": "The scriptures of Abraham and Moses",
+        "transliteration": "Suhufi ibraheema wamoosa"
+      }
+    ]
+  },
+  {
+    "id": 88,
+    "name": "الغاشية",
+    "transliteration": "Al-Ghashiyah",
+    "translation": "The Overwhelming",
+    "type": "meccan",
+    "total_verses": 26,
+    "verses": [
+      {
+        "id": 1,
+        "text": "هَلۡ أَتَىٰكَ حَدِيثُ ٱلۡغَٰشِيَةِ",
+        "translation": "Has there reached you the report of the Overwhelming [event]",
+        "transliteration": "Hal ataka hadeethu alghashiyati"
+      },
+      {
+        "id": 2,
+        "text": "وُجُوهٞ يَوۡمَئِذٍ خَٰشِعَةٌ",
+        "translation": "[Some] faces, that Day, will be humbled",
+        "transliteration": "Wujoohun yawmaithin khashiAAatun"
+      },
+      {
+        "id": 3,
+        "text": "عَامِلَةٞ نَّاصِبَةٞ",
+        "translation": "Working [hard] and exhausted",
+        "transliteration": "AAamilatun nasibatun"
+      },
+      {
+        "id": 4,
+        "text": "تَصۡلَىٰ نَارًا حَامِيَةٗ",
+        "translation": "They will [enter to] burn in an intensely hot Fire",
+        "transliteration": "Tasla naran hamiyatan"
+      },
+      {
+        "id": 5,
+        "text": "تُسۡقَىٰ مِنۡ عَيۡنٍ ءَانِيَةٖ",
+        "translation": "They will be given drink from a boiling spring",
+        "transliteration": "Tusqa min AAaynin aniyatin"
+      },
+      {
+        "id": 6,
+        "text": "لَّيۡسَ لَهُمۡ طَعَامٌ إِلَّا مِن ضَرِيعٖ",
+        "translation": "For them there will be no food except from a poisonous, thorny plant",
+        "transliteration": "Laysa lahum taAAamun illa min dareeAAin"
+      },
+      {
+        "id": 7,
+        "text": "لَّا يُسۡمِنُ وَلَا يُغۡنِي مِن جُوعٖ",
+        "translation": "Which neither nourishes nor avails against hunger",
+        "transliteration": "La yusminu wala yughnee min jooAAin"
+      },
+      {
+        "id": 8,
+        "text": "وُجُوهٞ يَوۡمَئِذٖ نَّاعِمَةٞ",
+        "translation": "[Other] faces, that Day, will show pleasure",
+        "transliteration": "Wujoohun yawmaithin naAAimatun"
+      },
+      {
+        "id": 9,
+        "text": "لِّسَعۡيِهَا رَاضِيَةٞ",
+        "translation": "With their effort [they are] satisfied",
+        "transliteration": "LisaAAyiha radiyatun"
+      },
+      {
+        "id": 10,
+        "text": "فِي جَنَّةٍ عَالِيَةٖ",
+        "translation": "In an elevated garden",
+        "transliteration": "Fee jannatin AAaliyatin"
+      },
+      {
+        "id": 11,
+        "text": "لَّا تَسۡمَعُ فِيهَا لَٰغِيَةٗ",
+        "translation": "Wherein they will hear no unsuitable speech",
+        "transliteration": "La tasmaAAu feeha laghiyatan"
+      },
+      {
+        "id": 12,
+        "text": "فِيهَا عَيۡنٞ جَارِيَةٞ",
+        "translation": "Within it is a flowing spring",
+        "transliteration": "Feeha AAaynun jariyatun"
+      },
+      {
+        "id": 13,
+        "text": "فِيهَا سُرُرٞ مَّرۡفُوعَةٞ",
+        "translation": "Within it are couches raised high",
+        "transliteration": "Feeha sururun marfooAAatun"
+      },
+      {
+        "id": 14,
+        "text": "وَأَكۡوَابٞ مَّوۡضُوعَةٞ",
+        "translation": "And cups put in place",
+        "transliteration": "Waakwabun mawdooAAatun"
+      },
+      {
+        "id": 15,
+        "text": "وَنَمَارِقُ مَصۡفُوفَةٞ",
+        "translation": "And cushions lined up",
+        "transliteration": "Wanamariqu masfoofatun"
+      },
+      {
+        "id": 16,
+        "text": "وَزَرَابِيُّ مَبۡثُوثَةٌ",
+        "translation": "And carpets spread around",
+        "transliteration": "Wazarabiyyu mabthoothatun"
+      },
+      {
+        "id": 17,
+        "text": "أَفَلَا يَنظُرُونَ إِلَى ٱلۡإِبِلِ كَيۡفَ خُلِقَتۡ",
+        "translation": "Then do they not look at the camels - how they are created",
+        "transliteration": "Afala yanthuroona ila alibili kayfa khuliqat"
+      },
+      {
+        "id": 18,
+        "text": "وَإِلَى ٱلسَّمَآءِ كَيۡفَ رُفِعَتۡ",
+        "translation": "And at the sky - how it is raised",
+        "transliteration": "Waila alssamai kayfa rufiAAat"
+      },
+      {
+        "id": 19,
+        "text": "وَإِلَى ٱلۡجِبَالِ كَيۡفَ نُصِبَتۡ",
+        "translation": "And at the mountains - how they are erected",
+        "transliteration": "Waila aljibali kayfa nusibat"
+      },
+      {
+        "id": 20,
+        "text": "وَإِلَى ٱلۡأَرۡضِ كَيۡفَ سُطِحَتۡ",
+        "translation": "And at the earth - how it is spread out",
+        "transliteration": "Waila alardi kayfa sutihat"
+      },
+      {
+        "id": 21,
+        "text": "فَذَكِّرۡ إِنَّمَآ أَنتَ مُذَكِّرٞ",
+        "translation": "So remind, [O Muhammad]; you are only a reminder",
+        "transliteration": "Fathakkir innama anta muthakkirun"
+      },
+      {
+        "id": 22,
+        "text": "لَّسۡتَ عَلَيۡهِم بِمُصَيۡطِرٍ",
+        "translation": "You are not over them a controller",
+        "transliteration": "Lasta AAalayhim bimusaytirin"
+      },
+      {
+        "id": 23,
+        "text": "إِلَّا مَن تَوَلَّىٰ وَكَفَرَ",
+        "translation": "However, he who turns away and disbelieves",
+        "transliteration": "Illa man tawalla wakafara"
+      },
+      {
+        "id": 24,
+        "text": "فَيُعَذِّبُهُ ٱللَّهُ ٱلۡعَذَابَ ٱلۡأَكۡبَرَ",
+        "translation": "Then Allah will punish him with the greatest punishment",
+        "transliteration": "FayuAAaththibuhu Allahu alAAathaba alakbara"
+      },
+      {
+        "id": 25,
+        "text": "إِنَّ إِلَيۡنَآ إِيَابَهُمۡ",
+        "translation": "Indeed, to Us is their return",
+        "transliteration": "Inna ilayna iyabahum"
+      },
+      {
+        "id": 26,
+        "text": "ثُمَّ إِنَّ عَلَيۡنَا حِسَابَهُم",
+        "translation": "Then indeed, upon Us is their account",
+        "transliteration": "Thumma inna AAalayna hisabahum"
+      }
+    ]
+  },
+  {
+    "id": 89,
+    "name": "الفجر",
+    "transliteration": "Al-Fajr",
+    "translation": "The Dawn",
+    "type": "meccan",
+    "total_verses": 30,
+    "verses": [
+      {
+        "id": 1,
+        "text": "وَٱلۡفَجۡرِ",
+        "translation": "By the dawn",
+        "transliteration": "Waalfajri"
+      },
+      {
+        "id": 2,
+        "text": "وَلَيَالٍ عَشۡرٖ",
+        "translation": "And [by] ten nights",
+        "transliteration": "Walayalin AAashrin"
+      },
+      {
+        "id": 3,
+        "text": "وَٱلشَّفۡعِ وَٱلۡوَتۡرِ",
+        "translation": "And [by] the even [number] and the odd",
+        "transliteration": "WaalshshafAAi waalwatri"
+      },
+      {
+        "id": 4,
+        "text": "وَٱلَّيۡلِ إِذَا يَسۡرِ",
+        "translation": "And [by] the night when it passes",
+        "transliteration": "Waallayli itha yasri"
+      },
+      {
+        "id": 5,
+        "text": "هَلۡ فِي ذَٰلِكَ قَسَمٞ لِّذِي حِجۡرٍ",
+        "translation": "Is there [not] in [all] that an oath [sufficient] for one of perception",
+        "transliteration": "Hal fee thalika qasamun lithee hijrin"
+      },
+      {
+        "id": 6,
+        "text": "أَلَمۡ تَرَ كَيۡفَ فَعَلَ رَبُّكَ بِعَادٍ",
+        "translation": "Have you not considered how your Lord dealt with 'Aad",
+        "transliteration": "Alam tara kayfa faAAala rabbuka biAAadin"
+      },
+      {
+        "id": 7,
+        "text": "إِرَمَ ذَاتِ ٱلۡعِمَادِ",
+        "translation": "[With] Iram - who had lofty pillars",
+        "transliteration": "Irama thati alAAimadi"
+      },
+      {
+        "id": 8,
+        "text": "ٱلَّتِي لَمۡ يُخۡلَقۡ مِثۡلُهَا فِي ٱلۡبِلَٰدِ",
+        "translation": "The likes of whom had never been created in the land",
+        "transliteration": "Allatee lam yukhlaq mithluha fee albiladi"
+      },
+      {
+        "id": 9,
+        "text": "وَثَمُودَ ٱلَّذِينَ جَابُواْ ٱلصَّخۡرَ بِٱلۡوَادِ",
+        "translation": "And [with] Thamud, who carved out the rocks in the valley",
+        "transliteration": "Wathamooda allatheena jaboo alssakhra bialwadi"
+      },
+      {
+        "id": 10,
+        "text": "وَفِرۡعَوۡنَ ذِي ٱلۡأَوۡتَادِ",
+        "translation": "And [with] Pharaoh, owner of the stakes",
+        "transliteration": "WafirAAawna thee alawtadi"
+      },
+      {
+        "id": 11,
+        "text": "ٱلَّذِينَ طَغَوۡاْ فِي ٱلۡبِلَٰدِ",
+        "translation": "[All of] whom oppressed within the lands",
+        "transliteration": "Allatheena taghaw fee albiladi"
+      },
+      {
+        "id": 12,
+        "text": "فَأَكۡثَرُواْ فِيهَا ٱلۡفَسَادَ",
+        "translation": "And increased therein the corruption",
+        "transliteration": "Faaktharoo feeha alfasada"
+      },
+      {
+        "id": 13,
+        "text": "فَصَبَّ عَلَيۡهِمۡ رَبُّكَ سَوۡطَ عَذَابٍ",
+        "translation": "So your Lord poured upon them a scourge of punishment",
+        "transliteration": "Fasabba AAalayhim rabbuka sawta AAathabin"
+      },
+      {
+        "id": 14,
+        "text": "إِنَّ رَبَّكَ لَبِٱلۡمِرۡصَادِ",
+        "translation": "Indeed, your Lord is in observation",
+        "transliteration": "Inna rabbaka labialmirsadi"
+      },
+      {
+        "id": 15,
+        "text": "فَأَمَّا ٱلۡإِنسَٰنُ إِذَا مَا ٱبۡتَلَىٰهُ رَبُّهُۥ فَأَكۡرَمَهُۥ وَنَعَّمَهُۥ فَيَقُولُ رَبِّيٓ أَكۡرَمَنِ",
+        "translation": "And as for man, when his Lord tries him and [thus] is generous to him and favors him, he says, \"My Lord has honored me",
+        "transliteration": "Faamma alinsanu itha ma ibtalahu rabbuhu faakramahu wanaAAAAamahu fayaqoolu rabbee akramani"
+      },
+      {
+        "id": 16,
+        "text": "وَأَمَّآ إِذَا مَا ٱبۡتَلَىٰهُ فَقَدَرَ عَلَيۡهِ رِزۡقَهُۥ فَيَقُولُ رَبِّيٓ أَهَٰنَنِ",
+        "translation": "But when He tries him and restricts his provision, he says, \"My Lord has humiliated me",
+        "transliteration": "Waamma itha ma ibtalahu faqadara AAalayhi rizqahu fayaqoolu rabbee ahanani"
+      },
+      {
+        "id": 17,
+        "text": "كَلَّاۖ بَل لَّا تُكۡرِمُونَ ٱلۡيَتِيمَ",
+        "translation": "No! But you do not honor the orphan",
+        "transliteration": "Kalla bal la tukrimoona alyateema"
+      },
+      {
+        "id": 18,
+        "text": "وَلَا تَحَـٰٓضُّونَ عَلَىٰ طَعَامِ ٱلۡمِسۡكِينِ",
+        "translation": "And you do not encourage one another to feed the poor",
+        "transliteration": "Wala tahaddoona AAala taAAami almiskeeni"
+      },
+      {
+        "id": 19,
+        "text": "وَتَأۡكُلُونَ ٱلتُّرَاثَ أَكۡلٗا لَّمّٗا",
+        "translation": "And you consume inheritance, devouring [it] altogether",
+        "transliteration": "Watakuloona altturatha aklan lamman"
+      },
+      {
+        "id": 20,
+        "text": "وَتُحِبُّونَ ٱلۡمَالَ حُبّٗا جَمّٗا",
+        "translation": "And you love wealth with immense love",
+        "transliteration": "Watuhibboona almala hubban jamman"
+      },
+      {
+        "id": 21,
+        "text": "كَلَّآۖ إِذَا دُكَّتِ ٱلۡأَرۡضُ دَكّٗا دَكّٗا",
+        "translation": "No! When the earth has been leveled - pounded and crushed",
+        "transliteration": "Kalla itha dukkati alardu dakkan dakkan"
+      },
+      {
+        "id": 22,
+        "text": "وَجَآءَ رَبُّكَ وَٱلۡمَلَكُ صَفّٗا صَفّٗا",
+        "translation": "And your Lord has come and the angels, rank upon rank",
+        "transliteration": "Wajaa rabbuka waalmalaku saffan saffan"
+      },
+      {
+        "id": 23,
+        "text": "وَجِاْيٓءَ يَوۡمَئِذِۭ بِجَهَنَّمَۚ يَوۡمَئِذٖ يَتَذَكَّرُ ٱلۡإِنسَٰنُ وَأَنَّىٰ لَهُ ٱلذِّكۡرَىٰ",
+        "translation": "And brought [within view], that Day, is Hell - that Day, man will remember, but what good to him will be the remembrance",
+        "transliteration": "Wajeea yawmaithin bijahannama yawmaithin yatathakkaru alinsanu waanna lahu alththikra"
+      },
+      {
+        "id": 24,
+        "text": "يَقُولُ يَٰلَيۡتَنِي قَدَّمۡتُ لِحَيَاتِي",
+        "translation": "He will say, \"Oh, I wish I had sent ahead [some good] for my life",
+        "transliteration": "Yaqoolu ya laytanee qaddamtu lihayatee"
+      },
+      {
+        "id": 25,
+        "text": "فَيَوۡمَئِذٖ لَّا يُعَذِّبُ عَذَابَهُۥٓ أَحَدٞ",
+        "translation": "So on that Day, none will punish [as severely] as His punishment",
+        "transliteration": "Fayawmaithin la yuAAaththibu AAathabahu ahadun"
+      },
+      {
+        "id": 26,
+        "text": "وَلَا يُوثِقُ وَثَاقَهُۥٓ أَحَدٞ",
+        "translation": "And none will bind [as severely] as His binding [of the evildoers]",
+        "transliteration": "Wala yoothiqu wathaqahu ahadun"
+      },
+      {
+        "id": 27,
+        "text": "يَـٰٓأَيَّتُهَا ٱلنَّفۡسُ ٱلۡمُطۡمَئِنَّةُ",
+        "translation": "[To the righteous it will be said], \"O reassured soul",
+        "transliteration": "Ya ayyatuha alnnafsu almutmainnatu"
+      },
+      {
+        "id": 28,
+        "text": "ٱرۡجِعِيٓ إِلَىٰ رَبِّكِ رَاضِيَةٗ مَّرۡضِيَّةٗ",
+        "translation": "Return to your Lord, well-pleased and pleasing [to Him]",
+        "transliteration": "IrjiAAee ila rabbiki radiyatan mardiyyatan"
+      },
+      {
+        "id": 29,
+        "text": "فَٱدۡخُلِي فِي عِبَٰدِي",
+        "translation": "And enter among My [righteous] servants",
+        "transliteration": "Faodkhulee fee AAibadee"
+      },
+      {
+        "id": 30,
+        "text": "وَٱدۡخُلِي جَنَّتِي",
+        "translation": "And enter My Paradise",
+        "transliteration": "Waodkhulee jannatee"
+      }
+    ]
+  },
+  {
+    "id": 90,
+    "name": "البلد",
+    "transliteration": "Al-Balad",
+    "translation": "The City",
+    "type": "meccan",
+    "total_verses": 20,
+    "verses": [
+      {
+        "id": 1,
+        "text": "لَآ أُقۡسِمُ بِهَٰذَا ٱلۡبَلَدِ",
+        "translation": "I swear by this city, Makkah",
+        "transliteration": "La oqsimu bihatha albaladi"
+      },
+      {
+        "id": 2,
+        "text": "وَأَنتَ حِلُّۢ بِهَٰذَا ٱلۡبَلَدِ",
+        "translation": "And you, [O Muhammad], are free of restriction in this city",
+        "transliteration": "Waanta hillun bihatha albaladi"
+      },
+      {
+        "id": 3,
+        "text": "وَوَالِدٖ وَمَا وَلَدَ",
+        "translation": "And [by] the father and that which was born [of him]",
+        "transliteration": "Wawalidin wama walada"
+      },
+      {
+        "id": 4,
+        "text": "لَقَدۡ خَلَقۡنَا ٱلۡإِنسَٰنَ فِي كَبَدٍ",
+        "translation": "We have certainly created man into hardship",
+        "transliteration": "Laqad khalaqna alinsana fee kabadin"
+      },
+      {
+        "id": 5,
+        "text": "أَيَحۡسَبُ أَن لَّن يَقۡدِرَ عَلَيۡهِ أَحَدٞ",
+        "translation": "Does he think that never will anyone overcome him",
+        "transliteration": "Ayahsabu an lan yaqdira AAalayhi ahadun"
+      },
+      {
+        "id": 6,
+        "text": "يَقُولُ أَهۡلَكۡتُ مَالٗا لُّبَدًا",
+        "translation": "He says, \"I have spent wealth in abundance",
+        "transliteration": "Yaqoolu ahlaktu malan lubadan"
+      },
+      {
+        "id": 7,
+        "text": "أَيَحۡسَبُ أَن لَّمۡ يَرَهُۥٓ أَحَدٌ",
+        "translation": "Does he think that no one has seen him",
+        "transliteration": "Ayahsabu an lam yarahu ahadun"
+      },
+      {
+        "id": 8,
+        "text": "أَلَمۡ نَجۡعَل لَّهُۥ عَيۡنَيۡنِ",
+        "translation": "Have We not made for him two eyes",
+        "transliteration": "Alam najAAal lahu AAaynayni"
+      },
+      {
+        "id": 9,
+        "text": "وَلِسَانٗا وَشَفَتَيۡنِ",
+        "translation": "And a tongue and two lips",
+        "transliteration": "Walisanan washafatayni"
+      },
+      {
+        "id": 10,
+        "text": "وَهَدَيۡنَٰهُ ٱلنَّجۡدَيۡنِ",
+        "translation": "And have shown him the two ways",
+        "transliteration": "Wahadaynahu alnnajdayni"
+      },
+      {
+        "id": 11,
+        "text": "فَلَا ٱقۡتَحَمَ ٱلۡعَقَبَةَ",
+        "translation": "But he has not broken through the difficult pass",
+        "transliteration": "Fala iqtahama alAAaqabata"
+      },
+      {
+        "id": 12,
+        "text": "وَمَآ أَدۡرَىٰكَ مَا ٱلۡعَقَبَةُ",
+        "translation": "And what can make you know what is [breaking through] the difficult pass",
+        "transliteration": "Wama adraka ma alAAaqabatu"
+      },
+      {
+        "id": 13,
+        "text": "فَكُّ رَقَبَةٍ",
+        "translation": "It is the freeing of a slave",
+        "transliteration": "Fakku raqabatin"
+      },
+      {
+        "id": 14,
+        "text": "أَوۡ إِطۡعَٰمٞ فِي يَوۡمٖ ذِي مَسۡغَبَةٖ",
+        "translation": "Or feeding on a day of severe hunger",
+        "transliteration": "Aw itAAamun fee yawmin thee masghabatin"
+      },
+      {
+        "id": 15,
+        "text": "يَتِيمٗا ذَا مَقۡرَبَةٍ",
+        "translation": "An orphan of near relationship",
+        "transliteration": "Yateeman tha maqrabatin"
+      },
+      {
+        "id": 16,
+        "text": "أَوۡ مِسۡكِينٗا ذَا مَتۡرَبَةٖ",
+        "translation": "Or a needy person in misery",
+        "transliteration": "Aw miskeenan tha matrabatin"
+      },
+      {
+        "id": 17,
+        "text": "ثُمَّ كَانَ مِنَ ٱلَّذِينَ ءَامَنُو��ْ وَتَوَاصَوۡاْ بِٱلصَّبۡرِ وَتَوَاصَوۡاْ بِٱلۡمَرۡحَمَةِ",
+        "translation": "And then being among those who believed and advised one another to patience and advised one another to compassion",
+        "transliteration": "Thumma kana mina allatheena amanoo watawasaw bialssabri watawasaw bialmarhamati"
+      },
+      {
+        "id": 18,
+        "text": "أُوْلَـٰٓئِكَ أَصۡحَٰبُ ٱلۡمَيۡمَنَةِ",
+        "translation": "Those are the companions of the right",
+        "transliteration": "Olaika ashabu almaymanati"
+      },
+      {
+        "id": 19,
+        "text": "وَٱلَّذِينَ كَفَرُواْ بِـَٔايَٰتِنَا هُمۡ أَصۡحَٰبُ ٱلۡمَشۡـَٔمَةِ",
+        "translation": "But they who disbelieved in Our signs - those are the companions of the left",
+        "transliteration": "Waallatheena kafaroo biayatina hum ashabu almashamati"
+      },
+      {
+        "id": 20,
+        "text": "عَلَيۡهِمۡ نَارٞ مُّؤۡصَدَةُۢ",
+        "translation": "Over them will be fire closed in",
+        "transliteration": "AAalayhim narun musadatun"
+      }
+    ]
+  },
+  {
+    "id": 91,
+    "name": "الشمس",
+    "transliteration": "Ash-Shams",
+    "translation": "The Sun",
+    "type": "meccan",
+    "total_verses": 15,
+    "verses": [
+      {
+        "id": 1,
+        "text": "وَٱلشَّمۡسِ وَضُحَىٰهَا",
+        "translation": "By the sun and its brightness",
+        "transliteration": "Waalshshamsi waduhaha"
+      },
+      {
+        "id": 2,
+        "text": "وَٱلۡقَمَرِ إِذَا تَلَىٰهَا",
+        "translation": "And [by] the moon when it follows it",
+        "transliteration": "Waalqamari itha talaha"
+      },
+      {
+        "id": 3,
+        "text": "وَٱلنَّهَارِ إِذَا جَلَّىٰهَا",
+        "translation": "And [by] the day when it displays it",
+        "transliteration": "Waalnnahari itha jallaha"
+      },
+      {
+        "id": 4,
+        "text": "وَٱلَّيۡلِ إِذَا يَغۡشَىٰهَا",
+        "translation": "And [by] the night when it covers it",
+        "transliteration": "Waallayli itha yaghshaha"
+      },
+      {
+        "id": 5,
+        "text": "وَٱلسَّمَآءِ وَمَا بَنَىٰهَا",
+        "translation": "And [by] the sky and He who constructed it",
+        "transliteration": "Waalssamai wama banaha"
+      },
+      {
+        "id": 6,
+        "text": "وَٱلۡأَرۡضِ وَمَا طَحَىٰهَا",
+        "translation": "And [by] the earth and He who spread it",
+        "transliteration": "Waalardi wama tahaha"
+      },
+      {
+        "id": 7,
+        "text": "وَنَفۡسٖ وَمَا سَوَّىٰهَا",
+        "translation": "And [by] the soul and He who proportioned it",
+        "transliteration": "Wanafsin wama sawwaha"
+      },
+      {
+        "id": 8,
+        "text": "فَأَلۡهَمَهَا فُجُورَهَا وَتَقۡوَىٰهَا",
+        "translation": "And inspired it [with discernment of] its wickedness and its righteousness",
+        "transliteration": "Faalhamaha fujooraha wataqwaha"
+      },
+      {
+        "id": 9,
+        "text": "قَدۡ أَفۡلَحَ مَن زَكَّىٰهَا",
+        "translation": "He has succeeded who purifies it",
+        "transliteration": "Qad aflaha man zakkaha"
+      },
+      {
+        "id": 10,
+        "text": "وَقَدۡ خَابَ مَن دَسَّىٰهَا",
+        "translation": "And he has failed who instills it [with corruption]",
+        "transliteration": "Waqad khaba man dassaha"
+      },
+      {
+        "id": 11,
+        "text": "كَذَّبَتۡ ثَمُودُ بِطَغۡوَىٰهَآ",
+        "translation": "Thamud denied [their prophet] by reason of their transgression",
+        "transliteration": "Kaththabat thamoodu bitaghwaha"
+      },
+      {
+        "id": 12,
+        "text": "إِذِ ٱنۢبَعَثَ أَشۡقَىٰهَا",
+        "translation": "When the most wretched of them was sent forth",
+        "transliteration": "Ithi inbaAAatha ashqaha"
+      },
+      {
+        "id": 13,
+        "text": "فَقَالَ لَهُمۡ رَسُولُ ٱللَّهِ نَاقَةَ ٱللَّهِ وَسُقۡيَٰهَا",
+        "translation": "And the messenger of Allah [Salih] said to them, \"[Do not harm] the she-camel of Allah or [prevent her from] her drink",
+        "transliteration": "Faqala lahum rasoolu Allahi naqata Allahi wasuqyaha"
+      },
+      {
+        "id": 14,
+        "text": "فَكَذَّبُوهُ فَعَقَرُوهَا فَدَمۡدَمَ عَلَيۡهِمۡ رَبُّهُم بِذَنۢبِهِمۡ فَسَوَّىٰهَا",
+        "translation": "But they denied him and hamstrung her. So their Lord brought down upon them destruction for their sin and made it equal [upon all of them]",
+        "transliteration": "Fakaththaboohu faAAaqarooha fadamdama AAalayhim rabbuhum bithanbihim fasawwaha"
+      },
+      {
+        "id": 15,
+        "text": "وَلَا يَخَافُ عُقۡبَٰهَا",
+        "translation": "And He does not fear the consequence thereof",
+        "transliteration": "Wala yakhafu AAuqbaha"
+      }
+    ]
+  },
+  {
+    "id": 92,
+    "name": "الليل",
+    "transliteration": "Al-Layl",
+    "translation": "The Night",
+    "type": "meccan",
+    "total_verses": 21,
+    "verses": [
+      {
+        "id": 1,
+        "text": "وَٱلَّيۡلِ إِذَا يَغۡشَىٰ",
+        "translation": "By the night when it covers",
+        "transliteration": "Waallayli itha yaghsha"
+      },
+      {
+        "id": 2,
+        "text": "وَٱلنَّهَارِ إِذَا تَجَلَّىٰ",
+        "translation": "And [by] the day when it appears",
+        "transliteration": "Waalnnahari itha tajalla"
+      },
+      {
+        "id": 3,
+        "text": "وَمَا خَلَقَ ٱلذَّكَرَ وَٱلۡأُنثَىٰٓ",
+        "translation": "And [by] He who created the male and female",
+        "transliteration": "Wama khalaqa alththakara waalontha"
+      },
+      {
+        "id": 4,
+        "text": "إِنَّ سَعۡيَكُمۡ لَشَتَّىٰ",
+        "translation": "Indeed, your efforts are diverse",
+        "transliteration": "Inna saAAyakum lashatta"
+      },
+      {
+        "id": 5,
+        "text": "فَأَمَّا مَنۡ أَعۡطَىٰ وَٱتَّقَىٰ",
+        "translation": "As for he who gives and fears Allah",
+        "transliteration": "Faamma man aAAta waittaqa"
+      },
+      {
+        "id": 6,
+        "text": "وَصَدَّقَ بِٱلۡحُسۡنَىٰ",
+        "translation": "And believes in the best [reward]",
+        "transliteration": "Wasaddaqa bialhusna"
+      },
+      {
+        "id": 7,
+        "text": "فَسَنُيَسِّرُهُۥ لِلۡيُسۡرَىٰ",
+        "translation": "We will ease him toward ease",
+        "transliteration": "Fasanuyassiruhu lilyusra"
+      },
+      {
+        "id": 8,
+        "text": "وَأَمَّا مَنۢ بَخِلَ وَٱسۡتَغۡنَىٰ",
+        "translation": "But as for he who withholds and considers himself free of need",
+        "transliteration": "Waamma man bakhila waistaghna"
+      },
+      {
+        "id": 9,
+        "text": "وَكَذَّبَ بِٱلۡحُسۡنَىٰ",
+        "translation": "And denies the best [reward]",
+        "transliteration": "Wakaththaba bialhusna"
+      },
+      {
+        "id": 10,
+        "text": "فَسَنُيَسِّرُهُۥ لِلۡعُسۡرَىٰ",
+        "translation": "We will ease him toward difficulty",
+        "transliteration": "Fasanuyassiruhu lilAAusra"
+      },
+      {
+        "id": 11,
+        "text": "وَمَا يُغۡنِي عَنۡهُ مَالُهُۥٓ إِذَا تَرَدَّىٰٓ",
+        "translation": "And what will his wealth avail him when he falls",
+        "transliteration": "Wama yughnee AAanhu maluhu itha taradda"
+      },
+      {
+        "id": 12,
+        "text": "إِنَّ عَلَيۡنَا لَلۡهُدَىٰ",
+        "translation": "Indeed, [incumbent] upon Us is guidance",
+        "transliteration": "Inna AAalayna lalhuda"
+      },
+      {
+        "id": 13,
+        "text": "وَإِنَّ لَنَا لَلۡأٓخِرَةَ وَٱلۡأُولَىٰ",
+        "translation": "And indeed, to Us belongs the Hereafter and the first [life]",
+        "transliteration": "Wainna lana lalakhirata waaloola"
+      },
+      {
+        "id": 14,
+        "text": "فَأَنذَرۡتُكُمۡ نَارٗا تَلَظَّىٰ",
+        "translation": "So I have warned you of a Fire which is blazing",
+        "transliteration": "Faanthartukum naran talaththa"
+      },
+      {
+        "id": 15,
+        "text": "لَا يَصۡلَىٰهَآ إِلَّا ٱلۡأَشۡقَى",
+        "translation": "None will [enter to] burn therein except the most wretched one",
+        "transliteration": "La yaslaha illa alashqa"
+      },
+      {
+        "id": 16,
+        "text": "ٱلَّذِي كَذَّبَ وَتَوَلَّىٰ",
+        "translation": "Who had denied and turned away",
+        "transliteration": "Allathee kaththaba watawalla"
+      },
+      {
+        "id": 17,
+        "text": "وَسَيُجَنَّبُهَا ٱلۡأَتۡق��ى",
+        "translation": "But the righteous one will avoid it",
+        "transliteration": "Wasayujannabuha alatqa"
+      },
+      {
+        "id": 18,
+        "text": "ٱلَّذِي يُؤۡتِي مَالَهُۥ يَتَزَكَّىٰ",
+        "translation": "[He] who gives [from] his wealth to purify himself",
+        "transliteration": "Allathee yutee malahu yatazakka"
+      },
+      {
+        "id": 19,
+        "text": "وَمَا لِأَحَدٍ عِندَهُۥ مِن نِّعۡمَةٖ تُجۡزَىٰٓ",
+        "translation": "And not [giving] for anyone who has [done him] a favor to be rewarded",
+        "transliteration": "Wama liahadin AAindahu min niAAmatin tujza"
+      },
+      {
+        "id": 20,
+        "text": "إِلَّا ٱبۡتِغَآءَ وَجۡهِ رَبِّهِ ٱلۡأَعۡلَىٰ",
+        "translation": "But only seeking the countenance of his Lord, Most High",
+        "transliteration": "Illa ibtighaa wajhi rabbihi alaAAla"
+      },
+      {
+        "id": 21,
+        "text": "وَلَسَوۡفَ يَرۡضَىٰ",
+        "translation": "And he is going to be satisfied",
+        "transliteration": "Walasawfa yarda"
+      }
+    ]
+  },
+  {
+    "id": 93,
+    "name": "الضحى",
+    "transliteration": "Ad-Duhaa",
+    "translation": "The Morning Hours",
+    "type": "meccan",
+    "total_verses": 11,
+    "verses": [
+      {
+        "id": 1,
+        "text": "وَٱلضُّحَىٰ",
+        "translation": "By the morning brightness",
+        "transliteration": "Waaldduha"
+      },
+      {
+        "id": 2,
+        "text": "وَٱلَّيۡلِ إِذَا سَجَىٰ",
+        "translation": "And [by] the night when it covers with darkness",
+        "transliteration": "Waallayli itha saja"
+      },
+      {
+        "id": 3,
+        "text": "مَا وَدَّعَكَ رَبُّكَ وَمَا قَلَىٰ",
+        "translation": "Your Lord has not taken leave of you, [O Muhammad], nor has He detested [you]",
+        "transliteration": "Ma waddaAAaka rabbuka wama qala"
+      },
+      {
+        "id": 4,
+        "text": "وَلَلۡأٓخِرَةُ خَيۡرٞ لَّكَ مِنَ ٱلۡأُولَىٰ",
+        "translation": "And the Hereafter is better for you than the first [life]",
+        "transliteration": "Walalakhiratu khayrun laka mina aloola"
+      },
+      {
+        "id": 5,
+        "text": "وَلَسَوۡفَ يُعۡطِيكَ رَبُّكَ فَتَرۡضَىٰٓ",
+        "translation": "And your Lord is going to give you, and you will be satisfied",
+        "transliteration": "Walasawfa yuAAteeka rabbuka fatarda"
+      },
+      {
+        "id": 6,
+        "text": "أَلَمۡ يَجِدۡكَ يَتِيمٗا فَـَٔاوَىٰ",
+        "translation": "Did He not find you an orphan and give [you] refuge",
+        "transliteration": "Alam yajidka yateeman faawa"
+      },
+      {
+        "id": 7,
+        "text": "وَوَجَدَكَ ضَآلّٗا فَهَدَىٰ",
+        "translation": "And He found you lost and guided [you]",
+        "transliteration": "Wawajadaka dallan fahada"
+      },
+      {
+        "id": 8,
+        "text": "وَوَجَدَكَ عَآئِلٗا فَأَغۡنَىٰ",
+        "translation": "And He found you poor and made [you] self-sufficient",
+        "transliteration": "Wawajadaka AAailan faaghna"
+      },
+      {
+        "id": 9,
+        "text": "فَأَمَّا ٱلۡيَتِيمَ فَلَا تَقۡهَرۡ",
+        "translation": "So as for the orphan, do not oppress [him]",
+        "transliteration": "Faamma alyateema fala taqhar"
+      },
+      {
+        "id": 10,
+        "text": "وَأَمَّا ٱلسَّآئِلَ فَلَا تَنۡهَرۡ",
+        "translation": "And as for the petitioner, do not repel [him]",
+        "transliteration": "Waamma alssaila fala tanhar"
+      },
+      {
+        "id": 11,
+        "text": "وَأَمَّا بِنِعۡمَةِ رَبِّكَ فَحَدِّثۡ",
+        "translation": "But as for the favor of your Lord, report [it]",
+        "transliteration": "Waamma biniAAmati rabbika fahaddith"
+      }
+    ]
+  },
+  {
+    "id": 94,
+    "name": "الشرح",
+    "transliteration": "Ash-Sharh",
+    "translation": "The Relief",
+    "type": "meccan",
+    "total_verses": 8,
+    "verses": [
+      {
+        "id": 1,
+        "text": "أَلَمۡ نَشۡرَحۡ لَكَ صَدۡرَكَ",
+        "translation": "Did We not expand for you, [O Muhammad], your breast",
+        "transliteration": "Alam nashrah laka sadraka"
+      },
+      {
+        "id": 2,
+        "text": "وَوَضَعۡنَا عَنكَ وِزۡرَكَ",
+        "translation": "And We removed from you your burden",
+        "transliteration": "WawadaAAna AAanka wizraka"
+      },
+      {
+        "id": 3,
+        "text": "ٱلَّذِيٓ أَنقَضَ ظَهۡرَكَ",
+        "translation": "Which had weighed upon your back",
+        "transliteration": "Allathee anqada thahraka"
+      },
+      {
+        "id": 4,
+        "text": "وَرَفَعۡنَا لَكَ ذِكۡرَكَ",
+        "translation": "And raised high for you your repute",
+        "transliteration": "WarafaAAna laka thikraka"
+      },
+      {
+        "id": 5,
+        "text": "فَإِنَّ مَعَ ٱلۡعُسۡرِ يُسۡرًا",
+        "translation": "For indeed, with hardship [will be] ease",
+        "transliteration": "Fainna maAAa alAAusri yusran"
+      },
+      {
+        "id": 6,
+        "text": "إِنَّ مَعَ ٱلۡعُسۡرِ يُسۡرٗا",
+        "translation": "Indeed, with hardship [will be] ease",
+        "transliteration": "Inna maAAa alAAusri yusran"
+      },
+      {
+        "id": 7,
+        "text": "فَإِذَا فَرَغۡتَ فَٱنصَبۡ",
+        "translation": "So when you have finished [your duties], then stand up [for worship]",
+        "transliteration": "Faitha faraghta fainsab"
+      },
+      {
+        "id": 8,
+        "text": "وَإِلَىٰ رَبِّكَ فَٱرۡغَب",
+        "translation": "And to your Lord direct [your] longing",
+        "transliteration": "Waila rabbika fairghab"
+      }
+    ]
+  },
+  {
+    "id": 95,
+    "name": "التين",
+    "transliteration": "At-Tin",
+    "translation": "The Fig",
+    "type": "meccan",
+    "total_verses": 8,
+    "verses": [
+      {
+        "id": 1,
+        "text": "وَٱلتِّينِ وَٱلزَّيۡتُونِ",
+        "translation": "By the fig and the olive",
+        "transliteration": "Waaltteeni waalzzaytooni"
+      },
+      {
+        "id": 2,
+        "text": "وَطُورِ سِينِينَ",
+        "translation": "And [by] Mount Sinai",
+        "transliteration": "Watoori seeneena"
+      },
+      {
+        "id": 3,
+        "text": "وَهَٰذَا ٱلۡبَلَدِ ٱلۡأَمِينِ",
+        "translation": "And [by] this secure city [Makkah]",
+        "transliteration": "Wahatha albaladi alameeni"
+      },
+      {
+        "id": 4,
+        "text": "لَقَدۡ خَلَقۡنَا ٱلۡإِنسَٰنَ فِيٓ أَحۡسَنِ تَقۡوِيمٖ",
+        "translation": "We have certainly created man in the best of stature",
+        "transliteration": "Laqad khalaqna alinsana fee ahsani taqweemin"
+      },
+      {
+        "id": 5,
+        "text": "ثُمَّ رَدَدۡنَٰهُ أَسۡفَلَ سَٰفِلِينَ",
+        "translation": "Then We return him to the lowest of the low",
+        "transliteration": "Thumma radadnahu asfala safileena"
+      },
+      {
+        "id": 6,
+        "text": "إِلَّا ٱلَّذِينَ ءَامَنُواْ وَعَمِلُواْ ٱلصَّـٰلِحَٰتِ فَلَهُمۡ أَجۡرٌ غَيۡرُ مَمۡنُونٖ",
+        "translation": "Except for those who believe and do righteous deeds, for they will have a reward uninterrupted",
+        "transliteration": "Illa allatheena amanoo waAAamiloo alssalihati falahum ajrun ghayru mamnoonin"
+      },
+      {
+        "id": 7,
+        "text": "فَمَا يُكَذِّبُكَ بَعۡدُ بِٱلدِّينِ",
+        "translation": "So what yet causes you to deny the Recompense",
+        "transliteration": "Fama yukaththibuka baAAdu bialddeeni"
+      },
+      {
+        "id": 8,
+        "text": "أَلَيۡسَ ٱللَّهُ بِأَحۡكَمِ ٱلۡحَٰكِمِينَ",
+        "translation": "Is not Allah the most just of judges",
+        "transliteration": "Alaysa Allahu biahkami alhakimeena"
+      }
+    ]
+  },
+  {
+    "id": 96,
+    "name": "العلق",
+    "transliteration": "Al-'Alaq",
+    "translation": "The Clot",
+    "type": "meccan",
+    "total_verses": 19,
+    "verses": [
+      {
+        "id": 1,
+        "text": "ٱقۡرَأۡ بِٱسۡمِ رَبِّكَ ٱلَّذِي خَلَقَ",
+        "translation": "Recite in the name of your Lord who created",
+        "transliteration": "Iqra biismi rabbika allathee khalaqa"
+      },
+      {
+        "id": 2,
+        "text": "خَلَقَ ٱلۡإِنسَٰنَ مِنۡ عَلَقٍ",
+        "translation": "Created man from a clinging substance",
+        "transliteration": "Khalaqa alinsana min AAalaqin"
+      },
+      {
+        "id": 3,
+        "text": "ٱقۡرَأۡ وَرَبُّكَ ٱلۡأَكۡرَمُ",
+        "translation": "Recite, and your Lord is the most Generous",
+        "transliteration": "Iqra warabbuka alakramu"
+      },
+      {
+        "id": 4,
+        "text": "ٱلَّذِي عَلَّمَ بِٱلۡقَلَمِ",
+        "translation": "Who taught by the pen",
+        "transliteration": "Allathee AAallama bialqalami"
+      },
+      {
+        "id": 5,
+        "text": "عَلَّمَ ٱلۡإِنسَٰنَ مَا لَمۡ يَعۡلَمۡ",
+        "translation": "Taught man that which he knew not",
+        "transliteration": "AAallama alinsana ma lam yaAAlam"
+      },
+      {
+        "id": 6,
+        "text": "كَلَّآ إِنَّ ٱلۡإِنسَٰنَ لَيَطۡغَىٰٓ",
+        "translation": "No! [But] indeed, man transgresses",
+        "transliteration": "Kalla inna alinsana layatgha"
+      },
+      {
+        "id": 7,
+        "text": "أَن رَّءَاهُ ٱسۡتَغۡنَىٰٓ",
+        "translation": "Because he sees himself self-sufficient",
+        "transliteration": "An raahu istaghna"
+      },
+      {
+        "id": 8,
+        "text": "إِنَّ إِلَىٰ رَبِّكَ ٱلرُّجۡعَىٰٓ",
+        "translation": "Indeed, to your Lord is the return",
+        "transliteration": "Inna ila rabbika alrrujAAa"
+      },
+      {
+        "id": 9,
+        "text": "أَرَءَيۡتَ ٱلَّذِي يَنۡهَىٰ",
+        "translation": "Have you seen the one who forbids",
+        "transliteration": "Araayta allathee yanha"
+      },
+      {
+        "id": 10,
+        "text": "عَبۡدًا إِذَا صَلَّىٰٓ",
+        "translation": "A servant when he prays",
+        "transliteration": "AAabdan itha salla"
+      },
+      {
+        "id": 11,
+        "text": "أَرَءَيۡتَ إِن كَانَ عَلَى ٱلۡهُدَىٰٓ",
+        "translation": "Have you seen if he is upon guidance",
+        "transliteration": "Araayta in kana AAala alhuda"
+      },
+      {
+        "id": 12,
+        "text": "أَوۡ أَمَرَ بِٱلتَّقۡوَىٰٓ",
+        "translation": "Or enjoins righteousness",
+        "transliteration": "Aw amara bialttaqwa"
+      },
+      {
+        "id": 13,
+        "text": "أَرَءَيۡتَ إِن كَذَّبَ وَتَوَلَّىٰٓ",
+        "translation": "Have you seen if he denies and turns away",
+        "transliteration": "Araayta in kaththaba watawalla"
+      },
+      {
+        "id": 14,
+        "text": "أَلَمۡ يَعۡلَم بِأَنَّ ٱللَّهَ يَرَىٰ",
+        "translation": "Does he not know that Allah sees",
+        "transliteration": "Alam yaAAlam bianna Allaha yara"
+      },
+      {
+        "id": 15,
+        "text": "كَلَّا لَئِن لَّمۡ يَنتَهِ لَنَسۡفَعَۢا بِٱلنَّاصِيَةِ",
+        "translation": "No! If he does not desist, We will surely drag him by the forelock",
+        "transliteration": "Kalla lain lam yantahi lanasfaAAan bialnnasiyati"
+      },
+      {
+        "id": 16,
+        "text": "نَاصِيَةٖ كَٰذِبَةٍ خَاطِئَةٖ",
+        "translation": "A lying, sinning forelock",
+        "transliteration": "Nasiyatin kathibatin khatiatin"
+      },
+      {
+        "id": 17,
+        "text": "فَلۡيَدۡعُ نَادِيَهُۥ",
+        "translation": "Then let him call his associates",
+        "transliteration": "FalyadAAu nadiyahu"
+      },
+      {
+        "id": 18,
+        "text": "سَنَدۡعُ ٱلزَّبَانِيَةَ",
+        "translation": "We will call the angels of Hell",
+        "transliteration": "SanadAAu alzzabaniyata"
+      },
+      {
+        "id": 19,
+        "text": "كَلَّا لَا تُطِعۡهُ وَٱسۡجُدۡۤ وَٱقۡتَرِب۩",
+        "translation": "No! Do not obey him. But prostrate and draw near [to Allah]",
+        "transliteration": "Kalla la tutiAAhu waosjud waiqtarib"
+      }
+    ]
+  },
+  {
+    "id": 97,
+    "name": "القدر",
+    "transliteration": "Al-Qadr",
+    "translation": "The Power",
+    "type": "meccan",
+    "total_verses": 5,
+    "verses": [
+      {
+        "id": 1,
+        "text": "إِنَّآ أَنزَلۡنَٰهُ فِي لَيۡلَةِ ٱلۡقَدۡرِ",
+        "translation": "Indeed, We sent the Qur'an down during the Night of Decree",
+        "transliteration": "Inna anzalnahu fee laylati alqadri"
+      },
+      {
+        "id": 2,
+        "text": "وَمَآ أَدۡرَىٰكَ مَا لَيۡلَةُ ٱلۡقَدۡرِ",
+        "translation": "And what can make you know what is the Night of Decree",
+        "transliteration": "Wama adraka ma laylatu alqadri"
+      },
+      {
+        "id": 3,
+        "text": "لَيۡلَةُ ٱلۡقَدۡرِ خَيۡرٞ مِّنۡ أَلۡفِ شَهۡرٖ",
+        "translation": "The Night of Decree is better than a thousand months",
+        "transliteration": "Laylatu alqadri khayrun min alfi shahrin"
+      },
+      {
+        "id": 4,
+        "text": "تَنَزَّلُ ٱلۡمَلَـٰٓئِكَةُ وَٱلرُّوحُ فِيهَا بِإِذۡنِ رَبِّهِم مِّن كُلِّ أَمۡرٖ",
+        "translation": "The angels and the Spirit descend therein by permission of their Lord for every matter",
+        "transliteration": "Tanazzalu almalaikatu waalrroohu feeha biithni rabbihim min kulli amrin"
+      },
+      {
+        "id": 5,
+        "text": "سَلَٰمٌ هِيَ حَتَّىٰ مَطۡلَعِ ٱلۡفَجۡرِ",
+        "translation": "Peace it is until the emergence of dawn",
+        "transliteration": "Salamun hiya hatta matlaAAi alfajri"
+      }
+    ]
+  },
+  {
+    "id": 98,
+    "name": "البينة",
+    "transliteration": "Al-Bayyinah",
+    "translation": "The Clear Proof",
+    "type": "medinan",
+    "total_verses": 8,
+    "verses": [
+      {
+        "id": 1,
+        "text": "لَمۡ يَكُنِ ٱلَّذِينَ كَفَرُواْ مِنۡ أَهۡلِ ٱلۡكِتَٰبِ وَٱلۡمُشۡرِكِينَ مُنفَكِّينَ حَتَّىٰ تَأۡتِيَهُمُ ٱلۡبَيِّنَةُ",
+        "translation": "Those who disbelieved among the People of the Scripture and the polytheists were not to be parted [from misbelief] until there came to them clear evidence",
+        "transliteration": "Lam yakuni allatheena kafaroo min ahli alkitabi waalmushrikeena munfakkeena hatta tatiyahumu albayyinatu"
+      },
+      {
+        "id": 2,
+        "text": "رَسُولٞ مِّنَ ٱللَّهِ يَتۡلُواْ صُحُفٗا مُّطَهَّرَةٗ",
+        "translation": "A Messenger from Allah, reciting purified scriptures",
+        "transliteration": "Rasoolun mina Allahi yatloo suhufan mutahharatan"
+      },
+      {
+        "id": 3,
+        "text": "فِيهَا كُتُبٞ قَيِّمَةٞ",
+        "translation": "Within which are correct writings",
+        "transliteration": "Feeha kutubun qayyimatun"
+      },
+      {
+        "id": 4,
+        "text": "وَمَا تَفَرَّقَ ٱلَّذِينَ أُوتُواْ ٱلۡكِتَٰبَ إِلَّا مِنۢ بَعۡدِ مَا جَآءَتۡهُمُ ٱلۡبَيِّنَةُ",
+        "translation": "Nor did those who were given the Scripture become divided until after there had come to them clear evidence",
+        "transliteration": "Wama tafarraqa allatheena ootoo alkitaba illa min baAAdi ma jaathumu albayyinatu"
+      },
+      {
+        "id": 5,
+        "text": "وَمَآ أُمِرُوٓاْ إِلَّا لِيَعۡبُدُواْ ٱللَّهَ مُخۡلِصِينَ لَهُ ٱلدِّينَ حُنَفَآءَ وَيُقِيمُواْ ٱلصَّلَوٰةَ وَيُؤۡتُواْ ٱلزَّكَوٰةَۚ وَذَٰلِكَ دِينُ ٱلۡقَيِّمَةِ",
+        "translation": "And they were not commanded except to worship Allah, [being] sincere to Him in religion, inclining to truth, and to establish prayer and to give zakah. And that is the correct religion",
+        "transliteration": "Wama omiroo illa liyaAAbudoo Allaha mukhliseena lahu alddeena hunafaa wayuqeemoo alssalata wayutoo alzzakata wathalika deenu alqayyimati"
+      },
+      {
+        "id": 6,
+        "text": "إِنَّ ٱلَّذِينَ كَفَرُواْ مِنۡ أَهۡلِ ٱلۡكِتَٰبِ وَٱلۡمُشۡرِكِينَ فِي نَارِ جَهَنَّمَ خَٰلِدِينَ فِيهَآۚ أُوْلَـٰٓئِكَ هُمۡ شَرُّ ٱلۡبَرِيَّةِ",
+        "translation": "Indeed, they who disbelieved among the People of the Scripture and the polytheists will be in the fire of Hell, abiding eternally therein. Those are the worst of creatures",
+        "transliteration": "Inna allatheena kafaroo min ahli alkitabi waalmushrikeena fee nari jahannama khalideena feeha olaika hum sharru albariyyati"
+      },
+      {
+        "id": 7,
+        "text": "إِنَّ ٱلَّذِينَ ءَامَنُواْ وَعَمِلُواْ ٱلصَّـٰلِحَٰتِ أُوْلَـٰٓئِكَ هُمۡ خَيۡرُ ٱلۡبَرِيَّةِ",
+        "translation": "Indeed, they who have believed and done righteous deeds - those are the best of creatures",
+        "transliteration": "Inna allatheena amanoo waAAamiloo alssalihati olaika hum khayru albariyyati"
+      },
+      {
+        "id": 8,
+        "text": "جَزَآؤُهُمۡ عِندَ رَبِّهِمۡ جَنَّـٰتُ عَدۡنٖ تَجۡرِي مِن تَحۡتِهَا ٱلۡأَنۡهَٰرُ خَٰلِدِينَ فِيهَآ أَبَدٗاۖ رَّضِيَ ٱللَّهُ عَنۡهُمۡ وَرَضُواْ عَنۡهُۚ ذَٰلِكَ لِمَنۡ خَشِيَ رَبَّهُۥ",
+        "translation": "Their reward with Allah will be gardens of perpetual residence beneath which rivers flow, wherein they will abide forever, Allah being pleased with them and they with Him. That is for whoever has feared his Lord",
+        "transliteration": "Jazaohum AAinda rabbihim jannatu AAadnin tajree min tahtiha alanharu khalideena feeha abadan radiya Allahu AAanhum waradoo AAanhu thalika liman khashiya rabbahu"
+      }
+    ]
+  },
+  {
+    "id": 99,
+    "name": "الزلزلة",
+    "transliteration": "Az-Zalzalah",
+    "translation": "The Earthquake",
+    "type": "medinan",
+    "total_verses": 8,
+    "verses": [
+      {
+        "id": 1,
+        "text": "إِذَا زُلۡزِلَتِ ٱلۡأَرۡضُ زِلۡزَالَهَا",
+        "translation": "When the earth is shaken with its [final] earthquake",
+        "transliteration": "Itha zulzilati alardu zilzalaha"
+      },
+      {
+        "id": 2,
+        "text": "وَأَخۡرَجَتِ ٱلۡأَرۡضُ أَثۡقَالَهَا",
+        "translation": "And the earth discharges its burdens",
+        "transliteration": "Waakhrajati alardu athqalaha"
+      },
+      {
+        "id": 3,
+        "text": "وَقَالَ ٱلۡإِنسَٰنُ مَا لَهَا",
+        "translation": "And man says, \"What is [wrong] with it",
+        "transliteration": "Waqala alinsanu ma laha"
+      },
+      {
+        "id": 4,
+        "text": "يَوۡمَئِذٖ تُحَدِّثُ أَخۡبَارَهَا",
+        "translation": "That Day, it will report its news",
+        "transliteration": "Yawmaithin tuhaddithu akhbaraha"
+      },
+      {
+        "id": 5,
+        "text": "بِأَنَّ رَبَّكَ أَوۡحَىٰ لَهَا",
+        "translation": "Because your Lord has commanded it",
+        "transliteration": "Bianna rabbaka awha laha"
+      },
+      {
+        "id": 6,
+        "text": "يَوۡمَئِذٖ يَصۡدُرُ ٱلنَّاسُ أَشۡتَاتٗا لِّيُرَوۡاْ أَعۡمَٰلَهُمۡ",
+        "translation": "That Day, the people will depart separated [into categories] to be shown [the result of] their deeds",
+        "transliteration": "Yawmaithin yasduru alnnasu ashtatan liyuraw aAAmalahum"
+      },
+      {
+        "id": 7,
+        "text": "فَمَن يَعۡمَلۡ مِثۡقَالَ ذَرَّةٍ خَيۡرٗا يَرَهُۥ",
+        "translation": "So whoever does an atom's weight of good will see it",
+        "transliteration": "Faman yaAAmal mithqala tharratin khayran yarahu"
+      },
+      {
+        "id": 8,
+        "text": "وَمَن يَعۡمَلۡ مِثۡقَالَ ذَرَّةٖ شَرّٗا يَرَهُۥ",
+        "translation": "And whoever does an atom's weight of evil will see it",
+        "transliteration": "Waman yaAAmal mithqala tharratin sharran yarahu"
+      }
+    ]
+  },
+  {
+    "id": 100,
+    "name": "العاديات",
+    "transliteration": "Al-'Adiyat",
+    "translation": "The Courser",
+    "type": "meccan",
+    "total_verses": 11,
+    "verses": [
+      {
+        "id": 1,
+        "text": "وَٱلۡعَٰدِيَٰتِ ضَبۡحٗا",
+        "translation": "By the racers, panting",
+        "transliteration": "WaalAAadiyati dabhan"
+      },
+      {
+        "id": 2,
+        "text": "فَٱلۡمُورِيَٰتِ قَدۡحٗا",
+        "translation": "And the producers of sparks [when] striking",
+        "transliteration": "Faalmooriyati qadhan"
+      },
+      {
+        "id": 3,
+        "text": "فَٱلۡمُغِيرَٰتِ صُبۡحٗا",
+        "translation": "And the chargers at dawn",
+        "transliteration": "Faalmugheerati subhan"
+      },
+      {
+        "id": 4,
+        "text": "فَأَثَرۡنَ بِهِۦ نَقۡعٗا",
+        "translation": "Stirring up thereby [clouds of] dust",
+        "transliteration": "Faatharna bihi naqAAan"
+      },
+      {
+        "id": 5,
+        "text": "فَوَسَطۡنَ بِهِۦ جَمۡعًا",
+        "translation": "Arriving thereby in the center collectively",
+        "transliteration": "Fawasatna bihi jamAAan"
+      },
+      {
+        "id": 6,
+        "text": "إِنَّ ٱلۡإِنسَٰنَ لِرَبِّهِۦ لَكَنُودٞ",
+        "translation": "Indeed mankind, to his Lord, is ungrateful",
+        "transliteration": "Inna alinsana lirabbihi lakanoodun"
+      },
+      {
+        "id": 7,
+        "text": "وَإِنَّهُۥ عَلَىٰ ذَٰلِكَ لَشَهِيدٞ",
+        "translation": "And indeed, he is to that a witness",
+        "transliteration": "Wainnahu AAala thalika lashaheedun"
+      },
+      {
+        "id": 8,
+        "text": "وَإِنَّهُۥ لِحُبِّ ٱلۡخَيۡرِ لَشَدِيدٌ",
+        "translation": "And indeed he is, in love of wealth, intense",
+        "transliteration": "Wainnahu lihubbi alkhayri lashadeedun"
+      },
+      {
+        "id": 9,
+        "text": "۞أَفَلَا يَعۡلَمُ إِذَا بُعۡثِرَ مَا فِي ٱلۡقُبُورِ",
+        "translation": "But does he not know that when the contents of the graves are scattered",
+        "transliteration": "Afala yaAAlamu itha buAAthira ma fee alquboori"
+      },
+      {
+        "id": 10,
+        "text": "وَحُصِّلَ مَا فِي ٱلصُّدُورِ",
+        "translation": "And that within the breasts is obtained",
+        "transliteration": "Wahussila ma fee alssudoori"
+      },
+      {
+        "id": 11,
+        "text": "إِنَّ رَبَّهُم بِهِمۡ يَوۡمَئِذٖ لَّخَبِيرُۢ",
+        "translation": "Indeed, their Lord with them, that Day, is [fully] Acquainted",
+        "transliteration": "Inna rabbahum bihim yawmaithin lakhabeerun"
+      }
+    ]
+  },
+  {
+    "id": 101,
+    "name": "القارعة",
+    "transliteration": "Al-Qari'ah",
+    "translation": "The Calamity",
+    "type": "meccan",
+    "total_verses": 11,
+    "verses": [
+      {
+        "id": 1,
+        "text": "ٱلۡقَارِعَةُ",
+        "translation": "The Striking Calamity",
+        "transliteration": "AlqariAAatu"
+      },
+      {
+        "id": 2,
+        "text": "مَا ٱلۡقَارِعَةُ",
+        "translation": "What is the Striking Calamity",
+        "transliteration": "Ma alqariAAatu"
+      },
+      {
+        "id": 3,
+        "text": "وَمَآ أَدۡرَىٰكَ مَا ٱلۡقَارِعَةُ",
+        "translation": "And what can make you know what is the Striking Calamity",
+        "transliteration": "Wama adraka ma alqariAAatu"
+      },
+      {
+        "id": 4,
+        "text": "يَوۡمَ يَكُونُ ٱلنَّاسُ كَٱلۡفَرَاشِ ٱلۡمَبۡثُوثِ",
+        "translation": "It is the Day when people will be like moths, dispersed",
+        "transliteration": "Yawma yakoonu alnnasu kaalfarashi almabthoothi"
+      },
+      {
+        "id": 5,
+        "text": "وَتَكُونُ ٱلۡجِبَالُ كَٱلۡعِهۡنِ ٱلۡمَنفُوشِ",
+        "translation": "And the mountains will be like wool, fluffed up",
+        "transliteration": "Watakoonu aljibalu kaalAAihni almanfooshi"
+      },
+      {
+        "id": 6,
+        "text": "فَأَمَّا مَن ثَقُلَتۡ مَوَٰزِينُهُۥ",
+        "translation": "Then as for one whose scales are heavy [with good deeds]",
+        "transliteration": "Faamma man thaqulat mawazeenuhu"
+      },
+      {
+        "id": 7,
+        "text": "فَهُوَ فِي عِيشَةٖ رَّاضِيَةٖ",
+        "translation": "He will be in a pleasant life",
+        "transliteration": "Fahuwa fee AAeeshatin radiyatin"
+      },
+      {
+        "id": 8,
+        "text": "وَأَمَّا مَنۡ خَفَّتۡ مَوَٰزِينُهُۥ",
+        "translation": "But as for one whose scales are light",
+        "transliteration": "Waamma man khaffat mawazeenuhu"
+      },
+      {
+        "id": 9,
+        "text": "فَأُمُّهُۥ هَاوِيَةٞ",
+        "translation": "His refuge will be an abyss",
+        "transliteration": "Faommuhu hawiyatun"
+      },
+      {
+        "id": 10,
+        "text": "وَمَآ أَدۡرَىٰكَ مَا هِيَهۡ",
+        "translation": "And what can make you know what that is",
+        "transliteration": "Wama adraka ma hiyah"
+      },
+      {
+        "id": 11,
+        "text": "نَارٌ حَامِيَةُۢ",
+        "translation": "It is a Fire, intensely hot",
+        "transliteration": "Narun hamiyatun"
+      }
+    ]
+  },
+  {
+    "id": 102,
+    "name": "التكاثر",
+    "transliteration": "At-Takathur",
+    "translation": "The Rivalry in world increase",
+    "type": "meccan",
+    "total_verses": 8,
+    "verses": [
+      {
+        "id": 1,
+        "text": "أَلۡهَىٰكُمُ ٱلتَّكَاثُرُ",
+        "translation": "Competition in [worldly] increase diverts you",
+        "transliteration": "Alhakumu alttakathuru"
+      },
+      {
+        "id": 2,
+        "text": "حَتَّىٰ زُرۡتُمُ ٱلۡمَقَابِرَ",
+        "translation": "Until you visit the graveyards",
+        "transliteration": "Hatta zurtumu almaqabira"
+      },
+      {
+        "id": 3,
+        "text": "كَلَّا سَوۡفَ تَعۡلَمُونَ",
+        "translation": "No! You are going to know",
+        "transliteration": "Kalla sawfa taAAlamoona"
+      },
+      {
+        "id": 4,
+        "text": "ثُمَّ كَلَّا سَوۡفَ تَعۡلَمُونَ",
+        "translation": "Then no! You are going to know",
+        "transliteration": "Thumma kalla sawfa taAAlamoona"
+      },
+      {
+        "id": 5,
+        "text": "كَلَّا لَوۡ تَعۡلَمُونَ عِلۡمَ ٱلۡيَقِينِ",
+        "translation": "No! If you only knew with knowledge of certainty",
+        "transliteration": "Kalla law taAAlamoona AAilma alyaqeeni"
+      },
+      {
+        "id": 6,
+        "text": "لَتَرَوُنَّ ٱلۡجَحِيمَ",
+        "translation": "You will surely see the Hellfire",
+        "transliteration": "Latarawunna aljaheema"
+      },
+      {
+        "id": 7,
+        "text": "ثُمَّ لَتَرَوُنَّهَا عَيۡنَ ٱلۡيَقِينِ",
+        "translation": "Then you will surely see it with the eye of certainty",
+        "transliteration": "Thumma latarawunnaha AAayna alyaqeeni"
+      },
+      {
+        "id": 8,
+        "text": "ثُمَّ لَتُسۡـَٔلُنَّ يَوۡمَئِذٍ عَنِ ٱلنَّعِيمِ",
+        "translation": "Then you will surely be asked that Day about pleasure",
+        "transliteration": "Thumma latusalunna yawmaithin AAani alnnaAAeemi"
+      }
+    ]
+  },
+  {
+    "id": 103,
+    "name": "العصر",
+    "transliteration": "Al-'Asr",
+    "translation": "The Declining Day",
+    "type": "meccan",
+    "total_verses": 3,
+    "verses": [
+      {
+        "id": 1,
+        "text": "وَٱلۡعَصۡرِ",
+        "translation": "By time",
+        "transliteration": "WaalAAasri"
+      },
+      {
+        "id": 2,
+        "text": "إِنَّ ٱلۡإِنسَٰنَ لَفِي خُسۡرٍ",
+        "translation": "Indeed, mankind is in loss",
+        "transliteration": "Inna alinsana lafee khusrin"
+      },
+      {
+        "id": 3,
+        "text": "إِلَّا ٱلَّذِينَ ءَامَنُواْ وَعَمِلُواْ ٱلصَّـٰلِحَٰتِ وَتَوَاصَوۡاْ بِٱلۡحَقِّ وَتَوَاصَوۡاْ بِٱلصَّبۡرِ",
+        "translation": "Except for those who have believed and done righteous deeds and advised each other to truth and advised each other to patience",
+        "transliteration": "Illa allatheena amanoo waAAamiloo alssalihati watawasaw bialhaqqi watawasaw bialssabri"
+      }
+    ]
+  },
+  {
+    "id": 104,
+    "name": "الهمزة",
+    "transliteration": "Al-Humazah",
+    "translation": "The Traducer",
+    "type": "meccan",
+    "total_verses": 9,
+    "verses": [
+      {
+        "id": 1,
+        "text": "وَيۡلٞ لِّكُلِّ هُمَزَةٖ لُّمَزَةٍ",
+        "translation": "Woe to every scorner and mocker",
+        "transliteration": "Waylun likulli humazatin lumazatin"
+      },
+      {
+        "id": 2,
+        "text": "ٱلَّذِي جَمَعَ مَالٗا وَعَدَّدَهُۥ",
+        "translation": "Who collects wealth and [continuously] counts it",
+        "transliteration": "Allathee jamaAAa malan waAAaddadahu"
+      },
+      {
+        "id": 3,
+        "text": "يَحۡسَبُ أَنَّ مَالَهُۥٓ أَخۡلَدَهُۥ",
+        "translation": "He thinks that his wealth will make him immortal",
+        "transliteration": "Yahsabu anna malahu akhladahu"
+      },
+      {
+        "id": 4,
+        "text": "كَلَّاۖ لَيُنۢبَذَنَّ فِي ٱلۡحُطَمَةِ",
+        "translation": "No! He will surely be thrown into the Crusher",
+        "transliteration": "Kalla layunbathanna fee alhutamati"
+      },
+      {
+        "id": 5,
+        "text": "وَمَآ أَدۡرَىٰكَ مَا ٱلۡحُطَمَةُ",
+        "translation": "And what can make you know what is the Crusher",
+        "transliteration": "Wama adraka ma alhutamatu"
+      },
+      {
+        "id": 6,
+        "text": "نَارُ ٱللَّهِ ٱلۡمُوقَدَةُ",
+        "translation": "It is the fire of Allah, [eternally] fueled",
+        "transliteration": "Naru Allahi almooqadatu"
+      },
+      {
+        "id": 7,
+        "text": "ٱلَّتِي تَطَّلِعُ عَلَى ٱلۡأَفۡـِٔدَةِ",
+        "translation": "Which mounts directed at the hearts",
+        "transliteration": "Allatee tattaliAAu AAala alafidati"
+      },
+      {
+        "id": 8,
+        "text": "إِنَّهَا عَلَيۡهِم مُّؤۡصَدَةٞ",
+        "translation": "Indeed, Hellfire will be closed down upon them",
+        "transliteration": "lnnaha AAalayhim musadatun"
+      },
+      {
+        "id": 9,
+        "text": "فِي عَمَدٖ مُّمَدَّدَةِۭ",
+        "translation": "In extended columns",
+        "transliteration": "Fee AAamadin mumaddadatin"
+      }
+    ]
+  },
+  {
+    "id": 105,
+    "name": "الفيل",
+    "transliteration": "Al-Fil",
+    "translation": "The Elephant",
+    "type": "meccan",
+    "total_verses": 5,
+    "verses": [
+      {
+        "id": 1,
+        "text": "أَلَمۡ تَرَ كَيۡفَ فَعَلَ رَبُّكَ بِأَصۡحَٰبِ ٱلۡفِيلِ",
+        "translation": "Have you not considered, [O Muhammad], how your Lord dealt with the companions of the elephant",
+        "transliteration": "Alam tara kayfa faAAala rabbuka biashabi alfeeli"
+      },
+      {
+        "id": 2,
+        "text": "أَلَمۡ يَجۡعَلۡ كَيۡدَهُمۡ فِي تَضۡلِيلٖ",
+        "translation": "Did He not make their plan into misguidance",
+        "transliteration": "Alam yajAAal kaydahum fee tadleelin"
+      },
+      {
+        "id": 3,
+        "text": "وَأَرۡسَلَ عَلَيۡهِمۡ طَيۡرًا أَبَابِيلَ",
+        "translation": "And He sent against them birds in flocks",
+        "transliteration": "Waarsala AAalayhim tayran ababeela"
+      },
+      {
+        "id": 4,
+        "text": "تَرۡمِيهِم بِحِجَارَةٖ مِّن سِجِّيلٖ",
+        "translation": "Striking them with stones of hard clay",
+        "transliteration": "Tarmeehim bihijaratin min sijjeelin"
+      },
+      {
+        "id": 5,
+        "text": "فَجَعَلَهُمۡ كَعَصۡفٖ مَّأۡكُولِۭ",
+        "translation": "And He made them like eaten straw",
+        "transliteration": "FajaAAalahum kaAAasfin makoolin"
+      }
+    ]
+  },
+  {
+    "id": 106,
+    "name": "قريش",
+    "transliteration": "Quraysh",
+    "translation": "Quraysh",
+    "type": "meccan",
+    "total_verses": 4,
+    "verses": [
+      {
+        "id": 1,
+        "text": "لِإِيلَٰفِ قُرَيۡشٍ",
+        "translation": "For the accustomed security of the Quraysh",
+        "transliteration": "Lieelafi qurayshin"
+      },
+      {
+        "id": 2,
+        "text": "إِۦلَٰفِهِمۡ رِحۡلَةَ ٱلشِّتَآءِ وَٱلصَّيۡفِ",
+        "translation": "Their accustomed security [in] the caravan of winter and summer",
+        "transliteration": "Eelafihim rihlata alshshitai waalssayfi"
+      },
+      {
+        "id": 3,
+        "text": "فَلۡيَعۡبُدُواْ رَبَّ هَٰذَا ٱلۡبَيۡتِ",
+        "translation": "Let them worship the Lord of this House",
+        "transliteration": "FalyaAAbudoo rabba hatha albayti"
+      },
+      {
+        "id": 4,
+        "text": "ٱلَّذِيٓ أَطۡعَمَهُم مِّن جُوعٖ وَءَامَنَهُم مِّنۡ خَوۡفِۭ",
+        "translation": "Who has fed them, [saving them] from hunger and made them safe, [saving them] from fear",
+        "transliteration": "Allathee atAAamahum min jooAAin waamanahum min khawfin"
+      }
+    ]
+  },
+  {
+    "id": 107,
+    "name": "الماعون",
+    "transliteration": "Al-Ma'un",
+    "translation": "The Small kindnesses",
+    "type": "meccan",
+    "total_verses": 7,
+    "verses": [
+      {
+        "id": 1,
+        "text": "أَرَءَيۡتَ ٱلَّذِي يُكَذِّبُ بِٱلدِّينِ",
+        "translation": "Have you seen the one who denies the Recompense",
+        "transliteration": "Araayta allathee yukaththibu bialddeeni"
+      },
+      {
+        "id": 2,
+        "text": "فَذَٰلِكَ ٱلَّذِي يَدُعُّ ٱلۡيَتِيمَ",
+        "translation": "For that is the one who drives away the orphan",
+        "transliteration": "Fathalika allathee yaduAAAAu alyateema"
+      },
+      {
+        "id": 3,
+        "text": "وَلَا يَحُضُّ عَلَىٰ طَعَامِ ٱلۡمِسۡكِينِ",
+        "translation": "And does not encourage the feeding of the poor",
+        "transliteration": "Wala yahuddu AAala taAAami almiskeeni"
+      },
+      {
+        "id": 4,
+        "text": "فَوَيۡلٞ لِّلۡمُصَلِّينَ",
+        "translation": "So woe to those who pray",
+        "transliteration": "Fawaylun lilmusalleena"
+      },
+      {
+        "id": 5,
+        "text": "ٱلَّذِينَ هُمۡ عَن صَلَاتِهِمۡ سَاهُونَ",
+        "translation": "[But] who are heedless of their prayer",
+        "transliteration": "Allatheena hum AAan salatihim sahoona"
+      },
+      {
+        "id": 6,
+        "text": "ٱلَّذِينَ هُمۡ يُرَآءُونَ",
+        "translation": "Those who make show [of their deeds]",
+        "transliteration": "Allatheena hum yuraoona"
+      },
+      {
+        "id": 7,
+        "text": "وَيَمۡنَعُونَ ٱلۡمَاعُونَ",
+        "translation": "And withhold [simple] assistance",
+        "transliteration": "WayamnaAAoona almaAAoona"
+      }
+    ]
+  },
+  {
+    "id": 108,
+    "name": "الكوثر",
+    "transliteration": "Al-Kawthar",
+    "translation": "The Abundance",
+    "type": "meccan",
+    "total_verses": 3,
+    "verses": [
+      {
+        "id": 1,
+        "text": "إِنَّآ أَعۡطَيۡنَٰكَ ٱلۡكَوۡثَرَ",
+        "translation": "Indeed, We have granted you, [O Muhammad], al-Kawthar",
+        "transliteration": "Inna aAAtaynaka alkawthara"
+      },
+      {
+        "id": 2,
+        "text": "فَصَلِّ لِرَبِّكَ وَٱنۡحَرۡ",
+        "translation": "So pray to your Lord and sacrifice [to Him alone]",
+        "transliteration": "Fasalli lirabbika wainhar"
+      },
+      {
+        "id": 3,
+        "text": "إِنَّ شَانِئَكَ هُوَ ٱلۡأَبۡتَرُ",
+        "translation": "Indeed, your enemy is the one cut off",
+        "transliteration": "Inna shaniaka huwa alabtaru"
+      }
+    ]
+  },
+  {
+    "id": 109,
+    "name": "الكافرون",
+    "transliteration": "Al-Kafirun",
+    "translation": "The Disbelievers",
+    "type": "meccan",
+    "total_verses": 6,
+    "verses": [
+      {
+        "id": 1,
+        "text": "قُلۡ يَـٰٓأَيُّهَا ٱلۡكَٰفِرُونَ",
+        "translation": "Say, \"O disbelievers",
+        "transliteration": "Qul ya ayyuha alkafiroona"
+      },
+      {
+        "id": 2,
+        "text": "لَآ أَعۡبُدُ مَا تَعۡبُدُونَ",
+        "translation": "I do not worship what you worship",
+        "transliteration": "La aAAbudu ma taAAbudoona"
+      },
+      {
+        "id": 3,
+        "text": "وَلَآ أَنتُمۡ عَٰبِدُونَ مَآ أَعۡبُدُ",
+        "translation": "Nor are you worshippers of what I worship",
+        "transliteration": "Wala antum AAabidoona ma aAAbudu"
+      },
+      {
+        "id": 4,
+        "text": "وَلَآ أَنَا۠ عَابِدٞ مَّا عَبَدتُّمۡ",
+        "translation": "Nor will I be a worshipper of what you worship",
+        "transliteration": "Wala ana AAabidun ma AAabadtum"
+      },
+      {
+        "id": 5,
+        "text": "وَلَآ أَنتُمۡ عَٰبِدُونَ مَآ أَعۡبُدُ",
+        "translation": "Nor will you be worshippers of what I worship",
+        "transliteration": "Wala antum AAabidoona ma aAAbudu"
+      },
+      {
+        "id": 6,
+        "text": "لَكُمۡ دِينُكُمۡ وَلِيَ دِينِ",
+        "translation": "For you is your religion, and for me is my religion",
+        "transliteration": "Lakum deenukum waliya deeni"
+      }
+    ]
+  },
+  {
+    "id": 110,
+    "name": "النصر",
+    "transliteration": "An-Nasr",
+    "translation": "The Divine Support",
+    "type": "medinan",
+    "total_verses": 3,
+    "verses": [
+      {
+        "id": 1,
+        "text": "إِذَا جَآءَ نَصۡرُ ٱللَّهِ وَٱلۡفَتۡحُ",
+        "translation": "When the victory of Allah has come and the conquest",
+        "transliteration": "Itha jaa nasru Allahi waalfathu"
+      },
+      {
+        "id": 2,
+        "text": "وَرَأَيۡتَ ٱلنَّاسَ يَدۡخُلُونَ فِي دِينِ ٱللَّهِ أَفۡوَاجٗا",
+        "translation": "And you see the people entering into the religion of Allah in multitudes",
+        "transliteration": "Waraayta alnnasa yadkhuloona fee deeni Allahi afwajan"
+      },
+      {
+        "id": 3,
+        "text": "فَسَبِّحۡ بِحَمۡدِ رَبِّكَ وَٱسۡتَغۡفِرۡهُۚ إِنَّهُۥ كَانَ تَوَّابَۢا",
+        "translation": "Then exalt [Him] with praise of your Lord and ask forgiveness of Him. Indeed, He is ever Accepting of repentance",
+        "transliteration": "Fasabbih bihamdi rabbika waistaghfirhu innahu kana tawwaban"
+      }
+    ]
+  },
+  {
+    "id": 111,
+    "name": "المسد",
+    "transliteration": "Al-Masad",
+    "translation": "The Palm Fiber",
+    "type": "meccan",
+    "total_verses": 5,
+    "verses": [
+      {
+        "id": 1,
+        "text": "تَبَّتۡ يَدَآ أَبِي لَهَبٖ وَتَبَّ",
+        "translation": "May the hands of Abu Lahab be ruined, and ruined is he",
+        "transliteration": "Tabbat yada abee lahabin watabba"
+      },
+      {
+        "id": 2,
+        "text": "مَآ أَغۡنَىٰ عَنۡهُ مَالُهُۥ وَمَا كَسَبَ",
+        "translation": "His wealth will not avail him or that which he gained",
+        "transliteration": "Ma aghna AAanhu maluhu wama kasaba"
+      },
+      {
+        "id": 3,
+        "text": "سَيَصۡلَىٰ نَارٗا ذَاتَ لَهَبٖ",
+        "translation": "He will [enter to] burn in a Fire of [blazing] flame",
+        "transliteration": "Sayasla naran thata lahabin"
+      },
+      {
+        "id": 4,
+        "text": "وَٱمۡرَأَتُهُۥ حَمَّالَةَ ٱلۡحَطَبِ",
+        "translation": "And his wife [as well] - the carrier of firewood",
+        "transliteration": "Waimraatuhu hammalata alhatabi"
+      },
+      {
+        "id": 5,
+        "text": "فِي جِيدِهَا حَبۡلٞ مِّن مَّسَدِۭ",
+        "translation": "Around her neck is a rope of [twisted] fiber",
+        "transliteration": "Fee jeediha hablun min masadin"
+      }
+    ]
+  },
+  {
+    "id": 112,
+    "name": "الإخلاص",
+    "transliteration": "Al-Ikhlas",
+    "translation": "The Sincerity",
+    "type": "meccan",
+    "total_verses": 4,
+    "verses": [
+      {
+        "id": 1,
+        "text": "قُلۡ هُوَ ٱللَّهُ أَحَدٌ",
+        "translation": "Say, \"He is Allah, [who is] One",
+        "transliteration": "Qul huwa Allahu ahadun"
+      },
+      {
+        "id": 2,
+        "text": "ٱللَّهُ ٱلصَّمَدُ",
+        "translation": "Allah, the Eternal Refuge",
+        "transliteration": "Allahu alssamadu"
+      },
+      {
+        "id": 3,
+        "text": "لَمۡ يَلِدۡ وَلَمۡ يُولَدۡ",
+        "translation": "He neither begets nor is born",
+        "transliteration": "Lam yalid walam yooladu"
+      },
+      {
+        "id": 4,
+        "text": "وَلَمۡ يَكُن لَّهُۥ كُفُوًا أَحَدُۢ",
+        "translation": "Nor is there to Him any equivalent",
+        "transliteration": "Walam yakun lahu kufuwan ahadun"
+      }
+    ]
+  },
+  {
+    "id": 113,
+    "name": "الفلق",
+    "transliteration": "Al-Falaq",
+    "translation": "The Daybreak",
+    "type": "meccan",
+    "total_verses": 5,
+    "verses": [
+      {
+        "id": 1,
+        "text": "قُلۡ أَعُوذُ بِرَبِّ ٱلۡفَلَقِ",
+        "translation": "Say, \"I seek refuge in the Lord of daybreak",
+        "transliteration": "Qul aAAoothu birabbi alfalaqi"
+      },
+      {
+        "id": 2,
+        "text": "مِن شَرِّ مَا خَلَقَ",
+        "translation": "From the evil of that which He created",
+        "transliteration": "Min sharri ma khalaqa"
+      },
+      {
+        "id": 3,
+        "text": "وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ",
+        "translation": "And from the evil of darkness when it settles",
+        "transliteration": "Wamin sharri ghasiqin itha waqaba"
+      },
+      {
+        "id": 4,
+        "text": "وَمِن شَرِّ ٱلنَّفَّـٰثَٰتِ فِي ٱلۡعُقَدِ",
+        "translation": "And from the evil of the blowers in knots",
+        "transliteration": "Wamin sharri alnnaffathati fee alAAuqadi"
+      },
+      {
+        "id": 5,
+        "text": "وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ",
+        "translation": "And from the evil of an envier when he envies",
+        "transliteration": "Wamin sharri hasidin itha hasada"
+      }
+    ]
+  },
+  {
+    "id": 114,
+    "name": "الناس",
+    "transliteration": "An-Nas",
+    "translation": "Mankind",
+    "type": "meccan",
+    "total_verses": 6,
+    "verses": [
+      {
+        "id": 1,
+        "text": "قُلۡ أَعُوذُ بِرَبِّ ٱلنَّاسِ",
+        "translation": "Say, \"I seek refuge in the Lord of mankind",
+        "transliteration": "Qul aAAoothu birabbi alnnasi"
+      },
+      {
+        "id": 2,
+        "text": "مَلِكِ ٱلنَّاسِ",
+        "translation": "The Sovereign of mankind",
+        "transliteration": "Maliki alnnasi"
+      },
+      {
+        "id": 3,
+        "text": "إِلَٰهِ ٱلنَّاسِ",
+        "translation": "The God of mankind",
+        "transliteration": "Ilahi alnnasi"
+      },
+      {
+        "id": 4,
+        "text": "مِن شَرِّ ٱلۡوَسۡوَاسِ ٱلۡخَنَّاسِ",
+        "translation": "From the evil of the retreating whisperer",
+        "transliteration": "Min sharri alwaswasi alkhannasi"
+      },
+      {
+        "id": 5,
+        "text": "ٱلَّذِي يُوَسۡوِسُ فِي صُدُورِ ٱلنَّاسِ",
+        "translation": "Who whispers [evil] into the breasts of mankind",
+        "transliteration": "Allathee yuwaswisu fee sudoori alnnasi"
+      },
+      {
+        "id": 6,
+        "text": "مِنَ ٱلۡجِنَّةِ وَٱلنَّاسِ",
+        "translation": "From among the jinn and mankind",
+        "transliteration": "Mina aljinnati wa alnnasm"
+      }
+    ]
+  }
+]
