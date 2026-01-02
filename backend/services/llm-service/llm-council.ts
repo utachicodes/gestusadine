@@ -159,20 +159,10 @@ export class LLMCouncil {
             throw new Error('No active Council Members found. Enable agents in Admin Config.');
         }
 
-        // Step 1: Retrieve relevant documents from RAG if not provided
+        // Step 1: Use provided RAG context
         let contextText = '';
         if (ragContext) {
             contextText = `\n\nRelevant context from knowledge base:\n${ragContext}`;
-        } else {
-            // Get general RAG context
-            try {
-                const ragResult = await ragService.search(query, 5);
-                if (ragResult.context) {
-                    contextText = `\n\nRelevant context from knowledge base:\n${ragResult.context}`;
-                }
-            } catch (error: any) {
-                councilLogger.warn('RAG context retrieval failed:', error.message);
-            }
         }
 
         const fullPrompt = `${query}${contextText}`;
