@@ -587,18 +587,18 @@ export default function ManageLibrary() {
         {/* Header */}
         <header className="flex justify-between items-start md:items-center flex-col md:flex-row gap-4">
           <div>
-            <p className="inline-flex items-center text-xs uppercase tracking-[0.22em] text-islamic-dark/60 dark:text-slate-400 mb-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-islamic-gold mr-2" />
+            <p className="inline-flex items-center text-xs uppercase tracking-[0.22em] text-muted-foreground mb-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-primary mr-2" />
               Admin
             </p>
-            <h1 className="text-3xl md:text-4xl font-bold text-islamic-dark dark:text-slate-100">
-              Manage <span className="text-gradient">Library</span>
+            <h1 className="text-3xl md:text-4xl font-bold text-foreground">
+              Manage <span className="text-primary">Library</span>
             </h1>
-            <p className="text-islamic-dark/70 dark:text-slate-300 mt-1">
+            <p className="text-muted-foreground mt-1">
               Add, edit, and manage digital books in your Islamic library
             </p>
           </div>
-          <Button variant="islamicPrimary" onClick={handleAdd} className="shrink-0">
+          <Button onClick={handleAdd} className="shrink-0">
             <Plus className="h-4 w-4 mr-2" />
             Add Book
           </Button>
@@ -606,48 +606,48 @@ export default function ManageLibrary() {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Card className="islamic-card border-islamic-gold/30">
+          <Card className="border-border">
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-islamic-dark/60 dark:text-slate-400">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
                 Total Books
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-islamic-dark dark:text-slate-100">{books.length}</div>
+              <div className="text-3xl font-bold text-foreground">{books.length}</div>
             </CardContent>
           </Card>
-          <Card className="islamic-card border-islamic-gold/30">
+          <Card className="border-border">
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-islamic-dark/60 dark:text-slate-400">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
                 Featured Books
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-islamic-gold">
+              <div className="text-3xl font-bold text-primary">
                 {books.filter(b => b.featured).length}
               </div>
             </CardContent>
           </Card>
-          <Card className="islamic-card border-islamic-gold/30">
+          <Card className="border-border">
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-islamic-dark/60 dark:text-slate-400">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
                 Total Downloads
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-islamic-green-600 dark:text-islamic-green">
+              <div className="text-3xl font-bold text-foreground">
                 {books.reduce((sum, b) => sum + b.downloads, 0).toLocaleString()}
               </div>
             </CardContent>
           </Card>
-          <Card className="islamic-card border-islamic-gold/30">
+          <Card className="border-border">
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-islamic-dark/60 dark:text-slate-400">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
                 Categories
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-islamic-dark dark:text-slate-100">
+              <div className="text-3xl font-bold text-foreground">
                 {new Set(books.map(b => b.category)).size}
               </div>
             </CardContent>
@@ -657,7 +657,7 @@ export default function ManageLibrary() {
         {/* Search */}
         <div className="flex gap-4">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-islamic-dark/40 dark:text-slate-500" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               type="text"
               placeholder="Search books by title, author, or category..."
@@ -669,15 +669,15 @@ export default function ManageLibrary() {
         </div>
 
         {/* Books Table */}
-        <Card className="islamic-card">
+        <Card className="border-border">
           <CardHeader>
-            <CardTitle className="text-islamic-dark dark:text-slate-100">Books ({filteredBooks.length})</CardTitle>
-            <CardDescription className="text-islamic-dark/70 dark:text-slate-400">
+            <CardTitle className="text-foreground">Books ({filteredBooks.length})</CardTitle>
+            <CardDescription className="text-muted-foreground">
               Manage your digital library collection
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="rounded-md border border-islamic-gold/20">
+            <div className="rounded-md border border-border">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -781,7 +781,7 @@ export default function ManageLibrary() {
             <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
               Cancel
             </Button>
-            <Button variant="islamicPrimary" onClick={handleSaveAdd}>Add Book</Button>
+            <Button onClick={handleSaveAdd}>Add Book</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -800,7 +800,7 @@ export default function ManageLibrary() {
             <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
               Cancel
             </Button>
-            <Button variant="islamicPrimary" onClick={handleSaveEdit}>Save Changes</Button>
+            <Button onClick={handleSaveEdit}>Save Changes</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

@@ -1,17 +1,20 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useAuth } from '@/auth/AuthContext';
+import { supabase } from '@/lib/supabase';
 
 type Language = 'en' | 'fr' | 'wo';
 
 interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
-  t: (key: string) => string;
+  t: (key: string, params?: Record<string, string | number>) => string;
 }
 
 const translations = {
   en: {
     'chat.placeholder': 'Ask me anything about Islam...',
     'chat.welcome': 'Asalamu alaikum, I am Anisah',
+    'chat.welcome_logo_alt': 'Anisah',
     'chat.welcome.subtitle': 'Get authentic Islamic answers from multiple scholarly perspectives.',
     'chat.thinking': 'Thinking...',
     'chat.error': 'Failed to get response. Please try again.',
@@ -47,6 +50,27 @@ const translations = {
     'events.attendees': 'Attendees',
     // Shop
     'shop.title': 'Shop',
+    'shop.shop_label': 'Shop',
+    'shop.islamic': 'Islamic',
+    'shop.store': 'Store',
+    'shop.browse_desc': 'Browse and purchase Islamic products, books, and merchandise',
+    'shop.waitlist_title': 'Merch previews. Join the preorder list.',
+    'shop.waitlist_subtitle': 'Exclusive drops, limited runs, and intentional designs. No payments yet—reserve your spot and be notified first.',
+    'shop.waitlist_exclusive': 'Exclusive early access',
+    'shop.waitlist_drop_hint': 'Drops announced in waves',
+    'shop.preview': 'Preview',
+    'shop.preorder': 'Preorder spot',
+    'shop.waitlist_description': 'Join the list to get notified when this drop opens.',
+    'shop.waitlist_price_hint': 'Expected from {price} {currency}',
+    'shop.waitlist_email_placeholder': 'Email for early access',
+    'shop.waitlist_cta': 'Notify me first',
+    'shop.waitlist_joined_short': 'You are on the list',
+    'shop.waitlist_joined': 'You’re on the preorder list. We will notify you first.',
+    'shop.waitlist_invalid_email': 'Enter a valid email to join.',
+    'shop.order_created': 'Order created! Redirecting to payment...',
+    'shop.updated_qty': 'Updated quantity in cart',
+    'shop.added_to_cart': 'Added to cart',
+    'shop.removed_from_cart': 'Item removed from cart',
     'shop.subtitle': 'Islamic Products',
     'shop.intro': 'Discover modest clothing, books, accessories, and resources to deepen your Islamic knowledge.',
     'shop.loading': 'Loading products...',
@@ -90,6 +114,39 @@ const translations = {
     'nav.signout': 'Sign Out',
     'nav.signin': 'Sign In',
     'nav.home': 'Home',
+    // Library
+    'library.title': 'Digital Islamic Library',
+    'library.subtitle': 'Access a comprehensive collection of Islamic books, texts, and resources',
+    'library.search_placeholder': 'Search books by title, author, or topic...',
+    'library.filter_category': 'Category',
+    'library.filter_language': 'Language',
+    'library.filter_format': 'Format',
+    'library.all_categories': 'All Categories',
+    'library.all_languages': 'All Languages',
+    'library.all_formats': 'All Formats',
+    'library.downloads': 'downloads',
+    'library.pages': 'pages',
+    'library.file_size': 'MB',
+    'library.download_button': 'Download',
+    'library.featured': 'Featured',
+    'library.no_results': 'No books found matching your criteria',
+    'library.categories.quran': 'Quran',
+    'library.categories.hadith': 'Hadith',
+    'library.categories.fiqh': 'Fiqh',
+    'library.categories.aqeedah': 'Aqeedah',
+    'library.categories.seerah': 'Seerah',
+    'library.categories.tafsir': 'Tafsir',
+    'library.categories.arabic': 'Arabic Learning',
+    'library.categories.dua': 'Dua & Dhikr',
+    'library.categories.general': 'General',
+    'library.languages.ar': 'Arabic',
+    'library.languages.en': 'English',
+    'library.languages.fr': 'French',
+    'library.languages.wo': 'Wolof',
+    'library.formats.pdf': 'PDF',
+    'library.formats.epub': 'EPUB',
+    'library.formats.mobi': 'MOBI',
+    'library.formats.audio': 'Audio',
     // Hero
     'hero.heading': 'Islamic Knowledge\nAt Your Fingertips',
     'hero.subtitle': 'Your complete Islamic platform: scholarly guidance, daily inspiration, digital library, products, events, and media.',
@@ -178,13 +235,37 @@ const translations = {
     'error.upload_failed': 'Upload failed',
     'error.delete_failed': 'Could not delete document.',
     'error.delete_document': 'Delete document'
+    ,
+    'tarteel.title': 'Qirah',
+    'tarteel.select_surah': 'Select a Surah',
+    'tarteel.loading_surah': 'Loading Surah...',
+    'tarteel.listening_title': 'Listening...',
+    'tarteel.listening_desc': 'Please recite the highlighted verse.',
+    'tarteel.mic_error_title': 'Microphone Error',
+    'tarteel.mic_error_desc': 'Could not access microphone. Please ensure permissions are granted.',
+    'tarteel.file_too_large_title': 'File Too Large',
+    'tarteel.file_too_large_desc': 'Recording exceeds the 10MB limit. Please try a shorter recitation.',
+    'tarteel.success_title': 'MashaAllah!',
+    'tarteel.success_desc': 'Your recitation was correct.',
+    'tarteel.correction_title': 'Correction Needed',
+    'tarteel.heard_label': 'We heard:',
+    'tarteel.api_error_title': 'Analysis Error',
+    'tarteel.api_error_desc': 'Could not process your recitation. Please try again.',
+    'tarteel.tap_mic': 'Tap microphone to start reciting',
+    'tarteel.overlay_analyzing': 'Analyzing Recitation...',
+    'tarteel.overlay_checking': 'Checking pronunciation, tajweed, and memorization accuracy.',
+    'tarteel.ayah_label': 'Ayah'
   },
   fr: {
     'chat.placeholder': 'Demandez-moi quoi que ce soit sur l\'Islam...',
     'chat.welcome': 'Asalamu alaikum, je suis Anisah',
+    'chat.welcome_logo_alt': 'Anisah',
     'chat.welcome.subtitle': 'Obtenez des réponses islamiques authentiques de multiples perspectives savantes.',
     'chat.thinking': 'Réflexion...',
     'chat.error': 'Échec de la réponse. Veuillez réessayer.',
+    'chat.history_cleared': 'Historique effacé',
+    'chat.history_cleared_desc': 'L\'historique du chat a été effacé',
+    'chat.invalid_response': 'Réponse invalide du serveur',
     'chat.clear_history': 'Effacer l\'historique',
     'chat.feature1.title': 'Perspectives multiples',
     'chat.feature1.desc': 'Obtenez des réponses de différentes écoles de pensée islamiques',
@@ -217,6 +298,27 @@ const translations = {
     'events.attendees': 'Participants',
     // Shop
     'shop.title': 'Boutique',
+    'shop.shop_label': 'Boutique',
+    'shop.islamic': 'Islamique',
+    'shop.store': 'Magasin',
+    'shop.browse_desc': 'Parcourez et achetez des produits islamiques, des livres et des marchandises',
+    'shop.waitlist_title': 'Aperçus merch. Rejoignez la précommande.',
+    'shop.waitlist_subtitle': 'Drops exclusifs, séries limitées, designs soignés. Pas de paiement maintenant—réservez votre place et soyez prévenu en premier.',
+    'shop.waitlist_exclusive': 'Accès anticipé exclusif',
+    'shop.waitlist_drop_hint': 'Les sorties arrivent par vagues',
+    'shop.preview': 'Aperçu',
+    'shop.preorder': 'Précommande',
+    'shop.waitlist_description': 'Inscrivez-vous pour être prévenu dès que ce drop ouvre.',
+    'shop.waitlist_price_hint': 'Prévu à partir de {price} {currency}',
+    'shop.waitlist_email_placeholder': 'Email pour accès prioritaire',
+    'shop.waitlist_cta': 'Prévenez-moi',
+    'shop.waitlist_joined_short': 'Vous êtes sur la liste',
+    'shop.waitlist_joined': 'Vous êtes sur la liste de précommande. Nous vous préviendrons en premier.',
+    'shop.waitlist_invalid_email': 'Saisissez un email valide pour rejoindre la liste.',
+    'shop.order_created': 'Commande créée ! Redirection vers le paiement...',
+    'shop.updated_qty': 'Quantité mise à jour dans le panier',
+    'shop.added_to_cart': 'Ajouté au panier',
+    'shop.removed_from_cart': 'Article retiré du panier',
     'shop.subtitle': 'Produits islamiques',
     'shop.intro': 'Découvrez des vêtements modestes, livres, accessoires et ressources pour approfondir vos connaissances islamiques.',
     'shop.loading': 'Chargement des produits...',
@@ -260,6 +362,39 @@ const translations = {
     'nav.signout': 'Déconnexion',
     'nav.signin': 'Connexion',
     'nav.home': 'Accueil',
+    // Library
+    'library.title': 'Bibliothèque Numérique Islamique',
+    'library.subtitle': 'Accédez à une collection complète de livres, textes et ressources islamiques',
+    'library.search_placeholder': 'Rechercher par titre, auteur ou sujet...',
+    'library.filter_category': 'Catégorie',
+    'library.filter_language': 'Langue',
+    'library.filter_format': 'Format',
+    'library.all_categories': 'Toutes les catégories',
+    'library.all_languages': 'Toutes les langues',
+    'library.all_formats': 'Tous les formats',
+    'library.downloads': 'téléchargements',
+    'library.pages': 'pages',
+    'library.file_size': 'Mo',
+    'library.download_button': 'Télécharger',
+    'library.featured': 'En vedette',
+    'library.no_results': 'Aucun livre trouvé correspondant à vos critères',
+    'library.categories.quran': 'Coran',
+    'library.categories.hadith': 'Hadith',
+    'library.categories.fiqh': 'Fiqh',
+    'library.categories.aqeedah': 'Aqida',
+    'library.categories.seerah': 'Sira',
+    'library.categories.tafsir': 'Tafsir',
+    'library.categories.arabic': 'Apprentissage de l\'Arabe',
+    'library.categories.dua': 'Dou\'a & Dhikr',
+    'library.categories.general': 'Général',
+    'library.languages.ar': 'Arabe',
+    'library.languages.en': 'Anglais',
+    'library.languages.fr': 'Français',
+    'library.languages.wo': 'Wolof',
+    'library.formats.pdf': 'PDF',
+    'library.formats.epub': 'EPUB',
+    'library.formats.mobi': 'MOBI',
+    'library.formats.audio': 'Audio',
     // Hero
     'hero.heading': 'Connaissance Islamique\nÀ Portée de Main',
     'hero.subtitle': 'Votre plateforme islamique complète : conseils savants, inspiration quotidienne, bibliothèque numérique, produits, événements et médias.',
@@ -282,6 +417,9 @@ const translations = {
     'index.fiqh_map_title': 'Carte du fiqh',
     'index.fiqh_map_desc': "Explorez les thèmes du fiqh à travers les quatre madhabs : adoration, transactions, famille, éthique, et contextes locaux.",
     'index.explore': 'Explorer',
+    'index.library_title': 'Bibliothèque Numérique',
+    'index.library_desc': 'Accédez à des livres islamiques, des PDF et des ressources éducatives',
+    'index.browse_books': 'Parcourir les livres',
     'index.how_title_prefix': 'Conçu pour',
     'index.how_title_gradient': "le Sénégal et l'Oumma",
     'index.how_subtitle': "Chaque réponse suit un flux calme et structuré, ancré dans des sources authentiques.",
@@ -348,10 +486,31 @@ const translations = {
     'error.upload_failed': 'Échec du téléchargement',
     'error.delete_failed': 'Impossible de supprimer le document.',
     'error.delete_document': 'Supprimer le document'
+    ,
+    'tarteel.title': 'Qirah',
+    'tarteel.select_surah': 'Sélectionner une sourate',
+    'tarteel.loading_surah': 'Chargement de la sourate...',
+    'tarteel.listening_title': 'Écoute en cours...',
+    'tarteel.listening_desc': 'Veuillez réciter le verset en surbrillance.',
+    'tarteel.mic_error_title': 'Erreur de microphone',
+    'tarteel.mic_error_desc': 'Impossible d’accéder au microphone. Vérifiez les permissions.',
+    'tarteel.file_too_large_title': 'Fichier trop volumineux',
+    'tarteel.file_too_large_desc': 'L’enregistrement dépasse 10 Mo. Essayez une récitation plus courte.',
+    'tarteel.success_title': 'MashaAllah !',
+    'tarteel.success_desc': 'Votre récitation est correcte.',
+    'tarteel.correction_title': 'Correction nécessaire',
+    'tarteel.heard_label': 'Nous avons entendu :',
+    'tarteel.api_error_title': 'Erreur d’analyse',
+    'tarteel.api_error_desc': 'Impossible de traiter votre récitation. Veuillez réessayer.',
+    'tarteel.tap_mic': 'Appuyez sur le micro pour commencer',
+    'tarteel.overlay_analyzing': 'Analyse de la récitation...',
+    'tarteel.overlay_checking': 'Vérification de la prononciation, du tajwid et de la mémorisation.',
+    'tarteel.ayah_label': 'Verset'
   },
   wo: {
     'chat.placeholder': 'Nan ma wax lé l\'Islaam...',
     'chat.welcome': 'Asalamu alaikum, man Anisah la',
+    'chat.welcome_logo_alt': 'Anisah',
     'chat.welcome.subtitle': 'Wañ japp ndax mi jëmm ju Iislaam ji yore wax yu bari xam-xam.',
     'chat.thinking': 'Mi nangu tànn...',
     'chat.error': 'Wula ju topp. Jàppleen ndax.',
@@ -366,6 +525,26 @@ const translations = {
     'chat.council_members': 'Jëmm',
     'chat.council_reasoning': 'Xalaat',
     'status.online': 'Ci jàmm',
+    // Tarteel
+    'tarteel.title': 'Qirah',
+    'tarteel.select_surah': 'Tànn Surah',
+    'tarteel.loading_surah': 'Mi jëkk Surah bi...',
+    'tarteel.listening_title': 'Mi ngi déglu...',
+    'tarteel.listening_desc': 'Jàngal sa ayah bi ñu xàmme.',
+    'tarteel.mic_error_title': 'Njumte Micro',
+    'tarteel.mic_error_desc': 'Mic bi mënatul. Seenali ndigal yi ngir daje.',
+    'tarteel.file_too_large_title': 'Denc bu mag lool',
+    'tarteel.file_too_large_desc': 'Jàngal bi dafa rëy 10MB. Jébbal jàngal bu gàtt.',
+    'tarteel.success_title': 'MashaAllah!',
+    'tarteel.success_desc': 'Sa jàngal bi baax na.',
+    'tarteel.correction_title': 'Sàmm laaj la',
+    'tarteel.heard_label': 'Lanu déglu :',
+    'tarteel.api_error_title': 'Njumte njaaréef',
+    'tarteel.api_error_desc': 'Mënunu jëfandikoo sa jàngal. Delluleen.',
+    'tarteel.tap_mic': 'Tappal micro ngir tàmbalee',
+    'tarteel.overlay_analyzing': 'Mi ngi xool jàngal bi...',
+    'tarteel.overlay_checking': 'Xool téem bu ñaan, tajweed, ak xool ci xam-xam.',
+    'tarteel.ayah_label': 'Ayah',
     // Media
     'media.title': 'Média',
     'media.subtitle': 'Dal bu Contenu bu Islam',
@@ -387,6 +566,27 @@ const translations = {
     'events.attendees': 'Jëmm',
     // Shop
     'shop.title': 'Dëkk',
+    'shop.shop_label': 'Butik',
+    'shop.islamic': 'Lislaam',
+    'shop.store': 'Bitik',
+    'shop.browse_desc': 'Saytu te jënd ay produit Lislaam, ay téré ak yeneen yëf',
+    'shop.waitlist_title': 'Merch previews. Bokku ci preorder.',
+    'shop.waitlist_subtitle': 'Drop yu xóot, limi lekkool, design yu feesal. Déetul payement leegi—jël sa barab ngir ñu la xamal jëmm ak jëmm.',
+    'shop.waitlist_exclusive': 'Dugub bu ndijoor bu jot ci kanam',
+    'shop.waitlist_drop_hint': 'Drop yi ñuy wàcce ci ndimbel',
+    'shop.preview': 'Preview',
+    'shop.preorder': 'Preorder',
+    'shop.waitlist_description': 'Bokku ci list bi ngir ñu la xamal bu drop bi ubbeeku.',
+    'shop.waitlist_price_hint': 'Diir ci {price} {currency}',
+    'shop.waitlist_email_placeholder': 'Imel ngir jot ci kanam',
+    'shop.waitlist_cta': 'Xamleel ma jëmm',
+    'shop.waitlist_joined_short': 'Yaa ngi ci list bi',
+    'shop.waitlist_joined': 'Yaa ngi ci preorder list bi. Ñuy la xamle ci kanam.',
+    'shop.waitlist_invalid_email': 'Dugal imel bu baax ngir dugg ci list bi.',
+    'shop.order_created': 'Commande bi noppi na! Ñu ngi lay yobbu ci payement bi...',
+    'shop.updated_qty': 'Yokku nañu limu yëf bi ci panier bi',
+    'shop.added_to_cart': 'Yokku nañu ko ci panier bi',
+    'shop.removed_from_cart': 'Dindi nañu ko ci panier bi',
     'shop.subtitle': 'Yëf yu Islam',
     'shop.intro': 'Gis yéeg yu wóor, téere, yëf yu bari, ak mbind yu bari ngir yokk sa xam-xam bu Islam.',
     'shop.loading': 'Mi jëkk yëf yi...',
@@ -430,6 +630,39 @@ const translations = {
     'nav.signout': 'Jóggé',
     'nav.signin': 'Jóogle',
     'nav.home': 'Kër',
+    // Library
+    'library.title': 'Téerey Lislaam Digital',
+    'library.subtitle': 'Jot ci téerey lislaam, mbind ak yëf yu bari',
+    'library.search_placeholder': 'Seet téere ci tur, bindkat walla mbir...',
+    'library.filter_category': 'Wàll',
+    'library.filter_language': 'Làkk',
+    'library.filter_format': 'Format',
+    'library.all_categories': 'Wàll yépp',
+    'library.all_languages': 'Làkk yépp',
+    'library.all_formats': 'Format yépp',
+    'library.downloads': 'yeb',
+    'library.pages': 'xët',
+    'library.file_size': 'MB',
+    'library.download_button': 'Yeb',
+    'library.featured': 'Siiw',
+    'library.no_results': 'Amul téere bu méngoo ak li nga seet',
+    'library.categories.quran': 'Al-Qur\'an',
+    'library.categories.hadith': 'Hadith',
+    'library.categories.fiqh': 'Fiqh',
+    'library.categories.aqeedah': 'Aqeedah',
+    'library.categories.seerah': 'Seerah',
+    'library.categories.tafsir': 'Tafsir',
+    'library.categories.arabic': 'Jàng Arab',
+    'library.categories.dua': 'Ñaan & Dikr',
+    'library.categories.general': 'Bokk',
+    'library.languages.ar': 'Arab',
+    'library.languages.en': 'Angale',
+    'library.languages.fr': 'Faransé',
+    'library.languages.wo': 'Wolof',
+    'library.formats.pdf': 'PDF',
+    'library.formats.epub': 'EPUB',
+    'library.formats.mobi': 'MOBI',
+    'library.formats.audio': 'Audio',
     // Hero
     'hero.heading': 'Xam-xam bu Islaam\nCi Sa Loxo',
     'hero.subtitle': 'Sa plateforme bu Islam bu wóor : cër yu xam-xamkat, cër yu bés-bés, dal bu digital, jëmm, jëf, ak media.',
@@ -452,6 +685,9 @@ const translations = {
     'index.fiqh_map_title': 'Karte bu fiqh',
     'index.fiqh_map_desc': 'Seet téem yu fiqh ci ñeent madhab yi: jaamu, jëmbët, kër, njublaay ak xeetu dëkkuwaay.',
     'index.explore': 'Seet',
+    'index.library_title': 'Téerey Digital',
+    'index.library_desc': 'Jot ci téerey lislaam, PDF ak yëf yu jàngale',
+    'index.browse_books': 'Seet téere yi',
     'index.how_title_prefix': 'Soppiko ci',
     'index.how_title_gradient': 'Sénégal ak Ummah bi',
     'index.how_subtitle': 'Tontu bépp di topp yoon bu sukk ak tëgg ci mbind yi wér.',
@@ -506,6 +742,31 @@ const translations = {
     'dashboard.prayer.isha': 'Isha',
     'dashboard.action_text': 'Jël benn waxtu ngir xalaat ci aaya bu tey. Waxal ko ci sa njulli ak xalaat ci li mu tekki ci bés bii.',
     'dashboard.hadith_text': 'Yonent bi (jàmm ak moom) nee na: \'Nit ñi gën a baax ñooñu ñi gën a jariñu nit ñi.\'',
+    'dashboard.sectionLabel': "Jàmmu Islam bii tey",
+    'dashboard.titlePrefix': "Sa dëkk bu sukkandiku",
+    'dashboard.titleHighlight': "cër yi tey",
+    'dashboard.intro': "Tontu, duʿa, xam-xam yu ndaw ak quizu besub lakk – ngir nga dëppoo say xol ak Yàlla léegi léegi.",
+    'dashboard.ayahOfTheDay': "Aaya bu bees",
+    'dashboard.loading': "Mi ngi yeb…",
+    'dashboard.ayahLoading': "Mi ngi yeb aaya bii…",
+    'dashboard.ayahError': "Mënul yeb aaya bii.",
+    'dashboard.todayLabel': "Tey",
+    'dashboard.todaySummary': "Ci bés bii: benn aaya, benn hadith, benn duʿa ak benn jëf bu ndaw nga mën jëfandikoo.",
+    'dashboard.openReminder': "Ubbi cuqalub bés bii",
+    'dashboard.dailyDua': "Duʿa bu tey",
+    'dashboard.dailyDuaLoading': "Mi ngi yeb duʿa bu tey…",
+    'dashboard.dailyDuaError': "Mënul yeb duʿa bu tey.",
+    'dashboard.smallFact': "Xam-xam bu ndaw",
+    'dashboard.factLoading': "Mi ngi yeb xam-xam bu tey…",
+    'dashboard.factError': "Mënul yeb xam-xam bu tey.",
+    'dashboard.weeklyQuiz': "Quizu ayu-bés",
+    'dashboard.weeklyQuizSubtitle': "Benn laaj, ñatte tollu.",
+    'dashboard.easy': "Wóor-wóor",
+    'dashboard.medium': "Dig-digg",
+    'dashboard.advanced': "Xuux",
+    'dashboard.checkAnswer': "Seet tontu bi",
+    'dashboard.correctFeedback': "Baax na, tontu bi dëgg la.",
+    'dashboard.wrongFeedbackPrefix': "Dul li. Wanaan: ",
     // Admin
     'admin.select_category': 'Tànn kategori',
     'admin.select_language': 'Tànn làkk',
@@ -532,23 +793,60 @@ export const useLanguage = () => {
 };
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [language, setLanguageState] = useState<Language>('en');
+  const { user } = useAuth();
 
-  // Load saved language preference
-  useEffect(() => {
-    const saved = localStorage.getItem('xamsadine-language') as Language;
-    if (saved && ['en', 'fr', 'wo'].includes(saved)) {
-      setLanguageState(saved);
+  const readStored = (): Language => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('xamsadine-language') as Language;
+      if (saved && ['en', 'fr', 'wo'].includes(saved)) return saved;
     }
-  }, []);
+    if (user?.user_metadata?.language && ['en', 'fr', 'wo'].includes(user.user_metadata.language)) {
+      return user.user_metadata.language;
+    }
+    return 'en';
+  };
+
+  const [language, setLanguageState] = useState<Language>(readStored);
+
+  // Sync document lang and persist
+  useEffect(() => {
+    document.documentElement.lang = language;
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('xamsadine-language', language);
+    }
+    if (user) {
+      supabase.auth.updateUser({ data: { language } }).catch(() => {
+        // ignore failure; keep UX fast
+      });
+    }
+  }, [language, user]);
 
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);
-    localStorage.setItem('xamsadine-language', lang);
   };
 
-  const t = (key: string): string => {
-    return translations[language][key as keyof typeof translations.en] || key;
+  const t = (key: string, params?: Record<string, string | number>): string => {
+    const current = (translations as Record<string, Record<string, string>>)[language];
+    const translate = (dict?: Record<string, string>) => {
+      const value = dict?.[key];
+      if (!value) return undefined;
+      if (!params) return value;
+      return Object.keys(params).reduce((acc, paramKey) => {
+        const token = `{${paramKey}}`;
+        return acc.replace(token, String(params[paramKey]));
+      }, value);
+    };
+
+    const currentValue = translate(current);
+    if (currentValue) return currentValue;
+
+    const fallback = (translations as Record<string, Record<string, string>>).en;
+    const fallbackValue = translate(fallback);
+    if (fallbackValue) return fallbackValue;
+    if (import.meta.env.DEV) {
+      console.warn(`Missing translation key: ${key} for ${language}`);
+    }
+    return key;
   };
 
   return (

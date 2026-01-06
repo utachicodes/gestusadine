@@ -35,217 +35,251 @@ import ManageLibrary from "./pages/admin/ManageLibrary";
 import RAGTest from "./pages/admin/RAGTest";
 import Tarteel from "./pages/Tarteel";
 
+import { ThemeProvider } from "@/contexts/ThemeContext";
+
 const queryClient = new QueryClient();
 
 const App = () => (
   <ErrorBoundary>
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <LanguageProvider>
-          <AuthProvider>
-            <BrowserRouter>
-              <Routes>
-                <Route 
-                  path="/" 
-                  element={
-                    <PublicRoute>
-                      <AppShell><Index /></AppShell>
-                    </PublicRoute>
-                  } 
-                />
-                <Route path="/login" element={<AppShell><Login /></AppShell>} />
-                <Route
-                  path="/dashboard"
-                  element={
-                    <ProtectedRoute>
-                      <DashboardLayout>
-                        <Dashboard />
-                      </DashboardLayout>
-                    </ProtectedRoute>
-                  }
-                />
-                <Route path="/fatwa" element={<AppShell><Fatwa /></AppShell>} />
-                <Route path="/fiqh" element={<AppShell><Fiqh /></AppShell>} />
-                <Route
-                  path="/language"
-                  element={
-                    <ProtectedRoute>
-                      <DashboardLayout>
-                        <Language />
-                      </DashboardLayout>
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/circle"
-                  element={
-                    <ProtectedRoute adminOnly>
-                      <DashboardLayout>
-                        <CircleKnowledge />
-                      </DashboardLayout>
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/chat"
-                  element={
-                    <ProtectedRoute>
-                      <DashboardLayout>
-                        <ChatInterface />
-                      </DashboardLayout>
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin"
-                  element={
-                    <ProtectedRoute adminOnly>
-                      <DashboardLayout>
-                        <AdminDashboard />
-                      </DashboardLayout>
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin/config"
-                  element={
-                    <ProtectedRoute adminOnly>
-                      <DashboardLayout>
-                        <AdminConfig />
-                      </DashboardLayout>
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin/events"
-                  element={
-                    <ProtectedRoute adminOnly>
-                      <DashboardLayout>
-                        <ManageEvents />
-                      </DashboardLayout>
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin/videos"
-                  element={
-                    <ProtectedRoute adminOnly>
-                      <DashboardLayout>
-                        <ManageVideos />
-                      </DashboardLayout>
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin/products"
-                  element={
-                    <ProtectedRoute adminOnly>
-                      <DashboardLayout>
-                        <ManageProducts />
-                      </DashboardLayout>
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin/daily"
-                  element={
-                    <ProtectedRoute adminOnly>
-                      <DashboardLayout>
-                        <ManageDaily />
-                      </DashboardLayout>
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/documents"
-                  element={
-                    <ProtectedRoute adminOnly>
-                      <DashboardLayout>
-                        <DocumentUpload />
-                      </DashboardLayout>
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/media"
-                  element={
-                    <ProtectedRoute>
-                      <DashboardLayout>
-                        <MediaPage />
-                      </DashboardLayout>
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/events"
-                  element={
-                    <ProtectedRoute>
-                      <DashboardLayout>
-                        <EventsPage />
-                      </DashboardLayout>
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/shop"
-                  element={
-                    <ProtectedRoute>
-                      <DashboardLayout>
-                        <ShopPage />
-                      </DashboardLayout>
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/library"
-                  element={
-                    <ProtectedRoute>
-                      <DashboardLayout>
-                        <Library />
-                      </DashboardLayout>
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/tarteel"
-                  element={
-                    <ProtectedRoute>
-                      <DashboardLayout>
-                        <Tarteel />
-                      </DashboardLayout>
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin/library"
-                  element={
-                    <ProtectedRoute adminOnly>
-                      <DashboardLayout>
-                        <ManageLibrary />
-                      </DashboardLayout>
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin/rag-test"
-                  element={
-                    <ProtectedRoute adminOnly>
-                      <DashboardLayout>
-                        <RAGTest />
-                      </DashboardLayout>
-                    </ProtectedRoute>
-                  }
-                />
-                {/* Catch-all */}
-                <Route path="*" element={<AppShell><NotFound /></AppShell>} />
+    <AuthProvider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <LanguageProvider>
+              <BrowserRouter>
+                <Routes>
+                  <Route
+                    path="/"
+                    element={
+                      <PublicRoute>
+                        <AppShell>
+                          <Index />
+                        </AppShell>
+                      </PublicRoute>
+                    }
+                  />
+                  <Route
+                    path="/login"
+                    element={
+                      <AppShell>
+                        <Login />
+                      </AppShell>
+                    }
+                  />
+                  <Route
+                    path="/dashboard"
+                    element={
+                      <ProtectedRoute>
+                        <DashboardLayout>
+                          <Dashboard />
+                        </DashboardLayout>
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/fatwa"
+                    element={
+                      <AppShell>
+                        <Fatwa />
+                      </AppShell>
+                    }
+                  />
+                  <Route
+                    path="/fiqh"
+                    element={
+                      <AppShell>
+                        <Fiqh />
+                      </AppShell>
+                    }
+                  />
+                  <Route
+                    path="/language"
+                    element={
+                      <ProtectedRoute>
+                        <DashboardLayout>
+                          <Language />
+                        </DashboardLayout>
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/circle"
+                    element={
+                      <ProtectedRoute adminOnly>
+                        <DashboardLayout>
+                          <CircleKnowledge />
+                        </DashboardLayout>
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/chat"
+                    element={
+                      <ProtectedRoute>
+                        <DashboardLayout>
+                          <ChatInterface />
+                        </DashboardLayout>
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin"
+                    element={
+                      <ProtectedRoute adminOnly>
+                        <DashboardLayout>
+                          <AdminDashboard />
+                        </DashboardLayout>
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/config"
+                    element={
+                      <ProtectedRoute adminOnly>
+                        <DashboardLayout>
+                          <AdminConfig />
+                        </DashboardLayout>
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/events"
+                    element={
+                      <ProtectedRoute adminOnly>
+                        <DashboardLayout>
+                          <ManageEvents />
+                        </DashboardLayout>
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/videos"
+                    element={
+                      <ProtectedRoute adminOnly>
+                        <DashboardLayout>
+                          <ManageVideos />
+                        </DashboardLayout>
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/products"
+                    element={
+                      <ProtectedRoute adminOnly>
+                        <DashboardLayout>
+                          <ManageProducts />
+                        </DashboardLayout>
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/daily"
+                    element={
+                      <ProtectedRoute adminOnly>
+                        <DashboardLayout>
+                          <ManageDaily />
+                        </DashboardLayout>
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/documents"
+                    element={
+                      <ProtectedRoute adminOnly>
+                        <DashboardLayout>
+                          <DocumentUpload />
+                        </DashboardLayout>
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/media"
+                    element={
+                      <ProtectedRoute>
+                        <DashboardLayout>
+                          <MediaPage />
+                        </DashboardLayout>
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/events"
+                    element={
+                      <ProtectedRoute>
+                        <DashboardLayout>
+                          <EventsPage />
+                        </DashboardLayout>
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/shop"
+                    element={
+                      <ProtectedRoute>
+                        <DashboardLayout>
+                          <ShopPage />
+                        </DashboardLayout>
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/library"
+                    element={
+                      <ProtectedRoute>
+                        <DashboardLayout>
+                          <Library />
+                        </DashboardLayout>
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/tarteel"
+                    element={
+                      <ProtectedRoute>
+                        <DashboardLayout>
+                          <Tarteel />
+                        </DashboardLayout>
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/library"
+                    element={
+                      <ProtectedRoute adminOnly>
+                        <DashboardLayout>
+                          <ManageLibrary />
+                        </DashboardLayout>
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/rag-test"
+                    element={
+                      <ProtectedRoute adminOnly>
+                        <DashboardLayout>
+                          <RAGTest />
+                        </DashboardLayout>
+                      </ProtectedRoute>
+                    }
+                  />
+                  {/* Catch-all */}
+                  <Route
+                    path="*"
+                    element={
+                      <AppShell>
+                        <NotFound />
+                      </AppShell>
+                    }
+                  />
                 </Routes>
-            </BrowserRouter>
-          </AuthProvider>
-        </LanguageProvider>
-      </TooltipProvider>
-    </QueryClientProvider>
+              </BrowserRouter>
+            </LanguageProvider>
+          </TooltipProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </AuthProvider>
   </ErrorBoundary>
 );
 

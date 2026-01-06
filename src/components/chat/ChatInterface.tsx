@@ -148,36 +148,36 @@ export const ChatInterface = () => {
   }, [messages]);
 
   return (
-    <div className="flex-1 flex flex-col h-screen bg-[#efefec] dark:bg-slate-900">
+    <div className="flex-1 flex flex-col h-screen bg-background transition-colors duration-300">
       {/* Messages - Claude-inspired clean design */}
       <div className="flex-1 overflow-y-auto">
         <div className="max-w-3xl mx-auto w-full">
           {messages.length === 0 ? (
-            <div className="h-full flex flex-col items-center justify-center min-h-[60vh] px-4 dark:bg-slate-900">
+            <div className="h-full flex flex-col items-center justify-center min-h-[60vh] px-4">
               <div className="text-center max-w-2xl">
                 <img 
                   src="/logo.png" 
-                  alt="Anisah" 
+                  alt={t('chat.welcome_logo_alt')} 
                   className="h-16 w-auto object-contain mx-auto mb-8 brightness-110 dark:brightness-0 dark:invert"
                 />
-                <h3 className="text-2xl font-semibold text-gray-900 dark:text-slate-100 mb-2">
+                <h3 className="text-2xl font-semibold text-foreground mb-2">
                   {t('chat.welcome')}
                 </h3>
-                <p className="text-base text-gray-600 dark:text-slate-300 mb-8">
+                <p className="text-base text-muted-foreground mb-8">
                   {t('chat.welcome.subtitle')}
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                  <div className="p-4 rounded-lg bg-gray-50 dark:bg-slate-800/50 border border-gray-100 dark:border-slate-700">
-                    <div className="font-medium text-gray-900 dark:text-slate-100 mb-1">{t('chat.feature1.title')}</div>
-                    <p className="text-gray-600 dark:text-slate-400 text-xs">{t('chat.feature1.desc')}</p>
+                  <div className="p-4 rounded-lg bg-card border border-border">
+                    <div className="font-medium text-foreground mb-1">{t('chat.feature1.title')}</div>
+                    <p className="text-muted-foreground text-xs">{t('chat.feature1.desc')}</p>
                   </div>
-                  <div className="p-4 rounded-lg bg-gray-50 dark:bg-slate-800/50 border border-gray-100 dark:border-slate-700">
-                    <div className="font-medium text-gray-900 dark:text-slate-100 mb-1">{t('chat.feature2.title')}</div>
-                    <p className="text-gray-600 dark:text-slate-400 text-xs">{t('chat.feature2.desc')}</p>
+                  <div className="p-4 rounded-lg bg-card border border-border">
+                    <div className="font-medium text-foreground mb-1">{t('chat.feature2.title')}</div>
+                    <p className="text-muted-foreground text-xs">{t('chat.feature2.desc')}</p>
                   </div>
-                  <div className="p-4 rounded-lg bg-gray-50 dark:bg-slate-800/50 border border-gray-100 dark:border-slate-700">
-                    <div className="font-medium text-gray-900 dark:text-slate-100 mb-1">{t('chat.feature3.title')}</div>
-                    <p className="text-gray-600 dark:text-slate-400 text-xs">{t('chat.feature3.desc')}</p>
+                  <div className="p-4 rounded-lg bg-card border border-border">
+                    <div className="font-medium text-foreground mb-1">{t('chat.feature3.title')}</div>
+                    <p className="text-muted-foreground text-xs">{t('chat.feature3.desc')}</p>
                   </div>
                 </div>
               </div>
@@ -190,7 +190,7 @@ export const ChatInterface = () => {
                     variant="ghost"
                     size="sm"
                     onClick={clearHistory}
-                    className="text-gray-500 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 text-xs"
+                    className="text-muted-foreground hover:text-destructive text-xs"
                   >
                     <Trash2 className="h-3 w-3 mr-1.5" />
                     {t('chat.clear_history')}
@@ -201,8 +201,8 @@ export const ChatInterface = () => {
                 {messages.map((message) => (
                   <div
                     key={message.id}
-                    className={`group px-4 py-4 hover:bg-gray-50/50 dark:hover:bg-slate-800/50 transition-colors ${
-                      message.role === 'user' ? 'bg-gray-50/30 dark:bg-slate-800/30' : 'dark:bg-slate-900'
+                    className={`group px-4 py-4 hover:bg-muted/50 transition-colors ${
+                      message.role === 'user' ? 'bg-muted/30' : 'bg-transparent'
                     }`}
                   >
                     <div className="max-w-3xl mx-auto flex gap-4">
@@ -217,22 +217,22 @@ export const ChatInterface = () => {
                       )}
                       <div className="flex-1 min-w-0">
                         <div className="prose prose-sm max-w-none">
-                          <div className="whitespace-pre-wrap leading-relaxed text-[15px] text-gray-900 dark:text-slate-100">
+                          <div className="whitespace-pre-wrap leading-relaxed text-[15px] text-foreground">
                             {message.content}
                           </div>
                           {message.council && message.council.members.length > 0 && (
-                            <div className="mt-4 pt-4 border-t border-gray-200 dark:border-slate-700">
-                              <div className="text-xs font-semibold mb-2 text-gray-700 dark:text-slate-300">
+                            <div className="mt-4 pt-4 border-t border-border">
+                              <div className="text-xs font-semibold mb-2 text-foreground">
                                 {t('chat.council_consensus')}
                               </div>
-                              <div className="text-xs space-y-2 text-gray-600 dark:text-slate-300">
+                              <div className="text-xs space-y-2 text-muted-foreground">
                                 <div>
-                                  <strong className="dark:text-slate-200">{t('chat.council_members')}:</strong> <span className="dark:text-slate-300">{message.council.members.join(', ')}</span>
+                                  <strong className="text-foreground">{t('chat.council_members')}:</strong> <span>{message.council.members.join(', ')}</span>
                                 </div>
                                 {message.council.reasoning && message.council.reasoning.length > 0 && (
                                   <div>
-                                    <strong className="dark:text-slate-200">{t('chat.council_reasoning')}:</strong>
-                                    <ul className="list-disc list-inside ml-2 mt-1 space-y-1 dark:text-slate-300">
+                                    <strong className="text-foreground">{t('chat.council_reasoning')}:</strong>
+                                    <ul className="list-disc list-inside ml-2 mt-1 space-y-1">
                                       {message.council.reasoning.map((point, idx) => (
                                         <li key={idx}>{point}</li>
                                       ))}
@@ -246,7 +246,7 @@ export const ChatInterface = () => {
                       </div>
                       {message.role === 'user' && (
                         <div className="flex-shrink-0 mt-1">
-                          <div className="h-8 w-8 rounded-full bg-islamic-primary-green flex items-center justify-center text-white text-sm font-medium">
+                          <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground text-sm font-medium">
                             {user?.email?.charAt(0).toUpperCase() || 'U'}
                           </div>
                         </div>
@@ -255,7 +255,7 @@ export const ChatInterface = () => {
                   </div>
                 ))}
                 {isLoading && (
-                  <div className="group px-4 py-4 hover:bg-gray-50/50 dark:hover:bg-slate-800/50 dark:bg-slate-900 transition-colors">
+                  <div className="group px-4 py-4 hover:bg-muted/50 transition-colors">
                     <div className="max-w-3xl mx-auto flex gap-4">
                       <div className="flex-shrink-0 mt-1">
                         <img 
@@ -267,11 +267,11 @@ export const ChatInterface = () => {
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
                           <div className="flex gap-1">
-                            <div className="h-1.5 w-1.5 bg-gray-400 dark:bg-slate-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                            <div className="h-1.5 w-1.5 bg-gray-400 dark:bg-slate-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                            <div className="h-1.5 w-1.5 bg-gray-400 dark:bg-slate-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                            <div className="h-1.5 w-1.5 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                            <div className="h-1.5 w-1.5 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                            <div className="h-1.5 w-1.5 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
                           </div>
-                          <span className="text-sm text-gray-500 dark:text-slate-400">{t('chat.thinking')}</span>
+                          <span className="text-sm text-muted-foreground">{t('chat.thinking')}</span>
                         </div>
                       </div>
                     </div>
@@ -285,16 +285,16 @@ export const ChatInterface = () => {
       </div>
 
       {/* Input - Claude-inspired */}
-      <div className="border-t border-gray-200 dark:border-slate-700 bg-[#efefec] dark:bg-slate-900">
+      <div className="border-t border-border bg-background">
         <div className="max-w-3xl mx-auto px-4 py-4">
           <form onSubmit={handleSubmit} className="relative">
-            <div className="flex items-end gap-2 bg-gray-50 dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 focus-within:border-islamic-primary-green focus-within:ring-1 focus-within:ring-islamic-primary-green/20 transition-all">
+            <div className="flex items-end gap-2 bg-card rounded-2xl border border-border focus-within:border-primary focus-within:ring-1 focus-within:ring-primary/20 transition-all">
               <Input
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder={t('chat.placeholder')}
-                className="flex-1 bg-transparent border-0 focus-visible:ring-0 focus-visible:ring-offset-0 min-h-[52px] text-[15px] px-4 text-gray-900 dark:text-slate-100 placeholder:text-gray-500 dark:placeholder:text-slate-400"
+                className="flex-1 bg-transparent border-0 focus-visible:ring-0 focus-visible:ring-offset-0 min-h-[52px] text-[15px] px-4 text-foreground placeholder:text-muted-foreground"
                 disabled={isLoading}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' && !e.shiftKey) {
@@ -306,12 +306,12 @@ export const ChatInterface = () => {
               <button
                 type="submit"
                 disabled={isLoading || !input.trim()}
-                className="m-2 h-8 w-8 rounded-lg bg-islamic-primary-green hover:bg-islamic-primary-green/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center transition-colors flex-shrink-0"
+                className="m-2 h-8 w-8 rounded-lg bg-primary hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center transition-colors flex-shrink-0 text-primary-foreground"
               >
                 {isLoading ? (
-                  <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  <div className="h-4 w-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
                 ) : (
-                  <Send className="h-4 w-4 text-white" />
+                  <Send className="h-4 w-4" />
                 )}
               </button>
             </div>

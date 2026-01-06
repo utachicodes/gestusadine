@@ -13,7 +13,7 @@ const AppShell: React.FC<AppShellProps> = ({ children }) => {
   const location = useLocation();
 
   return (
-    <div className="app-shell bg-gradient-to-b from-sand-50 via-islamic-light to-sand-100 text-islamic-dark">
+    <div className="app-shell bg-background text-foreground transition-colors duration-300">
       <div className="app-shell-gradient" />
       <GeometricBackground />
 

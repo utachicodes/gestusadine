@@ -340,7 +340,7 @@ export default function RAGTest() {
   const getStatusIcon = (status: TestResult['status']) => {
     switch (status) {
       case 'passed':
-        return <CheckCircle className="w-5 h-5 text-green-500" />;
+        return <CheckCircle className="w-5 h-5 text-primary" />;
       case 'failed':
         return <XCircle className="w-5 h-5 text-red-500" />;
       case 'running':
@@ -425,7 +425,7 @@ export default function RAGTest() {
             results.map((result, index) => (
               <Card
                 key={index}
-                className={`bg-[#efefec]/80 backdrop-blur-sm border ${result.status === 'passed' ? 'border-green-300' :
+                className={`bg-[#efefec]/80 backdrop-blur-sm border ${result.status === 'passed' ? 'border-primary' :
                     result.status === 'failed' ? 'border-red-300' :
                       result.status === 'running' ? 'border-blue-300' :
                         'border-islamic-gold/30'

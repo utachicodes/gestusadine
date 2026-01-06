@@ -35,7 +35,7 @@ export const CouncilMembersDisplay: React.FC<CouncilMembersDisplayProps> = ({ me
     const memberIcons: Record<string, React.ReactNode> = {
         'member-logic': <Brain className="w-8 h-8 text-blue-500" />,
         'member-creativity': <Zap className="w-8 h-8 text-purple-500" />,
-        'member-ethics': <Shield className="w-8 h-8 text-green-500" />,
+        'member-ethics': <Shield className="w-8 h-8 text-primary" />,
         'member-critic': <Award className="w-8 h-8 text-orange-500" />
     };
 
@@ -82,7 +82,7 @@ interface ConsensusScoreDisplayProps {
 export const ConsensusScoreDisplay: React.FC<ConsensusScoreDisplayProps> = ({ score, executionTime }) => {
     const scorePercentage = Math.round(score * 100);
     const getScoreColor = () => {
-        if (scorePercentage >= 80) return 'text-green-600';
+        if (scorePercentage >= 80) return 'text-primary';
         if (scorePercentage >= 60) return 'text-blue-600';
         if (scorePercentage >= 40) return 'text-yellow-600';
         return 'text-red-600';

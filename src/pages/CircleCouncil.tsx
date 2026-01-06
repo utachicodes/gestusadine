@@ -163,9 +163,9 @@ const CirclePage: React.FC = () => {
 
                     {/* Status Bar */}
                     {council.isCouncilHealthy && (
-                        <Alert className="bg-green-50 border-green-200">
-                            <CheckCircle2 className="h-4 w-4 text-green-600" />
-                            <AlertDescription className="text-green-800">
+                        <Alert className="bg-primary/5 border-primary/20">
+                            <CheckCircle2 className="h-4 w-4 text-primary" />
+                            <AlertDescription className="text-primary/90">
                                 Council is active and ready with {council.members?.length || 4} expert members
                             </AlertDescription>
                         </Alert>
@@ -324,9 +324,9 @@ const CirclePage: React.FC = () => {
                                             Ensures responses align with orthodox Islamic creed and theology. Flags potential theological issues and maintains boundaries of proper belief.
                                         </p>
                                     </div>
-                                    <div className="p-4 bg-green-50 rounded-lg border border-green-200">
-                                        <h4 className="font-semibold text-green-900 mb-2">Humility & Abstention Agent</h4>
-                                        <p className="text-green-800 text-sm">
+                                    <div className="p-4 bg-primary/5 rounded-lg border border-primary/20">
+                                        <h4 className="font-semibold text-primary mb-2">Humility & Abstention Agent</h4>
+                                        <p className="text-muted-foreground text-sm">
                                             Recommends epistemic humility and abstention (tawaqquf) when knowledge is uncertain or requires specialized scholarship.
                                         </p>
                                     </div>

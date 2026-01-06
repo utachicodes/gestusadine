@@ -242,7 +242,7 @@ const AdminConfig: React.FC = () => {
         return (
             <div className="flex-1 min-h-screen flex items-center justify-center">
                 <div className="text-center">
-                    <RefreshCw className="w-8 h-8 text-islamic-green-600 animate-spin mx-auto mb-4" />
+                    <RefreshCw className="w-8 h-8 text-primary animate-spin mx-auto mb-4" />
                     <p className="text-islamic-dark/70">Loading configuration...</p>
                 </div>
             </div>
@@ -270,7 +270,7 @@ const AdminConfig: React.FC = () => {
                     <div className="flex items-center justify-between">
                         <div>
                             <h3 className="font-semibold text-islamic-dark mb-1">OpenRouter API Status</h3>
-                            <p className="text-xs text-green-600 dark:text-green-400 mt-1 font-medium">
+                            <p className="text-xs text-primary dark:text-primary-foreground mt-1 font-medium">
                                 💰 All recommended models are FREE on OpenRouter!
                             </p>
                         </div>
@@ -295,18 +295,18 @@ const AdminConfig: React.FC = () => {
                             <div key={agentId} className="islamic-card p-6 bg-[#efefec]/95">
                                 <div className="flex items-center justify-between mb-6">
                                     <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-full bg-islamic-green/10 flex items-center justify-center">
-                                            <Settings className="w-5 h-5 text-islamic-green-600" />
+                                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                                            <Settings className="w-5 h-5 text-primary" />
                                         </div>
                                         <div>
                                             <div className="flex items-center gap-2">
                                                 <h3 className="font-semibold text-islamic-dark">{agent.agentName}</h3>
                                                 {isRecommended && (
-                                                    <Badge className="bg-green-500 text-white">Recommended</Badge>
+                                                    <Badge className="bg-primary text-primary-foreground">Recommended</Badge>
                                                 )}
                                                 {testResult && (
                                                     testResult.success ? (
-                                                        <CheckCircle className="w-5 h-5 text-green-500" />
+                                                        <CheckCircle className="w-5 h-5 text-primary" />
                                                     ) : (
                                                         <XCircle className="w-5 h-5 text-red-500" />
                                                     )
@@ -353,8 +353,8 @@ const AdminConfig: React.FC = () => {
                                 </div>
 
                                 {testResult && (
-                                    <div className={`mb-4 p-3 rounded-lg ${testResult.success ? 'bg-green-50 dark:bg-green-900/20' : 'bg-red-50 dark:bg-red-900/20'}`}>
-                                        <p className={`text-sm ${testResult.success ? 'text-green-700 dark:text-green-300' : 'text-red-700 dark:text-red-300'}`}>
+                                    <div className={`mb-4 p-3 rounded-lg ${testResult.success ? 'bg-primary/10 dark:bg-primary/20' : 'bg-red-50 dark:bg-red-900/20'}`}>
+                                        <p className={`text-sm ${testResult.success ? 'text-primary dark:text-primary-foreground' : 'text-red-700 dark:text-red-300'}`}>
                                             {testResult.message}
                                         </p>
                                     </div>

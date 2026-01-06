@@ -23,7 +23,7 @@ const Navbar = () => {
       : [{ title: t('nav.signin'), href: '/login' }];
 
   return (
-    <header className="sticky top-0 z-50 bg-[#efefec]/80 backdrop-blur-lg shadow-sm">
+    <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-lg shadow-sm">
       <div className="container flex items-center justify-between h-16">
         <div>
           <Link to="/" className="flex items-center">
@@ -42,7 +42,7 @@ const Navbar = () => {
               <Link
                 key={item.title}
                 to={item.href}
-                className="text-sm font-medium text-gray-600 hover:text-islamic-green-600 transition-colors"
+                className="text-sm font-medium text-foreground hover:text-primary transition-colors"
               >
                 {item.title}
               </Link>
@@ -54,13 +54,13 @@ const Navbar = () => {
             <select
               value={language}
               onChange={(e) => setLanguage(e.target.value as 'en' | 'fr' | 'wo')}
-              className="appearance-none bg-transparent border border-gray-300 dark:border-slate-700 rounded-md pl-3 pr-8 py-1.5 text-sm font-medium text-gray-600 dark:text-slate-300 hover:border-islamic-green-600 focus:outline-none focus:ring-1 focus:ring-islamic-green-600 transition-colors"
+              className="appearance-none bg-transparent border border-input rounded-md pl-3 pr-8 py-1.5 text-sm font-medium text-foreground hover:border-primary focus:outline-none focus:ring-1 focus:ring-ring transition-colors"
             >
               <option value="en">EN</option>
               <option value="fr">FR</option>
               <option value="wo">WO</option>
             </select>
-            <Globe className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 dark:text-slate-400 pointer-events-none" />
+            <Globe className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
           </div>
 
           {/* Sign Out Button for logged-in users */}
@@ -87,7 +87,7 @@ const Navbar = () => {
               <Link
                 key={item.title}
                 to={item.href}
-                className="text-sm font-medium text-gray-600 hover:text-islamic-green-600 px-2"
+                className="text-sm font-medium text-foreground hover:text-primary px-2"
               >
                 {item.title}
               </Link>

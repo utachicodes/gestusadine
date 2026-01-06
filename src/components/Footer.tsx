@@ -6,7 +6,7 @@ const Footer = () => {
   const { t } = useLanguage();
 
   return (
-    <footer className="bg-islamic-dark dark:bg-slate-900 text-white pt-16 pb-8">
+    <footer className="bg-secondary text-secondary-foreground pt-16 pb-8">
       <div className="container">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
           <div>
@@ -17,7 +17,7 @@ const Footer = () => {
                 className="h-12 w-auto object-contain brightness-0 invert"
               />
             </div>
-            <p className="text-white/70 mb-4">
+            <p className="text-secondary-foreground/70 mb-4">
               {t('footer.description')}
             </p>
           </div>
@@ -26,12 +26,12 @@ const Footer = () => {
             <h4 className="text-lg font-semibold mb-4">{t('footer.contact')}</h4>
             <ul className="space-y-4">
               <li className="flex items-start">
-                <Phone className="w-5 h-5 text-white dark:text-islamic-gold mr-3 mt-1" />
-                <span className="text-white/70">+221 78 108 05 06</span>
+                <Phone className="w-5 h-5 text-primary mr-3 mt-1" />
+                <span className="text-secondary-foreground/70">+221 78 108 05 06</span>
               </li>
               <li className="flex items-start">
-                <Mail className="w-5 h-5 text-white dark:text-islamic-gold mr-3 mt-1" />
-                <a href="mailto:xamsadineai@gmail.com" className="text-white/70 hover:text-islamic-gold transition-colors">
+                <Mail className="w-5 h-5 text-primary mr-3 mt-1" />
+                <a href="mailto:xamsadineai@gmail.com" className="text-secondary-foreground/70 hover:text-primary transition-colors">
                   xamsadineai@gmail.com
                 </a>
               </li>
@@ -39,7 +39,7 @@ const Footer = () => {
           </div>
         </div>
         
-        <div className="border-t border-white/10 pt-8 mt-8 text-center text-white/50 text-sm">
+        <div className="border-t border-secondary-foreground/10 pt-8 mt-8 text-center text-secondary-foreground/50 text-sm">
           <p>© {new Date().getFullYear()} XamSaDine AI. {t('footer.rights')}</p>
         </div>
       </div>

@@ -7,6 +7,7 @@ import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { apiFetch } from '@/lib/api';
+import { useLanguage } from '@/contexts/LanguageContext';
 import {
   Select,
   SelectContent,
@@ -16,6 +17,7 @@ import {
 } from "@/components/ui/select";
 
 const Tarteel = () => {
+  const { t } = useLanguage();
   const [isListening, setIsListening] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [currentAyah, setCurrentAyah] = useState(0);
@@ -213,16 +215,16 @@ const Tarteel = () => {
       visualize();
       
       toast({
-        title: "Listening...",
-        description: "Please recite the highlighted verse.",
+        title: t('tarteel.listening_title'),
+        description: t('tarteel.listening_desc'),
       });
 
     } catch (err) {
       console.error("Error accessing microphone:", err);
       toast({
         variant: "destructive",
-        title: "Microphone Error",
-        description: "Could not access microphone. Please ensure permissions are granted.",
+        title: t('tarteel.mic_error_title'),
+        description: t('tarteel.mic_error_desc'),
       });
     }
   };
@@ -242,7 +244,7 @@ const Tarteel = () => {
     }
     
     if (recognitionRef.current) {
-      try { recognitionRef.current.stop(); } catch {}
+      try { recognitionRef.current.stop(); } catch (_e) { void 0; }
       recognitionRef.current = null;
     }
 
@@ -273,8 +275,8 @@ const Tarteel = () => {
       if (blob.size > 10 * 1024 * 1024) {
         toast({
           variant: "destructive",
-          title: "File Too Large",
-          description: "Recording exceeds the 10MB limit. Please try a shorter recitation.",
+          title: t('tarteel.file_too_large_title'),
+          description: t('tarteel.file_too_large_desc'),
         });
         setIsProcessing(false);
         return;
@@ -306,10 +308,10 @@ const Tarteel = () => {
             setTranscription(liveTranscript);
             setFeedback(isOk ? 'success' : 'error');
             if (isOk) {
-              toast({ title: "MashaAllah!", description: "Your recitation was correct.", className: "bg-green-500 text-white border-none" });
+              toast({ title: t('tarteel.success_title'), description: t('tarteel.success_desc'), className: "bg-primary text-primary-foreground border-none" });
             } else {
               setMistakes([currentAyah]);
-              toast({ variant: "destructive", title: "Correction Needed", description: `We heard: ${liveTranscript}` });
+              toast({ variant: "destructive", title: t('tarteel.correction_title'), description: `${t('tarteel.heard_label')} ${liveTranscript}` });
             }
             return;
           }
@@ -323,17 +325,17 @@ const Tarteel = () => {
         if (result.isCorrect) {
           setFeedback('success');
           toast({
-            title: "MashaAllah!",
-            description: "Your recitation was correct.",
-            className: "bg-green-500 text-white border-none",
+            title: t('tarteel.success_title'),
+            description: t('tarteel.success_desc'),
+            className: "bg-primary text-primary-foreground border-none",
           });
         } else {
           setFeedback('error');
           setMistakes([currentAyah]);
           toast({
             variant: "destructive",
-            title: "Correction Needed",
-            description: `We heard: ${result.transcription}`,
+            title: t('tarteel.correction_title'),
+            description: `${t('tarteel.heard_label')} ${result.transcription}`,
           });
         }
       } catch (error) {
@@ -341,8 +343,8 @@ const Tarteel = () => {
         if (!liveTranscript) {
           toast({
             variant: "destructive",
-            title: "Analysis Error",
-            description: "Could not process your recitation. Please try again.",
+            title: t('tarteel.api_error_title'),
+            description: t('tarteel.api_error_desc'),
           });
         }
       } finally {
@@ -398,13 +400,13 @@ const Tarteel = () => {
   return (
     <div className="container mx-auto p-6 max-w-4xl space-y-8 min-h-screen flex flex-col justify-center">
       <div className="text-center space-y-2">
-        <h1 className="text-4xl font-bold text-gradient">Qirah</h1>
+        <h1 className="text-4xl font-bold text-gradient">{t('tarteel.title')}</h1>
       </div>
 
       <div className="flex justify-center">
           <Select value={selectedSurahId} onValueChange={setSelectedSurahId}>
             <SelectTrigger className="w-[280px]">
-              <SelectValue placeholder="Select a Surah" />
+              <SelectValue placeholder={t('tarteel.select_surah')} />
             </SelectTrigger>
             <SelectContent>
               {surahs.map((surah) => (
@@ -423,7 +425,7 @@ const Tarteel = () => {
           <div className="flex items-center space-x-2 text-sm text-muted-foreground">
             <span className="font-semibold text-primary">{currentSurahData?.name} ({currentSurahData?.transliteration})</span>
             <span>•</span>
-            <span>Ayah {(currentSurahData?.verses[currentAyah]?.id) || currentAyah + 1}</span>
+            <span>{t('tarteel.ayah_label')} {(currentSurahData?.verses[currentAyah]?.id) || currentAyah + 1}</span>
           </div>
           <Button variant="ghost" size="icon">
             <Settings className="h-5 w-5" />
@@ -439,8 +441,8 @@ const Tarteel = () => {
                   className={cn(
                     "text-4xl md:text-5xl font-arabic leading-relaxed py-4 transition-colors duration-500",
                     isListening ? "text-primary" : "text-foreground",
-                    feedback === 'error' && "text-red-500",
-                    feedback === 'success' && "text-emerald-500"
+                    feedback === 'error' && "text-destructive",
+                    feedback === 'success' && "text-primary"
                   )}
                   dir="rtl"
                 >
@@ -452,13 +454,13 @@ const Tarteel = () => {
                 </p>
                 </>
             ) : (
-                <div className="py-10">Loading Surah...</div>
+                <div className="py-10">{t('tarteel.loading_surah')}</div>
             )}
             
             {transcription && feedback === 'error' && (
-               <div className="mt-4 p-4 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
-                  <p className="text-sm text-muted-foreground mb-1">We heard:</p>
-                  <p className="text-xl font-arabic text-red-600 dark:text-red-400" dir="rtl">{transcription}</p>
+               <div className="mt-4 p-4 bg-destructive/10 rounded-lg border border-destructive">
+                  <p className="text-sm text-muted-foreground mb-1">{t('tarteel.heard_label')}</p>
+                  <p className="text-xl font-arabic text-destructive" dir="rtl">{transcription}</p>
                </div>
             )}
           </div>
@@ -481,11 +483,11 @@ const Tarteel = () => {
                 {isProcessing ? (
                   <RefreshCw className="h-5 w-5 animate-spin" />
                 ) : feedback === 'success' ? (
-                  <CheckCircle2 className="h-8 w-8 text-islamic-green-600" />
+                  <CheckCircle2 className="h-8 w-8 text-primary" />
                 ) : feedback === 'error' ? (
-                  <AlertCircle className="h-8 w-8 text-red-500" />
+                  <AlertCircle className="h-8 w-8 text-destructive" />
                 ) : (
-                  <span>Tap microphone to start reciting</span>
+                  <span>{t('tarteel.tap_mic')}</span>
                 )}
               </div>
             )}
@@ -543,9 +545,9 @@ const Tarteel = () => {
                 <Mic className="h-5 w-5 text-primary" />
               </div>
             </div>
-            <p className="text-lg font-medium">Analyzing Recitation...</p>
+            <p className="text-lg font-medium">{t('tarteel.overlay_analyzing')}</p>
             <p className="text-sm text-muted-foreground text-center">
-              Checking pronunciation, tajweed, and memorization accuracy.
+              {t('tarteel.overlay_checking')}
             </p>
           </div>
         </div>

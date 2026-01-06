@@ -243,7 +243,7 @@ const HeroSection = () => {
             {['#Fiqh', '#Qurʼan', '#Hadith', '#Maliki', '#Dua', '#Seerah'].map((tag, i) => (
               <div
                 key={tag}
-                className="absolute px-3 py-1.5 rounded-full bg-white/80 text-islamic-dark text-sm shadow glass-panel floating-element"
+                className="absolute px-3 py-1.5 rounded-full bg-card/80 text-foreground text-sm shadow glass-panel floating-element"
                 style={{
                   left: `${8 + i * 15}%`,
                   top: i % 2 === 0 ? '18%' : '68%',
@@ -261,7 +261,7 @@ const HeroSection = () => {
       </div>
 
       {/* Bottom Fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-islamic-light dark:from-slate-800 to-transparent"></div>
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent"></div>
     </section>
   );
 };

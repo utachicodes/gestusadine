@@ -21,7 +21,7 @@
   inset: 0;
   pointer-events: none;
   z-index: -1;
-  background: radial-gradient(circle at top, rgba(16, 94, 54, 0.4), transparent 60%),
-              radial-gradient(circle at bottom, rgba(13, 63, 103, 0.35), transparent 60%);
+  background: radial-gradient(circle at top, hsl(var(--primary) / 0.15), transparent 60%),
+              radial-gradient(circle at bottom, hsl(var(--secondary) / 0.15), transparent 60%);
 }
 
