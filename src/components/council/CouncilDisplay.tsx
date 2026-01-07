@@ -3,6 +3,7 @@ import { Brain, Users, Zap, Award, TrendingUp, Shield } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export interface CouncilMember {
     id: string;
@@ -18,6 +19,8 @@ interface CouncilMembersDisplayProps {
 }
 
 export const CouncilMembersDisplay: React.FC<CouncilMembersDisplayProps> = ({ members, isLoading }) => {
+    const { t } = useLanguage();
+
     if (isLoading) {
         return (
             <div className="space-y-4">
@@ -29,7 +32,7 @@ export const CouncilMembersDisplay: React.FC<CouncilMembersDisplayProps> = ({ me
     }
 
     if (!members || members.length === 0) {
-        return <div className="text-center text-islamic-dark/50 py-12">No council members available</div>;
+        return <div className="text-center text-islamic-dark/50 py-12">{t('council.no_members')}</div>;
     }
 
     const memberIcons: Record<string, React.ReactNode> = {
@@ -58,13 +61,13 @@ export const CouncilMembersDisplay: React.FC<CouncilMembersDisplayProps> = ({ me
                     </CardHeader>
                     <CardContent className="space-y-3">
                         <div>
-                            <div className="text-sm text-islamic-dark/70 mb-1">Model</div>
+                            <div className="text-sm text-islamic-dark/70 mb-1">{t('council.model')}</div>
                             <Badge variant="secondary" className="bg-islamic-gold/20 text-islamic-dark border-islamic-gold/30">
                                 {member.modelId.split('/')[1] || member.modelId}
                             </Badge>
                         </div>
                         <div>
-                            <div className="text-sm text-islamic-dark/70 mb-1">Creativity Level</div>
+                            <div className="text-sm text-islamic-dark/70 mb-1">{t('council.creativity_level')}</div>
                             <Progress value={member.temperature * 50} className="h-2" />
                         </div>
                     </CardContent>
@@ -80,6 +83,7 @@ interface ConsensusScoreDisplayProps {
 }
 
 export const ConsensusScoreDisplay: React.FC<ConsensusScoreDisplayProps> = ({ score, executionTime }) => {
+    const { t } = useLanguage();
     const scorePercentage = Math.round(score * 100);
     const getScoreColor = () => {
         if (scorePercentage >= 80) return 'text-primary';
@@ -93,13 +97,13 @@ export const ConsensusScoreDisplay: React.FC<ConsensusScoreDisplayProps> = ({ sc
             <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-islamic-dark">
                     <TrendingUp className="w-5 h-5" />
-                    Consensus Analysis
+                    {t('council.consensus_analysis')}
                 </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
                 <div className="space-y-2">
                     <div className="flex justify-between items-center">
-                        <span className="text-islamic-dark/70">Consensus Score</span>
+                        <span className="text-islamic-dark/70">{t('council.consensus_score')}</span>
                         <span className={`text-2xl font-bold ${getScoreColor()}`}>{scorePercentage}%</span>
                     </div>
                     <Progress value={scorePercentage} className="h-3" />
@@ -107,7 +111,7 @@ export const ConsensusScoreDisplay: React.FC<ConsensusScoreDisplayProps> = ({ sc
                 <div className="pt-2 border-t border-islamic-gold/20">
                     <div className="text-sm text-islamic-dark/70">
                         <div className="flex justify-between">
-                            <span>Processing Time</span>
+                            <span>{t('council.processing_time')}</span>
                             <span className="font-semibold text-islamic-dark">{(executionTime / 1000).toFixed(2)}s</span>
                         </div>
                     </div>
@@ -128,12 +132,13 @@ export const MemberResponseDisplay: React.FC<MemberResponseDisplayProps> = ({
     response,
     confidence
 }) => {
+    const { t } = useLanguage();
     return (
         <div className="space-y-2">
             <div className="flex justify-between items-center">
                 <h4 className="font-semibold text-islamic-dark">{memberName}</h4>
                 <Badge variant="outline" className="border-islamic-gold/30 text-islamic-dark/70">
-                    {Math.round(confidence * 100)}% Confidence
+                    {Math.round(confidence * 100)}% {t('council.confidence')}
                 </Badge>
             </div>
             <p className="text-islamic-dark/80 text-sm leading-relaxed">{response}</p>
@@ -149,6 +154,7 @@ interface CouncilQueryFormProps {
 }
 
 export const CouncilQueryForm: React.FC<CouncilQueryFormProps> = ({ onSubmit, isLoading, initialQuery, autoSubmitKey }) => {
+    const { t } = useLanguage();
     const [query, setQuery] = React.useState('');
 
     React.useEffect(() => {
@@ -178,12 +184,12 @@ export const CouncilQueryForm: React.FC<CouncilQueryFormProps> = ({ onSubmit, is
         <form onSubmit={handleSubmit} className="space-y-4">
             <div>
                 <label className="text-sm font-medium text-islamic-dark block mb-2">
-                    Ask the Council
+                    {t('council.ask_title')}
                 </label>
                 <textarea
                     value={query}
                     onChange={e => setQuery(e.target.value)}
-                    placeholder="Ask a complex question and let the Council analyze it from multiple perspectives..."
+                    placeholder={t('council.ask_placeholder')}
                     disabled={isLoading}
                     className="w-full p-4 border border-islamic-gold/30 rounded-lg bg-[#efefec] text-islamic-dark placeholder-islamic-dark/50 focus:outline-none focus:border-islamic-gold focus:ring-2 focus:ring-islamic-gold/20 disabled:opacity-50 disabled:cursor-not-allowed resize-none"
                     rows={4}
@@ -197,12 +203,12 @@ export const CouncilQueryForm: React.FC<CouncilQueryFormProps> = ({ onSubmit, is
                 {isLoading ? (
                     <>
                         <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                        Council is Deliberating...
+                        {t('council.deliberating')}
                     </>
                 ) : (
                     <>
                         <Users className="w-5 h-5" />
-                        Ask Council
+                        {t('council.ask_button')}
                     </>
                 )}
             </button>
@@ -222,6 +228,7 @@ interface DocumentUploadFormProps {
 }
 
 export const DocumentUploadForm: React.FC<DocumentUploadFormProps> = ({ onSubmit, isLoading }) => {
+    const { t } = useLanguage();
     const [formData, setFormData] = React.useState({
         docId: '',
         title: '',
@@ -241,48 +248,48 @@ export const DocumentUploadForm: React.FC<DocumentUploadFormProps> = ({ onSubmit
     return (
         <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-                <label className="text-sm font-medium text-islamic-dark block mb-1">Title</label>
+                <label className="text-sm font-medium text-islamic-dark block mb-1">{t('council.upload.title')}</label>
                 <input
                     type="text"
                     value={formData.title}
                     onChange={e => setFormData({ ...formData, title: e.target.value, docId: e.target.value.toLowerCase().replace(/\s+/g, '-') })}
-                    placeholder="Document title"
+                    placeholder={t('council.upload.title_placeholder')}
                     disabled={isLoading}
                     className="w-full px-4 py-2 border border-islamic-gold/30 rounded-lg bg-[#efefec] text-islamic-dark placeholder-islamic-dark/50 focus:outline-none focus:border-islamic-gold disabled:opacity-50"
                 />
             </div>
             <div>
-                <label className="text-sm font-medium text-islamic-dark block mb-1">Source</label>
+                <label className="text-sm font-medium text-islamic-dark block mb-1">{t('council.upload.source')}</label>
                 <input
                     type="text"
                     value={formData.source}
                     onChange={e => setFormData({ ...formData, source: e.target.value })}
-                    placeholder="Document source (e.g., Islamic Text, Legal Document)"
+                    placeholder={t('council.upload.source_placeholder')}
                     disabled={isLoading}
                     className="w-full px-4 py-2 border border-islamic-gold/30 rounded-lg bg-[#efefec] text-islamic-dark placeholder-islamic-dark/50 focus:outline-none focus:border-islamic-gold disabled:opacity-50"
                 />
             </div>
             <div>
-                <label className="text-sm font-medium text-islamic-dark block mb-1">Category</label>
+                <label className="text-sm font-medium text-islamic-dark block mb-1">{t('council.upload.category')}</label>
                 <select
                     value={formData.category}
                     onChange={e => setFormData({ ...formData, category: e.target.value })}
                     disabled={isLoading}
                     className="w-full px-4 py-2 border border-islamic-gold/30 rounded-lg bg-[#efefec] text-islamic-dark focus:outline-none focus:border-islamic-gold disabled:opacity-50"
                 >
-                    <option value="general">General (All Agents)</option>
-                    <option value="agent-fiqh">Fiqh Reasoning Agent</option>
-                    <option value="agent-aqeedah">Aqeedah Boundary Agent</option>
-                    <option value="agent-humility">Humility & Abstention Agent</option>
-                    <option value="agent-context">Contemporary Context Agent</option>
+                    <option value="general">{t('council.upload.category.general')}</option>
+                    <option value="agent-fiqh">{t('council.upload.category.fiqh')}</option>
+                    <option value="agent-aqeedah">{t('council.upload.category.aqeedah')}</option>
+                    <option value="agent-humility">{t('council.upload.category.humility')}</option>
+                    <option value="agent-context">{t('council.upload.category.context')}</option>
                 </select>
             </div>
             <div>
-                <label className="text-sm font-medium text-islamic-dark block mb-1">Content</label>
+                <label className="text-sm font-medium text-islamic-dark block mb-1">{t('council.upload.content')}</label>
                 <textarea
                     value={formData.content}
                     onChange={e => setFormData({ ...formData, content: e.target.value })}
-                    placeholder="Paste document content here"
+                    placeholder={t('council.upload.content_placeholder')}
                     disabled={isLoading}
                     className="w-full p-4 border border-islamic-gold/30 rounded-lg bg-[#efefec] text-islamic-dark placeholder-islamic-dark/50 focus:outline-none focus:border-islamic-gold disabled:opacity-50 resize-none"
                     rows={6}
@@ -293,7 +300,7 @@ export const DocumentUploadForm: React.FC<DocumentUploadFormProps> = ({ onSubmit
                 disabled={isLoading || !formData.title.trim() || !formData.content.trim()}
                 className="w-full px-6 py-3 bg-islamic-gold text-white font-semibold rounded-lg hover:bg-islamic-gold/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-                {isLoading ? 'Uploading...' : 'Upload Document'}
+                {isLoading ? t('council.upload.uploading') : t('council.upload.submit')}
             </button>
         </form>
     );

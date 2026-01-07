@@ -84,7 +84,7 @@ const HeroSection = () => {
         <div className="max-w-4xl mx-auto text-center">
           {/* Main Heading - Interactive & Animated */}
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-            <div 
+            <div
               className="relative inline-block"
               style={{
                 transform: `perspective(1000px) rotateY(${mousePosition.x * 0.05}deg) rotateX(${-mousePosition.y * 0.05}deg)`,
@@ -93,13 +93,13 @@ const HeroSection = () => {
             >
               {/* Light background behind text for visibility */}
               <div className="absolute inset-0 bg-white/90 dark:bg-slate-100/90 rounded-2xl blur-2xl -z-10"></div>
-              
+
               {/* Animated words */}
               <div className="relative flex flex-wrap justify-center items-center gap-x-2 md:gap-x-3 gap-y-2">
                 {animatedWords.map((word, index) => {
                   const isNewLine = word === '\n' || (index > 0 && animatedWords[index - 1] === '\n');
                   if (word === '\n') return <br key={`break-${index}`} className="w-full" />;
-                  
+
                   return (
                     <span
                       key={`${word}-${index}`}
@@ -122,15 +122,15 @@ const HeroSection = () => {
                     >
                       {/* Glow ring effect */}
                       <span className="absolute inset-0 rounded-lg bg-black/5 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></span>
-                      
+
                       {/* Black text */}
                       <span className="relative text-black font-extrabold tracking-tight">
                         {word}
                       </span>
-                      
+
                       {/* Shimmer effect on hover */}
                       <span className="absolute inset-0 bg-gradient-to-r from-transparent via-black/10 to-transparent -skew-x-12 translate-x-[-100%] group-hover:translate-x-[200%] transition-transform duration-1000 pointer-events-none"></span>
-                      
+
                       {/* Decorative dot after each word (except last and before line breaks) */}
                       {index < animatedWords.length - 1 && animatedWords[index + 1] !== '\n' && (
                         <span className="inline-block w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-white/50 mx-1.5 animate-pulse group-hover:bg-white group-hover:scale-150 transition-all duration-300"></span>
@@ -139,7 +139,7 @@ const HeroSection = () => {
                   );
                 })}
               </div>
-              
+
               {/* Floating particles around text */}
               <div className="absolute inset-0 pointer-events-none overflow-hidden">
                 {[...Array(6)].map((_, i) => (
@@ -171,13 +171,7 @@ const HeroSection = () => {
             >
               {t('hero.get_started')}
             </Button>
-            <Button
-              variant="outline"
-              className="px-6 py-3 rounded-full bg-white/40 backdrop-blur border-white/50 text-islamic-dark hover:bg-white/60"
-              onClick={() => navigate('/media')}
-            >
-              {t('hero.watch_video')}
-            </Button>
+
           </div>
 
           {/* Search Form */}
@@ -208,8 +202,8 @@ const HeroSection = () => {
               language === 'fr'
                 ? ['Prière du voyageur', 'Ce qui annule mon jeûne', 'Guide du Hajj']
                 : language === 'wo'
-                ? ['Namaz bu ñu dox', 'Lu tëju suum gi', 'Jël Hajj']
-                : ['Prayer of the traveller', 'What breaks my fast', 'Hajj guide']
+                  ? ['Namaz bu ñu dox', 'Lu tëju suum gi', 'Jël Hajj']
+                  : ['Prayer of the traveller', 'What breaks my fast', 'Hajj guide']
             )].map((term, idx) => (
               <button
                 key={term}
@@ -235,23 +229,6 @@ const HeroSection = () => {
 
                 <span className="relative">{term}</span>
               </button>
-            ))}
-          </div>
-
-          {/* Floating hashtag chips */}
-          <div className="pointer-events-none">
-            {['#Fiqh', '#Qurʼan', '#Hadith', '#Maliki', '#Dua', '#Seerah'].map((tag, i) => (
-              <div
-                key={tag}
-                className="absolute px-3 py-1.5 rounded-full bg-card/80 text-foreground text-sm shadow glass-panel floating-element"
-                style={{
-                  left: `${8 + i * 15}%`,
-                  top: i % 2 === 0 ? '18%' : '68%',
-                  transform: `rotate(${i % 2 === 0 ? -8 : 8}deg)`,
-                }}
-              >
-                {tag}
-              </div>
             ))}
           </div>
 

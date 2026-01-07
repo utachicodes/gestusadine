@@ -1,7 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { Product, Order, OrderItem } from '../../../shared/ecosystem-types.js';
 
-
 let supabaseInstance: ReturnType<typeof createClient> | null = null;
 
 function getSupabase() {
@@ -49,6 +48,7 @@ export const CommerceService = {
         // 1. Calculate Total & Verify Stock
         let totalAmount = 0;
         const orderItemsData = [];
+        const paymentItems = [];
 
         for (const item of items) {
             const product = await this.getProductById(item.productId);
@@ -60,6 +60,14 @@ export const CommerceService = {
                 product_id: item.productId,
                 quantity: item.quantity,
                 unit_price: product.price
+            });
+            // Prepare items for payment gateway
+            paymentItems.push({
+                name: product.name,
+                category: 'Merch',
+                amount: product.price,
+                quantity: item.quantity,
+                description: product.description || 'XamSaDine Merch'
             });
         }
 
@@ -90,18 +98,56 @@ export const CommerceService = {
 
         if (itemsError) throw itemsError;
 
-        // 4. Initiate Payment logic (Mock for now, would call PayTech.sn here)
-        const paymentUrl = await this.initiatePaymentGateway(order, paymentMethod);
+        // 4. Initiate Payment logic (NabooPay)
+        const paymentUrl = await this.initiatePaymentGateway(order, paymentItems, paymentMethod);
 
         return { order, paymentUrl };
     },
 
-    // Mock Payment Gateway Integration
-    async initiatePaymentGateway(order: any, method: string) {
-        // In production, call PayTech.sn / CinetPay API here
-        // return `https://paytech.sn/pay/${token}`;
+    // Payment Gateway Integration
+    async initiatePaymentGateway(order: any, items: any[], method: string) {
+        if (method === 'naboo') {
+            const NABOO_API_URL = 'https://api.naboopay.com/api/v1/transaction/create-transaction';
+            const apiKey = process.env.NABOOPAY_API_KEY;
 
-        console.log(`Fake initiating payment for Order ${order.id} via ${method}`);
+            if (!apiKey) {
+                throw new Error("Missing NABOOPAY_API_KEY environment variable");
+            }
+
+            const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:8080';
+
+            const payload = {
+                method_of_payment: ['WAVE', 'ORANGE_MONEY', 'FREE_MONEY', 'CREDIT_CARD'],
+                products: items,
+                amount: order.total_amount,
+                currency: 'XOF',
+                is_escrow: false,
+                success_url: `${frontendUrl}/shop?status=success&orderId=${order.id}`,
+                cancel_url: `${frontendUrl}/shop?status=cancelled&orderId=${order.id}`,
+                error_url: `${frontendUrl}/shop?status=error`
+            };
+
+            const response = await fetch(NABOO_API_URL, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiKey}`,
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+
+            const data: any = await response.json();
+
+            if (!response.ok) {
+                console.error("NabooPay Error:", data);
+                throw new Error(data.message || 'Payment provider error');
+            }
+
+            return data.checkout_url;
+        }
+
+        // Default / Mock fallthrough (should not be reached if properly configured)
         return `https://checkout.xamsadine.com/mock-pay/${order.id}`;
     },
 
@@ -119,7 +165,6 @@ export const CommerceService = {
         if (error) throw error;
 
         // Decrement Inventory
-        // Note: This should ideally be a transaction or done via RPC
         const { data: items } = await supabase
             .from('order_items')
             .select('*')

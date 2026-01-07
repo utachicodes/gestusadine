@@ -11,7 +11,7 @@ const Index = () => {
     <div className="min-h-screen flex flex-col">
       <main className="flex-grow">
         <HeroSection />
-        
+
         {/* What XamSaDine Does */}
         <section className="py-20 bg-secondary/30 relative overflow-hidden">
           <div className="container">
@@ -24,7 +24,7 @@ const Index = () => {
                   {t('index.what_subtitle')}
                 </p>
               </div>
-              
+
               <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
                 <Link to="/fatwa" className="islamic-card p-6 hover:scale-105 transition-transform bg-card border border-border">
                   <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
@@ -48,16 +48,7 @@ const Index = () => {
                   </span>
                 </Link>
 
-                <Link to="/fiqh" className="islamic-card p-6 hover:scale-105 transition-transform bg-card border border-border">
-                  <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center mb-4">
-                    <BookOpen className="w-6 h-6 text-accent-foreground" />
-                  </div>
-                  <h3 className="text-xl font-semibold mb-2 text-foreground">{t('index.fiqh_map_title')}</h3>
-                  <p className="text-muted-foreground text-sm mb-3">{t('index.fiqh_map_desc')}</p>
-                  <span className="text-sm text-accent-foreground font-medium inline-flex items-center gap-1">
-                    {t('index.explore')} <ArrowRight className="w-4 h-4" />
-                  </span>
-                </Link>
+
 
                 <Link to="/library" className="islamic-card p-6 hover:scale-105 transition-transform bg-card border border-border">
                   <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
@@ -137,7 +128,7 @@ const Index = () => {
             </div>
           </div>
         </section>
-        
+
         {/* Final CTA */}
         <section className="py-24 bg-primary/10 relative overflow-hidden">
           <div className="absolute inset-0 bg-hero-gradient opacity-90 dark:opacity-40"></div>

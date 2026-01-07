@@ -78,8 +78,8 @@ export const ChatInterface = () => {
     setMessages([]);
     localStorage.removeItem(STORAGE_KEY);
     toast({
-      title: 'History Cleared',
-      description: 'Chat history has been cleared',
+      title: t('chat.history_cleared'),
+      description: t('chat.history_cleared_desc'),
     });
   };
 
@@ -105,7 +105,7 @@ export const ChatInterface = () => {
     try {
       const response = await apiFetch('/api/chat', {
         method: 'POST',
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           message: userInput,
           language: language,
           madhab: madhab
@@ -113,11 +113,11 @@ export const ChatInterface = () => {
       });
 
       const data = await response.json();
-      
+
       if (!data.response) {
         throw new Error('Invalid response from server');
       }
-      
+
       const botMessage: Message = {
         id: `bot-${Date.now()}`,
         content: data.response,
@@ -129,12 +129,12 @@ export const ChatInterface = () => {
       setMessages(prev => [...prev, botMessage]);
     } catch (error) {
       logger.error('Chat error:', { error, message: userInput });
-      
+
       // Remove the user message if the request failed
       setMessages(prev => prev.filter(msg => msg.id !== userMessage.id));
-      
+
       toast({
-        title: 'Error',
+        title: t('common.error'),
         description: error instanceof Error ? error.message : t('chat.error'),
         variant: 'destructive',
       });
@@ -155,9 +155,9 @@ export const ChatInterface = () => {
           {messages.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center min-h-[60vh] px-4">
               <div className="text-center max-w-2xl">
-                <img 
-                  src="/logo.png" 
-                  alt={t('chat.welcome_logo_alt')} 
+                <img
+                  src="/logo.png"
+                  alt={t('chat.welcome_logo_alt')}
                   className="h-16 w-auto object-contain mx-auto mb-8 brightness-110 dark:brightness-0 dark:invert"
                 />
                 <h3 className="text-2xl font-semibold text-foreground mb-2">
@@ -201,16 +201,15 @@ export const ChatInterface = () => {
                 {messages.map((message) => (
                   <div
                     key={message.id}
-                    className={`group px-4 py-4 hover:bg-muted/50 transition-colors ${
-                      message.role === 'user' ? 'bg-muted/30' : 'bg-transparent'
-                    }`}
+                    className={`group px-4 py-4 hover:bg-muted/50 transition-colors ${message.role === 'user' ? 'bg-muted/30' : 'bg-transparent'
+                      }`}
                   >
                     <div className="max-w-3xl mx-auto flex gap-4">
                       {message.role === 'assistant' && (
                         <div className="flex-shrink-0 mt-1">
-                          <img 
-                            src="/logo.png" 
-                            alt="Anisah" 
+                          <img
+                            src="/logo.png"
+                            alt="Anisah"
                             className="h-8 w-8 object-contain brightness-110 dark:brightness-0 dark:invert"
                           />
                         </div>
@@ -258,9 +257,9 @@ export const ChatInterface = () => {
                   <div className="group px-4 py-4 hover:bg-muted/50 transition-colors">
                     <div className="max-w-3xl mx-auto flex gap-4">
                       <div className="flex-shrink-0 mt-1">
-                        <img 
-                          src="/logo.png" 
-                          alt="XamSaDine AI" 
+                        <img
+                          src="/logo.png"
+                          alt="XamSaDine AI"
                           className="h-8 w-8 object-contain brightness-110 dark:brightness-0 dark:invert"
                         />
                       </div>

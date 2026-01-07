@@ -44,7 +44,7 @@ const Login = () => {
           title: t('common.success'),
           description: t('login.success_signed_up'),
         });
-        setIsSignUp(false); 
+        setIsSignUp(false);
       } else {
         await signInWithPassword({ email, password });
         // Refresh profile to ensure admin status is updated
@@ -81,9 +81,8 @@ const Login = () => {
             <button
               type="button"
               onClick={() => setIsSignUp(false)}
-              className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all ${
-                !isSignUp ? 'bg-[#efefec] dark:bg-slate-800 text-islamic-dark dark:text-slate-100 border border-islamic-primary-green dark:border-islamic-green shadow' : 'bg-sand-200 dark:bg-slate-700 text-islamic-dark dark:text-slate-300'
-              }`}
+              className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all ${!isSignUp ? 'bg-[#efefec] dark:bg-slate-800 text-islamic-dark dark:text-slate-100 border border-islamic-primary-green dark:border-islamic-green shadow' : 'bg-sand-200 dark:bg-slate-700 text-islamic-dark dark:text-slate-300'
+                }`}
             >
               <LogIn className="w-4 h-4" />
               {t('login.sign_in')}
@@ -91,9 +90,8 @@ const Login = () => {
             <button
               type="button"
               onClick={() => setIsSignUp(true)}
-              className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all ${
-                isSignUp ? 'bg-[#efefec] dark:bg-slate-800 text-islamic-dark dark:text-slate-100 border border-islamic-primary-gold dark:border-islamic-gold shadow' : 'bg-sand-200 dark:bg-slate-700 text-islamic-dark dark:text-slate-300'
-              }`}
+              className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all ${isSignUp ? 'bg-[#efefec] dark:bg-slate-800 text-islamic-dark dark:text-slate-100 border border-islamic-primary-gold dark:border-islamic-gold shadow' : 'bg-sand-200 dark:bg-slate-700 text-islamic-dark dark:text-slate-300'
+                }`}
             >
               <UserPlus className="w-4 h-4" />
               {t('login.sign_up')}
@@ -203,12 +201,35 @@ const Login = () => {
             </div>
           )}
 
+          {isSignUp && (
+            <div className="flex items-center">
+              <input
+                id="terms"
+                name="terms"
+                type="checkbox"
+                required
+                className="h-4 w-4 text-islamic-primary-green focus:ring-islamic-primary-green border-gray-300 rounded"
+              />
+              <label htmlFor="terms" className="ml-2 block text-sm text-gray-900 dark:text-slate-200">
+                I agree to the <a href="#" className="text-islamic-primary-green hover:underline">Terms of Service</a> and <a href="#" className="text-islamic-primary-green hover:underline">Privacy Policy</a>
+              </label>
+            </div>
+          )}
+
+          <div className="flex justify-center mt-4">
+            <div className="flex items-center gap-2 px-3 py-1.5 bg-gray-100 dark:bg-slate-800 rounded-md border border-gray-200 dark:border-slate-700">
+              <div className="w-4 h-4 text-[#F48120]">
+                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M41.7 32.7C40.6 34.6 38.6 35.8 36.4 35.8H14.1C10.7 35.8 8 33.1 8 29.7C8 26.5 10.5 23.8 13.7 23.6C14.3 19.3 18 16 22.4 16C23.2 16 24 16.1 24.8 16.4C25.4 13.6 27.9 11.5 30.9 11.5C34.7 11.5 37.8 14.6 37.8 18.4C37.8 18.7 37.8 19 37.7 19.3C39.9 20.3 41.5 22.5 41.5 25.1C41.5 26.1 41.2 27 40.8 27.8L41.7 32.7Z" fill="currentColor" /></svg>
+              </div>
+              <span className="text-[10px] text-gray-500 dark:text-slate-400 font-medium">Protected by Cloudflare</span>
+            </div>
+          </div>
+
           <Button
             type="submit"
             disabled={isLoading}
-            className={`w-full py-3 text-sm font-semibold rounded-lg text-islamic-dark dark:text-slate-100 bg-[#efefec] dark:bg-slate-800 border transition-all ${
-              isSignUp ? 'border-islamic-primary-gold dark:border-islamic-gold hover:bg-islamic-primary-gold/10 dark:hover:bg-islamic-gold/20' : 'border-islamic-primary-green dark:border-islamic-green hover:bg-islamic-primary-green/10 dark:hover:bg-islamic-green/20'
-            } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-islamic-primary-green dark:focus:ring-islamic-green active:scale-98`}
+            className={`w-full py-3 text-sm font-semibold rounded-lg text-islamic-dark dark:text-slate-100 bg-[#efefec] dark:bg-slate-800 border transition-all ${isSignUp ? 'border-islamic-primary-gold dark:border-islamic-gold hover:bg-islamic-primary-gold/10 dark:hover:bg-islamic-gold/20' : 'border-islamic-primary-green dark:border-islamic-green hover:bg-islamic-primary-green/10 dark:hover:bg-islamic-green/20'
+              } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-islamic-primary-green dark:focus:ring-islamic-green active:scale-98`}
           >
             {isLoading ? (
               <div className="flex items-center justify-center gap-3">

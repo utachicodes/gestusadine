@@ -1,10 +1,17 @@
-version: '3'
+version: '3.8'
 
 services:
-  xamsadine-app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+  app:
+    build: .
     ports:
-      - "8080:80"
+      - "4000:4000"  # API/Backend
+    environment:
+      - NODE_ENV=development
+      - PORT=4000
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      - NABOOPAY_API_KEY=${NABOOPAY_API_KEY}
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+    volumes:
+      - ./backend/data:/app/backend/data # Persist local RAG/Vector data
     restart: unless-stopped

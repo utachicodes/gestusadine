@@ -1,15 +1,15 @@
 import express from 'express';
 import { OpenRouterClient } from '../../llm-service/openrouter-client';
 import { LLMCouncil } from '../../llm-service/llm-council';
-import { requireAuth } from './auth';
+import { requireAuth, optionalAuth } from './auth';
 import { logger } from '../../../shared/logger';
 
 const router = express.Router();
 const openRouter = new OpenRouterClient();
 const llmCouncil = new LLMCouncil();
 
-// Chat endpoint - requires authentication
-router.post('/chat', requireAuth, async (req, res) => {
+// Chat endpoint - optional authentication
+router.post('/chat', optionalAuth, async (req, res) => {
   try {
     const { message, language = 'en' } = req.body;
 
@@ -24,10 +24,10 @@ router.post('/chat', requireAuth, async (req, res) => {
     const validLanguages = ['en', 'fr', 'wo'];
     const sanitizedLanguage = validLanguages.includes(language) ? language : 'en';
 
-    logger.info('Processing chat message', { 
-      userId: req.user?.id, 
+    logger.info('Processing chat message', {
+      userId: req.authUser?.sub,
       language: sanitizedLanguage,
-      messageLength: message.length 
+      messageLength: message.length
     });
 
     // Get response from LLM Council
@@ -48,19 +48,19 @@ router.post('/chat', requireAuth, async (req, res) => {
       language: sanitizedLanguage
     };
 
-    logger.info('Chat response generated', { 
-      userId: req.user?.id,
-      responseLength: response.response.length 
+    logger.info('Chat response generated', {
+      userId: req.authUser?.sub,
+      responseLength: response.response.length
     });
 
     res.json(response);
   } catch (error: any) {
-    logger.error('Chat API error:', { 
+    logger.error('Chat API error:', {
       error: error.message || error,
       stack: error.stack,
-      userId: req.user?.id 
+      userId: req.authUser?.sub
     });
-    
+
     res.status(500).json({
       error: 'Internal server error',
       message: error.message || 'Failed to process your request. Please try again.'

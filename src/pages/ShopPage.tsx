@@ -2,78 +2,59 @@ import React, { useEffect, useState } from "react";
 import { EcosystemService } from "@/services/ecosystem";
 import { Product } from "@/types/ecosystem";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { MOCK_PRODUCTS } from "@/lib/mock-data";
+import { useAuth } from "@/auth/AuthContext";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { Sparkles, Clock3 } from "lucide-react";
-
-interface WaitlistEntry {
-  productId: string;
-  email: string;
-  createdAt: string;
-}
-
-const STORAGE_KEY = "xamsadine-merch-waitlist";
+import { useNavigate } from "react-router-dom";
 
 export default function ShopPage() {
   const { t } = useLanguage();
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const [emailByProduct, setEmailByProduct] = useState<Record<string, string>>({});
-  const [submitted, setSubmitted] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     loadProducts();
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      try {
-        const parsed: WaitlistEntry[] = JSON.parse(saved);
-        const submittedMap: Record<string, boolean> = {};
-        parsed.forEach((entry) => (submittedMap[entry.productId] = true));
-        setSubmitted(submittedMap);
-      } catch {
-        // ignore corrupted data
-      }
-    }
   }, []);
 
   const loadProducts = async () => {
     setLoading(true);
-    setProducts(MOCK_PRODUCTS);
-    setLoading(false);
     try {
       const data = await EcosystemService.getProducts();
-      if (data.length > 0) setProducts(data);
-    } catch {
-      // silent fallback to mock data
+      if (data) setProducts(data);
+    } catch (error) {
+      console.error("Failed to load products:", error);
+      // Don't show error toast on load to avoid annoying user if just empty
+    } finally {
+      setLoading(false);
     }
   };
 
-  const saveWaitlist = (entries: WaitlistEntry[]) => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
-  };
-
-  const handleNotify = (productId: string) => {
-    const email = emailByProduct[productId]?.trim();
-    if (!email || !email.includes("@")) {
-      toast.error(t("shop.waitlist_invalid_email"));
+  const handleBuy = async (product: Product) => {
+    if (!user) {
+      toast.info(t("login.sign_in") || "Please sign in to purchase");
+      navigate("/login");
       return;
     }
-    const saved = localStorage.getItem(STORAGE_KEY);
-    let entries: WaitlistEntry[] = [];
-    if (saved) {
-      try {
-        entries = JSON.parse(saved);
-      } catch {
-        entries = [];
-      }
+
+    const loadingToast = toast.loading(t("shop.redirecting_naboo"));
+    try {
+      const { paymentUrl } = await EcosystemService.checkout(
+        [{ productId: product.id, quantity: 1 }],
+        'naboo'
+      );
+
+      // Redirect to NabooPay
+      window.location.href = paymentUrl;
+    } catch (e: any) {
+      toast.dismiss(loadingToast);
+      console.error("Checkout error:", e);
+      toast.error(e.message || t("error.checkout_failed"));
     }
-    entries.push({ productId, email, createdAt: new Date().toISOString() });
-    saveWaitlist(entries);
-    setSubmitted((prev) => ({ ...prev, [productId]: true }));
-    toast.success(t("shop.waitlist_joined"));
   };
 
   return (
@@ -85,7 +66,7 @@ export default function ShopPage() {
             {t("shop.waitlist_title")}
           </h1>
           <p className="text-lg text-muted-foreground">
-            {t("shop.waitlist_subtitle")}
+            {t("shop.waitlist_description")}
           </p>
           <div className="flex items-center gap-3 text-sm text-muted-foreground">
             <Sparkles className="w-4 h-4 text-primary" />
@@ -96,57 +77,58 @@ export default function ShopPage() {
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {loading
-            ? Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="islamic-card h-[360px] animate-pulse border border-border" />
-              ))
-            : products.map((product) => (
-                <div key={product.id} className="islamic-card border border-border p-4 flex flex-col gap-4 bg-card/70">
-                  <div className="aspect-[4/5] rounded-xl overflow-hidden bg-muted relative">
-                    {product.images?.[0] ? (
-                      <img
-                        src={product.images[0]}
-                        alt={product.name}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-muted-foreground">
-                        <span>{t("shop.preview")}</span>
-                      </div>
-                    )}
-                    <div className="absolute top-4 left-4 bg-primary text-primary-foreground text-[11px] font-semibold px-3 py-1 rounded-full">
-                      {t("shop.preorder")}
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <h3 className="text-lg font-semibold">{product.name}</h3>
-                    <p className="text-sm text-muted-foreground line-clamp-3">
-                      {product.description || t("shop.waitlist_description")}
-                    </p>
-                    <p className="text-sm font-medium text-primary">
-                      {t("shop.waitlist_price_hint", { price: product.price.toLocaleString(), currency: product.currency })}
-                    </p>
-                  </div>
-                  <div className="space-y-2">
-                    <Input
-                      type="email"
-                      placeholder={t("shop.waitlist_email_placeholder")}
-                      value={emailByProduct[product.id] || ""}
-                      onChange={(e) =>
-                        setEmailByProduct((prev) => ({ ...prev, [product.id]: e.target.value }))
-                      }
-                      className="bg-background/70"
+          {loading ? (
+            Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="islamic-card h-[400px] animate-pulse border border-border bg-card/50 rounded-xl" />
+            ))
+          ) : products.length > 0 ? (
+            products.map((product) => (
+              <div key={product.id} className="islamic-card border border-border p-4 flex flex-col gap-4 bg-card/70 group hover:border-primary/50 transition-colors">
+                <div className="aspect-[4/5] rounded-xl overflow-hidden bg-muted relative">
+                  {product.images?.[0] ? (
+                    <img
+                      src={product.images[0]}
+                      alt={product.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
-                    <Button
-                      className="w-full"
-                      onClick={() => handleNotify(product.id)}
-                      disabled={submitted[product.id]}
-                    >
-                      {submitted[product.id] ? t("shop.waitlist_joined_short") : t("shop.waitlist_cta")}
-                    </Button>
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-muted-foreground bg-secondary/30">
+                      <span>{t("shop.preview")}</span>
+                    </div>
+                  )}
+                  <div className="absolute top-4 left-4 bg-primary text-primary-foreground text-[11px] font-semibold px-3 py-1 rounded-full shadow-sm">
+                    {t("shop.preorder")}
                   </div>
                 </div>
-              ))}
+                <div className="space-y-2 flex-1">
+                  <div className="flex justify-between items-start gap-2">
+                    <h3 className="text-lg font-bold leading-tight">{product.name}</h3>
+                    <p className="text-sm font-semibold text-primary whitespace-nowrap">
+                      {product.price.toLocaleString()} {product.currency || 'XOF'}
+                    </p>
+                  </div>
+                  <p className="text-sm text-muted-foreground line-clamp-2">
+                    {product.description}
+                  </p>
+                </div>
+                <div className="pt-2">
+                  <Button
+                    className="w-full bg-[#1e40af] hover:bg-[#1e3a8a] text-white shadow-md hover:shadow-lg transition-all"
+                    onClick={() => handleBuy(product)}
+                  >
+                    {t("shop.buy_with_naboo")}
+                  </Button>
+                  <p className="text-[10px] text-center text-muted-foreground mt-2 opacity-70">
+                    Secured by NabooPay
+                  </p>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="col-span-full py-12 text-center text-muted-foreground border border-dashed border-border rounded-xl">
+              <p>No products available at the moment.</p>
+            </div>
+          )}
         </div>
       </div>
     </div>

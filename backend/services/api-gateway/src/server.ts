@@ -47,6 +47,7 @@ import { videoRoutes } from "../../video-service/src/routes/video.routes.js";
 import { eventRoutes } from "../../event-service/src/routes/event.routes.js";
 import { commerceRoutes } from "../../commerce-service/src/routes/commerce.routes.js"; // Direct import for monolith
 import { tarteelRoutes } from "./routes/tarteel.ts";
+import { councilRoutes } from "./routes/council.routes.js";
 
 // Catch unhandled promise rejections
 process.on("unhandledRejection", (reason: any, promise) => {
@@ -79,7 +80,10 @@ if (existsSync(distPath)) {
 }
 
 // Initialize services
+// Initialize services
 app.use('/api/tarteel', tarteelRoutes);
+app.use('/api/council', councilRoutes);
+
 
 configService.loadConfig().then(() => {
   console.log('✅ Config service initialized');
@@ -162,71 +166,7 @@ app.post("/api/ask", async (req, res) => {
   }
 });
 
-// Council Routes - LLM Council System
-app.post("/api/council/ask", async (req, res) => {
-  try {
-    const { askCouncil } = await import("./routes/council-handler.ts");
-    await askCouncil(req, res);
-  } catch (error: any) {
-    console.error("💥 Unhandled error in /api/council/ask route:", error);
-    if (!res.headersSent) {
-      res.status(500).json({
-        error: "Internal server error",
-        message: "An unexpected error occurred",
-      });
-    }
-  }
-});
 
-app.get("/api/council/members", async (req, res) => {
-  try {
-    const { getCouncilMembers } = await import("./routes/council-handler.ts");
-    getCouncilMembers(req, res);
-  } catch (error: any) {
-    console.error("💥 Unhandled error in /api/council/members route:", error);
-    if (!res.headersSent) {
-      res.status(500).json({
-        error: "Internal server error",
-        message: "An unexpected error occurred",
-      });
-    }
-  }
-});
-
-app.get("/api/council/health", async (_req, res) => {
-  try {
-    res.json({
-      success: true,
-      data: {
-        status: "healthy",
-        timestamp: new Date().toISOString(),
-      },
-    });
-  } catch (error: any) {
-    console.error("💥 Unhandled error in /api/council/health route:", error);
-    if (!res.headersSent) {
-      res.status(500).json({
-        error: "Internal server error",
-        message: "An unexpected error occurred",
-      });
-    }
-  }
-});
-
-app.post("/api/council/search", async (req, res) => {
-  try {
-    const { searchRAG } = await import("./routes/council-handler.ts");
-    await searchRAG(req, res);
-  } catch (error: any) {
-    console.error("💥 Unhandled error in /api/council/search route:", error);
-    if (!res.headersSent) {
-      res.status(500).json({
-        error: "Internal server error",
-        message: "An unexpected error occurred",
-      });
-    }
-  }
-});
 
 // Config routes
 app.get("/api/config/agents", requireAdmin, async (req, res) => {
@@ -320,66 +260,7 @@ app.get("/api/documents/:id/url", requireAdmin, async (req, res) => {
   }
 });
 
-// Translation API endpoints (Wolof support)
-app.post("/api/council/translate-to-wolof", async (req, res) => {
-  try {
-    const { translateToWolof } = await import("./routes/council-handler.ts");
-    await translateToWolof(req, res);
-  } catch (error: any) {
-    console.error("💥 Error in /api/council/translate-to-wolof:", error);
-    if (!res.headersSent) {
-      res.status(500).json({
-        error: "Internal server error",
-        message: "An unexpected error occurred while translating to Wolof",
-      });
-    }
-  }
-});
 
-app.post("/api/council/translate-to-french", async (req, res) => {
-  try {
-    const { translateToFrench } = await import("./routes/council-handler.ts");
-    await translateToFrench(req, res);
-  } catch (error: any) {
-    console.error("💥 Error in /api/council/translate-to-french:", error);
-    if (!res.headersSent) {
-      res.status(500).json({
-        error: "Internal server error",
-        message: "An unexpected error occurred while translating to French",
-      });
-    }
-  }
-});
-
-app.post("/api/council/ask-wolof", async (req, res) => {
-  try {
-    const { askCouncilWolof } = await import("./routes/council-handler.ts");
-    await askCouncilWolof(req, res);
-  } catch (error: any) {
-    console.error("💥 Error in /api/council/ask-wolof:", error);
-    if (!res.headersSent) {
-      res.status(500).json({
-        error: "Internal server error",
-        message: "An unexpected error occurred while processing Wolof query",
-      });
-    }
-  }
-});
-
-app.post("/api/council/detect-language", async (req, res) => {
-  try {
-    const { detectLanguage } = await import("./routes/council-handler.ts");
-    await detectLanguage(req, res);
-  } catch (error: any) {
-    console.error("💥 Error in /api/council/detect-language:", error);
-    if (!res.headersSent) {
-      res.status(500).json({
-        error: "Internal server error",
-        message: "An unexpected error occurred while detecting language",
-      });
-    }
-  }
-});
 
 // Chat routes
 app.use('/api', chatRoutes);

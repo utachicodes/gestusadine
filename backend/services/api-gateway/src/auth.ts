@@ -70,6 +70,35 @@ export async function requireAuth(req: Request, res: Response, next: NextFunctio
   }
 }
 
+export async function optionalAuth(req: Request, res: Response, next: NextFunction) {
+  try {
+    const token = await parseBearerToken(req);
+    if (!token) {
+      next();
+      return;
+    }
+
+    const { jwks, issuer } = getJWKS();
+
+    const { payload } = await jwtVerify(token, jwks, {
+      issuer,
+      audience: "authenticated",
+    });
+
+    const email = typeof payload.email === "string" ? payload.email : undefined;
+    req.authUser = {
+      sub: String(payload.sub),
+      email,
+    };
+    req.isAdmin = (email ?? "").toLowerCase() === ADMIN_EMAIL.toLowerCase();
+
+    next();
+  } catch (_err) {
+    // If token is invalid, just proceed as guest
+    next();
+  }
+}
+
 export async function requireAdmin(req: Request, res: Response, next: NextFunction) {
   await requireAuth(req, res, () => {
     if (!req.isAdmin) {
