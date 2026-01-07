@@ -1,7 +1,7 @@
 import "./config-env.js"; // Initialize environment first
 import { fileURLToPath } from "url";
 import { dirname, resolve } from "path";
-import { existsSync } from "node:fs";
+import { existsSync, readdirSync } from "node:fs";
 import path from "node:path";
 import express from "express";
 import cors from "cors";
@@ -21,6 +21,18 @@ console.log("🚀 Starting XamSaDine API Gateway");
 console.log("  __dirname:", __dirname);
 console.log("  cwd:", process.cwd());
 console.log("  projectRoot:", projectRoot);
+
+// Log directory structure to debug missing dist
+try {
+  console.log("📂 Root Directory Contents:");
+  const files = readdirSync(projectRoot);
+  files.forEach(file => {
+    const isDir = existsSync(path.join(projectRoot, file)) && !file.includes('.');
+    console.log(`  ${isDir ? '📁' : '📄'} ${file}`);
+  });
+} catch (e: any) {
+  console.error("⚠️  Failed to list directory contents:", e.message);
+}
 
 // Import routes after env is loaded
 const { postFatwa } = await import("./routes/fatwa.ts");
@@ -67,9 +79,13 @@ function findDistFolder(startDir: string): string | null {
     const distPath = resolve(currentDir, "dist");
     const indexHtml = resolve(distPath, "index.html");
 
-    console.log(`  Searching for dist in: ${currentDir}`);
-    if (existsSync(distPath) && existsSync(indexHtml)) {
-      return distPath;
+    if (existsSync(distPath)) {
+      console.log(`  Found dist folder at: ${distPath}`);
+      if (existsSync(indexHtml)) {
+        return distPath;
+      } else {
+        console.log(`  ⚠️  dist exists but index.html is missing inside it! Contents:`, readdirSync(distPath).join(', '));
+      }
     }
 
     const parent = dirname(currentDir);
@@ -82,6 +98,8 @@ function findDistFolder(startDir: string): string | null {
 console.log("🌍 Deployment Debug Info:");
 console.log("  RENDER_ENV:", !!process.env.RENDER);
 console.log("  NODE_ENV:", process.env.NODE_ENV);
+console.log("  PORT:", process.env.PORT);
+console.log("  SUPABASE_URL Set:", !!process.env.SUPABASE_URL || !!process.env.VITE_SUPABASE_URL);
 console.log("  __dirname:", __dirname);
 console.log("  cwd:", process.cwd());
 
