@@ -9,10 +9,26 @@ const SUPABASE_TABLE = process.env.SUPABASE_CONFIG_TABLE || 'system_config';
 const SUPABASE_CONFIG_ID = process.env.SUPABASE_CONFIG_ID || 'default';
 
 function getSupabaseAdmin() {
-    const url = process.env.SUPABASE_URL;
-    const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-    if (!url || !key) return null;
-    return createClient(url, key, { auth: { persistSession: false } });
+    const url = (process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || '').trim();
+    const key = (process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_SERVICE_ROLE_KEY || '').trim();
+
+    // Validate format
+    if (!url || !url.startsWith('http') || url.includes('your-supabase-url')) {
+        console.warn('⚠️  Supabase URL missing or invalid in ConfigService. Falling back to local storage.');
+        return null;
+    }
+
+    if (!key || key.includes('your-supabase-key')) {
+        console.warn('⚠️  Supabase Key missing or invalid in ConfigService. Falling back to local storage.');
+        return null;
+    }
+
+    try {
+        return createClient(url, key, { auth: { persistSession: false } });
+    } catch (error: any) {
+        console.error('❌ Failed to initialize Supabase client in ConfigService:', error.message);
+        return null;
+    }
 }
 
 // Default configuration

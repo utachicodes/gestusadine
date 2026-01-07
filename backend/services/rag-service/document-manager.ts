@@ -11,10 +11,26 @@ const SUPABASE_BUCKET = process.env.SUPABASE_RAG_BUCKET || 'rag-documents';
 const SUPABASE_TABLE = process.env.SUPABASE_RAG_TABLE || 'rag_documents';
 
 function getSupabaseAdmin() {
-    const url = process.env.SUPABASE_URL;
-    const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-    if (!url || !key) return null;
-    return createClient(url, key, { auth: { persistSession: false } });
+    const url = (process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || '').trim();
+    const key = (process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_SERVICE_ROLE_KEY || '').trim();
+
+    // Validate format
+    if (!url || !url.startsWith('http') || url.includes('your-supabase-url')) {
+        console.warn('⚠️  Supabase URL missing or invalid in DocumentManager. Falling back to local storage.');
+        return null;
+    }
+
+    if (!key || key.includes('your-supabase-key')) {
+        console.warn('⚠️  Supabase Key missing or invalid in DocumentManager. Falling back to local storage.');
+        return null;
+    }
+
+    try {
+        return createClient(url, key, { auth: { persistSession: false } });
+    } catch (error: any) {
+        console.error('❌ Failed to initialize Supabase client in DocumentManager:', error.message);
+        return null;
+    }
 }
 
 // Ensure upload directory exists

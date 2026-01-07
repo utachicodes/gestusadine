@@ -1,4 +1,4 @@
-import dotenv from "dotenv";
+import "./config-env.js"; // Initialize environment first
 import { fileURLToPath } from "url";
 import { dirname, resolve } from "path";
 import { existsSync } from "node:fs";
@@ -10,32 +10,10 @@ import { requireAdmin, requireAuth } from "./auth";
 import { configService } from "../../config-service/config.service";
 import { documentManager } from "../../rag-service/document-manager";
 
-// Get project root (4 levels up from this file)
+// Get project root
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const projectRoot = resolve(__dirname, "../../../../");
-
-// Load .env.local first (higher priority), then .env
-const envLocalPath = resolve(projectRoot, ".env.local");
-const envPath = resolve(projectRoot, ".env");
-
-console.log("🔍 Looking for .env files:");
-console.log("  Project root:", projectRoot);
-console.log("  .env.local exists:", existsSync(envLocalPath));
-console.log("  .env exists:", existsSync(envPath));
-
-if (existsSync(envLocalPath)) {
-  const result = dotenv.config({ path: envLocalPath, override: true });
-  if (result.error) {
-    console.error("❌ Error loading .env.local:", result.error);
-  } else {
-    console.log("✅ Loaded .env.local");
-  }
-}
-if (existsSync(envPath)) {
-  dotenv.config({ path: envPath, override: false });
-  console.log("✅ Loaded .env");
-}
 
 // Import routes after env is loaded
 const { postFatwa } = await import("./routes/fatwa.ts");

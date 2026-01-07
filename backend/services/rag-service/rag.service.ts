@@ -45,10 +45,26 @@ const SUPABASE_VECTORS_TABLE = process.env.SUPABASE_RAG_VECTORS_TABLE || 'rag_ve
 const SUPABASE_DOCS_TABLE = process.env.SUPABASE_RAG_DOCS_TABLE || 'rag_ingested_documents';
 
 function getSupabaseAdmin() {
-    const url = process.env.SUPABASE_URL;
-    const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-    if (!url || !key) return null;
-    return createClient(url, key, { auth: { persistSession: false } });
+    const url = (process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || '').trim();
+    const key = (process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_SERVICE_ROLE_KEY || '').trim();
+
+    // Validate format
+    if (!url || !url.startsWith('http') || url.includes('your-supabase-url')) {
+        console.warn('⚠️  Supabase URL missing or invalid in RAGService. Falling back to local storage.');
+        return null;
+    }
+
+    if (!key || key.includes('your-supabase-key')) {
+        console.warn('⚠️  Supabase Key missing or invalid in RAGService. Falling back to local storage.');
+        return null;
+    }
+
+    try {
+        return createClient(url, key, { auth: { persistSession: false } });
+    } catch (error: any) {
+        console.error('❌ Failed to initialize Supabase client in RAGService:', error.message);
+        return null;
+    }
 }
 
 const CHUNK_SIZE = 500; // Characters per chunk
