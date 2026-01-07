@@ -1,105 +1,122 @@
-# XamSaDine AI v2
+# 🌙 XamSaDine AI v2
+### *The Digital Ecosystem for Modern Islamic Living*
 
-**XamSaDine AI** is a distributed multi-agent system designed to provide rigorous, scholar-grade Islamic guidance. It combines a sophisticated "LLM Council" architecture with practical lifestyle modules (Commerce, Education) into a unified service-oriented platform.
+XamSaDine AI is more than just a chatbot; it is a **comprehensive Service-Oriented Platform** that merges traditional Islamic scholarship with state-of-the-art AI. Designed for scalability and epistemic integrity, it offers a unified interface for commerce, education, and spiritual guidance.
 
-![Maintained](https://img.shields.io/badge/Maintained-yes-green.svg?style=for-the-badge)
-![License](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)
+![Maintained](https://img.shields.io/badge/Maintained-yes-34D399?style=for-the-badge)
+![License](https://img.shields.io/badge/License-MIT-3B82F6?style=for-the-badge)
+![Platform](https://img.shields.io/badge/Platform-SaaS--Ready-F59E0B?style=for-the-badge)
 
-### Tech Stack
-![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
-![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
-![Node](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)
-![Supabase](https://img.shields.io/badge/Supabase-181818?style=for-the-badge&logo=supabase&logoColor=white)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
-![OpenRouter](https://img.shields.io/badge/OpenRouter-API-7F52FF?style=for-the-badge)
+---
+
+## 🌟 Why XamSaDine?
+
+In an era of generic AI, **XamSaDine** stands out by enforcing strictly grounded, scholar-verified responses through its unique "Council" architecture. Whether you're shopping for exclusive merchandise, perfecting your recitation, or seeking a fatwa, XamSaDine provides a premium, authenticated experience.
 
 ---
 
 ## 🏗 System Architecture
 
-The platform utilizes a **Service-Oriented Architecture (SOA)** where the frontend communicates with a central API Gateway that routes requests to specialized microservices.
+The platform follows a **Microservices-inspired Monolith** pattern using an API Gateway to bridge the React frontend with specialized backend logic.
 
 ```mermaid
 graph TD
-    User[Frontend (Vite/React)] --> Gateway[API Gateway (Node/Express)]
+    User["User Interface (Vite/React)"] --> Gateway["API Gateway (Express)"]
     
-    subgraph "Core Microservices"
-        Gateway --> Council[LLM Council Service]
-        Gateway --> Shop[Commerce Service]
-        Gateway --> Tarteel[Tarteel AI Service]
-        Gateway --> Media[Media & Events Service]
+    subgraph "✨ Intelligence Layer"
+        Gateway --> Council["LLM Council (Consensus Engine)"]
+        Council --> Agents["Agent Array (Fiqh, Aqeedah, Modern)"]
+        Council --> RAG["RAG Engine (pgvector)"]
     end
     
-    subgraph "Integrations"
-        Council --> OpenRouter[LLM APIs (Claude, GPT-4)]
-        Council --> RAG[Vector Store (Supabase pgvector)]
-        Shop --> Naboo[NabooPay Gateway]
-        Shop --> DB[(Supabase Database)]
+    subgraph "🛍 Lifestyle Layer"
+        Gateway --> Shop["Islamic Shop (NabooPay Integration)"]
+        Gateway --> Tarteel["Tarteel AI (Web Speech Analysis)"]
+        Gateway --> Library["Digital Library (CMS)"]
+    end
+    
+    subgraph "🔐 Infrastructure"
+        Agents --> OpenRouter["OpenRouter (Claude/GPT-4o)"]
+        RAG --> SupaVector["Supabase Vector Store"]
+        Shop --> SupaDB["Supabase Postgres"]
     end
 ```
 
-### 1. The LLM Council
-A unique epistemic architecture that prevents hallucination through distributed consensus.
-*   **Fiqh Agent**: Specialized in jurisprudence. It references the four Sunni Madhhabs (Hanafi, Maliki, Shafi, Hanbali) to provide legal rulings.
-*   **Aqeedah Agent**: Ensures theological correctness based on Ashari/Maturidi/Athari frameworks.
-*   **Context Agent**: Analyzes modern implications (e.g., "Is crypto halal?") using contemporary financial data.
-*   **Humility Agent**: The final gatekeeper. It evaluates the confidence of the other agents and forces an "Abstain" response if consensus is weak or the topic requires a human scholar.
-*   **RAG (Retrieval Augmented Generation)**: Uploaded texts (PDF/TXT) are chunked and embedded, allowing agents to "read" specific books before answering.
+---
 
-### 2. Islamic Shop (Beta)
-A full-stack e-commerce module.
-*   **Flow**: Users select limited-drop items -> Checkout -> Redirect to **NabooPay**.
-*   **Payment**: Supports local African payment methods (Wave, Orange Money) via secure API hooks.
-*   **Order Management**: Webhooks update order status in real-time upon payment confirmation.
+## 🚀 Core Features
 
-### 3. Tarteel AI
-Real-time Quranic recitation feedback.
-*   **Technology**: Uses the **Web Speech API** for high-performance, client-side Arabic speech recognition.
-*   **Analysis**: Compares user speech against the digital Quran text (Uthmani script) to detect pronunciation errors or missing words.
+### ⚖️ The LLM Council (Circle of Knowledge)
+Our flagship AI implementation using multi-model consensus:
+- **Distributed Reasoning**: Every question is reviewed by independent agents (Fiqh, Aqeedah, Context).
+- **Epistemic Integrity**: A dedicated "Humility Agent" prevents hallucinations and handles ethical boundaries.
+- **RAG-Powered**: Semantic search across uploaded Islamic PDF/TXT documents using 384-dimensional embeddings.
 
-### 4. Digital Library
-*   **Content**: A CMS-backed repository of videos, books, and articles.
-*   **Localization**: Content can be tagged and filtered by language (English, French, Wolof).
+### 🛒 The Islamic Shop
+A turnkey commerce solution:
+- **Direct Payments**: Integrated with **NabooPay**, supporting local methods like Wave and Orange Money.
+- **Secure Handling**: Real-time webhook processing for order verification.
+- **Exclusive Drops**: Support for categorized digital and physical goods.
+
+### 📖 Tarteel AI & Library
+- **Speech Recognition**: Uses the browser's `webkitSpeechRecognition` to provide instant feedback on Quranic recitation.
+- **Digital Archive**: A robust repository of searchable books, articles, and media content.
 
 ---
 
-## 🛠 Setup & Deployment
+## 🛠 Tech Stack
 
-### Prerequisites
-*   Node.js 18+ (LTS recommended)
-*   Docker & Docker Compose (optional)
-*   Supabase Project (for Auth & Database)
-*   OpenRouter API Key (for LLMs)
-
-### Installation
-
-1.  **Clone the Repository**
-    ```bash
-    git clone https://github.com/UtachiCodes/xamsadine-ai-website-v2.git
-    cd xamsadine-ai-website-v2
-    npm install
-    ```
-
-2.  **Environment Configuration**
-    Create `.env` files for root and backend services (`backend/services/api-gateway/.env`).
-    Required keys: `OPENROUTER_API_KEY`, `NABOOPAY_API_KEY`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`.
-
-3.  **Run Locally**
-    *   **Frontend**: `npm run dev` (Runs Vite on port 8080)
-    *   **Backend**: `npm run dev:api` (Runs Express Gateway on port 4000)
-
-### Production Deployment
-
-The project includes a multi-stage `Dockerfile`.
-*   **Build**: `docker-compose up --build`
-*   **Deploy**: Push to **Render.com** (Web Service) or **Railway** and set the environment variables. The Dockerfile automatically builds the React frontend and serves it via the backend, creating a single deployable unit.
-
-See [DEPLOYMENT.md](./DEPLOYMENT.md) for a step-by-step guide.
+| Layer | Technologies |
+| :--- | :--- |
+| **Frontend** | React 18, Vite, Tailwind CSS, Framer Motion, Lucide Icons |
+| **Backend** | Node.js, TypeScript, Express, TSX, Zod |
+| **Database** | Supabase (PostgreSQL), pgvector |
+| **AI/ML** | OpenRouter (Claude 3.5, GPT-4o), Transformers.js |
+| **DevOps** | Docker, multi-stage builds, Render/Railway Ready |
 
 ---
 
-## License
+## 🏁 Getting Started
 
-Distributed under the MIT License. See `LICENSE` for more information.
+### 1. Requirements
+- Node.js 20+
+- Supabase Project
+- API Keys (OpenRouter, NabooPay)
 
-**Contact**: [abdoullahaljersi@gmail.com](mailto:abdoullahaljersi@gmail.com)
+### 2. Local Setup
+```bash
+# Clone the repository
+git clone https://github.com/UtachiCodes/xamsadine-ai-website-v2.git
+
+# Install dependencies
+npm install
+
+# Setup Environment (fill in .env)
+cp .env.example .env
+
+# Run Unified Platform
+npm run dev:api  # Starts Backend (port 4000)
+npm run dev      # Starts Frontend (port 8080)
+```
+
+---
+
+## 🌍 Deployment
+
+XamSaDine is optimized for containerized environments.
+
+**Deploy to Render (One-Click Ready)**:
+1. Connect GitHub.
+2. Select `Dockerfile`.
+3. Add environment variables (see `DEPLOYMENT.md`).
+
+For detailed database initialization, refer to [rag-setup.sql](./database/rag-setup.sql) and [DEPLOYMENT.md](./DEPLOYMENT.md).
+
+---
+
+## 🤝 Support & License
+
+- **License**: MIT
+- **Contact**: [abdoullahaljersi@gmail.com](mailto:abdoullahaljersi@gmail.com)
+
+*Built by UtachiCodes for the Global Islamic Community.*
