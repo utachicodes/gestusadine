@@ -1,12 +1,13 @@
 import express from 'express';
-import { OpenRouterClient } from '../../llm-service/openrouter-client';
-import { LLMCouncil } from '../../llm-service/llm-council';
-import { requireAuth, optionalAuth } from './auth';
+import { openRouterClient } from '../../llm-service/openrouter-client';
+import { llmCouncil } from '../../llm-service/llm-council';
+import { optionalAuth } from './auth';
 import { logger } from '../../../shared/logger';
 
 const router = express.Router();
-const openRouter = new OpenRouterClient();
-const llmCouncil = new LLMCouncil();
+// Use exported singletons
+const openRouter = openRouterClient;
+// const llmCouncil = new LLMCouncil();
 
 // Chat endpoint - optional authentication
 router.post('/chat', optionalAuth, async (req, res) => {

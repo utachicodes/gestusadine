@@ -1,4 +1,4 @@
-import { openRouterClient, COUNCIL_MODELS } from './openrouter-client';
+import { OpenRouterClient, openRouterClient, COUNCIL_MODELS } from './openrouter-client';
 import { ragService } from '../rag-service/rag.service';
 import { logger } from '../../shared/logger';
 import { configService } from '../config-service/config.service';
@@ -42,8 +42,10 @@ export interface ConsensusResult {
 export class LLMCouncil {
     private members: CouncilMember[] = [];
     private initialized: boolean = false;
+    private openRouter: OpenRouterClient;
 
     constructor() {
+        this.openRouter = openRouterClient;
         // Initialize on construction (async handled separately)
         this.initialize().catch(err => {
             logger.error('Failed to initialize LLM Council:', err);

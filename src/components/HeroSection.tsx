@@ -195,42 +195,40 @@ const HeroSection = () => {
             </div>
           </form>
 
-          {/* Popular Topics */}
-          <div className="flex flex-wrap justify-center gap-3 items-center">
-            <span className="text-sm text-white/60 font-medium">{t('hero.popular')}</span>
-            {[...(
-              language === 'fr'
-                ? ['Prière du voyageur', 'Ce qui annule mon jeûne', 'Guide du Hajj']
-                : language === 'wo'
-                  ? ['Namaz bu ñu dox', 'Lu tëju suum gi', 'Jël Hajj']
-                  : ['Prayer of the traveller', 'What breaks my fast', 'Hajj guide']
-            )].map((term, idx) => (
-              <button
-                key={term}
-                className="group relative px-4 py-2 rounded-full text-sm font-medium text-white/90 transition-colors duration-200 hover:text-white"
-                onClick={() => {
-                  if (!user) {
-                    toast({
-                      title: t('auth.required'),
-                      description: t('auth.signin'),
-                      variant: "destructive"
-                    });
-                    navigate('/login');
-                    return;
-                  }
-                  setQuestion(term);
-                }}
-              >
-                {/* Glassmorphic background */}
-                <div className="absolute inset-0 rounded-full bg-white/10 border border-white/20 group-hover:bg-white/18 group-hover:border-white/30 transition-all duration-200"></div>
-
-                {/* Glow on hover */}
-                <div className="absolute inset-0 rounded-full bg-islamic-teal-400/18 blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 -z-10"></div>
-
-                <span className="relative">{term}</span>
-              </button>
-            ))}
-          </div>
+          {/* Popular Topics - Temporarily disabled as requested */}
+          {/* 
+<div className="flex flex-wrap justify-center gap-3 items-center">
+  <span className="text-sm text-white/60 font-medium">{t('hero.popular')}</span>
+  {[...(
+    language === 'fr'
+      ? ['Prière du voyageur', 'Ce qui annule mon jeûne', 'Guide du Hajj']
+      : language === 'wo'
+        ? ['Namaz bu ñu dox', 'Lu tëju suum gi', 'Jël Hajj']
+        : ['Prayer of the traveller', 'What breaks my fast', 'Hajj guide']
+  )].map((term, idx) => (
+    <button
+      key={term}
+      className="group relative px-4 py-2 rounded-full text-sm font-medium text-white/90 transition-colors duration-200 hover:text-white"
+      onClick={() => {
+        if (!user) {
+          toast({
+            title: t('auth.required'),
+            description: t('auth.signin'),
+            variant: "destructive"
+          });
+          navigate('/login');
+          return;
+        }
+        setQuestion(term);
+      }}
+    >
+      <div className="absolute inset-0 rounded-full bg-white/10 border border-white/20 group-hover:bg-white/18 group-hover:border-white/30 transition-all duration-200"></div>
+      <div className="absolute inset-0 rounded-full bg-islamic-teal-400/18 blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 -z-10"></div>
+      <span className="relative">{term}</span>
+    </button>
+  ))}
+</div>
+*/}
 
           {/* Spacer for better visual balance */}
           <div className="mt-16"></div>

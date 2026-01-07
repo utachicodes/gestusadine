@@ -13,7 +13,14 @@ import { documentManager } from "../../rag-service/document-manager";
 // Get project root
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const projectRoot = resolve(__dirname, "../../../../");
+
+// In Render and Docker, the project root is usually the CWD
+const projectRoot = process.env.RENDER || process.env.DOCKER ? process.cwd() : resolve(__dirname, "../../../../");
+
+console.log("🚀 Starting XamSaDine API Gateway");
+console.log("  __dirname:", __dirname);
+console.log("  cwd:", process.cwd());
+console.log("  projectRoot:", projectRoot);
 
 // Import routes after env is loaded
 const { postFatwa } = await import("./routes/fatwa.ts");
@@ -51,10 +58,41 @@ app.use(cors(corsOptions));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Serve frontend build (Vite dist/) from the project root
-const distPath = path.join(projectRoot, "dist");
-if (existsSync(distPath)) {
+// Dynamic search for dist folder up the tree
+function findDistFolder(startDir: string): string | null {
+  let currentDir = startDir;
+  const root = resolve("/");
+
+  while (currentDir !== root) {
+    const distPath = resolve(currentDir, "dist");
+    const indexHtml = resolve(distPath, "index.html");
+
+    console.log(`  Searching for dist in: ${currentDir}`);
+    if (existsSync(distPath) && existsSync(indexHtml)) {
+      return distPath;
+    }
+
+    const parent = dirname(currentDir);
+    if (parent === currentDir) break; // Reached root or same level
+    currentDir = parent;
+  }
+  return null;
+}
+
+console.log("🌍 Deployment Debug Info:");
+console.log("  RENDER_ENV:", !!process.env.RENDER);
+console.log("  NODE_ENV:", process.env.NODE_ENV);
+console.log("  __dirname:", __dirname);
+console.log("  cwd:", process.cwd());
+
+const distPath = findDistFolder(__dirname) || findDistFolder(process.cwd());
+const indexHtmlPath = distPath ? path.join(distPath, "index.html") : "";
+
+if (distPath) {
+  console.log("✅ Serving static files from:", distPath);
   app.use(express.static(distPath));
+} else {
+  console.error("❌ CRITICAL: dist directory or index.html not found anywhere up the tree!");
 }
 
 // Initialize services
@@ -77,8 +115,8 @@ documentManager.init().then(() => {
 
 // Simple test endpoint
 app.get("/", (_req, res) => {
-  if (existsSync(distPath)) {
-    res.sendFile(path.join(distPath, "index.html"));
+  if (distPath) {
+    res.sendFile(indexHtmlPath);
     return;
   }
   res.json({ message: "XamSaDine API Gateway is running!", status: "ok" });
@@ -89,6 +127,19 @@ app.get("/api/fatwa/test", (_req, res) => {
   res.json({
     message: "Fatwa endpoint is accessible",
     timestamp: new Date().toISOString()
+  });
+});
+
+// Deployment Debug Endpoint
+app.get("/api/debug/deployment", (_req, res) => {
+  res.json({
+    render: !!process.env.RENDER,
+    nodeEnv: process.env.NODE_ENV,
+    cwd: process.cwd(),
+    dirname: __dirname,
+    distPath: distPath || "NOT_FOUND",
+    indexHtmlExists: !!distPath && existsSync(indexHtmlPath),
+    projectRoot: typeof projectRoot !== 'undefined' ? projectRoot : "UNKNOWN"
   });
 });
 
@@ -264,8 +315,8 @@ app.use((req, res) => {
     res.status(404).json({ error: "Not Found" });
     return;
   }
-  if (existsSync(distPath)) {
-    res.sendFile(path.join(distPath, "index.html"));
+  if (distPath) {
+    res.sendFile(indexHtmlPath);
     return;
   }
   res.status(404).json({ error: "Not Found" });

@@ -5,7 +5,20 @@ import { existsSync } from "node:fs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const projectRoot = resolve(__dirname, "../../../../");
+
+// Improved project root detection
+function findProjectRoot(startDir: string): string {
+    let currentDir = startDir;
+    while (currentDir !== resolve(currentDir, "..")) {
+        if (existsSync(resolve(currentDir, "package.json"))) {
+            return currentDir;
+        }
+        currentDir = resolve(currentDir, "..");
+    }
+    return startDir; // Fallback
+}
+
+const projectRoot = findProjectRoot(__dirname);
 
 console.log("🌍 Environment Initialization");
 console.log("  Project root:", projectRoot);
