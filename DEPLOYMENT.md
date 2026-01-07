@@ -1,49 +1,73 @@
-# Deployment Guide
+# XamSaDine AI v2 - Deployment Guide
 
-You can deploy the XamSaDine AI platform to any provider that supports Docker (Render, Railway, Fly.io, DigitalOcean).
-
-## Option 1: Render (Recommended for Ease)
-
-1.  **Push your code** to GitHub.
-2.  Create a new **Web Service** on [Render.com](https://render.com).
-3.  Connect your GitHub repository.
-4.  Render will automatically detect the `Dockerfile`.
-5.  **Configure Environment Variables**:
-    Add the following in the Render Dashboard:
-    *   `OPENROUTER_API_KEY`: Your key starting with `sk-or-...`
-    *   `NABOOPAY_API_KEY`: Your payment gateway key
-    *   `SUPABASE_URL`: Your Supabase URL
-    *   `SUPABASE_SERVICE_ROLE_KEY`: Your Supabase Key
-    *   `PORT`: `4000` (Important: Render needs to know which port to listen on)
-6.  Click **Deploy**.
-
-## Option 2: VPS (DigitalOcean, Hetzner)
-
-If you have a Linux server with Docker installed:
-
-1.  **Clone the repo**:
-    ```bash
-    git clone https://github.com/your-username/xamsadine-ai-website-v2.git
-    cd xamsadine-ai-website-v2
-    ```
-2.  **Create .env file**:
-    ```bash
-    nano .env
-    # Paste your environment variables here
-    ```
-3.  **Run with Docker Compose**:
-    ```bash
-    docker-compose up -d --build
-    ```
-    The app will be available at `http://YOUR_SERVER_IP:4000`.
-
-## Option 3: Railway
-
-1.  Install Railway CLI or use the Dashboard.
-2.  `railway up` in the project directory.
-3.  Railway will detect the `Dockerfile`.
-4.  Set variables in the Railway variable dashboard.
+This guide ensures a "perfect" deployment on **Render**, **Railway**, or any Docker-compatible host.
 
 ---
 
-**Note**: The Docker image builds the Frontend (`dist`) and serves it via the Backend API Gateway. You do not need separate deployments for frontend and backend.
+## 1. Database Setup (Supabase)
+
+Before deploying the code, you must initialize your Supabase database. Copy and run the following SQL scripts in the [Supabase SQL Editor](https://supabase.com/dashboard/project/_/sql):
+
+1.  `database/ecosystem_schema.sql` (Core Tables)
+2.  `database/profiles-table.sql` (User Records)
+3.  `database/rag-setup.sql` (AI Circle Knowledge Base)
+4.  `database/library-schema.sql` (Digital Library)
+
+---
+
+## 2. Option 1: Render (Recommended)
+
+Render is the easiest way to host the monorepo as a single unit.
+
+1.  **Push your code** to GitHub.
+2.  Create a new **Web Service** on [Render.com](https://render.com).
+3.  Connect your repository.
+4.  Render will detect the `Dockerfile`.
+5.  **Environment Variables**: In the Render dashboard, add:
+    *   `SUPABASE_URL`: Your project URL
+    *   `SUPABASE_SERVICE_ROLE_KEY`: Your service\_role key (needed for RAG/Admin tasks)
+    *   `OPENROUTER_API_KEY`: Your API key for LLMs
+    *   `NABOOPAY_API_KEY`: Your payment gateway key
+    *   `PORT`: `4000`
+    *   `NODE_ENV`: `production`
+
+---
+
+## 3. Option 2: Docker Compose (VPS)
+
+Use this for DigitalOcean, Hetzner, or AWS.
+
+1.  **Clone the Repository**
+2.  **Setup environment**:
+    ```bash
+    cp .env.example .env
+    nano .env # Fill in your keys
+    ```
+3.  **Run Build**:
+    ```bash
+    docker-compose up -d --build
+    ```
+    The platform will be live at `http://your-server-ip:4000`.
+
+---
+
+## 4. Required Environment Variables Checklist
+
+| Variable | Description | Source |
+| :--- | :--- | :--- |
+| `SUPABASE_URL` | Your Supabase Project URL | Supabase Dashboard |
+| `SUPABASE_SERVICE_ROLE_KEY` | Secret Service Role Key | Supabase Dashboard |
+| `OPENROUTER_API_KEY` | Key for AI Council | OpenRouter.ai |
+| `NABOOPAY_API_KEY` | Key for Shop Payments | NabooPay |
+| `PORT` | 4000 (Internal default) | Render/Railway |
+
+---
+
+## 5. Technical Notes
+*   **Single Container**: The `Dockerfile` builds the Vite frontend and copies the assets to the API Gateway. There is no need for a separate frontend host.
+*   **Static Serving**: `server.ts` automatically serves `index.html` for any non-API route.
+*   **Memory**: AI features (Transformers.js) may require at least 1GB of RAM for the initial model download.
+
+---
+
+**Everything is verified and ready for deployment.**
