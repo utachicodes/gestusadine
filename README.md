@@ -1,4 +1,4 @@
-# 🌙 XamSaDine AI v2
+# XamSaDine AI v2
 ### *The Digital Ecosystem for Modern Islamic Living*
 
 XamSaDine AI is more than just a chatbot; it is a **comprehensive Service-Oriented Platform** that merges traditional Islamic scholarship with state-of-the-art AI. Designed for scalability and epistemic integrity, it offers a unified interface for commerce, education, and spiritual guidance.
@@ -9,9 +9,9 @@ XamSaDine AI is more than just a chatbot; it is a **comprehensive Service-Orient
 
 ---
 
-## 🌟 Why XamSaDine?
+## Why XamSaDine?
 
-In an era of generic AI, **XamSaDine** stands out by enforcing strictly grounded, scholar-verified responses through its unique "Council" architecture. Whether you're shopping for exclusive merchandise, perfecting your recitation, or seeking a fatwa, XamSaDine provides a premium, authenticated experience.
+In an era of generic AI, **XamSaDine AI** stands out by enforcing strictly grounded, scholar-verified responses through its unique "Council" architecture. Whether you're shopping for exclusive merchandise, perfecting your recitation, or seeking a fatwa, XamSaDine provides a premium, authenticated experience.
 
 ---
 
@@ -23,19 +23,19 @@ The platform follows a **Microservices-inspired Monolith** pattern using an API 
 graph TD
     User["User Interface (Vite/React)"] --> Gateway["API Gateway (Express)"]
     
-    subgraph "✨ Intelligence Layer"
+    subgraph " Intelligence Layer"
         Gateway --> Council["LLM Council (Consensus Engine)"]
         Council --> Agents["Agent Array (Fiqh, Aqeedah, Modern)"]
         Council --> RAG["RAG Engine (pgvector)"]
     end
     
-    subgraph "🛍 Lifestyle Layer"
+    subgraph " Lifestyle Layer"
         Gateway --> Shop["Islamic Shop (NabooPay Integration)"]
         Gateway --> Tarteel["Tarteel AI (Web Speech Analysis)"]
         Gateway --> Library["Digital Library (CMS)"]
     end
     
-    subgraph "🔐 Infrastructure"
+    subgraph " Infrastructure"
         Agents --> OpenRouter["OpenRouter (Claude/GPT-4o)"]
         RAG --> SupaVector["Supabase Vector Store"]
         Shop --> SupaDB["Supabase Postgres"]
@@ -44,27 +44,27 @@ graph TD
 
 ---
 
-## 🚀 Core Features
+## Core Features
 
-### ⚖️ The LLM Council (Circle of Knowledge)
+### The LLM Council (Circle of Knowledge)
 Our flagship AI implementation using multi-model consensus:
 - **Distributed Reasoning**: Every question is reviewed by independent agents (Fiqh, Aqeedah, Context).
 - **Epistemic Integrity**: A dedicated "Humility Agent" prevents hallucinations and handles ethical boundaries.
 - **RAG-Powered**: Semantic search across uploaded Islamic PDF/TXT documents using 384-dimensional embeddings.
 
-### 🛒 The Islamic Shop
+### The Islamic Shop
 A turnkey commerce solution:
 - **Direct Payments**: Integrated with **NabooPay**, supporting local methods like Wave and Orange Money.
 - **Secure Handling**: Real-time webhook processing for order verification.
 - **Exclusive Drops**: Support for categorized digital and physical goods.
 
-### 📖 Tarteel AI & Library
+### Tarteel AI & Library
 - **Speech Recognition**: Uses the browser's `webkitSpeechRecognition` to provide instant feedback on Quranic recitation.
 - **Digital Archive**: A robust repository of searchable books, articles, and media content.
 
 ---
 
-## 🛠 Tech Stack
+## Tech Stack
 
 | Layer | Technologies |
 | :--- | :--- |
@@ -76,7 +76,7 @@ A turnkey commerce solution:
 
 ---
 
-## 🏁 Getting Started
+## Getting Started
 
 ### 1. Requirements
 - Node.js 20+
@@ -101,7 +101,7 @@ npm run dev      # Starts Frontend (port 8080)
 
 ---
 
-## 🌍 Deployment
+## Deployment
 
 XamSaDine is optimized for containerized environments.
 
@@ -120,3 +120,4 @@ For detailed database initialization, refer to [rag-setup.sql](./database/rag-se
 - **Contact**: [abdoullahaljersi@gmail.com](mailto:abdoullahaljersi@gmail.com)
 
 *Built by UtachiCodes for the Global Islamic Community.*
+
