@@ -14,7 +14,7 @@ class TranslationServiceManager {
   private process: ChildProcess | null = null;
   private isRunning = false;
   private readonly translationServicePath: string;
-  private readonly pythonExecutable: string = 'python';
+  private readonly pythonExecutable: string = process.platform === 'win32' ? 'python' : 'python3';
 
   constructor() {
     // In ES modules we use import.meta.url to get current directory

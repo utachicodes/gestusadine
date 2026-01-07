@@ -7,10 +7,11 @@
     "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
     "dev:frontend": "vite",
     "dev:backend": "tsx --max-old-space-size=4096 backend/services/api-gateway/src/server.ts",
-    "build": "vite build",
+    "build": "vite build && pip3 install -r backend/services/translation-service/requirements.txt",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
+    "prestart": "vite build",
     "start": "tsx --max-old-space-size=4096 backend/services/api-gateway/src/server.ts"
   },
   "dependencies": {
@@ -69,9 +70,11 @@
     "sonner": "^1.5.0",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
+    "tsx": "^4.20.5",
     "vaul": "^0.9.3",
     "wavefile": "^11.0.0",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "tsx": "^4.20.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
@@ -94,7 +97,6 @@
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.11",
     "ts-node": "^10.9.2",
-    "tsx": "^4.20.5",
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.0.1",
     "vite": "^7.2.6"

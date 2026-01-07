@@ -2,6 +2,7 @@ import "./config-env.js"; // Initialize environment first
 import { fileURLToPath } from "url";
 import { dirname, resolve } from "path";
 import { existsSync, readdirSync } from "node:fs";
+import { spawnSync } from "child_process";
 import path from "node:path";
 import express from "express";
 import cors from "cors";
@@ -103,15 +104,40 @@ console.log("  SUPABASE_URL Set:", !!process.env.SUPABASE_URL || !!process.env.V
 console.log("  __dirname:", __dirname);
 console.log("  cwd:", process.cwd());
 
-const distPath = findDistFolder(__dirname) || findDistFolder(process.cwd());
-const indexHtmlPath = distPath ? path.join(distPath, "index.html") : "";
+const isProduction = process.env.NODE_ENV === "production";
+let distPath: string | null = null;
 
-if (distPath) {
-  console.log("✅ Serving static files from:", distPath);
-  app.use(express.static(distPath));
+if (isProduction) {
+  distPath = findDistFolder(__dirname) || findDistFolder(process.cwd());
+
+  if (!distPath) {
+    console.warn("⚠️  dist not found. Attempting to build frontend with `npm run build`...");
+    const npmCmd = process.platform === "win32" ? "npm.cmd" : "npm";
+    const result = spawnSync(npmCmd, ["run", "build"], {
+      cwd: projectRoot,
+      stdio: "inherit",
+      shell: process.platform === "win32",
+    });
+
+    if (result.status === 0) {
+      distPath = findDistFolder(projectRoot) || findDistFolder(process.cwd());
+    } else {
+      console.error("❌ Frontend build failed. See logs above.");
+    }
+  }
+
+  if (distPath) {
+    console.log("✅ Serving static files from:", distPath);
+    app.use(express.static(distPath));
+  } else {
+    console.error("❌ CRITICAL: dist directory or index.html not found even after build attempt!");
+  }
 } else {
-  console.error("❌ CRITICAL: dist directory or index.html not found anywhere up the tree!");
+  console.log("ℹ️  Development mode: not serving static dist. Use Vite dev server for frontend.");
 }
+
+const indexHtmlPath = distPath ? path.join(distPath, "index.html") : "";
+const fallbackIndexHtmlPath = path.join(projectRoot, "index.html");
 
 // Initialize services
 // Initialize services
@@ -133,10 +159,16 @@ documentManager.init().then(() => {
 
 // Simple test endpoint
 app.get("/", (_req, res) => {
-  if (distPath) {
+  if (distPath && existsSync(indexHtmlPath)) {
     res.sendFile(indexHtmlPath);
     return;
   }
+
+  if (existsSync(fallbackIndexHtmlPath)) {
+    res.sendFile(fallbackIndexHtmlPath);
+    return;
+  }
+
   res.json({ message: "XamSaDine API Gateway is running!", status: "ok" });
 });
 
@@ -333,10 +365,17 @@ app.use((req, res) => {
     res.status(404).json({ error: "Not Found" });
     return;
   }
-  if (distPath) {
+
+  if (distPath && existsSync(indexHtmlPath)) {
     res.sendFile(indexHtmlPath);
     return;
   }
+
+  if (existsSync(fallbackIndexHtmlPath)) {
+    res.sendFile(fallbackIndexHtmlPath);
+    return;
+  }
+
   res.status(404).json({ error: "Not Found" });
 });
 
