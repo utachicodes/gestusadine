@@ -102,5 +102,8 @@
     "globals": "^15.9.0",
     "ts-node": "^10.9.2",
     "typescript-eslint": "^8.0.1"
+  },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "*"
   }
 }
