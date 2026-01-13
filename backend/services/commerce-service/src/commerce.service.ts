@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import { Product, Order, OrderItem } from '../../../shared/ecosystem-types.js';
 
-let supabaseInstance: ReturnType<typeof createClient> | null = null;
+let supabaseInstance: any = null;
 
 function getSupabase() {
     if (supabaseInstance) return supabaseInstance;
@@ -15,7 +15,7 @@ function getSupabase() {
 export const CommerceService = {
     // Get all products
     async getProducts(category?: string) {
-        const supabase = getSupabase();
+        const supabase: any = getSupabase();
         let query = supabase
             .from('products')
             .select('*')
@@ -32,7 +32,7 @@ export const CommerceService = {
     },
 
     async getProductById(id: string) {
-        const supabase = getSupabase();
+        const supabase: any = getSupabase();
         const { data, error } = await supabase
             .from('products')
             .select('*')
@@ -72,7 +72,7 @@ export const CommerceService = {
         }
 
         // 2. Create Order in DB
-        const supabase = getSupabase();
+        const supabase: any = getSupabase();
         const { data: order, error: orderError } = await supabase
             .from('orders')
             .insert({
@@ -153,7 +153,7 @@ export const CommerceService = {
 
     // Handle Payment Webhook (Success)
     async handlePaymentSuccess(orderId: string) {
-        const supabase = getSupabase();
+        const supabase: any = getSupabase();
         // Update order status
         const { data: order, error } = await supabase
             .from('orders')
@@ -189,7 +189,7 @@ export const CommerceService = {
 
     // Get User Orders
     async getUserOrders(userId: string) {
-        const supabase = getSupabase();
+        const supabase: any = getSupabase();
         const { data, error } = await supabase
             .from('orders')
             .select(`
