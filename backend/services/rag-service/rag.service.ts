@@ -1,8 +1,8 @@
 import fs from 'fs/promises';
 import path from 'path';
-import { freeEmbeddingService } from '../embedding-service.ts';
-import { logger } from '../../shared/logger.ts';
-import { createClient } from '@supabase/supabase-js';
+import { freeEmbeddingService } from '../embedding-service.js';
+import { logger } from '../../shared/logger.js';
+import { db } from '../api-gateway/src/lib/firebase-admin.js';
 
 export interface Document {
     id: string;
@@ -41,29 +41,17 @@ const VECTOR_DB_PATH = path.join(process.cwd(), 'backend', 'data', 'vectors.json
 const DOCUMENTS_DB_PATH = path.join(process.cwd(), 'backend', 'data', 'documents.json');
 const DATA_DIR = path.join(process.cwd(), 'backend', 'data');
 
-const SUPABASE_VECTORS_TABLE = process.env.SUPABASE_RAG_VECTORS_TABLE || 'rag_vectors';
-const SUPABASE_DOCS_TABLE = process.env.SUPABASE_RAG_DOCS_TABLE || 'rag_ingested_documents';
+const FIRESTORE_VECTORS_COLLECTION = 'rag_vectors';
+const FIRESTORE_DOCS_COLLECTION = 'rag_ingested_documents';
 
-function getSupabaseAdmin() {
-    const url = (process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || '').trim();
-    const key = (process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_SERVICE_ROLE_KEY || '').trim();
-
-    // Validate format
-    if (!url || !url.startsWith('http') || url.includes('your-supabase-url')) {
-        console.warn('⚠️  Supabase URL missing or invalid in RAGService. Falling back to local storage.');
-        return null;
-    }
-
-    if (!key || key.includes('your-supabase-key')) {
-        console.warn('⚠️  Supabase Key missing or invalid in RAGService. Falling back to local storage.');
-        return null;
-    }
-
+// Force Firestore check - we want this to be the primary storage
+async function getFirestoreAvailable(): Promise<boolean> {
     try {
-        return createClient(url, key, { auth: { persistSession: false } });
-    } catch (error: any) {
-        console.error('❌ Failed to initialize Supabase client in RAGService:', error.message);
-        return null;
+        await db.collection(FIRESTORE_VECTORS_COLLECTION).limit(1).get();
+        return true;
+    } catch (error) {
+        console.warn('⚠️  Firestore check failed. Using local storage as fallback.', error);
+        return false;
     }
 }
 
@@ -73,32 +61,34 @@ const CHUNK_OVERLAP = 100; // Overlap between chunks
 export class VectorStore {
     private vectors: VectorEntry[] = [];
     private log = logger.prefixed('VectorStore');
-    private supabase = getSupabaseAdmin();
+    private useFirestore = false;
 
     async init() {
-        if (this.supabase) {
+        this.useFirestore = await getFirestoreAvailable();
+
+        if (this.useFirestore) {
             try {
-                const { data, error } = await this.supabase
-                    .from(SUPABASE_VECTORS_TABLE)
-                    .select('*');
+                const snapshot = await db.collection(FIRESTORE_VECTORS_COLLECTION).get();
 
-                if (error) throw error;
-
-                this.vectors = (data ?? []).map((row: any) => ({
-                    id: String(row.id),
-                    docId: String(row.doc_id),
-                    chunkIndex: Number(row.chunk_index),
-                    text: String(row.text),
-                    embedding: Array.isArray(row.embedding) ? row.embedding : [],
-                    metadata: {
-                        title: String(row.title ?? ''),
-                        source: String(row.source ?? ''),
-                        category: String(row.category ?? 'general'),
-                    },
-                }));
-                this.log.info(`Loaded ${this.vectors.length} vectors (Supabase)`);
+                this.vectors = snapshot.docs.map((doc) => {
+                    const data = doc.data();
+                    return {
+                        id: String(doc.id),
+                        docId: String(data.doc_id),
+                        chunkIndex: Number(data.chunk_index),
+                        text: String(data.text),
+                        embedding: Array.isArray(data.embedding) ? data.embedding : [],
+                        metadata: {
+                            title: String(data.title ?? ''),
+                            source: String(data.source ?? ''),
+                            category: String(data.category ?? 'general'),
+                        },
+                    };
+                });
+                this.log.info(`Loaded ${this.vectors.length} vectors (Firestore)`);
                 return;
-            } catch {
+            } catch (error) {
+                console.error('Error loading from Firestore:', error);
                 // fall back to local
             }
         }
@@ -120,25 +110,25 @@ export class VectorStore {
     }
 
     async save() {
-        if (this.supabase) {
+        if (this.useFirestore) {
             try {
-                const rows = this.vectors.map((v) => ({
-                    id: v.id,
-                    doc_id: v.docId,
-                    chunk_index: v.chunkIndex,
-                    text: v.text,
-                    embedding: v.embedding,
-                    title: v.metadata.title,
-                    source: v.metadata.source,
-                    category: v.metadata.category,
-                }));
-
-                const { error } = await this.supabase
-                    .from(SUPABASE_VECTORS_TABLE)
-                    .upsert(rows, { onConflict: 'id' });
-
-                if (!error) return;
-            } catch {
+                const batch = db.batch();
+                for (const v of this.vectors) {
+                    const docRef = db.collection(FIRESTORE_VECTORS_COLLECTION).doc(v.id);
+                    batch.set(docRef, {
+                        doc_id: v.docId,
+                        chunk_index: v.chunkIndex,
+                        text: v.text,
+                        embedding: v.embedding,
+                        title: v.metadata.title,
+                        source: v.metadata.source,
+                        category: v.metadata.category,
+                    }, { merge: true });
+                }
+                await batch.commit();
+                return;
+            } catch (error) {
+                console.error('Error saving to Firestore:', error);
                 // fall back to local
             }
         }
@@ -175,10 +165,16 @@ export class VectorStore {
 
     async deleteForDoc(docId: string) {
         this.vectors = this.vectors.filter(v => v.docId !== docId);
-        if (this.supabase) {
+        if (this.useFirestore) {
             try {
-                await this.supabase.from(SUPABASE_VECTORS_TABLE).delete().eq('doc_id', docId);
-            } catch {
+                const snapshot = await db.collection(FIRESTORE_VECTORS_COLLECTION)
+                    .where('doc_id', '==', docId)
+                    .get();
+                const batch = db.batch();
+                snapshot.docs.forEach(doc => batch.delete(doc.ref));
+                await batch.commit();
+            } catch (error) {
+                console.error('Error deleting from Firestore:', error);
                 // ignore; save() will fallback
             }
         }
@@ -193,30 +189,31 @@ export class VectorStore {
 export class DocumentManager {
     private documents: Map<string, Document> = new Map();
     private log = logger.prefixed('DocumentManager');
-    private supabase = getSupabaseAdmin();
+    private useFirestore = false;
 
     async init() {
-        if (this.supabase) {
+        this.useFirestore = await getFirestoreAvailable();
+
+        if (this.useFirestore) {
             try {
-                const { data, error } = await this.supabase
-                    .from(SUPABASE_DOCS_TABLE)
-                    .select('*');
-                if (error) throw error;
+                const snapshot = await db.collection(FIRESTORE_DOCS_COLLECTION).get();
 
                 this.documents = new Map();
-                for (const row of data ?? []) {
-                    this.documents.set(String((row as any).id), {
-                        id: String((row as any).id),
-                        title: String((row as any).title ?? ''),
-                        content: String((row as any).content ?? ''),
-                        source: String((row as any).source ?? ''),
-                        category: String((row as any).category ?? 'general'),
-                        uploadedAt: String((row as any).uploaded_at ?? new Date().toISOString()),
+                for (const doc of snapshot.docs) {
+                    const data = doc.data();
+                    this.documents.set(doc.id, {
+                        id: doc.id,
+                        title: String(data.title ?? ''),
+                        content: String(data.content ?? ''),
+                        source: String(data.source ?? ''),
+                        category: String(data.category ?? 'general'),
+                        uploadedAt: String(data.uploaded_at ?? new Date().toISOString()),
                     });
                 }
-                this.log.info(`Loaded ${this.documents.size} documents (Supabase)`);
+                this.log.info(`Loaded ${this.documents.size} documents (Firestore)`);
                 return;
-            } catch {
+            } catch (error) {
+                console.error('Error loading documents from Firestore:', error);
                 // fall back to local
             }
         }
@@ -247,19 +244,23 @@ export class DocumentManager {
     async save() {
         const docs = Array.from(this.documents.values());
 
-        if (this.supabase) {
+        if (this.useFirestore) {
             try {
-                const rows = docs.map((d) => ({
-                    id: d.id,
-                    title: d.title,
-                    content: d.content,
-                    source: d.source,
-                    category: d.category,
-                    uploaded_at: d.uploadedAt,
-                }));
-                const { error } = await this.supabase.from(SUPABASE_DOCS_TABLE).upsert(rows, { onConflict: 'id' });
-                if (!error) return;
-            } catch {
+                const batch = db.batch();
+                for (const d of docs) {
+                    const docRef = db.collection(FIRESTORE_DOCS_COLLECTION).doc(d.id);
+                    batch.set(docRef, {
+                        title: d.title,
+                        content: d.content,
+                        source: d.source,
+                        category: d.category,
+                        uploaded_at: d.uploadedAt,
+                    }, { merge: true });
+                }
+                await batch.commit();
+                return;
+            } catch (error) {
+                console.error('Error saving documents to Firestore:', error);
                 // fall back to local
             }
         }

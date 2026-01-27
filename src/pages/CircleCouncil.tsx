@@ -318,9 +318,9 @@ const CirclePage: React.FC = () => {
                                             Analyzes questions from an Islamic jurisprudence perspective, providing reasoning based on Quran, Sunnah, and scholarly consensus (Ijma).
                                         </p>
                                     </div>
-                                    <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
-                                        <h4 className="font-semibold text-purple-900 mb-2">Aqeedah Boundary Agent</h4>
-                                        <p className="text-purple-800 text-sm">
+                                    <div className="p-4 bg-primary/5 rounded-lg border border-primary/20">
+                                        <h4 className="font-semibold text-primary mb-2">Aqeedah Boundary Agent</h4>
+                                        <p className="text-primary/80 text-sm">
                                             Ensures responses align with orthodox Islamic creed and theology. Flags potential theological issues and maintains boundaries of proper belief.
                                         </p>
                                     </div>

@@ -14,11 +14,11 @@ export const PublicRoute: React.FC<PublicRouteProps> = ({ children }) => {
   const { user, loading } = useAuth();
 
   // Debug logging in development
-  if (import.meta.env.DEV) {
-    React.useEffect(() => {
-      console.log('PublicRoute - loading:', loading, 'user:', user?.id);
-    }, [loading, user]);
-  }
+  React.useEffect(() => {
+    if (import.meta.env.DEV) {
+      console.log('PublicRoute - loading:', loading, 'user:', user?.uid);
+    }
+  }, [loading, user]);
 
   if (loading) {
     return (

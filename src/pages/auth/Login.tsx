@@ -1,66 +1,79 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/auth/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { motion } from 'framer-motion';
-import { LogIn, UserPlus, Sparkles, Eye, EyeOff } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { LogIn, UserPlus, ArrowRight, CheckCircle2, AlertCircle, ChevronLeft } from 'lucide-react';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [isSignUp, setIsSignUp] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const { signInWithPassword, signUp } = useAuth();
+
+  // States: 'signin' | 'signup' | 'forgot-password'
+  const [view, setView] = useState<'signin' | 'signup' | 'forgot-password'>('signin');
+
+  const { signInWithPassword, signUp, resetPassword, refreshProfile } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
   const { t } = useLanguage();
-  const { refreshProfile } = useAuth();
+  const [searchParams] = useSearchParams();
+  const upgradeTier = searchParams.get('upgrade');
+
+  const getErrorMessage = (error: any) => {
+    const msg = error?.message || error?.toString() || '';
+    if (msg.includes('auth/invalid-email')) return t('login.error_invalid_email') || 'Invalid email address.';
+    if (msg.includes('auth/user-not-found')) return t('login.error_user_not_found') || 'No user found with this email.';
+    if (msg.includes('auth/wrong-password')) return t('login.error_wrong_password') || 'Incorrect password.';
+    if (msg.includes('auth/email-already-in-use')) return t('login.error_email_in_use') || 'Email is already in use.';
+    if (msg.includes('auth/weak-password')) return t('login.error_weak_password') || 'Password should be at least 6 characters.';
+    return t('login.error_generic') || 'An error occurred. Please try again.';
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      if (isSignUp) {
+      if (view === 'forgot-password') {
+        if (!email) {
+          throw new Error('Please enter your email address.');
+        }
+        await resetPassword(email);
+        toast({
+          title: t('common.email_sent') || "Email Sent",
+          description: t('login.reset_email_sent') || "Check your inbox for password reset instructions.",
+        });
+        setView('signin');
+      } else if (view === 'signup') {
         if (!fullName.trim()) {
-          toast({
-            title: t('common.error'),
-            description: t('login.full_name_required') || 'Full name is required',
-            variant: 'destructive',
-          });
-          setIsLoading(false);
-          return;
+          throw new Error(t('login.full_name_required') || 'Full name is required');
         }
         const result = await signUp({ email, password, fullName: fullName.trim() });
-        if (result.error) {
-          throw result.error;
-        }
+        if (result.error) throw result.error;
+
         toast({
-          title: t('common.success'),
-          description: t('login.success_signed_up'),
+          title: t('common.welcome') || "Welcome!",
+          description: t('login.success_signed_up') || "Account created successfully.",
         });
-        setIsSignUp(false);
+        // Auto navigate handled by auth state change usually, but we can force it
       } else {
         await signInWithPassword({ email, password });
-        // Refresh profile to ensure admin status is updated
         await refreshProfile();
-        // Navigate after profile refresh
-        navigate('/');
         toast({
-          title: t('common.success'),
-          description: t('login.success_signed_in'),
+          title: t('common.welcome_back') || "Welcome back",
+          description: t('login.success_signed_in') || "Signed in successfully.",
         });
+        navigate(upgradeTier ? `/dashboard?upgrade=${upgradeTier}` : '/');
       }
-    } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : t('login.failed_desc');
+    } catch (error: any) {
       toast({
-        title: t('common.error'),
-        description: message,
+        title: t('common.error') || "Error",
+        description: getErrorMessage(error),
         variant: 'destructive',
       });
     } finally {
@@ -69,194 +82,153 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-gradient-to-b from-sand-50 via-white to-sand-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="absolute inset-0">
-        <div className="absolute -top-24 -left-24 w-96 h-96 bg-islamic-primary-green/10 blur-3xl rounded-full" />
-        <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-islamic-primary-gold/10 blur-3xl rounded-full" />
-      </motion.div>
+    <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center p-4 bg-background relative overflow-hidden">
+      {/* Subtle Background Elements */}
+      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent"></div>
+      <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] bg-primary/5 rounded-full blur-[100px] pointer-events-none"></div>
 
-      <div className="container relative z-10 py-16">
-        <motion.div initial={{ y: 16, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.5 }}>
-          <div className="flex justify-center gap-2 mb-8">
-            <button
-              type="button"
-              onClick={() => setIsSignUp(false)}
-              className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all ${!isSignUp ? 'bg-[#efefec] dark:bg-slate-800 text-islamic-dark dark:text-slate-100 border border-islamic-primary-green dark:border-islamic-green shadow' : 'bg-sand-200 dark:bg-slate-700 text-islamic-dark dark:text-slate-300'
-                }`}
-            >
-              <LogIn className="w-4 h-4" />
-              {t('login.sign_in')}
-            </button>
-            <button
-              type="button"
-              onClick={() => setIsSignUp(true)}
-              className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all ${isSignUp ? 'bg-[#efefec] dark:bg-slate-800 text-islamic-dark dark:text-slate-100 border border-islamic-primary-gold dark:border-islamic-gold shadow' : 'bg-sand-200 dark:bg-slate-700 text-islamic-dark dark:text-slate-300'
-                }`}
-            >
-              <UserPlus className="w-4 h-4" />
-              {t('login.sign_up')}
-            </button>
-          </div>
-          <h1 className="text-3xl md:text-4xl font-bold text-center text-islamic-dark dark:text-slate-100">
-            {isSignUp ? t('login.create_account_title') : t('login.title')}
-          </h1>
-          <p className="text-center text-islamic-dark/70 dark:text-slate-300 mt-2">
-            {isSignUp ? t('login.create_account_subtitle') : t('login.subtitle')}
-          </p>
-        </motion.div>
+      <div className="w-full max-w-md relative z-10">
+        <div className="bg-card border border-border/50 shadow-xl rounded-2xl p-8 md:p-10 backdrop-blur-sm">
 
-        <motion.form
-          onSubmit={handleSubmit}
-          initial={{ y: 24, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.05 }}
-          className="max-w-xl mx-auto mt-10 space-y-6"
-        >
-          {isSignUp && (
-            <div>
-              <label htmlFor="full-name" className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">
-                {t('login.full_name') || 'Full Name'}
-              </label>
-              <Input
-                id="full-name"
-                name="fullName"
-                type="text"
-                autoComplete="name"
-                required={isSignUp}
-                aria-required={isSignUp}
-                className="w-full px-4 py-3 border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 rounded-lg focus:ring-islamic-primary-green focus:border-islamic-primary-green"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-                aria-label="Full name"
-              />
-            </div>
-          )}
-          <div>
-            <label htmlFor="email-address" className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">
-              {t('login.email')}
-            </label>
-            <Input
-              id="email-address"
-              name="email"
-              type="email"
-              autoComplete="email"
-              required
-              aria-required="true"
-              className="w-full px-4 py-3 border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 rounded-lg focus:ring-islamic-primary-green focus:border-islamic-primary-green"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              aria-label="Email address"
-            />
-          </div>
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">
-              {t('login.password')}
-            </label>
-            <div className="relative">
-              <Input
-                id="password"
-                name="password"
-                type={showPassword ? 'text' : 'password'}
-                autoComplete={isSignUp ? 'new-password' : 'current-password'}
-                required
-                aria-required="true"
-                className="w-full px-4 py-3 pr-10 border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 rounded-lg focus:ring-islamic-primary-green focus:border-islamic-primary-green"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                aria-label="Password"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-300 transition-colors"
-                aria-label={showPassword ? 'Hide password' : 'Show password'}
+          {/* Header Area */}
+          <div className="text-center mb-8">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={view}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.2 }}
               >
-                {showPassword ? (
-                  <EyeOff className="w-5 h-5" />
-                ) : (
-                  <Eye className="w-5 h-5" />
+                {view === 'signin' && (
+                  <>
+                    <h1 className="text-2xl font-bold tracking-tight mb-2">{t('login.title') || "Welcome Back"}</h1>
+                    <p className="text-muted-foreground text-sm">{t('login.subtitle') || "Sign in to your account"}</p>
+                  </>
                 )}
-              </button>
-            </div>
+                {view === 'signup' && (
+                  <>
+                    <h1 className="text-2xl font-bold tracking-tight mb-2">{t('login.create_account_title') || "Create Account"}</h1>
+                    <p className="text-muted-foreground text-sm">{t('login.create_account_subtitle') || "Join our community today"}</p>
+                  </>
+                )}
+                {view === 'forgot-password' && (
+                  <>
+                    <h1 className="text-2xl font-bold tracking-tight mb-2">{t('login.forgot_password') || "Reset Password"}</h1>
+                    <p className="text-muted-foreground text-sm">{t('login.reset_desc') || "Enter your email to receive reset instructions"}</p>
+                  </>
+                )}
+              </motion.div>
+            </AnimatePresence>
           </div>
 
-          {!isSignUp && (
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <input
-                  id="remember-me"
-                  name="remember-me"
-                  type="checkbox"
-                  className="h-4 w-4 text-islamic-primary-green focus:ring-islamic-primary-green border-gray-300 rounded"
-                />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900 dark:text-slate-200">
-                  {t('login.remember_me')}
-                </label>
-              </div>
-              <div className="text-sm">
-                <a href="#" className="font-medium text-islamic-primary-green dark:text-islamic-green hover:text-islamic-primary-gold dark:hover:text-islamic-gold">
-                  {t('login.forgot_password')}
-                </a>
-              </div>
-            </div>
-          )}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <AnimatePresence mode="wait">
+              {view === 'signup' && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  className="overflow-hidden"
+                >
+                  <div className="space-y-2 mb-4">
+                    <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">{t('login.full_name') || "Full Name"}</label>
+                    <Input
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      placeholder="John Doe"
+                      className="bg-background/50"
+                      required={view === 'signup'}
+                    />
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
-          {isSignUp && (
-            <div className="flex items-center">
-              <input
-                id="terms"
-                name="terms"
-                type="checkbox"
+            <div className="space-y-2">
+              <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">{t('login.email') || "Email"}</label>
+              <Input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="name@example.com"
+                className="bg-background/50"
                 required
-                className="h-4 w-4 text-islamic-primary-green focus:ring-islamic-primary-green border-gray-300 rounded"
               />
-              <label htmlFor="terms" className="ml-2 block text-sm text-gray-900 dark:text-slate-200">
-                I agree to the <a href="#" className="text-islamic-primary-green hover:underline">Terms of Service</a> and <a href="#" className="text-islamic-primary-green hover:underline">Privacy Policy</a>
-              </label>
             </div>
-          )}
 
-          <div className="flex justify-center mt-4">
-            <div className="flex items-center gap-2 px-3 py-1.5 bg-gray-100 dark:bg-slate-800 rounded-md border border-gray-200 dark:border-slate-700">
-              <div className="w-4 h-4 text-[#F48120]">
-                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M41.7 32.7C40.6 34.6 38.6 35.8 36.4 35.8H14.1C10.7 35.8 8 33.1 8 29.7C8 26.5 10.5 23.8 13.7 23.6C14.3 19.3 18 16 22.4 16C23.2 16 24 16.1 24.8 16.4C25.4 13.6 27.9 11.5 30.9 11.5C34.7 11.5 37.8 14.6 37.8 18.4C37.8 18.7 37.8 19 37.7 19.3C39.9 20.3 41.5 22.5 41.5 25.1C41.5 26.1 41.2 27 40.8 27.8L41.7 32.7Z" fill="currentColor" /></svg>
+            {view !== 'forgot-password' && (
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">{t('login.password') || "Password"}</label>
+                  {view === 'signin' && (
+                    <button
+                      type="button"
+                      onClick={() => setView('forgot-password')}
+                      className="text-sm text-primary hover:underline font-medium"
+                    >
+                      {t('login.forgot_password') || "Forgot password?"}
+                    </button>
+                  )}
+                </div>
+                <Input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="bg-background/50"
+                  required
+                />
               </div>
-              <span className="text-[10px] text-gray-500 dark:text-slate-400 font-medium">Protected by Cloudflare</span>
-            </div>
-          </div>
-
-          <Button
-            type="submit"
-            disabled={isLoading}
-            className={`w-full py-3 text-sm font-semibold rounded-lg text-islamic-dark dark:text-slate-100 bg-[#efefec] dark:bg-slate-800 border transition-all ${isSignUp ? 'border-islamic-primary-gold dark:border-islamic-gold hover:bg-islamic-primary-gold/10 dark:hover:bg-islamic-gold/20' : 'border-islamic-primary-green dark:border-islamic-green hover:bg-islamic-primary-green/10 dark:hover:bg-islamic-green/20'
-              } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-islamic-primary-green dark:focus:ring-islamic-green active:scale-98`}
-          >
-            {isLoading ? (
-              <div className="flex items-center justify-center gap-3">
-                <div className="h-5 w-5 border-2 border-islamic-dark dark:border-slate-300 border-t-transparent rounded-full animate-spin" />
-                <span>{t('login.processing')}</span>
-              </div>
-            ) : (
-              <span>{isSignUp ? t('login.sign_up') : t('login.sign_in')}</span>
             )}
-          </Button>
-        </motion.form>
-      </div>
 
-      {isLoading && (
-        <div className="fixed inset-0 bg-[#efefec]/60 dark:bg-slate-900/80 backdrop-blur-sm flex items-center justify-center">
-          <div className="flex items-center gap-3">
-            <div className="flex space-x-1">
-              <div className="h-2 w-2 bg-islamic-primary-green dark:bg-islamic-green rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-              <div className="h-2 w-2 bg-islamic-primary-gold dark:bg-islamic-gold rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-              <div className="h-2 w-2 bg-islamic-primary-teal dark:bg-teal-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
-            </div>
-            <span className="text-sm text-islamic-dark/80 dark:text-slate-200">{t('login.processing')}</span>
+            <Button disabled={isLoading} type="submit" className="w-full mt-6" size="lg">
+              {isLoading ? (
+                <span className="flex items-center gap-2">
+                  <span className="h-4 w-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                  {t('login.processing') || "Processing..."}
+                </span>
+              ) : (
+                <>
+                  {view === 'signin' && (t('login.sign_in') || "Sign In")}
+                  {view === 'signup' && (t('login.sign_up') || "Sign Up")}
+                  {view === 'forgot-password' && (t('login.send_reset_link') || "Send Reset Link")}
+                </>
+              )}
+            </Button>
+          </form>
+
+          {/* Footer Actions */}
+          <div className="mt-8 pt-6 border-t border-border flex flex-col items-center gap-4 text-sm text-muted-foreground">
+            {view === 'signin' ? (
+              <p>
+                {t('login.no_account') || "Don't have an account?"}{" "}
+                <button onClick={() => setView('signup')} className="text-primary hover:underline font-medium">
+                  {t('login.sign_up') || "Sign up"}
+                </button>
+              </p>
+            ) : view === 'signup' ? (
+              <p>
+                {t('login.already_account') || "Already have an account?"}{" "}
+                <button onClick={() => setView('signin')} className="text-primary hover:underline font-medium">
+                  {t('login.sign_in') || "Sign in"}
+                </button>
+              </p>
+            ) : (
+              <button onClick={() => setView('signin')} className="flex items-center gap-2 text-foreground hover:text-primary transition-colors">
+                <ChevronLeft className="w-4 h-4" />
+                {t('login.back_to_login') || "Back to login"}
+              </button>
+            )}
           </div>
         </div>
-      )}
+
+        {/* Simple Legal Text */}
+        <p className="text-center text-xs text-muted-foreground mt-8 opacity-60">
+          By continuing, you agree to our Terms of Service and Privacy Policy.
+        </p>
+      </div>
     </div>
   );
-}
+};
 
 export default Login;

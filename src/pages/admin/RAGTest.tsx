@@ -5,7 +5,6 @@ import { Badge } from '@/components/ui/badge';
 import { CheckCircle, XCircle, Loader2, TestTube, FileText, Search, Brain, AlertCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { openRouter } from '@/lib/openrouter';
-import { supabase } from '@/lib/supabase';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 
@@ -426,9 +425,9 @@ export default function RAGTest() {
               <Card
                 key={index}
                 className={`bg-[#efefec]/80 backdrop-blur-sm border ${result.status === 'passed' ? 'border-primary' :
-                    result.status === 'failed' ? 'border-red-300' :
-                      result.status === 'running' ? 'border-blue-300' :
-                        'border-islamic-gold/30'
+                  result.status === 'failed' ? 'border-red-300' :
+                    result.status === 'running' ? 'border-blue-300' :
+                      'border-islamic-gold/30'
                   }`}
               >
                 <CardHeader>

@@ -1,118 +1,122 @@
-import { createClient } from '@supabase/supabase-js';
+import { db } from '../../api-gateway/src/lib/firebase-admin.js';
 import { Event, EventRegistration } from '../../../shared/ecosystem-types.js';
-
-let supabaseInstance: ReturnType<typeof createClient> | null = null;
-
-function getSupabase() {
-    if (supabaseInstance) return supabaseInstance;
-    const supabaseUrl = process.env.SUPABASE_URL!;
-    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-    if (!supabaseUrl || !supabaseKey) throw new Error("Missing Supabase credentials");
-    // Cast to any to avoid strict type errors for now
-    supabaseInstance = createClient<any>(supabaseUrl, supabaseKey);
-    return supabaseInstance;
-}
 
 export const EventService = {
     // Get upcoming events
     async getUpcomingEvents(limit = 10) {
-        const supabase = getSupabase();
         const now = new Date().toISOString();
-        const { data, error } = await supabase
-            .from('events')
-            .select('*')
-            .gte('start_time', now)
-            .order('start_time', { ascending: true })
-            .limit(limit);
+        const snapshot = await db.collection('events')
+            .where('start_time', '>=', now)
+            .orderBy('start_time', 'asc')
+            .limit(limit)
+            .get();
 
-        if (error) throw error;
-        return data as Event[];
+        return snapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        })) as Event[];
     },
 
     // Get specific event
     async getEventById(id: string) {
-        const supabase = getSupabase();
-        const { data, error } = await supabase
-            .from('events')
-            .select('*')
-            .eq('id', id)
-            .single();
-
-        if (error) throw error;
-        return data as Event;
+        const doc = await db.collection('events').doc(id).get();
+        if (!doc.exists) {
+            throw new Error('Event not found');
+        }
+        return {
+            id: doc.id,
+            ...doc.data()
+        } as Event;
     },
 
     // Register user for event
     async registerUser(userId: string, eventId: string) {
-        const supabase = getSupabase();
         // 1. Check if event is full
         const event = await this.getEventById(eventId);
         if (event.max_attendees) {
-            const { count } = await supabase
-                .from('event_registrations')
-                .select('*', { count: 'exact', head: true })
-                .eq('event_id', eventId)
-                .eq('status', 'confirmed');
+            const registrations = await db.collection('event_registrations')
+                .where('event_id', '==', eventId)
+                .where('status', '==', 'confirmed')
+                .get();
 
-            if (count && count >= event.max_attendees) {
+            if (registrations.size >= event.max_attendees) {
                 throw new Error('Event is fully booked');
             }
         }
 
-        // 2. Register
-        const { data, error } = await supabase
-            .from('event_registrations')
-            .insert({
-                user_id: userId,
-                event_id: eventId,
-                status: 'confirmed'
-            })
-            .select()
-            .single();
+        // 2. Check if already registered
+        const existing = await db.collection('event_registrations')
+            .where('user_id', '==', userId)
+            .where('event_id', '==', eventId)
+            .limit(1)
+            .get();
 
-        if (error) {
-            if (error.code === '23505') throw new Error('Already registered'); // Unique constraint violation
-            throw error;
+        if (!existing.empty) {
+            throw new Error('Already registered');
         }
 
-        // 3. Log Activity
-        await supabase.from('user_activity').insert({
+        // 3. Register
+        const registrationData = {
+            user_id: userId,
+            event_id: eventId,
+            status: 'confirmed',
+            created_at: new Date().toISOString()
+        };
+
+        const docRef = await db.collection('event_registrations').add(registrationData);
+
+        // 4. Log Activity
+        await db.collection('user_activity').add({
             user_id: userId,
             activity_type: 'event_register',
             target_id: eventId,
-            metadata: { event_title: event.title }
+            metadata: { event_title: event.title },
+            created_at: new Date().toISOString()
         });
 
-        return data as EventRegistration;
+        return {
+            id: docRef.id,
+            ...registrationData
+        } as EventRegistration;
     },
 
     // Get user's registrations
     async getUserRegistrations(userId: string) {
-        const supabase = getSupabase();
-        const { data, error } = await supabase
-            .from('event_registrations')
-            .select(`
-        *,
-        event:events(*)
-      `)
-            .eq('user_id', userId)
-            .order('created_at', { ascending: false });
+        const snapshot = await db.collection('event_registrations')
+            .where('user_id', '==', userId)
+            .orderBy('created_at', 'desc')
+            .get();
 
-        if (error) throw error;
-        return data;
+        const registrations = [];
+        for (const doc of snapshot.docs) {
+            const registration = { id: doc.id, ...doc.data() };
+            // Fetch event details
+            const eventDoc = await db.collection('events').doc(registration.event_id).get();
+            if (eventDoc.exists) {
+                registrations.push({
+                    ...registration,
+                    event: { id: eventDoc.id, ...eventDoc.data() }
+                });
+            }
+        }
+
+        return registrations;
     },
 
     // Admin: Create Event
     async createEvent(event: Omit<Event, 'id' | 'created_at'>) {
-        const supabase = getSupabase();
-        const { data, error } = await supabase
-            .from('events')
-            .insert(event)
-            .select()
-            .single();
+        const eventData = {
+            ...event,
+            created_at: new Date().toISOString()
+        };
 
+        const docRef = await db.collection('events').add(eventData);
+        const doc = await docRef.get();
 
-        if (error) throw error;
+        const data = {
+            id: doc.id,
+            ...doc.data()
+        } as Event;
 
         // Index into RAG
         try {
@@ -128,6 +132,6 @@ export const EventService = {
             console.error('Failed to index event:', err);
         }
 
-        return data as Event;
+        return data;
     }
 };

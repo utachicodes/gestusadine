@@ -35,6 +35,11 @@ export interface BatchTranslationResponse {
   translations: string[];
 }
 
+interface ErrorResponse {
+  error?: string;
+  message?: string;
+}
+
 class WolofTranslationClient {
   private baseUrl: string;
   private timeout: number;
@@ -97,10 +102,10 @@ class WolofTranslationClient {
    */
   private async makeRequest(endpoint: string, method: string, body?: any): Promise<any> {
     const url = `${this.baseUrl}${endpoint}`;
-    
+
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), this.timeout);
-    
+
     const options: RequestInit = {
       method,
       headers: {
@@ -117,8 +122,8 @@ class WolofTranslationClient {
       const response = await fetch(url, options);
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || `HTTP ${response.status}`);
+        const error = await response.json() as ErrorResponse;
+        throw new Error(error.error || error.message || `HTTP ${response.status}`);
       }
 
       return await response.json();

@@ -1,0 +1,53 @@
+
+> deenakdiamano@0.0.0 lint
+> eslint .
+
+
+C:\Users\abdou\Desktop\XamSaDine_AI\xamsadine-ai-website-v2\src\auth\AuthContext.tsx
+  197:17  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+C:\Users\abdou\Desktop\XamSaDine_AI\xamsadine-ai-website-v2\src\components\settings\ThemeCustomizer.tsx
+  33:8  warning  React Hook useEffect has a missing dependency: 'fetchTheme'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\abdou\Desktop\XamSaDine_AI\xamsadine-ai-website-v2\src\components\ui\badge.tsx
+  36:17  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+C:\Users\abdou\Desktop\XamSaDine_AI\xamsadine-ai-website-v2\src\components\ui\button.tsx
+  60:18  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+C:\Users\abdou\Desktop\XamSaDine_AI\xamsadine-ai-website-v2\src\components\ui\form.tsx
+  168:3  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+C:\Users\abdou\Desktop\XamSaDine_AI\xamsadine-ai-website-v2\src\components\ui\navigation-menu.tsx
+  119:3  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+C:\Users\abdou\Desktop\XamSaDine_AI\xamsadine-ai-website-v2\src\components\ui\sidebar.tsx
+  760:3  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+C:\Users\abdou\Desktop\XamSaDine_AI\xamsadine-ai-website-v2\src\components\ui\toggle.tsx
+  43:18  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+C:\Users\abdou\Desktop\XamSaDine_AI\xamsadine-ai-website-v2\src\contexts\AuthContext.tsx
+  19:14  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+C:\Users\abdou\Desktop\XamSaDine_AI\xamsadine-ai-website-v2\src\contexts\LanguageContext.tsx
+  932:14  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+C:\Users\abdou\Desktop\XamSaDine_AI\xamsadine-ai-website-v2\src\contexts\ThemeContext.tsx
+  146:14  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+C:\Users\abdou\Desktop\XamSaDine_AI\xamsadine-ai-website-v2\src\pages\AdminConfig.tsx
+  39:8  warning  React Hook React.useEffect has a missing dependency: 'loadConfig'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\abdou\Desktop\XamSaDine_AI\xamsadine-ai-website-v2\src\pages\DocumentUpload.tsx
+  39:8  warning  React Hook React.useEffect has a missing dependency: 'loadDocuments'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\abdou\Desktop\XamSaDine_AI\xamsadine-ai-website-v2\src\pages\MediaPage.tsx
+  19:8  warning  React Hook useEffect has a missing dependency: 'loadVideos'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\abdou\Desktop\XamSaDine_AI\xamsadine-ai-website-v2\src\pages\Tarteel.tsx
+  115:6  warning  React Hook useEffect has a missing dependency: 'toast'. Either include it or remove the dependency array          react-hooks/exhaustive-deps
+  139:6  warning  React Hook useEffect has a missing dependency: 'stopListening'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+✖ 16 problems (0 errors, 16 warnings)
+

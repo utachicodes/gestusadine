@@ -6,7 +6,7 @@
 
 @layer base {
   :root {
-    --background: 210 40% 98%;
+    --background: 40 10% 98%; /* Cream-white for paper feel */
     --foreground: 222.2 84% 4.9%;
 
     --card: 0 0% 100%;
@@ -15,16 +15,16 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 220 25% 57%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 210 20% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
 
-    --secondary: 200 98% 23%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 45 40% 96%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
 
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 210 40% 96.1%;
+    --accent: 43 74% 49%; /* Gold */
     --accent-foreground: 222.2 47.4% 11.2%;
 
     --destructive: 0 84.2% 60.2%;
@@ -393,32 +393,18 @@
     @apply border-slate-700;
   }
 
-  .dark .bg-green-50 {
-    @apply bg-green-900/20;
-  }
 
-  .dark .text-green-800 {
-    @apply text-green-300;
-  }
-
-  .dark .text-green-700 {
-    @apply text-green-300;
-  }
-
-  .dark .border-green-600 {
-    @apply border-green-500;
-  }
 
   .dark .bg-red-50 {
-    @apply bg-red-900/20;
+    @apply bg-destructive/20;
   }
 
   .dark .text-red-800 {
-    @apply text-red-300;
+    @apply text-destructive-foreground;
   }
 
   .dark .border-red-600 {
-    @apply border-red-500;
+    @apply border-destructive;
   }
 
   h1,
@@ -440,19 +426,23 @@
 
   /* Premium Glassmorphic Card */
   .islamic-card {
-    @apply relative overflow-hidden rounded-2xl transition-all duration-300;
-    background: rgba(239, 239, 236, 0.7);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(239, 239, 236, 0.3);
-    box-shadow: 0 8px 32px 0 rgba(224, 232, 243, 0.08),
-      0 2px 8px 0 rgba(0, 0, 0, 0.04);
+    @apply relative overflow-hidden rounded-xl transition-all duration-500 ease-out;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 
+      0 4px 6px -1px rgba(0, 0, 0, 0.02),
+      0 2px 4px -1px rgba(0, 0, 0, 0.02),
+      inset 0 1px 1px rgba(255, 255, 255, 0.6);
   }
 
   .islamic-card:hover {
-    box-shadow: 0 12px 48px 0 rgba(224, 232, 243, 0.12),
-      0 4px 16px 0 rgba(0, 0, 0, 0.06);
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+    box-shadow: 
+      0 20px 25px -5px rgba(0, 0, 0, 0.05),
+      0 10px 10px -5px rgba(0, 0, 0, 0.02),
+      0 0 0 1px rgba(212, 175, 55, 0.2); /* Golden border on hover */
   }
 
   /* Premium Glassmorphic Card - Dark variant */

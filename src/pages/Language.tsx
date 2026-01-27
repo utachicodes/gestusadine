@@ -31,7 +31,7 @@ const Language: React.FC = () => {
 
   React.useEffect(() => {
     // Load saved madhab preference
-    const savedMadhab = localStorage.getItem('xamsadine-madhab') as Madhab;
+    const savedMadhab = localStorage.getItem('GëstuSaDine-madhab') as Madhab;
     if (savedMadhab && ['hanafi', 'maliki', 'shafii', 'hanbali'].includes(savedMadhab)) {
       setMadhab(savedMadhab);
     }
@@ -39,7 +39,7 @@ const Language: React.FC = () => {
 
   const handleMadhabChange = (newMadhab: Madhab) => {
     setMadhab(newMadhab);
-    localStorage.setItem('xamsadine-madhab', newMadhab);
+    localStorage.setItem('GëstuSaDine-madhab', newMadhab);
   };
 
   return (
@@ -55,35 +55,34 @@ const Language: React.FC = () => {
               <span className="text-gradient">Preferences</span>
             </h1>
             <p className="mt-2 text-muted-foreground max-w-xl">
-              Customize your experience, language, and theme. XamSaDine will tailor everything to your choices.
+              Customize your experience, language, and theme. GëstuSaDine will tailor everything to your choices.
             </p>
           </div>
         </header>
 
         {/* Language Section */}
         <div>
-             <div className="flex items-center gap-2 mb-4">
-                <Globe className="w-5 h-5 text-primary" />
-                <h2 className="text-xl font-semibold text-foreground">Language</h2>
-             </div>
-             <div className="grid gap-4 md:grid-cols-3">
-                {languages.map((l) => (
-                    <button
-                        key={l.code}
-                        onClick={() => setLanguage(l.code as any)}
-                        className={`islamic-card p-5 text-left transition-all border rounded-xl ${
-                            language === l.code
-                            ? "ring-2 ring-primary bg-primary/5 border-primary"
-                            : "hover:bg-muted/50 border-border"
-                        }`}
-                    >
-                        <div className="flex items-center justify-between">
-                             <p className="text-base font-semibold text-foreground">{l.label}</p>
-                             {language === l.code && <Check className="w-5 h-5 text-primary" />}
-                        </div>
-                    </button>
-                ))}
-             </div>
+          <div className="flex items-center gap-2 mb-4">
+            <Globe className="w-5 h-5 text-primary" />
+            <h2 className="text-xl font-semibold text-foreground">Language</h2>
+          </div>
+          <div className="grid gap-4 md:grid-cols-3">
+            {languages.map((l) => (
+              <button
+                key={l.code}
+                onClick={() => setLanguage(l.code as any)}
+                className={`islamic-card p-5 text-left transition-all border rounded-xl ${language === l.code
+                    ? "ring-2 ring-primary bg-primary/5 border-primary"
+                    : "hover:bg-muted/50 border-border"
+                  }`}
+              >
+                <div className="flex items-center justify-between">
+                  <p className="text-base font-semibold text-foreground">{l.label}</p>
+                  {language === l.code && <Check className="w-5 h-5 text-primary" />}
+                </div>
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Theme section */}
@@ -97,11 +96,10 @@ const Language: React.FC = () => {
               <button
                 key={t.value}
                 onClick={() => setTheme(t.value)}
-                className={`islamic-card p-5 text-left transition-all border rounded-xl ${
-                  theme === t.value
+                className={`islamic-card p-5 text-left transition-all border rounded-xl ${theme === t.value
                     ? "ring-2 ring-primary bg-primary/5 border-primary"
                     : "hover:bg-muted/50 border-border"
-                }`}
+                  }`}
               >
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
@@ -111,7 +109,7 @@ const Language: React.FC = () => {
                     <p className="text-base font-semibold text-foreground">{t.label}</p>
                   </div>
                   {theme === t.value && (
-                     <Check className="w-5 h-5 text-primary" />
+                    <Check className="w-5 h-5 text-primary" />
                   )}
                 </div>
                 <p className="text-xs text-muted-foreground">{t.description}</p>
@@ -120,44 +118,44 @@ const Language: React.FC = () => {
           </div>
 
           {theme === 'personalized' && (
-             <div className="grid gap-6 md:grid-cols-3 p-6 border rounded-xl bg-card animate-in fade-in zoom-in-95 duration-300">
-                <div>
-                    <label className="block text-sm font-medium mb-2 text-foreground">Primary Color</label>
-                    <div className="flex items-center gap-2">
-                        <input 
-                            type="color" 
-                            value={colors.primary} 
-                            onChange={(e) => setColors({ ...colors, primary: e.target.value })}
-                            className="w-10 h-10 rounded cursor-pointer border-none p-0"
-                        />
-                        <span className="text-sm text-muted-foreground">{colors.primary}</span>
-                    </div>
+            <div className="grid gap-6 md:grid-cols-3 p-6 border rounded-xl bg-card animate-in fade-in zoom-in-95 duration-300">
+              <div>
+                <label className="block text-sm font-medium mb-2 text-foreground">Primary Color</label>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="color"
+                    value={colors.primary}
+                    onChange={(e) => setColors({ ...colors, primary: e.target.value })}
+                    className="w-10 h-10 rounded cursor-pointer border-none p-0"
+                  />
+                  <span className="text-sm text-muted-foreground">{colors.primary}</span>
                 </div>
-                <div>
-                    <label className="block text-sm font-medium mb-2 text-foreground">Secondary Color</label>
-                    <div className="flex items-center gap-2">
-                        <input 
-                            type="color" 
-                            value={colors.secondary} 
-                            onChange={(e) => setColors({ ...colors, secondary: e.target.value })}
-                            className="w-10 h-10 rounded cursor-pointer border-none p-0"
-                        />
-                        <span className="text-sm text-muted-foreground">{colors.secondary}</span>
-                    </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2 text-foreground">Secondary Color</label>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="color"
+                    value={colors.secondary}
+                    onChange={(e) => setColors({ ...colors, secondary: e.target.value })}
+                    className="w-10 h-10 rounded cursor-pointer border-none p-0"
+                  />
+                  <span className="text-sm text-muted-foreground">{colors.secondary}</span>
                 </div>
-                <div>
-                    <label className="block text-sm font-medium mb-2 text-foreground">Accent Color</label>
-                    <div className="flex items-center gap-2">
-                        <input 
-                            type="color" 
-                            value={colors.accent} 
-                            onChange={(e) => setColors({ ...colors, accent: e.target.value })}
-                            className="w-10 h-10 rounded cursor-pointer border-none p-0"
-                        />
-                        <span className="text-sm text-muted-foreground">{colors.accent}</span>
-                    </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2 text-foreground">Accent Color</label>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="color"
+                    value={colors.accent}
+                    onChange={(e) => setColors({ ...colors, accent: e.target.value })}
+                    className="w-10 h-10 rounded cursor-pointer border-none p-0"
+                  />
+                  <span className="text-sm text-muted-foreground">{colors.accent}</span>
                 </div>
-             </div>
+              </div>
+            </div>
           )}
         </div>
 
@@ -172,11 +170,10 @@ const Language: React.FC = () => {
               <button
                 key={m.value}
                 onClick={() => handleMadhabChange(m.value)}
-                className={`islamic-card p-5 text-left transition-all border rounded-xl ${
-                  madhab === m.value
+                className={`islamic-card p-5 text-left transition-all border rounded-xl ${madhab === m.value
                     ? "ring-2 ring-primary bg-primary/5 border-primary"
                     : "hover:bg-muted/50 border-border"
-                }`}
+                  }`}
               >
                 <div className="flex items-center justify-between mb-2">
                   <p className="text-base font-semibold text-foreground">{m.label}</p>
@@ -199,7 +196,7 @@ const Language: React.FC = () => {
           <div className="text-sm text-muted-foreground space-y-2">
             <p className="font-medium text-foreground">Your choices shape every answer</p>
             <p>
-              When you ask a question in Guided Fatwa or explore Daily Islam, XamSaDine will prioritize references, rulings, and explanations from your selected madhab and present them in your chosen language.
+              When you ask a question in Guided Fatwa or explore Daily Islam, GëstuSaDine will prioritize references, rulings, and explanations from your selected madhab and present them in your chosen language.
             </p>
           </div>
         </div>

@@ -10,7 +10,7 @@ interface AgentConfig {
     agentId: string;
     agentName: string;
     llmConfig: {
-        provider: 'openai' | 'anthropic' | 'local';
+        provider: string;
         model: string;
         apiKey?: string;
         endpoint?: string;
@@ -35,106 +35,106 @@ const AdminConfig: React.FC = () => {
     const { toast } = useToast();
 
     React.useEffect(() => {
-        loadConfig();
-    }, []);
+        const loadConfig = async () => {
+            setLoading(true);
+            try {
+                // Load from localStorage or use defaults
+                const savedAgents = localStorage.getItem('admin_agents_config');
+                if (savedAgents) {
+                    setAgents(JSON.parse(savedAgents));
+                } else {
+                    // Default agent configurations based on COUNCIL_MODELS_CONFIG
+                    const defaultAgents: Record<string, AgentConfig> = {};
+                    COUNCIL_MODELS_CONFIG.forEach(member => {
+                        defaultAgents[member.memberId] = {
+                            agentId: member.memberId,
+                            agentName: member.memberName,
+                            llmConfig: {
+                                provider: member.provider.toLowerCase().replace(' ', ''),
+                                model: member.modelId,
+                                apiKey: '', // Will use VITE_OPENROUTER_API_KEY
+                                temperature: member.temperature,
+                                maxTokens: member.maxTokens
+                            },
+                            enabled: true
+                        };
+                    });
+                    setAgents(defaultAgents);
+                }
 
-    const loadConfig = async () => {
-        setLoading(true);
-        try {
-            // Load from localStorage or use defaults
-            const savedAgents = localStorage.getItem('admin_agents_config');
-            if (savedAgents) {
-                setAgents(JSON.parse(savedAgents));
-            } else {
-                // Default agent configurations based on COUNCIL_MODELS_CONFIG
-                const defaultAgents: Record<string, AgentConfig> = {};
-                COUNCIL_MODELS_CONFIG.forEach(member => {
-                    defaultAgents[member.memberId] = {
-                        agentId: member.memberId,
-                        agentName: member.memberName,
-                        llmConfig: {
-                            provider: member.provider.toLowerCase().replace(' ', ''),
-                            model: member.modelId,
-                            apiKey: '', // Will use VITE_OPENROUTER_API_KEY
-                            temperature: member.temperature,
-                            maxTokens: member.maxTokens
-                        },
-                        enabled: true
-                    };
+                // Available models from OpenRouter (grouped by provider)
+                // FREE models prioritized
+                setAvailableModels([
+                    {
+                        provider: 'allenai',
+                        models: [
+                            'allenai/olmo-3.1-32b-think', // FREE - Reasoning
+                            'allenai/olmo-3-32b-think'   // FREE - Reasoning
+                        ]
+                    },
+                    {
+                        provider: 'xiaomi',
+                        models: [
+                            'xiaomi/mimo-v2-flash' // FREE - Top reasoning, coding, agent scenarios
+                        ]
+                    },
+                    {
+                        provider: 'nvidia',
+                        models: [
+                            'nvidia/nemotron-3-nano-30b-a3b' // FREE - Agentic AI
+                        ]
+                    },
+                    {
+                        provider: 'mistralai',
+                        models: [
+                            'mistralai/devstral-2-2512', // FREE - Agentic coding
+                            'mistralai/mistral-large',
+                            'mistralai/mixtral-8x7b'
+                        ]
+                    },
+                    {
+                        provider: 'tngtech',
+                        models: [
+                            'tngtech/r1t-chimera' // FREE - Creative storytelling
+                        ]
+                    },
+                    {
+                        provider: 'nex-agi',
+                        models: [
+                            'nex-agi/deepseek-v3.1-nex-n1' // FREE - Agent autonomy
+                        ]
+                    },
+                    {
+                        provider: 'arcee-ai',
+                        models: [
+                            'arcee-ai/trinity-mini' // FREE - Reasoning, function calling
+                        ]
+                    },
+                    {
+                        provider: 'kwaipilot',
+                        models: [
+                            'kwaipilot/kat-coder-pro-v1' // FREE - Agentic coding
+                        ]
+                    },
+                    // Paid models (fallback options)
+                    { provider: 'openai', models: ['openai/gpt-4o', 'openai/gpt-4-turbo', 'openai/gpt-3.5-turbo', 'openai/gpt-4o-mini'] },
+                    { provider: 'anthropic', models: ['anthropic/claude-3-opus', 'anthropic/claude-3-sonnet', 'anthropic/claude-3-haiku'] },
+                    { provider: 'meta', models: ['meta-llama/llama-3-70b-instruct', 'meta-llama/llama-3-8b-instruct'] },
+                    { provider: 'google', models: ['google/gemini-pro', 'google/gemini-pro-vision'] }
+                ]);
+            } catch (error) {
+                toast({
+                    title: "Error",
+                    description: "Could not load configuration.",
+                    variant: "destructive"
                 });
-                setAgents(defaultAgents);
+            } finally {
+                setLoading(false);
             }
+        };
 
-            // Available models from OpenRouter (grouped by provider)
-            // FREE models prioritized
-            setAvailableModels([
-                {
-                    provider: 'allenai',
-                    models: [
-                        'allenai/olmo-3.1-32b-think', // FREE - Reasoning
-                        'allenai/olmo-3-32b-think'   // FREE - Reasoning
-                    ]
-                },
-                {
-                    provider: 'xiaomi',
-                    models: [
-                        'xiaomi/mimo-v2-flash' // FREE - Top reasoning, coding, agent scenarios
-                    ]
-                },
-                {
-                    provider: 'nvidia',
-                    models: [
-                        'nvidia/nemotron-3-nano-30b-a3b' // FREE - Agentic AI
-                    ]
-                },
-                {
-                    provider: 'mistralai',
-                    models: [
-                        'mistralai/devstral-2-2512', // FREE - Agentic coding
-                        'mistralai/mistral-large',
-                        'mistralai/mixtral-8x7b'
-                    ]
-                },
-                {
-                    provider: 'tngtech',
-                    models: [
-                        'tngtech/r1t-chimera' // FREE - Creative storytelling
-                    ]
-                },
-                {
-                    provider: 'nex-agi',
-                    models: [
-                        'nex-agi/deepseek-v3.1-nex-n1' // FREE - Agent autonomy
-                    ]
-                },
-                {
-                    provider: 'arcee-ai',
-                    models: [
-                        'arcee-ai/trinity-mini' // FREE - Reasoning, function calling
-                    ]
-                },
-                {
-                    provider: 'kwaipilot',
-                    models: [
-                        'kwaipilot/kat-coder-pro-v1' // FREE - Agentic coding
-                    ]
-                },
-                // Paid models (fallback options)
-                { provider: 'openai', models: ['openai/gpt-4o', 'openai/gpt-4-turbo', 'openai/gpt-3.5-turbo', 'openai/gpt-4o-mini'] },
-                { provider: 'anthropic', models: ['anthropic/claude-3-opus', 'anthropic/claude-3-sonnet', 'anthropic/claude-3-haiku'] },
-                { provider: 'meta', models: ['meta-llama/llama-3-70b-instruct', 'meta-llama/llama-3-8b-instruct'] },
-                { provider: 'google', models: ['google/gemini-pro', 'google/gemini-pro-vision'] }
-            ]);
-        } catch (error) {
-            toast({
-                title: "Error",
-                description: "Could not load configuration.",
-                variant: "destructive"
-            });
-        } finally {
-            setLoading(false);
-        }
-    };
+        loadConfig();
+    }, [toast]);
 
     const updateAgent = async (agentId: string, updates: Partial<AgentConfig>) => {
         setSaving(true);
@@ -161,7 +161,7 @@ const AdminConfig: React.FC = () => {
         }
     };
 
-    const updateLLMField = (agentId: string, field: string, value: any) => {
+    const updateLLMField = (agentId: string, field: string, value: string | number) => {
         setAgents(prev => ({
             ...prev,
             [agentId]: {
@@ -212,17 +212,18 @@ const AdminConfig: React.FC = () => {
             } else {
                 throw new Error('Empty response');
             }
-        } catch (error: any) {
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : 'Unknown error';
             setTestResults(prev => ({
                 ...prev,
                 [agentId]: {
                     success: false,
-                    message: error.message || 'Test failed'
+                    message: errorMessage || 'Test failed'
                 }
             }));
             toast({
                 title: "Test Failed",
-                description: error.message || 'Could not test model',
+                description: errorMessage || 'Could not test model',
                 variant: "destructive"
             });
         } finally {
@@ -292,7 +293,7 @@ const AdminConfig: React.FC = () => {
                         const testResult = testResults[agentId];
 
                         return (
-                            <div key={agentId} className="islamic-card p-6 bg-[#efefec]/95">
+                            <div key={agentId} className="islamic-card p-6 bg-card/95">
                                 <div className="flex items-center justify-between mb-6">
                                     <div className="flex items-center gap-3">
                                         <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
@@ -388,7 +389,7 @@ const AdminConfig: React.FC = () => {
                                         <select
                                             value={agent.llmConfig.provider}
                                             onChange={(e) => updateLLMField(agentId, 'provider', e.target.value)}
-                                            className="w-full px-4 py-2 rounded-lg border border-islamic-cream bg-[#efefec] text-islamic-dark focus:ring-2 focus:ring-islamic-gold/40"
+                                            className="w-full px-4 py-2 rounded-lg border border-input bg-background/50 text-foreground focus:ring-2 focus:ring-primary/40"
                                         >
                                             {availableModels.map((p) => (
                                                 <option key={p.provider} value={p.provider}>
@@ -405,7 +406,7 @@ const AdminConfig: React.FC = () => {
                                         <select
                                             value={agent.llmConfig.model}
                                             onChange={(e) => updateLLMField(agentId, 'model', e.target.value)}
-                                            className="w-full px-4 py-2 rounded-lg border border-islamic-cream bg-[#efefec] text-islamic-dark focus:ring-2 focus:ring-islamic-gold/40"
+                                            className="w-full px-4 py-2 rounded-lg border border-input bg-background/50 text-foreground focus:ring-2 focus:ring-primary/40"
                                         >
                                             {availableModels
                                                 .find(p => p.provider === agent.llmConfig.provider)
@@ -426,7 +427,7 @@ const AdminConfig: React.FC = () => {
                                             max="2"
                                             value={agent.llmConfig.temperature}
                                             onChange={(e) => updateLLMField(agentId, 'temperature', parseFloat(e.target.value))}
-                                            className="w-full px-4 py-2 rounded-lg border border-islamic-cream bg-[#efefec] text-islamic-dark focus:ring-2 focus:ring-islamic-gold/40"
+                                            className="w-full px-4 py-2 rounded-lg border border-input bg-background/50 text-foreground focus:ring-2 focus:ring-primary/40"
                                         />
                                     </div>
 
@@ -439,7 +440,7 @@ const AdminConfig: React.FC = () => {
                                             step="100"
                                             value={agent.llmConfig.maxTokens}
                                             onChange={(e) => updateLLMField(agentId, 'maxTokens', parseInt(e.target.value))}
-                                            className="w-full px-4 py-2 rounded-lg border border-islamic-cream bg-[#efefec] text-islamic-dark focus:ring-2 focus:ring-islamic-gold/40"
+                                            className="w-full px-4 py-2 rounded-lg border border-input bg-background/50 text-foreground focus:ring-2 focus:ring-primary/40"
                                         />
                                     </div>
 
@@ -462,17 +463,17 @@ const AdminConfig: React.FC = () => {
                             </div>
                         );
                     })}
-                </div>
+                </div >
 
                 {/* Synthesis Model Info */}
-                <div className="mt-8 p-6 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-800">
+                < div className="mt-8 p-6 bg-primary/5 dark:bg-primary/20 rounded-lg border border-primary/20 dark:border-primary/30" >
                     <h3 className="font-semibold text-islamic-dark mb-2">Epistemic Synthesis Engine</h3>
                     <p className="text-sm text-islamic-dark/70 mb-2">
                         The synthesis engine combines all council member responses into a final answer.
                     </p>
                     <div className="flex items-center gap-4 text-sm">
                         <div>
-                            <span className="font-medium">Recommended Model:</span> {SYNTHESIS_MODEL.recommendedModel}
+                            <span className="font-medium">Recommended Model:</span> {SYNTHESIS_MODEL.name}
                         </div>
                         <div>
                             <span className="font-medium">Model ID:</span> {SYNTHESIS_MODEL.modelId}
@@ -484,9 +485,9 @@ const AdminConfig: React.FC = () => {
                     <p className="text-xs text-islamic-dark/50 mt-2">
                         {SYNTHESIS_MODEL.description}
                     </p>
-                </div>
-            </section>
-        </div>
+                </div >
+            </section >
+        </div >
     );
 };
 

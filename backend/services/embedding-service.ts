@@ -1,16 +1,35 @@
-import { pipeline, env } from '@huggingface/transformers';
-
-// Disable local model loading in production
-env.allowLocalModels = false;
+import type { pipeline as PipelineType, env as EnvType } from '@huggingface/transformers';
 
 /**
  * Free embedding service using Transformers.js
  * Model: Xenova/all-MiniLM-L6-v2 (384 dimensions, 100% free, runs locally)
+ * 
+ * NOTE: Lazy-loaded to avoid onnxruntime-node compatibility issues on Node.js 24+
  */
 class FreeEmbeddingService {
     private pipeline: any = null;
     private modelName = 'Xenova/all-MiniLM-L6-v2';
     private isInitialized = false;
+    private transformersModule: any = null;
+
+    /**
+     * Lazy load the transformers module
+     */
+    private async loadTransformers() {
+        if (this.transformersModule) return this.transformersModule;
+
+        try {
+            this.transformersModule = await import('@huggingface/transformers');
+            // Disable local model loading in production
+            this.transformersModule.env.allowLocalModels = false;
+            return this.transformersModule;
+        } catch (error: any) {
+            console.warn('[FreeEmbedding] Transformers.js not available:', error.message);
+            console.warn('[FreeEmbedding] This may be due to onnxruntime-node compatibility with Node.js 24+');
+            console.warn('[FreeEmbedding] Embedding service will not be available');
+            throw error;
+        }
+    }
 
     /**
      * Initialize the embedding pipeline
@@ -20,7 +39,8 @@ class FreeEmbeddingService {
 
         try {
             console.log('[FreeEmbedding] Initializing Transformers.js pipeline...');
-            this.pipeline = await pipeline('feature-extraction', this.modelName);
+            const transformers = await this.loadTransformers();
+            this.pipeline = await transformers.pipeline('feature-extraction', this.modelName);
             this.isInitialized = true;
             console.log('[FreeEmbedding] Pipeline initialized successfully');
         } catch (error: any) {

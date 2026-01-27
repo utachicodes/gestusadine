@@ -1,28 +1,15 @@
+/* eslint-disable @typescript-eslint/no-namespace */
 import type { NextFunction, Request, Response } from "express";
-import { createRemoteJWKSet, jwtVerify } from "jose";
+import { auth } from "./lib/firebase-admin.js";
+import { SubscriptionService } from "../../subscription-service/subscription.service.js";
+import { TierInfo, SubscriptionTier } from "../../../shared/subscription-types.js";
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "abdoullahaljersi@gmail.com";
-
-// Lazy init variables
-let issuer: string | undefined;
-let jwks: any; // ReturnType<typeof createRemoteJWKSet>
-
-function getJWKS() {
-  if (jwks) return { jwks, issuer };
-
-  const supabaseUrl = process.env.SUPABASE_URL;
-  if (!supabaseUrl) {
-    throw new Error("Missing SUPABASE_URL env var");
-  }
-
-  issuer = `${supabaseUrl}/auth/v1`;
-  jwks = createRemoteJWKSet(new URL(`${issuer}/.well-known/jwks.json`));
-  return { jwks, issuer };
-}
 
 export type AuthUser = {
   sub: string;
   email?: string;
+  uid: string;
 };
 
 declare global {
@@ -30,6 +17,8 @@ declare global {
     interface Request {
       authUser?: AuthUser;
       isAdmin?: boolean;
+      userTier?: TierInfo;
+      subscription?: TierInfo;
     }
   }
 }
@@ -50,22 +39,18 @@ export async function requireAuth(req: Request, res: Response, next: NextFunctio
       return;
     }
 
-    const { jwks, issuer } = getJWKS();
+    const decodedToken = await auth.verifyIdToken(token);
 
-    const { payload } = await jwtVerify(token, jwks, {
-      issuer,
-      audience: "authenticated",
-    });
-
-    const email = typeof payload.email === "string" ? payload.email : undefined;
     req.authUser = {
-      sub: String(payload.sub),
-      email,
+      sub: decodedToken.uid,
+      email: decodedToken.email,
+      uid: decodedToken.uid,
     };
-    req.isAdmin = (email ?? "").toLowerCase() === ADMIN_EMAIL.toLowerCase();
+    req.isAdmin = (decodedToken.email ?? "").toLowerCase() === ADMIN_EMAIL.toLowerCase();
 
     next();
-  } catch (_err) {
+  } catch (error) {
+    console.error("Auth Error:", error);
     res.status(401).json({ error: "Unauthorized" });
   }
 }
@@ -78,19 +63,14 @@ export async function optionalAuth(req: Request, res: Response, next: NextFuncti
       return;
     }
 
-    const { jwks, issuer } = getJWKS();
+    const decodedToken = await auth.verifyIdToken(token);
 
-    const { payload } = await jwtVerify(token, jwks, {
-      issuer,
-      audience: "authenticated",
-    });
-
-    const email = typeof payload.email === "string" ? payload.email : undefined;
     req.authUser = {
-      sub: String(payload.sub),
-      email,
+      sub: decodedToken.uid,
+      email: decodedToken.email,
+      uid: decodedToken.uid,
     };
-    req.isAdmin = (email ?? "").toLowerCase() === ADMIN_EMAIL.toLowerCase();
+    req.isAdmin = (decodedToken.email ?? "").toLowerCase() === ADMIN_EMAIL.toLowerCase();
 
     next();
   } catch (_err) {
@@ -106,5 +86,110 @@ export async function requireAdmin(req: Request, res: Response, next: NextFuncti
       return;
     }
     next();
+  });
+}
+
+/**
+ * Middleware to attach user's tier information to request
+ * Does not block access - just adds tier info
+ */
+export async function optionalTier(req: Request, res: Response, next: NextFunction) {
+  if (!req.authUser) {
+    next();
+    return;
+  }
+
+  try {
+    const tierInfo = await SubscriptionService.getUserSubscription(req.authUser.sub);
+    if (tierInfo) {
+      req.userTier = tierInfo;
+      req.subscription = tierInfo;
+    }
+    next();
+  } catch (error) {
+    // Don't block on tier lookup failure
+    console.error('Error fetching tier info:', error);
+    next();
+  }
+}
+
+/**
+ * Middleware factory to require minimum tier level
+ * Usage: requireTier('core') or requireTier('pro')
+ */
+export function requireTier(minTier: SubscriptionTier) {
+  const tierHierarchy: Record<SubscriptionTier, number> = {
+    free: 0,
+    core: 1,
+    pro: 2,
+  };
+
+  return async (req: Request, res: Response, next: NextFunction) => {
+    await requireAuth(req, res, async () => {
+      try {
+        const tierInfo = await SubscriptionService.getUserSubscription(req.authUser!.sub);
+
+        if (!tierInfo) {
+          res.status(403).json({
+            error: "No active subscription",
+            message: "Please subscribe to access this feature",
+            requiredTier: minTier
+          });
+          return;
+        }
+
+        req.userTier = tierInfo;
+        req.subscription = tierInfo;
+
+        const userTierLevel = tierHierarchy[tierInfo.tier];
+        const requiredTierLevel = tierHierarchy[minTier];
+
+        if (userTierLevel < requiredTierLevel) {
+          res.status(403).json({
+            error: "Insufficient tier",
+            message: `This feature requires ${minTier} tier or higher`,
+            currentTier: tierInfo.tier,
+            requiredTier: minTier
+          });
+          return;
+        }
+
+        next();
+      } catch (error: any) {
+        res.status(500).json({
+          error: "Failed to verify subscription",
+          message: error.message
+        });
+      }
+    });
+  };
+}
+
+/**
+ * Middleware to check if user has credits available
+ */
+export async function requireCredits(req: Request, res: Response, next: NextFunction) {
+  await requireAuth(req, res, async () => {
+    try {
+      const hasCredits = await SubscriptionService.checkCreditsAvailable(req.authUser!.sub);
+
+      if (!hasCredits) {
+        const usageStats = await SubscriptionService.getUsageStats(req.authUser!.sub);
+        res.status(429).json({
+          error: "Credit limit exceeded",
+          message: "You've used all your chat credits for this billing period",
+          usage: usageStats,
+          upgradeUrl: "/pricing"
+        });
+        return;
+      }
+
+      next();
+    } catch (error: any) {
+      res.status(500).json({
+        error: "Failed to check credits",
+        message: error.message
+      });
+    }
   });
 }

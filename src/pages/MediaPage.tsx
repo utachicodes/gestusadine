@@ -15,32 +15,32 @@ export default function MediaPage() {
     const [activeTab, setActiveTab] = useState('all');
 
     useEffect(() => {
+        const loadVideos = async () => {
+            setLoading(true);
+            const audience = activeTab === 'all' ? undefined : activeTab;
+            const filteredVideos = activeTab === 'all'
+                ? MOCK_VIDEOS
+                : MOCK_VIDEOS.filter(v => v.audience === activeTab);
+
+            // Use mock data immediately and stop loading
+            setVideos(filteredVideos);
+            setLoading(false);
+
+            // Try to fetch from API in background (fire and forget)
+            (async () => {
+                try {
+                    const data = await EcosystemService.getVideos(audience);
+                    if (data.length > 0) {
+                        setVideos(data);
+                    }
+                } catch (error) {
+                    // Silently fail, already using mock data
+                }
+            })();
+        };
+
         loadVideos();
     }, [activeTab]);
-
-    const loadVideos = async () => {
-        setLoading(true);
-        const audience = activeTab === 'all' ? undefined : activeTab;
-        const filteredVideos = activeTab === 'all' 
-            ? MOCK_VIDEOS 
-            : MOCK_VIDEOS.filter(v => v.audience === activeTab);
-        
-        // Use mock data immediately and stop loading
-        setVideos(filteredVideos);
-        setLoading(false);
-        
-        // Try to fetch from API in background (fire and forget)
-        (async () => {
-            try {
-                const data = await EcosystemService.getVideos(audience);
-                if (data.length > 0) {
-                    setVideos(data);
-                }
-            } catch (error) {
-                // Silently fail, already using mock data
-            }
-        })();
-    };
 
     const handleWatch = (video: MediaContent) => {
         toast.info(`Starting video: ${video.title}`);
@@ -67,50 +67,46 @@ export default function MediaPage() {
                     </div>
                 </header>
 
-            <div className="w-full mb-8">
-                <div className="flex flex-wrap gap-3">
-                    <button
-                        onClick={() => setActiveTab('all')}
-                        className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-200 ${
-                            activeTab === 'all'
-                                ? 'bg-islamic-green-600 text-white shadow-md hover:bg-islamic-green-700'
-                                : 'bg-[#efefec] dark:bg-slate-800 text-islamic-dark dark:text-slate-300 border border-islamic-dark/20 dark:border-slate-700 hover:border-islamic-green-600 dark:hover:border-islamic-green hover:text-islamic-green-600 dark:hover:text-islamic-green'
-                        }`}
-                    >
-                        All
-                    </button>
-                    <button
-                        onClick={() => setActiveTab('kids')}
-                        className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-200 ${
-                            activeTab === 'kids'
-                                ? 'bg-islamic-green-600 text-white shadow-md hover:bg-islamic-green-700'
-                                : 'bg-[#efefec] dark:bg-slate-800 text-islamic-dark dark:text-slate-300 border border-islamic-dark/20 dark:border-slate-700 hover:border-islamic-green-600 dark:hover:border-islamic-green hover:text-islamic-green-600 dark:hover:text-islamic-green'
-                        }`}
-                    >
-                        Kids
-                    </button>
-                    <button
-                        onClick={() => setActiveTab('teens')}
-                        className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-200 ${
-                            activeTab === 'teens'
-                                ? 'bg-islamic-green-600 text-white shadow-md hover:bg-islamic-green-700'
-                                : 'bg-[#efefec] dark:bg-slate-800 text-islamic-dark dark:text-slate-300 border border-islamic-dark/20 dark:border-slate-700 hover:border-islamic-green-600 dark:hover:border-islamic-green hover:text-islamic-green-600 dark:hover:text-islamic-green'
-                        }`}
-                    >
-                        Teens
-                    </button>
-                    <button
-                        onClick={() => setActiveTab('adults')}
-                        className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-200 ${
-                            activeTab === 'adults'
-                                ? 'bg-islamic-green-600 text-white shadow-md hover:bg-islamic-green-700'
-                                : 'bg-[#efefec] dark:bg-slate-800 text-islamic-dark dark:text-slate-300 border border-islamic-dark/20 dark:border-slate-700 hover:border-islamic-green-600 dark:hover:border-islamic-green hover:text-islamic-green-600 dark:hover:text-islamic-green'
-                        }`}
-                    >
-                        Adults
-                    </button>
+                <div className="w-full mb-8">
+                    <div className="flex flex-wrap gap-3">
+                        <button
+                            onClick={() => setActiveTab('all')}
+                            className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-200 ${activeTab === 'all'
+                                    ? 'bg-islamic-green-600 text-white shadow-md hover:bg-islamic-green-700'
+                                    : 'bg-[#efefec] dark:bg-slate-800 text-islamic-dark dark:text-slate-300 border border-islamic-dark/20 dark:border-slate-700 hover:border-islamic-green-600 dark:hover:border-islamic-green hover:text-islamic-green-600 dark:hover:text-islamic-green'
+                                }`}
+                        >
+                            All
+                        </button>
+                        <button
+                            onClick={() => setActiveTab('kids')}
+                            className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-200 ${activeTab === 'kids'
+                                    ? 'bg-islamic-green-600 text-white shadow-md hover:bg-islamic-green-700'
+                                    : 'bg-[#efefec] dark:bg-slate-800 text-islamic-dark dark:text-slate-300 border border-islamic-dark/20 dark:border-slate-700 hover:border-islamic-green-600 dark:hover:border-islamic-green hover:text-islamic-green-600 dark:hover:text-islamic-green'
+                                }`}
+                        >
+                            Kids
+                        </button>
+                        <button
+                            onClick={() => setActiveTab('teens')}
+                            className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-200 ${activeTab === 'teens'
+                                    ? 'bg-islamic-green-600 text-white shadow-md hover:bg-islamic-green-700'
+                                    : 'bg-[#efefec] dark:bg-slate-800 text-islamic-dark dark:text-slate-300 border border-islamic-dark/20 dark:border-slate-700 hover:border-islamic-green-600 dark:hover:border-islamic-green hover:text-islamic-green-600 dark:hover:text-islamic-green'
+                                }`}
+                        >
+                            Teens
+                        </button>
+                        <button
+                            onClick={() => setActiveTab('adults')}
+                            className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-200 ${activeTab === 'adults'
+                                    ? 'bg-islamic-green-600 text-white shadow-md hover:bg-islamic-green-700'
+                                    : 'bg-[#efefec] dark:bg-slate-800 text-islamic-dark dark:text-slate-300 border border-islamic-dark/20 dark:border-slate-700 hover:border-islamic-green-600 dark:hover:border-islamic-green hover:text-islamic-green-600 dark:hover:text-islamic-green'
+                                }`}
+                        >
+                            Adults
+                        </button>
+                    </div>
                 </div>
-            </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {loading ? (

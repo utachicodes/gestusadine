@@ -1,0 +1,20 @@
+
+> deenakdiamano@0.0.0 lint
+> eslint .
+
+
+C:\Users\abdou\Desktop\XamSaDine_AI\xamsadine-ai-website-v2\src\components\ui\form.tsx
+  167:1  warning  Unused eslint-disable directive (no problems were reported from 'react-refresh/only-export-components')
+  169:3  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+C:\Users\abdou\Desktop\XamSaDine_AI\xamsadine-ai-website-v2\src\components\ui\navigation-menu.tsx
+  118:1  warning  Unused eslint-disable directive (no problems were reported from 'react-refresh/only-export-components')
+  120:3  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+C:\Users\abdou\Desktop\XamSaDine_AI\xamsadine-ai-website-v2\src\components\ui\sidebar.tsx
+  736:1  warning  Unused eslint-disable directive (no problems were reported from 'react-refresh/only-export-components')
+  761:3  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+✖ 6 problems (0 errors, 6 warnings)
+  0 errors and 3 warnings potentially fixable with the `--fix` option.
+

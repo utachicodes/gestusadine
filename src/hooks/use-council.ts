@@ -72,7 +72,7 @@ export function useCouncil() {
             setIsProcessing(true);
             try {
                 // Get madhab from localStorage
-                const madhab = localStorage.getItem('xamsadine-madhab') || 'maliki';
+                const madhab = localStorage.getItem('GëstuSaDine-madhab') || 'maliki';
                 const response = await apiFetch(`${API_BASE}/ask`, {
                     method: 'POST',
                     body: JSON.stringify({ query, useRAG, madhab })

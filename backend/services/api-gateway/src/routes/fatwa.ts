@@ -7,7 +7,7 @@ import { ragService } from "../../../rag-service/rag.service.ts";
 function getOllamaClient(): OllamaClient | null {
   const ollamaUrl = process.env.OLLAMA_URL || "http://localhost:11434";
   const ollamaModel = process.env.OLLAMA_MODEL || "gemma3:1b";
-  
+
   try {
     return new OllamaClient({
       baseUrl: ollamaUrl,
@@ -66,7 +66,7 @@ function validateFatwaInput(body: unknown): {
 export async function postFatwa(req: Request, res: Response) {
   try {
     console.log("📥 Received fatwa request");
-    
+
     // Validate and sanitize input
     let validatedInput;
     try {
@@ -95,20 +95,20 @@ export async function postFatwa(req: Request, res: Response) {
     if (hasOllama) {
       console.log("✅ Using Ollama for fatwa generation");
     }
-    
+
     if (ollama) {
       try {
         console.log("🔄 Step 1: Checking if question is Islamic...");
         // 1) Islamic-only guardrail
         const isIslamic = await ollama.isIslamicQuestion(question);
         console.log("   Result:", isIslamic ? "YES - Islamic question" : "NO - Not Islamic");
-        
+
         if (!isIslamic) {
           console.log("🚫 Question rejected (not Islamic)");
           return res.json({
             allowed: false,
             message:
-              "XamSaDine is dedicated to Islamic guidance only. Please ask a question related to Islam, worship, ethics, or Muslim life.",
+              "The platform is dedicated to Islamic guidance only. Please ask a question related to Islam, worship, ethics, or Muslim life.",
           });
         }
 
@@ -143,7 +143,7 @@ export async function postFatwa(req: Request, res: Response) {
         console.error("❌ Ollama API error, falling back to mock:");
         console.error("   Error type:", ollamaError?.constructor?.name);
         console.error("   Error message:", ollamaError?.message || ollamaError);
-        
+
         // Check if it's a connection error
         if (ollamaError?.message?.includes("Cannot connect") || ollamaError?.message?.includes("ECONNREFUSED")) {
           console.error("   ⚠️  Cannot connect to Ollama. Make sure Ollama is running:");
@@ -160,7 +160,7 @@ export async function postFatwa(req: Request, res: Response) {
     console.log("📝 Using mock response (Ollama not available or failed)");
     const madhabName = chosenMadhab.charAt(0).toUpperCase() + chosenMadhab.slice(1);
     const langText = language === "wo" ? "Wolof" : language === "fr" ? "French" : "English";
-    
+
     const mockResponse = `HUKM: According to the ${madhabName} school of fiqh, your question requires careful consideration. The ruling depends on the specific circumstances you've described.
 
 EVIDENCE: In the ${madhabName} tradition, scholars reference authentic sources from the Qur'an, Sunnah, and the established principles of the madhab. Key texts include the foundational works of ${madhabName} jurisprudence.
@@ -181,7 +181,7 @@ ADVICE: It is recommended to consult with a qualified scholar who is well-versed
     console.error("   Error type:", error?.constructor?.name);
     console.error("   Error message:", error?.message || error);
     console.error("   Stack:", error?.stack);
-    
+
     // Always send a response, even on error
     try {
       return res.status(500).json({

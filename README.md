@@ -1,7 +1,7 @@
-# XamSaDine AI v2
+# DeenAkDiamano v2
 ### *The Digital Ecosystem for Modern Islamic Living*
 
-XamSaDine AI is more than just a chatbot; it is a **comprehensive Service-Oriented Platform** that merges traditional Islamic scholarship with state-of-the-art AI. Designed for scalability and epistemic integrity, it offers a unified interface for commerce, education, and spiritual guidance.
+DeenAkDiamano is more than just a chatbot; it is a **comprehensive Service-Oriented Platform** that merges traditional Islamic scholarship with state-of-the-art AI. Designed for scalability and epistemic integrity, it offers a unified interface for commerce, education, and spiritual guidance.
 
 ![Maintained](https://img.shields.io/badge/Maintained-yes-34D399?style=for-the-badge)
 ![License](https://img.shields.io/badge/License-MIT-3B82F6?style=for-the-badge)
@@ -9,9 +9,9 @@ XamSaDine AI is more than just a chatbot; it is a **comprehensive Service-Orient
 
 ---
 
-## Why XamSaDine?
+## Why DeenAkDiamano?
 
-In an era of generic AI, **XamSaDine AI** stands out by enforcing strictly grounded, scholar-verified responses through its unique "Council" architecture. Whether you're shopping for exclusive merchandise, perfecting your recitation, or seeking a fatwa, XamSaDine provides a premium, authenticated experience.
+In an era of generic AI, **DeenAkDiamano** stands out by enforcing strictly grounded, scholar-verified responses through its unique "Council" architecture. Whether you're shopping for exclusive merchandise, perfecting your recitation, or seeking a fatwa, we provide a premium, authenticated experience.
 
 ---
 
@@ -26,7 +26,7 @@ graph TD
     subgraph " Intelligence Layer"
         Gateway --> Council["LLM Council (Consensus Engine)"]
         Council --> Agents["Agent Array (Fiqh, Aqeedah, Modern)"]
-        Council --> RAG["RAG Engine (pgvector)"]
+        Council --> RAG["RAG Engine"]
     end
     
     subgraph " Lifestyle Layer"
@@ -37,8 +37,8 @@ graph TD
     
     subgraph " Infrastructure"
         Agents --> OpenRouter["OpenRouter (Claude/GPT-4o)"]
-        RAG --> SupaVector["Supabase Vector Store"]
-        Shop --> SupaDB["Supabase Postgres"]
+        RAG --> Firestore["Firebase Firestore"]
+        Shop --> Firestore["Firebase Firestore"]
     end
 ```
 
@@ -50,7 +50,7 @@ graph TD
 Our flagship AI implementation using multi-model consensus:
 - **Distributed Reasoning**: Every question is reviewed by independent agents (Fiqh, Aqeedah, Context).
 - **Epistemic Integrity**: A dedicated "Humility Agent" prevents hallucinations and handles ethical boundaries.
-- **RAG-Powered**: Semantic search across uploaded Islamic PDF/TXT documents using 384-dimensional embeddings.
+- **RAG-Powered**: Semantic search across uploaded Islamic PDF/TXT documents.
 
 ### The Islamic Shop
 A turnkey commerce solution:
@@ -70,9 +70,44 @@ A turnkey commerce solution:
 | :--- | :--- |
 | **Frontend** | React 18, Vite, Tailwind CSS, Framer Motion, Lucide Icons |
 | **Backend** | Node.js, TypeScript, Express, TSX, Zod |
-| **Database** | Supabase (PostgreSQL), pgvector |
+| **Database** | Firebase (Firestore, Auth, Storage) |
 | **AI/ML** | OpenRouter (Claude 3.5, GPT-4o), Transformers.js |
-| **DevOps** | Docker, multi-stage builds, Render/Railway Ready |
+| **DevOps** | Docker, multi-stage builds |
+| **Subscriptions** | Tier-based system (Free, Core, Pro) |
+
+---
+
+## 💳 Subscription Tiers
+
+The platform offers three subscription tiers with different feature access:
+
+### 🆓 Free — Access Tier
+- **Price**: 0 XOF
+- **Chat Credits**: 50/month
+- **Purpose**: Discovery and first exposure
+- **Features**: Basic guidance only
+
+### 🌙 Core — Primary Tier
+- **Price**: 5,000 XOF/month (~$8.50 USD)
+- **Chat Credits**: 500/month
+- **Purpose**: Main experience for most users
+- **Features**:
+  - Specialized modes (Fiqh, Aqeedah)
+  - Personalized themes  
+  - Memory & personalization
+  - Templates & planners
+  - Priority model responses
+
+### 🧠 Pro / Builder — Advanced Tier
+- **Price**: 10,000 XOF/month (~$17 USD)
+- **Chat Credits**: Unlimited
+- **Purpose**: For serious, long-term users
+- **Features**: All Core features, plus:
+  - Advanced planning tools
+  - Early access to new features
+  - Unlimited chat usage
+
+> **Note**: Payment integration (NabooPay) is in development. Current implementation allows immediate subscription activation without payment processing.
 
 ---
 
@@ -80,7 +115,7 @@ A turnkey commerce solution:
 
 ### 1. Requirements
 - Node.js 20+
-- Supabase Project
+- Firebase Project
 - API Keys (OpenRouter, NabooPay)
 
 ### 2. Local Setup
@@ -103,21 +138,19 @@ npm run dev      # Starts Frontend (port 8080)
 
 ## Deployment
 
-XamSaDine is optimized for containerized environments.
+The application is optimized for containerized environments.
 
 **Deploy to Render (One-Click Ready)**:
 1. Connect GitHub.
 2. Select `Dockerfile`.
 3. Add environment variables (see `DEPLOYMENT.md`).
 
-For detailed database initialization, refer to [rag-setup.sql](./database/rag-setup.sql) and [DEPLOYMENT.md](./DEPLOYMENT.md).
-
 ---
 
 ## 🤝 Support & License
 
 - **License**: MIT
-- **Contact**: [abdoullahaljersi@gmail.com](mailto:abdoullahaljersi@gmail.com)
+- **Contact**: [contact@example.com](mailto:contact@example.com)
 
-*Built by UtachiCodes for the Global Islamic Community.*
+*Built for the Global Islamic Community.*
 

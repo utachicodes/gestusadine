@@ -5,8 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BookOpen, Plus, Edit, Trash2, Sparkles, HelpCircle } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { toast } from 'sonner';
-import { supabase } from '@/lib/supabase';
-import { apiFetch } from '@/lib/api';
+import { getDocuments, addDocument, updateDocument, deleteDocument, where, orderBy, limit, Timestamp } from '@/lib/firebase-helpers';
 
 interface DailyAyah {
   id?: string;
@@ -90,21 +89,14 @@ export default function ManageDaily() {
   const loadData = async () => {
     setLoading(true);
     try {
-      const today = new Date().toISOString().split('T')[0];
-      
-      // Load today's content or most recent
-      const { data: content, error } = await supabase
-        .from('daily_content')
-        .select('*')
-        .order('date', { ascending: false })
-        .limit(100);
+      const content = await getDocuments('daily_content', [
+        orderBy('date', 'desc'),
+        limit(100)
+      ]);
 
-      if (error) throw error;
-
-      // Separate by content type
-      const ayahsData = (content || [])
-        .filter(c => c.content_type === 'ayah')
-        .map(c => ({
+      const ayahsData = content
+        .filter((c: any) => c.contentType === 'ayah')
+        .map((c: any) => ({
           id: c.id,
           reference: c.reference || '',
           arabic: c.arabic || '',
@@ -113,9 +105,9 @@ export default function ManageDaily() {
           translation_wo: c.translation_wo || '',
         }));
 
-      const duasData = (content || [])
-        .filter(c => c.content_type === 'dua')
-        .map(c => ({
+      const duasData = content
+        .filter((c: any) => c.contentType === 'dua')
+        .map((c: any) => ({
           id: c.id,
           arabic: c.arabic || '',
           translation_en: c.translation_en || '',
@@ -123,18 +115,18 @@ export default function ManageDaily() {
           translation_wo: c.translation_wo || '',
         }));
 
-      const factsData = (content || [])
-        .filter(c => c.content_type === 'fact')
-        .map(c => ({
+      const factsData = content
+        .filter((c: any) => c.contentType === 'fact')
+        .map((c: any) => ({
           id: c.id,
           fact_en: c.fact_en || '',
           fact_fr: c.fact_fr || '',
           fact_wo: c.fact_wo || '',
         }));
 
-      const quizzesData = (content || [])
-        .filter(c => c.content_type === 'quiz')
-        .map(c => ({
+      const quizzesData = content
+        .filter((c: any) => c.contentType === 'quiz')
+        .map((c: any) => ({
           id: c.id,
           language: c.language || 'en',
           difficulty: c.difficulty || 'easy',
@@ -161,7 +153,7 @@ export default function ManageDaily() {
     try {
       const today = new Date().toISOString().split('T')[0];
       const contentData = {
-        content_type: 'ayah',
+        contentType: 'ayah',
         date: today,
         reference: ayahForm.reference,
         arabic: ayahForm.arabic,
@@ -171,17 +163,10 @@ export default function ManageDaily() {
       };
 
       if (editingId) {
-        const { error } = await supabase
-          .from('daily_content')
-          .update(contentData)
-          .eq('id', editingId);
-        if (error) throw error;
+        await updateDocument('daily_content', editingId, contentData);
         toast.success('Ayah updated successfully');
       } else {
-        const { error } = await supabase
-          .from('daily_content')
-          .insert([contentData]);
-        if (error) throw error;
+        await addDocument('daily_content', contentData);
         toast.success('Ayah added successfully');
       }
       await loadData();
@@ -194,32 +179,63 @@ export default function ManageDaily() {
     }
   };
 
-  const handleDuaSubmit = (e: React.FormEvent) => {
+  const handleDuaSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (editingId) {
-      setDuas(duas.map(d => d.id === editingId ? { ...duaForm, id: editingId } : d));
-      toast.success('Dua updated successfully');
-    } else {
-      setDuas([...duas, { ...duaForm, id: Date.now().toString() }]);
-      toast.success('Dua added successfully');
+    try {
+      const today = new Date().toISOString().split('T')[0];
+      const contentData = {
+        contentType: 'dua',
+        date: today,
+        arabic: duaForm.arabic,
+        translation_en: duaForm.translation_en,
+        translation_fr: duaForm.translation_fr,
+        translation_wo: duaForm.translation_wo,
+      };
+
+      if (editingId) {
+        await updateDocument('daily_content', editingId, contentData);
+        toast.success('Dua updated successfully');
+      } else {
+        await addDocument('daily_content', contentData);
+        toast.success('Dua added successfully');
+      }
+      await loadData();
+      setIsCreating(false);
+      setEditingId(null);
+      setDuaForm({ arabic: '', translation_en: '', translation_fr: '', translation_wo: '' });
+    } catch (error: any) {
+      console.error('Failed to save dua:', error);
+      toast.error(error.message || 'Failed to save dua');
     }
-    setIsCreating(false);
-    setEditingId(null);
-    setDuaForm({ arabic: '', translation_en: '', translation_fr: '', translation_wo: '' });
   };
 
-  const handleFactSubmit = (e: React.FormEvent) => {
+  const handleFactSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (editingId) {
-      setFacts(facts.map(f => f.id === editingId ? { ...factForm, id: editingId } : f));
-      toast.success('Fact updated successfully');
-    } else {
-      setFacts([...facts, { ...factForm, id: Date.now().toString() }]);
-      toast.success('Fact added successfully');
+    try {
+      const today = new Date().toISOString().split('T')[0];
+      const contentData = {
+        contentType: 'fact',
+        date: today,
+        fact_en: factForm.fact_en,
+        fact_fr: factForm.fact_fr,
+        fact_wo: factForm.fact_wo,
+      };
+
+      if (editingId) {
+        await updateDocument('daily_content', editingId, contentData);
+        toast.success('Fact updated successfully');
+      } else {
+        await addDocument('daily_content', contentData);
+        toast.success('Fact added successfully');
+      }
+      await loadData();
+      setIsCreating(false);
+      setEditingId(null);
+      setFactForm({ fact_en: '', fact_fr: '', fact_wo: '' });
+    } catch (error: any) {
+      console.error('Failed to save fact:', error);
+      toast.error(error.message || 'Failed to save fact');
     }
-    setIsCreating(false);
-    setEditingId(null);
-    setFactForm({ fact_en: '', fact_fr: '', fact_wo: '' });
   };
 
   const handleQuizSubmit = async (e: React.FormEvent) => {
@@ -227,7 +243,7 @@ export default function ManageDaily() {
     try {
       const today = new Date().toISOString().split('T')[0];
       const contentData = {
-        content_type: 'quiz',
+        contentType: 'quiz',
         date: today,
         language: quizForm.language,
         difficulty: quizForm.difficulty,
@@ -238,17 +254,10 @@ export default function ManageDaily() {
       };
 
       if (editingId) {
-        const { error } = await supabase
-          .from('daily_content')
-          .update(contentData)
-          .eq('id', editingId);
-        if (error) throw error;
+        await updateDocument('daily_content', editingId, contentData);
         toast.success('Quiz updated successfully');
       } else {
-        const { error } = await supabase
-          .from('daily_content')
-          .insert([contentData]);
-        if (error) throw error;
+        await addDocument('daily_content', contentData);
         toast.success('Quiz added successfully');
       }
       await loadData();
@@ -263,14 +272,9 @@ export default function ManageDaily() {
 
   const handleDelete = async (type: 'ayah' | 'dua' | 'fact' | 'quiz', id: string) => {
     if (!confirm('Are you sure you want to delete this item?')) return;
-    
-    try {
-      const { error } = await supabase
-        .from('daily_content')
-        .delete()
-        .eq('id', id);
 
-      if (error) throw error;
+    try {
+      await deleteDocument('daily_content', id);
       await loadData();
       toast.success('Item deleted successfully');
     } catch (error: any) {
@@ -332,11 +336,10 @@ export default function ManageDaily() {
                   setIsCreating(false);
                   setEditingId(null);
                 }}
-                className={`flex items-center gap-2 px-6 py-3 border-b-2 transition-colors ${
-                  activeTab === tab.id
+                className={`flex items-center gap-2 px-6 py-3 border-b-2 transition-colors ${activeTab === tab.id
                     ? 'border-islamic-green-600 text-islamic-green-600 font-semibold'
                     : 'border-transparent text-islamic-dark/60 hover:text-islamic-dark'
-                }`}
+                  }`}
               >
                 <Icon className="w-4 h-4" />
                 {tab.label}
@@ -662,4 +665,3 @@ export default function ManageDaily() {
     </div>
   );
 }
-

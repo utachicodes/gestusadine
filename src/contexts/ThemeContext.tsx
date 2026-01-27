@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useAuth } from '@/auth/AuthContext';
-import { supabase } from '@/lib/supabase';
+import { auth } from '@/lib/firebase';
+import { updateProfile } from 'firebase/auth';
 
 export type ThemeMode = 'light' | 'dark' | 'personalized';
 
@@ -50,12 +51,16 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     localStorage.setItem('theme', theme);
     localStorage.setItem('theme-colors', JSON.stringify(colors));
 
-    if (user) {
-      supabase.auth.updateUser({
-        data: { theme, theme_colors: colors }
-      }).catch(() => {
-        // Non-blocking: ignore failures
-      });
+    // Optionally save to Firebase user metadata (non-blocking)
+    if (user && auth.currentUser) {
+      const metadata = {
+        ...auth.currentUser.metadata,
+        theme,
+        theme_colors: JSON.stringify(colors)
+      };
+      // Note: Firebase doesn't support custom metadata like Supabase
+      // You would need to store this in Firestore user document instead
+      // For now, we'll just use localStorage
     }
 
     const root = window.document.documentElement;
@@ -80,11 +85,11 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
     if (theme === 'dark') {
       root.classList.add('dark');
-      ['--primary','--secondary','--accent','--background','--foreground','--card','--card-foreground','--muted','--muted-foreground','--border','--input','--ring','--popover','--popover-foreground','--secondary-foreground','--accent-foreground','--destructive','--destructive-foreground']
+      ['--primary', '--secondary', '--accent', '--background', '--foreground', '--card', '--card-foreground', '--muted', '--muted-foreground', '--border', '--input', '--ring', '--popover', '--popover-foreground', '--secondary-foreground', '--accent-foreground', '--destructive', '--destructive-foreground']
         .forEach((name) => root.style.removeProperty(name));
     } else if (theme === 'light') {
       root.classList.add('light');
-      ['--primary','--secondary','--accent','--background','--foreground','--card','--card-foreground','--muted','--muted-foreground','--border','--input','--ring','--popover','--popover-foreground','--secondary-foreground','--accent-foreground','--destructive','--destructive-foreground']
+      ['--primary', '--secondary', '--accent', '--background', '--foreground', '--card', '--card-foreground', '--muted', '--muted-foreground', '--border', '--input', '--ring', '--popover', '--popover-foreground', '--secondary-foreground', '--accent-foreground', '--destructive', '--destructive-foreground']
         .forEach((name) => root.style.removeProperty(name));
     } else {
       root.classList.add('personalized');
@@ -138,6 +143,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useTheme = () => {
   const context = useContext(ThemeContext);
   if (context === undefined) {
@@ -161,12 +167,12 @@ function hexToHSL(H: string) {
   r /= 255;
   g /= 255;
   b /= 255;
-  let cmin = Math.min(r,g,b),
-      cmax = Math.max(r,g,b),
-      delta = cmax - cmin,
-      h = 0,
-      s = 0,
-      l = 0;
+  const cmin = Math.min(r, g, b);
+  const cmax = Math.max(r, g, b);
+  const delta = cmax - cmin;
+  let h = 0,
+    s = 0,
+    l = 0;
 
   if (delta === 0)
     h = 0;

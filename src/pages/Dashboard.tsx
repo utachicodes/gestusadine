@@ -1,107 +1,13 @@
 import * as React from "react";
 import { Sparkles, Sun, MoonStar, HelpCircle, Star } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+// import { CreditUsageWidget } from "@/components/subscription/CreditUsageWidget";
+import { RankDisplay } from "@/components/gamification/RankDisplay";
+import { BadgeList, BadgeType } from "@/components/gamification/BadgeList";
 
 type LanguageCode = "wo" | "fr" | "en";
 type Difficulty = "easy" | "medium" | "advanced";
 
-const quizByLanguage: Record<
-  LanguageCode,
-  Record<Difficulty, { question: string; options: string[]; correct: string; hint: string }>
-> = {
-  en: {
-    easy: {
-      question: "How many daily obligatory prayers are there in Islam?",
-      options: ["Three", "Five", "Seven"],
-      correct: "Five",
-      hint: "Think of Fajr, Dhuhr, ʿAsr, Maghrib, ʿIshāʾ.",
-    },
-    medium: {
-      question:
-        "In Maliki fiqh, what is one key condition for following an imām in congregational prayer?",
-      options: [
-        "Standing directly in front of the imām",
-        "Intending to follow the imām at the beginning of the prayer",
-        "Reciting Sūrat al-Fātiḥah aloud with the imām",
-      ],
-      correct: "Intending to follow the imām at the beginning of the prayer",
-      hint: "It relates to your niyyah (intention).",
-    },
-    advanced: {
-      question:
-        "According to many Maliki jurists, when can local custom (ʿurf) be used in rulings?",
-      options: [
-        "Whenever it is popular, even if it contradicts Qurʾān and Sunnah",
-        "When it does not oppose clear textual evidence and helps clarify contracts or practices",
-        "Only in matters of pure worship (ʿibādāt)",
-      ],
-      correct:
-        "When it does not oppose clear textual evidence and helps clarify contracts or practices",
-      hint: "Custom cannot override explicit texts.",
-    },
-  },
-  fr: {
-    easy: {
-      question: "Combien de prières obligatoires quotidiennes y a-t-il en Islam ?",
-      options: ["Trois", "Cinq", "Sept"],
-      correct: "Cinq",
-      hint: "Pense à Fajr, Dhuhr, ʿAsr, Maghrib, ʿIshāʾ.",
-    },
-    medium: {
-      question:
-        "En fiqh malikite, quelle est une condition clé pour suivre l’imam en prière collective ?",
-      options: [
-        "Se tenir directement devant l’imam",
-        "Avoir l’intention de suivre l’imam au début de la prière",
-        "Réciter la Fātiḥa à voix haute avec l’imam",
-      ],
-      correct: "Avoir l’intention de suivre l’imam au début de la prière",
-      hint: "Cela concerne la niyyah (intention).",
-    },
-    advanced: {
-      question:
-        "Selon de nombreux juristes malikites, quand peut-on utiliser la coutume locale (ʿurf) dans les règles ?",
-      options: [
-        "Chaque fois qu’elle est populaire, même si elle contredit le Coran et la Sunna",
-        "Lorsqu’elle n’oppose pas un texte clair et aide à clarifier des contrats ou pratiques",
-        "Uniquement dans les questions d’adoration (ʿibādāt)",
-      ],
-      correct:
-        "Lorsqu’elle n’oppose pas un texte clair et aide à clarifier des contrats ou pratiques",
-      hint: "La coutume ne peut pas contredire des textes explicites.",
-    },
-  },
-  wo: {
-    easy: {
-      question: "Njulli yu séentu bu bépp bés ñaata la ci Islam ?",
-      options: ["Ñetti", "Juroom", "Juróom-ñaari"],
-      correct: "Juroom",
-      hint: "Xool Fajr, Dhuhr, ʿAsr, Maghrib, ʿIshāʾ.",
-    },
-    medium: {
-      question:
-        "Ci fiqh Maliki, lan la benn xaalis bu am solo ngir topp imâm ci njulli bu jàmm ?",
-      options: [
-        "Taxaw ci kanam imâm",
-        "Niyyah ngir topp imâm ci tàmbali njulli",
-        "Waxal Sūrat al-Fātiḥah ci kaw ak imâm",
-      ],
-      correct: "Niyyah ngir topp imâm ci tàmbali njulli",
-      hint: "Li jëm ci sa niyyah.",
-    },
-    advanced: {
-      question:
-        "Ni jurist yu bari ci Maliki wax, kan la ʿurf (àdetu dëkkuwaay) mën cee jariñu ci tegtal yi ?",
-      options: [
-        "Saa su nekk bu ne, su mel la muy di wacc Qurʼaan ak Sunna",
-        "Su mu du séen ak mbind yu wér te mu dëgëral jëmmante ak jumtukaay yi",
-        "Ci mbiri jaamu rekk (ʿibādāt)",
-      ],
-      correct: "Su mu du séen ak mbind yu wér te mu dëgëral jëmmante ak jumtukaay yi",
-      hint: "Àdet mënul weñ wott mbind yu wér.",
-    },
-  },
-};
 
 interface DailyData {
   gregorianDate: string;
@@ -128,7 +34,7 @@ const getCurrentDateFormatted = (format: 'US' | 'EU' | 'ISO') => {
   const year = today.getFullYear();
   const month = String(today.getMonth() + 1).padStart(2, '0');
   const day = String(today.getDate()).padStart(2, '0');
-  
+
   switch (format) {
     case 'US': return `${month}/${day}/${year}`;
     case 'EU': return `${day}-${month}-${year}`;
@@ -179,7 +85,7 @@ const MOCK_DAILY_BY_LANG: Record<LanguageCode, DailyData> = {
         "Yàlla du jël ci koro jigeen walla góor lu gën sàmm ndigalu moom.",
     },
     dua: {
-      arabic: "رَبِّ زِدْنِي عِلْمًا",
+      arabic: "رَبِّ زIDNII CILMĀ",
       translation: "Ya Rabb, yokkal ma xam-xam.",
     },
     fact: "Njulli juroom-ñaari waxtuñ bi lay setlu bésu musulmaan.",
@@ -210,11 +116,10 @@ const PrayerItem: React.FC<{
         <button
           type="button"
           onClick={handleToggle}
-          className={`flex-shrink-0 w-4 h-4 rounded border-2 transition-all ${
-            completed
-              ? 'bg-primary border-primary'
-              : 'border-muted-foreground/30 hover:border-primary'
-          }`}
+          className={`flex-shrink-0 w-4 h-4 rounded border-2 transition-all ${completed
+            ? 'bg-primary border-primary'
+            : 'border-muted-foreground/30 hover:border-primary'
+            }`}
           aria-label={`Mark ${prayer} as ${completed ? 'not completed' : 'completed'}`}
         >
           {completed && (
@@ -245,7 +150,18 @@ const Dashboard: React.FC = () => {
   const [daily, setDaily] = React.useState<DailyData | null>(null);
   const [error, setError] = React.useState<string | null>(null);
 
-  const quiz = quizByLanguage[language][difficulty];
+  // Quiz content derived from translations
+  const quiz = {
+    question: t(`quiz.${difficulty}.question`),
+    options: [
+      t(`quiz.${difficulty}.options.0`),
+      t(`quiz.${difficulty}.options.1`),
+      t(`quiz.${difficulty}.options.2`),
+    ],
+    correct: t(`quiz.${difficulty}.correct`),
+    hint: t(`quiz.${difficulty}.hint`),
+  };
+
   const isCorrect = submitted && selectedOption === quiz.correct;
 
   React.useEffect(() => {
@@ -257,7 +173,7 @@ const Dashboard: React.FC = () => {
         const response = await fetch(`${apiUrl}/api/daily`);
         if (!response.ok) throw new Error('Failed to fetch daily content');
         const data = await response.json();
-        
+
         // Map API response to DailyData format
         const mappedData: DailyData = {
           gregorianDate: data.gregorianDate,
@@ -369,9 +285,9 @@ const Dashboard: React.FC = () => {
           </div>
         </header>
 
-        <div className="grid gap-3 md:grid-cols-3 flex-1 min-h-0">
+        <div className="grid gap-3 md:grid-cols-4 flex-1 min-h-0">
           {/* Ayah / reminder */}
-          <div className="islamic-card col-span-2 relative overflow-hidden group">
+          <div className="islamic-card md:col-span-2 relative overflow-hidden group">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-secondary/5 to-accent/10 opacity-80 group-hover:opacity-100 transition-opacity" />
             <div className="absolute top-0 right-0 w-32 h-32 bg-accent/5 rounded-full blur-3xl -translate-y-16 translate-x-16" />
             <div className="relative p-6 h-full flex flex-col justify-between space-y-4">
@@ -414,11 +330,11 @@ const Dashboard: React.FC = () => {
                     {t('dashboard.todayLabel')}
                   </p>
                   <p className="font-semibold text-foreground text-base">
-                    {daily?.gregorianDate ? new Date(daily.gregorianDate).toLocaleDateString(language === 'fr' ? 'fr-FR' : language === 'wo' ? 'wo-SN' : 'en-US', { 
-                      weekday: 'short', 
-                      year: 'numeric', 
-                      month: 'short', 
-                      day: 'numeric' 
+                    {daily?.gregorianDate ? new Date(daily.gregorianDate).toLocaleDateString(language === 'fr' ? 'fr-FR' : language === 'wo' ? 'wo-SN' : 'en-US', {
+                      weekday: 'short',
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric'
                     }) : ""}
                   </p>
                   <p className="font-medium text-muted-foreground mt-1 text-xs">
@@ -437,12 +353,26 @@ const Dashboard: React.FC = () => {
               <p className="text-xs text-muted-foreground mb-3 leading-relaxed">
                 {t('dashboard.todaySummary')}
               </p>
-              <button 
+              <button
                 onClick={() => setShowReminder(!showReminder)}
                 className="btn-islamic w-full hover:scale-[1.02] transition-transform text-sm py-2"
               >
                 {t('dashboard.openReminder')}
               </button>
+            </div>
+          </div>
+
+          {/* Credit Usage Widget */}
+          {/* Credit Usage Widget replaced by Rank Display */}
+          {/* <CreditUsageWidget /> */}
+          <div className="md:col-span-1 space-y-4">
+            <RankDisplay currentRank="Talib" currentPoints={45} />
+
+            <div className="islamic-card p-4">
+              <h3 className="font-semibold mb-4 text-sm uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+                <Star className="w-4 h-4 text-islamic-gold" /> Your Badges
+              </h3>
+              <BadgeList badges={['Founding Member', 'Explorer', 'Beta Tester']} />
             </div>
           </div>
         </div>
@@ -453,7 +383,7 @@ const Dashboard: React.FC = () => {
             <div className="islamic-card p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-2xl font-semibold text-foreground">{t('dashboard.todays_reminder')}</h2>
-                <button 
+                <button
                   onClick={() => setShowReminder(false)}
                   className="text-muted-foreground hover:text-foreground"
                 >
@@ -596,7 +526,7 @@ const Dashboard: React.FC = () => {
                   <HelpCircle className="w-3.5 h-3.5 text-accent-foreground" />
                 </div>
               </div>
-              
+
               <div className="flex flex-wrap gap-1 mb-2">
                 <button
                   type="button"
@@ -605,11 +535,10 @@ const Dashboard: React.FC = () => {
                     setSelectedOption(null);
                     setSubmitted(false);
                   }}
-                  className={`px-2 py-0.5 rounded-full border text-[10px] font-medium transition-colors ${
-                    difficulty === "easy"
-                      ? "bg-primary text-primary-foreground border-primary"
-                      : "bg-primary/10 text-primary border-transparent hover:bg-primary/20"
-                  }`}
+                  className={`px-2 py-0.5 rounded-full border text-[10px] font-medium transition-colors ${difficulty === "easy"
+                    ? "bg-primary text-primary-foreground border-primary"
+                    : "bg-primary/10 text-primary border-transparent hover:bg-primary/20"
+                    }`}
                 >
                   {t('dashboard.easy')}
                 </button>
@@ -620,11 +549,10 @@ const Dashboard: React.FC = () => {
                     setSelectedOption(null);
                     setSubmitted(false);
                   }}
-                  className={`px-2 py-0.5 rounded-full border text-[10px] font-medium transition-colors ${
-                    difficulty === "medium"
-                      ? "bg-accent text-accent-foreground border-accent"
-                      : "bg-accent/10 text-accent-foreground border-transparent hover:bg-accent/20"
-                  }`}
+                  className={`px-2 py-0.5 rounded-full border text-[10px] font-medium transition-colors ${difficulty === "medium"
+                    ? "bg-accent text-accent-foreground border-accent"
+                    : "bg-accent/10 text-accent-foreground border-transparent hover:bg-accent/20"
+                    }`}
                 >
                   {t('dashboard.medium')}
                 </button>
@@ -635,11 +563,10 @@ const Dashboard: React.FC = () => {
                     setSelectedOption(null);
                     setSubmitted(false);
                   }}
-                  className={`px-2 py-0.5 rounded-full border text-[10px] font-medium transition-colors ${
-                    difficulty === "advanced"
-                      ? "bg-secondary text-secondary-foreground border-secondary"
-                      : "bg-secondary/10 text-secondary-foreground border-transparent hover:bg-secondary/20"
-                  }`}
+                  className={`px-2 py-0.5 rounded-full border text-[10px] font-medium transition-colors ${difficulty === "advanced"
+                    ? "bg-secondary text-secondary-foreground border-secondary"
+                    : "bg-secondary/10 text-secondary-foreground border-transparent hover:bg-secondary/20"
+                    }`}
                 >
                   {t('dashboard.advanced')}
                 </button>
@@ -662,15 +589,14 @@ const Dashboard: React.FC = () => {
                         setSubmitted(false);
                       }}
                       disabled={submitted}
-                      className={`w-full text-left text-[10px] px-2 py-1.5 rounded-lg border transition-colors ${
-                        correct
-                          ? "border-primary bg-primary/5 dark:bg-primary/20 text-primary dark:text-primary-foreground"
-                          : wrong
-                            ? "border-red-600 bg-red-50 dark:bg-red-900/30 text-red-800 dark:text-red-200"
-                            : selected
-                              ? "border-primary bg-primary/5 text-primary"
-                              : "border-border bg-card text-muted-foreground hover:bg-muted"
-                      } ${submitted ? 'cursor-default' : 'cursor-pointer'}`}
+                      className={`w-full text-left text-[10px] px-2 py-1.5 rounded-lg border transition-colors ${correct
+                        ? "border-primary bg-primary/5 dark:bg-primary/20 text-primary dark:text-primary-foreground"
+                        : wrong
+                          ? "border-destructive bg-destructive/10 dark:bg-destructive/20 text-destructive dark:text-destructive-foreground"
+                          : selected
+                            ? "border-primary bg-primary/5 text-primary"
+                            : "border-border bg-card text-muted-foreground hover:bg-muted"
+                        } ${submitted ? 'cursor-default' : 'cursor-pointer'}`}
                     >
                       <span className="line-clamp-2">{option}</span>
                     </button>
@@ -693,9 +619,8 @@ const Dashboard: React.FC = () => {
 
               {submitted && (
                 <p
-                  className={`mt-1 text-[10px] leading-tight ${
-                    isCorrect ? "text-primary dark:text-primary-foreground" : "text-muted-foreground"
-                  }`}
+                  className={`mt-1 text-[10px] leading-tight ${isCorrect ? "text-primary dark:text-primary-foreground" : "text-muted-foreground"
+                    }`}
                 >
                   {isCorrect
                     ? t('dashboard.correctFeedback')

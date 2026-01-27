@@ -7,7 +7,6 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { MediaContent } from '@/types/ecosystem';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
-import { supabase } from '@/lib/supabase';
 import { Textarea } from '@/components/ui/textarea';
 import {
     Dialog,
@@ -17,6 +16,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
+import { getDocuments, addDocument, updateDocument, deleteDocument, uploadFile, deleteFile, where, orderBy, limit } from '@/lib/firebase-helpers';
 
 export default function ManageVideos() {
     const { t } = useLanguage();
@@ -47,15 +47,11 @@ export default function ManageVideos() {
     const loadVideos = async () => {
         setLoading(true);
         try {
-            const { data, error } = await supabase
-                .from('media_content')
-                .select('*')
-                .eq('type', 'video')
-                .order('created_at', { ascending: false });
-
-            if (error) throw error;
-            setVideos(data || []);
-        } catch (error: any) {
+            const data = await getDocuments('videos', [
+                orderBy('created_at', 'desc')
+            ]);
+            setVideos(data as MediaContent[]);
+        } catch (error) {
             console.error('Failed to load videos:', error);
             toast.error('Failed to load videos');
         } finally {
@@ -67,22 +63,13 @@ export default function ManageVideos() {
         setUploadingVideo(true);
         try {
             const fileExt = file.name.split('.').pop();
-            const fileName = `${Math.random()}.${fileExt}`;
+            const fileName = `${Date.now()}.${fileExt}`;
             const filePath = `videos/${fileName}`;
 
-            const { error: uploadError } = await supabase.storage
-                .from('media')
-                .upload(filePath, file);
-
-            if (uploadError) throw uploadError;
-
-            const { data } = supabase.storage
-                .from('media')
-                .getPublicUrl(filePath);
-
-            setFormData({ ...formData, url: data.publicUrl });
+            const url = await uploadFile(filePath, file);
+            setFormData({ ...formData, url });
             toast.success('Video uploaded successfully');
-        } catch (error: any) {
+        } catch (error) {
             console.error('Failed to upload video:', error);
             toast.error('Failed to upload video');
         } finally {
@@ -94,22 +81,13 @@ export default function ManageVideos() {
         setUploadingThumbnail(true);
         try {
             const fileExt = file.name.split('.').pop();
-            const fileName = `${Math.random()}.${fileExt}`;
+            const fileName = `${Date.now()}.${fileExt}`;
             const filePath = `thumbnails/${fileName}`;
 
-            const { error: uploadError } = await supabase.storage
-                .from('media')
-                .upload(filePath, file);
-
-            if (uploadError) throw uploadError;
-
-            const { data } = supabase.storage
-                .from('media')
-                .getPublicUrl(filePath);
-
-            setFormData({ ...formData, thumbnail_url: data.publicUrl });
+            const url = await uploadFile(filePath, file);
+            setFormData({ ...formData, thumbnail_url: url });
             toast.success('Thumbnail uploaded successfully');
-        } catch (error: any) {
+        } catch (error) {
             console.error('Failed to upload thumbnail:', error);
             toast.error('Failed to upload thumbnail');
         } finally {
@@ -125,20 +103,18 @@ export default function ManageVideos() {
 
         setIsGenerating(true);
         try {
-            // Call OpenRouter API directly from client-side
             const openRouterApiKey = import.meta.env.VITE_OPENROUTER_API_KEY;
             if (!openRouterApiKey) {
                 throw new Error('OpenRouter API key not configured');
             }
 
-            // Generate video script and metadata using AI
             const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${openRouterApiKey}`,
                     'HTTP-Referer': window.location.origin,
-                    'X-Title': 'XamSaDine AI'
+                    'X-Title': 'GëstuSaDine'
                 },
                 body: JSON.stringify({
                     model: 'openai/gpt-4o',
@@ -164,34 +140,26 @@ export default function ManageVideos() {
             const data = await response.json();
             const content = JSON.parse(data.choices[0].message.content);
 
-            // Create video entry in database
             const videoData = {
                 title: content.title || `AI Generated Video - ${new Date().toLocaleDateString()}`,
                 description: content.description || 'AI generated video based on Islamic content',
                 type: 'video',
-                url: '', // Will be updated when video is actually generated
-                thumbnail_url: '',
+                url: '',
+                thumbnailUrl: '',
                 duration_seconds: content.estimated_duration_seconds || 300,
                 language: formData.language,
                 audience: formData.audience,
                 transcript: content.transcript || aiScript,
             };
 
-            const { data: newVideo, error: insertError } = await supabase
-                .from('media_content')
-                .insert([videoData])
-                .select()
-                .single();
-
-            if (insertError) throw insertError;
-
+            await addDocument('videos', videoData);
             setIsAIModalOpen(false);
             setAiScript('');
             await loadVideos();
-            toast.success('AI video content generated successfully! Note: Video file generation requires additional processing.');
-        } catch (error: any) {
+            toast.success('AI video content generated successfully!');
+        } catch (error) {
             console.error('Failed to generate AI video:', error);
-            toast.error(error.message || 'Failed to generate AI video');
+            toast.error(error instanceof Error ? error.message : 'Failed to generate AI video');
         } finally {
             setIsGenerating(false);
         }
@@ -205,7 +173,7 @@ export default function ManageVideos() {
                 description: formData.description,
                 type: 'video' as const,
                 url: formData.url,
-                thumbnail_url: formData.thumbnail_url || null,
+                thumbnailUrl: formData.thumbnail_url || null,
                 duration_seconds: formData.duration_seconds ? parseInt(formData.duration_seconds) : null,
                 language: formData.language,
                 audience: formData.audience,
@@ -213,22 +181,11 @@ export default function ManageVideos() {
             };
 
             if (editingId) {
-                const { error } = await supabase
-                    .from('media_content')
-                    .update(videoData)
-                    .eq('id', editingId);
-
-                if (error) throw error;
+                await updateDocument('videos', editingId, videoData);
                 toast.success('Video updated successfully');
                 setEditingId(null);
             } else {
-                const { data, error } = await supabase
-                    .from('media_content')
-                    .insert([videoData])
-                    .select()
-                    .single();
-
-                if (error) throw error;
+                await addDocument('videos', videoData);
                 toast.success('Video created successfully');
                 setIsCreating(false);
             }
@@ -244,9 +201,9 @@ export default function ManageVideos() {
                 audience: 'adults',
                 transcript: '',
             });
-        } catch (error: any) {
+        } catch (error) {
             console.error('Failed to save video:', error);
-            toast.error(error.message || 'Failed to save video');
+            toast.error(error instanceof Error ? error.message : 'Failed to save video');
         }
     };
 
@@ -269,41 +226,39 @@ export default function ManageVideos() {
         if (!confirm('Are you sure you want to delete this video?')) return;
 
         try {
-            // Get video details first to access file URLs
-            const { data: video } = await supabase
-                .from('media_content')
-                .select('*')
-                .eq('id', id)
-                .single();
+            const videos = await getDocuments('videos', [where('__name__', '==', id)]) as MediaContent[];
+            const video = videos[0];
 
             if (video) {
                 // Delete video file from storage if it exists
                 if (video.url && video.url.includes('videos/')) {
-                    const videoPath = video.url.split('/videos/')[1];
-                    if (videoPath) {
-                        await supabase.storage.from('videos').remove([`videos/${videoPath}`]);
+                    try {
+                        const videoPath = video.url.split('/videos/')[1].split('?')[0];
+                        if (videoPath) {
+                            await deleteFile(`videos/${videoPath}`);
+                        }
+                    } catch (err) {
+                        console.warn('Failed to delete video file:', err);
                     }
                 }
 
                 // Delete thumbnail from storage if it exists
                 if (video.thumbnail_url && video.thumbnail_url.includes('thumbnails/')) {
-                    const thumbnailPath = video.thumbnail_url.split('/thumbnails/')[1];
-                    if (thumbnailPath) {
-                        await supabase.storage.from('videos').remove([`thumbnails/${thumbnailPath}`]);
+                    try {
+                        const thumbnailPath = video.thumbnail_url.split('/thumbnails/')[1].split('?')[0];
+                        if (thumbnailPath) {
+                            await deleteFile(`thumbnails/${thumbnailPath}`);
+                        }
+                    } catch (err) {
+                        console.warn('Failed to delete thumbnail:', err);
                     }
                 }
             }
 
-            // Delete database entry
-            const { error } = await supabase
-                .from('media_content')
-                .delete()
-                .eq('id', id);
-
-            if (error) throw error;
-            toast.success('Video and associated files deleted successfully');
+            await deleteDocument('videos', id);
+            toast.success('Video deleted successfully');
             await loadVideos();
-        } catch (error: any) {
+        } catch (error) {
             console.error('Failed to delete video:', error);
             toast.error('Failed to delete video');
         }
@@ -471,7 +426,7 @@ export default function ManageVideos() {
                                                 <label className="text-sm text-gray-600">Audience</label>
                                                 <select
                                                     value={formData.audience}
-                                                    onChange={(e) => setFormData({ ...formData, audience: e.target.value as any })}
+                                                    onChange={(e) => setFormData({ ...formData, audience: e.target.value as 'kids' | 'teens' | 'adults' })}
                                                     className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                                                 >
                                                     <option value="kids">Kids</option>
@@ -592,7 +547,7 @@ export default function ManageVideos() {
                                     <label className="text-sm font-medium mb-2 block">Audience</label>
                                     <select
                                         value={formData.audience}
-                                        onChange={(e) => setFormData({ ...formData, audience: e.target.value as any })}
+                                        onChange={(e) => setFormData({ ...formData, audience: e.target.value as 'kids' | 'teens' | 'adults' })}
                                         className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                                     >
                                         <option value="kids">Kids</option>
@@ -627,4 +582,3 @@ export default function ManageVideos() {
         </div>
     );
 }
-

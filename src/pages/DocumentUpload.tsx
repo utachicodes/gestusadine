@@ -2,7 +2,8 @@ import * as React from "react";
 import { Upload, FileText, Trash2, CheckCircle, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { supabase } from "@/lib/supabase";
+import { storage } from "@/lib/firebase"; // Firebase Storage
+import { ref, uploadBytes, getDownloadURL, listAll, deleteObject } from "firebase/storage";
 import { openRouter } from "@/lib/openrouter";
 
 interface DocumentMetadata {
@@ -12,6 +13,7 @@ interface DocumentMetadata {
     uploadedAt: string;
     status: 'uploaded' | 'processing' | 'ready' | 'error';
     chunkCount?: number;
+    url?: string;
 }
 
 const AGENT_CATEGORIES = [
@@ -32,57 +34,56 @@ const DocumentUpload: React.FC = () => {
     const fileInputRef = React.useRef<HTMLInputElement>(null);
     const { toast } = useToast();
 
-    React.useEffect(() => {
-        loadDocuments();
-    }, []);
-
-    const loadDocuments = async () => {
+    const loadDocuments = React.useCallback(async () => {
         try {
-            // Load documents from Supabase storage
-            const { data: files, error } = await supabase.storage
-                .from('documents')
-                .list('', {
-                    limit: 100,
-                    sortBy: { column: 'created_at', order: 'desc' }
-                });
+            // List files from Firebase Storage
+            const listRef = ref(storage, selectedAgent); // Use simplified path strategy: agent-name/filename
+            // Note: Firebase Storage listing is flat by default or via prefix.
+            // If we organize by folders (prefixes), we list items in that prefix.
+            // If folder doesn't exist yet, it returns empty list (which is fine).
 
-            if (error) throw error;
+            const res = await listAll(listRef);
 
-            const documentsList: DocumentMetadata[] = (files || []).map(file => ({
-                id: file.id || file.name,
-                filename: file.name,
-                category: selectedAgent, // Tag document with agent
-                uploadedAt: file.created_at || new Date().toISOString(),
-                status: 'ready' as const,
+            const documentsList: DocumentMetadata[] = await Promise.all(res.items.map(async (itemRef) => {
+                // Get metadata if possible, for now just filename and url
+                const url = await getDownloadURL(itemRef);
+                return {
+                    id: itemRef.fullPath,
+                    filename: itemRef.name,
+                    category: selectedAgent,
+                    uploadedAt: new Date().toISOString(), // Storage list doesn't give date easily without getMetadata
+                    status: 'ready' as const,
+                    url: url
+                };
             }));
+
+            // If we want detailed metadata (created_at), we need getMetadata call per item.
+            // For performance, we skip it or could implement a separate database index.
 
             setDocuments(documentsList);
         } catch (error) {
+            // If error is "object-not-found" (folder empty), just set empty
             console.error('Error loading documents:', error);
-            toast({
-                title: 'Error',
-                description: 'Failed to load documents',
-                variant: 'destructive'
-            });
+            setDocuments([]); // Default to empty
         }
-    };
+    }, [selectedAgent]);
 
-    const handleOpen = async (id: string) => {
-        setOpeningId(id);
+    React.useEffect(() => {
+        loadDocuments();
+    }, [loadDocuments]);
+
+    const handleOpen = async (doc: DocumentMetadata) => {
+        if (doc.url) {
+            window.open(doc.url, '_blank', 'noopener,noreferrer');
+            return;
+        }
+
+        // Fallback if URL missed
+        setOpeningId(doc.id);
         try {
-            const doc = documents.find(d => d.id === id);
-            if (!doc) throw new Error('Document not found');
-
-            // Get public URL from Supabase Storage
-            const { data } = supabase.storage
-                .from('documents')
-                .getPublicUrl(`${selectedAgent}/${doc.filename}`);
-
-            if (!data?.publicUrl) {
-                throw new Error('Could not generate URL');
-            }
-
-            window.open(data.publicUrl, '_blank', 'noopener,noreferrer');
+            const itemRef = ref(storage, doc.id);
+            const url = await getDownloadURL(itemRef);
+            window.open(url, '_blank', 'noopener,noreferrer');
         } catch (error: any) {
             toast({
                 title: 'Open Failed',
@@ -120,6 +121,8 @@ const DocumentUpload: React.FC = () => {
         }
     };
 
+    const [uploadProgress, setUploadProgress] = React.useState(0);
+
     const handleFileUpload = async (file: File) => {
         if (!file.name.match(/\.(txt|pdf|docx|md)$/i)) {
             toast({
@@ -131,20 +134,36 @@ const DocumentUpload: React.FC = () => {
         }
 
         setUploading(true);
+        setUploadProgress(0);
+
         try {
-            // Upload to Supabase Storage
-            const fileExt = file.name.split('.').pop();
+            // Upload to Firebase Storage
             const fileName = `${Date.now()}_${file.name}`;
             const filePath = `${selectedAgent}/${fileName}`;
+            const storageRef = ref(storage, filePath);
 
-            const { error: uploadError } = await supabase.storage
-                .from('documents')
-                .upload(filePath, file, {
-                    cacheControl: '3600',
-                    upsert: false
+            // Use resumable upload for progress
+            const uploadTask = import('firebase/storage').then(({ uploadBytesResumable }) => {
+                const task = uploadBytesResumable(storageRef, file);
+
+                return new Promise<void>((resolve, reject) => {
+                    task.on('state_changed',
+                        (snapshot) => {
+                            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                            setUploadProgress(progress);
+                        },
+                        (error) => {
+                            reject(error);
+                        },
+                        async () => {
+                            // Upload completed successfully
+                            resolve();
+                        }
+                    );
                 });
+            });
 
-            if (uploadError) throw uploadError;
+            await uploadTask;
 
             // Process document for RAG if it's a text file
             if (file.name.match(/\.(txt|md)$/i)) {
@@ -184,20 +203,15 @@ const DocumentUpload: React.FC = () => {
             });
         } finally {
             setUploading(false);
+            setUploadProgress(0);
             if (fileInputRef.current) fileInputRef.current.value = '';
         }
     };
 
-    const handleDelete = async (id: string) => {
+    const handleDelete = async (id: string, filename: string) => {
         try {
-            const doc = documents.find(d => d.id === id);
-            if (!doc) throw new Error('Document not found');
-
-            const { error } = await supabase.storage
-                .from('documents')
-                .remove([`${selectedAgent}/${doc.filename}`]);
-
-            if (error) throw error;
+            const itemRef = ref(storage, id);
+            await deleteObject(itemRef);
 
             toast({
                 title: "Deleted",
@@ -292,7 +306,19 @@ const DocumentUpload: React.FC = () => {
                                 disabled={uploading}
                                 className="btn-islamic disabled:opacity-50"
                             >
-                                {uploading ? 'Uploading...' : 'Select File'}
+                                {uploading ? (
+                                    <div className="w-full flex flex-col items-center gap-2">
+                                        <div className="w-full h-2 bg-islamic-cream rounded-full overflow-hidden">
+                                            <div
+                                                className="h-full bg-islamic-gold transition-all duration-300 ease-out"
+                                                style={{ width: `${uploadProgress}%` }}
+                                            />
+                                        </div>
+                                        <span className="text-xs text-islamic-dark/60">
+                                            Uploading... {Math.round(uploadProgress)}%
+                                        </span>
+                                    </div>
+                                ) : 'Select File'}
                             </button>
                         </div>
                     </div>
@@ -325,7 +351,7 @@ const DocumentUpload: React.FC = () => {
 
                                         <div className="flex items-center gap-2">
                                             <button
-                                                onClick={() => handleOpen(doc.id)}
+                                                onClick={() => handleOpen(doc)}
                                                 disabled={openingId === doc.id}
                                                 className="px-3 py-2 text-xs rounded-lg border border-islamic-cream text-islamic-dark/80 hover:text-islamic-dark hover:border-islamic-gold/50 transition-colors disabled:opacity-50"
                                                 title="Preview / Download"
@@ -334,7 +360,7 @@ const DocumentUpload: React.FC = () => {
                                             </button>
 
                                             <button
-                                                onClick={() => handleDelete(doc.id)}
+                                                onClick={() => handleDelete(doc.id, doc.filename)}
                                                 className="p-2 text-islamic-dark/40 hover:text-red-500 rounded-lg transition-colors"
                                                 title={t('error.delete_document')}
                                             >

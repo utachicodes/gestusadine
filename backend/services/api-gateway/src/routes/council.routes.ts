@@ -13,7 +13,7 @@ import {
     translateToFrench,
     detectLanguage,
     healthCheck
-} from './council-handler';
+} from './council-handler.js';
 
 export const councilRoutes = Router();
 

@@ -1,8 +1,8 @@
 import express from 'express';
-import { openRouterClient } from '../../llm-service/openrouter-client';
-import { llmCouncil } from '../../llm-service/llm-council';
-import { optionalAuth } from './auth';
-import { logger } from '../../../shared/logger';
+import { openRouterClient } from '../../llm-service/openrouter-client.js';
+import { llmCouncil } from '../../llm-service/llm-council.js';
+import { optionalAuth } from './auth.js';
+import { logger } from '../../../shared/logger.js';
 
 const router = express.Router();
 // Use exported singletons

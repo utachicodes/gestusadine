@@ -1,8 +1,9 @@
-import { supabase } from "@/lib/supabase";
+import { auth } from "@/lib/firebase";
 
 async function getAccessToken(): Promise<string | null> {
-  const { data } = await supabase.auth.getSession();
-  return data.session?.access_token ?? null;
+  const user = auth.currentUser;
+  if (!user) return null;
+  return user.getIdToken();
 }
 
 export async function apiFetch(input: string, init?: RequestInit): Promise<Response> {

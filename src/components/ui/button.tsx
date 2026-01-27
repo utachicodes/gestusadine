@@ -17,7 +17,7 @@ const buttonVariants = cva(
         islamicPrimary:
           "bg-islamic-green text-white hover:bg-islamic-green/90 shadow-md",
         islamicOutline:
-          "bg-[#efefec] text-islamic-dark border border-islamic-primary-green hover:border-islamic-primary-gold",
+          "bg-background text-primary border border-primary hover:border-primary/80",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
@@ -39,7 +39,7 @@ const buttonVariants = cva(
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
+  VariantProps<typeof buttonVariants> {
   asChild?: boolean
 }
 
@@ -57,4 +57,5 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 )
 Button.displayName = "Button"
 
+// eslint-disable-next-line react-refresh/only-export-components
 export { Button, buttonVariants }

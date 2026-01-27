@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Trash2 } from 'lucide-react';
+import { Send, Trash2, Sparkles } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/auth/AuthContext';
@@ -7,6 +7,8 @@ import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { apiFetch } from '@/lib/api';
 import { logger } from '@/lib/logger';
+import { ModeSelector, SpecializedMode } from './ModeSelector';
+import { TemplateLibrary } from './TemplateLibrary';
 
 interface Message {
   id: string;
@@ -20,7 +22,7 @@ interface Message {
   };
 }
 
-const STORAGE_KEY = 'xamsadine_chat_history';
+const STORAGE_KEY = 'GëstuSaDine_chat_history';
 
 // Helper functions for localStorage
 const saveMessages = (messages: Message[]) => {
@@ -54,10 +56,29 @@ export const ChatInterface = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedMode, setSelectedMode] = useState<SpecializedMode>('general');
+  const [userTier, setUserTier] = useState<'free' | 'core' | 'pro'>('free');
+  const [showTemplates, setShowTemplates] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { user } = useAuth();
   const { toast } = useToast();
   const { language, t } = useLanguage();
+
+  // Fetch user tier on mount
+  useEffect(() => {
+    const fetchUserTier = async () => {
+      try {
+        const response = await apiFetch('/api/subscription/me');
+        const data = await response.json();
+        setUserTier(data.subscription?.tier || 'free');
+      } catch (error) {
+        logger.error('Failed to fetch user tier:', { error });
+      }
+    };
+    if (user) {
+      fetchUserTier();
+    }
+  }, [user]);
 
   // Load message history on mount
   useEffect(() => {
@@ -100,7 +121,7 @@ export const ChatInterface = () => {
     setIsLoading(true);
 
     // Get madhab from localStorage
-    const madhab = localStorage.getItem('xamsadine-madhab') || 'maliki';
+    const madhab = localStorage.getItem('GëstuSaDine-madhab') || 'maliki';
 
     try {
       const response = await apiFetch('/api/chat', {
@@ -108,7 +129,8 @@ export const ChatInterface = () => {
         body: JSON.stringify({
           message: userInput,
           language: language,
-          madhab: madhab
+          madhab: madhab,
+          mode: selectedMode, // Include selected mode
         }),
       });
 
@@ -127,6 +149,15 @@ export const ChatInterface = () => {
       };
 
       setMessages(prev => [...prev, botMessage]);
+
+      // Track credit usage
+      try {
+        await apiFetch('/api/subscription/track-usage', {
+          method: 'POST',
+        });
+      } catch (trackError) {
+        logger.warn('Failed to track usage:', { trackError });
+      }
     } catch (error) {
       logger.error('Chat error:', { error, message: userInput });
 
@@ -259,7 +290,7 @@ export const ChatInterface = () => {
                       <div className="flex-shrink-0 mt-1">
                         <img
                           src="/logo.png"
-                          alt="XamSaDine AI"
+                          alt="GëstuSaDine"
                           className="h-8 w-8 object-contain brightness-110 dark:brightness-0 dark:invert"
                         />
                       </div>
@@ -283,9 +314,44 @@ export const ChatInterface = () => {
         </div>
       </div>
 
+      {/* Mode Selector & Templates */}
+      <div className="border-t border-border bg-background/50 backdrop-blur-sm">
+        <div className="max-w-3xl mx-auto px-4 py-4">
+          <ModeSelector
+            selectedMode={selectedMode}
+            onModeChange={setSelectedMode}
+            userTier={userTier}
+          />
+
+          {showTemplates && (
+            <div className="mt-4">
+              <TemplateLibrary
+                onSelectTemplate={(prompt) => {
+                  setInput(prompt);
+                  setShowTemplates(false);
+                }}
+                userTier={userTier}
+              />
+            </div>
+          )}
+        </div>
+      </div>
+
       {/* Input - Claude-inspired */}
       <div className="border-t border-border bg-background">
         <div className="max-w-3xl mx-auto px-4 py-4">
+          <div className="flex items-center gap-2 mb-2">
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowTemplates(!showTemplates)}
+              className="text-xs"
+            >
+              <Sparkles className="w-3 h-3 mr-1.5" />
+              {showTemplates ? 'Hide' : 'Show'} Templates
+            </Button>
+          </div>
           <form onSubmit={handleSubmit} className="relative">
             <div className="flex items-end gap-2 bg-card rounded-2xl border border-border focus-within:border-primary focus-within:ring-1 focus-within:ring-primary/20 transition-all">
               <Input

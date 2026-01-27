@@ -207,7 +207,7 @@ class Logger {
  * Helper class for consistent prefixed logging
  */
 class PrefixedLogger {
-  constructor(private logger: Logger, private prefix: string) {}
+  constructor(private logger: Logger, private prefix: string) { }
 
   debug(message: string, context?: LogContext): void {
     this.logger.debug(`[${this.prefix}] ${message}`, context);
@@ -231,6 +231,6 @@ class PrefixedLogger {
 }
 
 // Export singleton instance
-export const logger = new Logger({ service: 'xamsadine-ai' });
+export const logger = new Logger({ service: 'deenakdiamano' });
 
 export default logger;

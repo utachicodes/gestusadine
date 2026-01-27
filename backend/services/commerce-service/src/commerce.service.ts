@@ -1,46 +1,34 @@
-import { createClient } from '@supabase/supabase-js';
+import { db } from '../../api-gateway/src/lib/firebase-admin';
 import { Product, Order, OrderItem } from '../../../shared/ecosystem-types.js';
-
-let supabaseInstance: any = null;
-
-function getSupabase() {
-    if (supabaseInstance) return supabaseInstance;
-    const supabaseUrl = process.env.SUPABASE_URL!;
-    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-    if (!supabaseUrl || !supabaseKey) throw new Error("Missing Supabase credentials");
-    supabaseInstance = createClient<any>(supabaseUrl, supabaseKey);
-    return supabaseInstance;
-}
 
 export const CommerceService = {
     // Get all products
     async getProducts(category?: string) {
-        const supabase: any = getSupabase();
-        let query = supabase
-            .from('products')
-            .select('*')
-            .gt('stock_quantity', 0) // Only show in-stock
-            .order('created_at', { ascending: false });
+        let query = db.collection('products')
+            .where('stock_quantity', '>', 0) // Only show in-stock
+            .orderBy('stock_quantity', 'desc')
+            .orderBy('created_at', 'desc');
 
         if (category) {
-            query = query.eq('category', category);
+            query = query.where('category', '==', category);
         }
 
-        const { data, error } = await query;
-        if (error) throw error;
-        return data as Product[];
+        const snapshot = await query.get();
+        return snapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        })) as Product[];
     },
 
     async getProductById(id: string) {
-        const supabase: any = getSupabase();
-        const { data, error } = await supabase
-            .from('products')
-            .select('*')
-            .eq('id', id)
-            .single();
-
-        if (error) throw error;
-        return data as Product;
+        const doc = await db.collection('products').doc(id).get();
+        if (!doc.exists) {
+            throw new Error('Product not found');
+        }
+        return {
+            id: doc.id,
+            ...doc.data()
+        } as Product;
     },
 
     // Create Order & Initiate Payment
@@ -67,36 +55,34 @@ export const CommerceService = {
                 category: 'Merch',
                 amount: product.price,
                 quantity: item.quantity,
-                description: product.description || 'XamSaDine Merch'
+                description: product.description || 'DeenAkDiamano Merch'
             });
         }
 
         // 2. Create Order in DB
-        const supabase: any = getSupabase();
-        const { data: order, error: orderError } = await supabase
-            .from('orders')
-            .insert({
-                user_id: userId,
-                total_amount: totalAmount,
-                status: 'pending',
-                payment_method: paymentMethod
-            })
-            .select()
-            .single();
+        const orderData = {
+            user_id: userId,
+            total_amount: totalAmount,
+            status: 'pending',
+            payment_method: paymentMethod,
+            created_at: new Date().toISOString()
+        };
 
-        if (orderError) throw orderError;
+        const orderRef = await db.collection('orders').add(orderData);
+        const orderDoc = await orderRef.get();
+        const order = {
+            id: orderDoc.id,
+            ...orderDoc.data()
+        };
 
         // 3. Create Order Items
-        const itemsToInsert = orderItemsData.map(item => ({
-            ...item,
-            order_id: order.id
-        }));
-
-        const { error: itemsError } = await supabase
-            .from('order_items')
-            .insert(itemsToInsert);
-
-        if (itemsError) throw itemsError;
+        for (const item of orderItemsData) {
+            await db.collection('order_items').add({
+                ...item,
+                order_id: order.id,
+                created_at: new Date().toISOString()
+            });
+        }
 
         // 4. Initiate Payment logic (NabooPay)
         const paymentUrl = await this.initiatePaymentGateway(order, paymentItems, paymentMethod);
@@ -147,41 +133,50 @@ export const CommerceService = {
             return data.checkout_url;
         }
 
-        // Default / Mock fallthrough (should not be reached if properly configured)
-        return `https://checkout.xamsadine.com/mock-pay/${order.id}`;
+        // Default / Mock fallthrough
+        return `https://checkout.deenakdiamano.com/mock-pay/${order.id}`;
     },
 
     // Handle Payment Webhook (Success)
     async handlePaymentSuccess(orderId: string) {
-        const supabase: any = getSupabase();
         // Update order status
-        const { data: order, error } = await supabase
-            .from('orders')
-            .update({ status: 'paid' })
-            .eq('id', orderId)
-            .select()
-            .single();
+        const orderRef = db.collection('orders').doc(orderId);
+        await orderRef.update({
+            status: 'paid',
+            updated_at: new Date().toISOString()
+        });
 
-        if (error) throw error;
+        const orderDoc = await orderRef.get();
+        const order = {
+            id: orderDoc.id,
+            ...orderDoc.data()
+        };
 
         // Decrement Inventory
-        const { data: items } = await supabase
-            .from('order_items')
-            .select('*')
-            .eq('order_id', orderId);
+        const itemsSnapshot = await db.collection('order_items')
+            .where('order_id', '==', orderId)
+            .get();
 
-        if (items) {
-            for (const item of items) {
-                await supabase.rpc('decrement_stock', { p_id: item.product_id, q: item.quantity });
+        for (const itemDoc of itemsSnapshot.docs) {
+            const item = itemDoc.data();
+            const productRef = db.collection('products').doc(item.product_id);
+            const productDoc = await productRef.get();
+
+            if (productDoc.exists) {
+                const currentStock = productDoc.data()?.stock_quantity || 0;
+                await productRef.update({
+                    stock_quantity: Math.max(0, currentStock - item.quantity)
+                });
             }
         }
 
         // Log Activity
-        await supabase.from('user_activity').insert({
+        await db.collection('user_activity').add({
             user_id: order.user_id,
             activity_type: 'purchase',
             target_id: order.id,
-            metadata: { amount: order.total_amount }
+            metadata: { amount: order.total_amount },
+            created_at: new Date().toISOString()
         });
 
         return order;
@@ -189,20 +184,41 @@ export const CommerceService = {
 
     // Get User Orders
     async getUserOrders(userId: string) {
-        const supabase: any = getSupabase();
-        const { data, error } = await supabase
-            .from('orders')
-            .select(`
-            *,
-            items:order_items(
-                *,
-                product:products(*)
-            )
-          `)
-            .eq('user_id', userId)
-            .order('created_at', { ascending: false });
+        const ordersSnapshot = await db.collection('orders')
+            .where('user_id', '==', userId)
+            .orderBy('created_at', 'desc')
+            .get();
 
-        if (error) throw error;
-        return data;
+        const orders = [];
+        for (const orderDoc of ordersSnapshot.docs) {
+            const order = {
+                id: orderDoc.id,
+                ...orderDoc.data()
+            };
+
+            // Fetch order items
+            const itemsSnapshot = await db.collection('order_items')
+                .where('order_id', '==', order.id)
+                .get();
+
+            const items = [];
+            for (const itemDoc of itemsSnapshot.docs) {
+                const item = itemDoc.data();
+                // Fetch product details
+                const productDoc = await db.collection('products').doc(item.product_id).get();
+                items.push({
+                    id: itemDoc.id,
+                    ...item,
+                    product: productDoc.exists ? { id: productDoc.id, ...productDoc.data() } : null
+                });
+            }
+
+            orders.push({
+                ...order,
+                items
+            });
+        }
+
+        return orders;
     }
 };

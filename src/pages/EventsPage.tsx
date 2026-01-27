@@ -22,11 +22,11 @@ export default function EventsPage() {
 
     const loadEvents = async () => {
         setLoading(true);
-        
+
         // Use mock data immediately and stop loading
         setEvents(MOCK_EVENTS);
         setLoading(false);
-        
+
         // Try to fetch from API in background (fire and forget)
         (async () => {
             try {
@@ -43,7 +43,7 @@ export default function EventsPage() {
     const loadRegistrations = async () => {
         try {
             const registrations = await EcosystemService.getMyRegistrations();
-            const eventIds = new Set(registrations.map((r: any) => r.event_id || r.id));
+            const eventIds = new Set(registrations.map((r: any) => r.event_id || r.id)) as Set<string>;
             setRegisteredEvents(eventIds);
         } catch (error) {
             // Silently fail
@@ -52,9 +52,9 @@ export default function EventsPage() {
 
     const handleRegister = async (eventId: string) => {
         if (registering[eventId] || registeredEvents.has(eventId)) return;
-        
+
         setRegistering(prev => ({ ...prev, [eventId]: true }));
-        
+
         try {
             await EcosystemService.registerForEvent(eventId);
             setRegisteredEvents(prev => new Set([...prev, eventId]));
@@ -120,22 +120,22 @@ export default function EventsPage() {
                                 </div>
                             </div>
                             <div className="p-6 pt-0">
-                                <Button 
-                                    className="w-full btn-islamic" 
+                                <Button
+                                    className="w-full btn-islamic"
                                     onClick={() => handleRegister(event.id)}
                                     disabled={registering[event.id] || registeredEvents.has(event.id)}
                                 >
-                                    <Calendar className="mr-2 h-4 w-4" /> 
-                                    {registering[event.id] 
+                                    <Calendar className="mr-2 h-4 w-4" />
+                                    {registering[event.id]
                                         ? (t('login.processing') || 'Processing...')
                                         : registeredEvents.has(event.id)
-                                        ? t('events.registered')
-                                        : t('events.register')
+                                            ? t('events.registered')
+                                            : t('events.register')
                                     }
                                 </Button>
                             </div>
                         </div>
-                )                )}
+                    ))}
                 </div>
             </section>
         </div>

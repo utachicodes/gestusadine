@@ -1,5 +1,6 @@
 
 import type { Config } from "tailwindcss";
+import tailwindcssAnimate from "tailwindcss-animate";
 
 export default {
 	darkMode: ["class"],
@@ -19,6 +20,11 @@ export default {
 			}
 		},
 		extend: {
+			fontFamily: {
+				sans: ["Inter", "sans-serif"],
+				serif: ["Playfair Display", "serif"],
+				arabic: ["Amiri", "serif"],
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
@@ -74,54 +80,65 @@ export default {
 						800: '#1e40af',
 						900: '#1e3a8a',
 					},
-					// Black color scheme
+					// Rich Gold (True Gold)
 					gold: {
-						DEFAULT: '#000000',
-						light: '#404040',
-						dark: '#000000',
-						50: '#f5f5f5',
-						100: '#e5e5e5',
-						200: '#cccccc',
-						300: '#999999',
-						400: '#666666',
-						500: '#404040',
-						600: '#333333',
-						700: '#1a1a1a',
-						800: '#0d0d0d',
-						900: '#000000',
+						DEFAULT: '#D4AF37', // metallic gold
+						light: '#F4D03F', // bright gold
+						dark: '#B7950B', // deep gold
+						50: '#FCF9E8',
+						100: '#F9F2D1',
+						200: '#F4E5A3',
+						300: '#EFD875',
+						400: '#EACC47',
+						500: '#D4AF37',
+						600: '#AA8C2C',
+						700: '#806921',
+						800: '#554616',
+						900: '#2B230B',
+					},
+					// Deep Emerald (Islamic Green)
+					emerald: {
+						DEFAULT: '#10B981',
+						light: '#34D399',
+						dark: '#059669',
+						50: '#ECFDF5',
+						100: '#D1FAE5',
+						200: '#A7F3D0',
+						300: '#6EE7B7',
+						400: '#34D399',
+						500: '#10B981',
+						600: '#059669',
+						700: '#047857',
+						800: '#065F46',
+						900: '#064E3B',
+					},
+					// Midnight Blue (Deep Backgrounds)
+					midnight: {
+						DEFAULT: '#1E293B',
+						light: '#334155',
+						dark: '#0F172A',
+						50: '#F8FAFC',
+						100: '#F1F5F9',
+						200: '#E2E8F0',
+						300: '#CBD5E1',
+						400: '#94A3B8',
+						500: '#64748B',
+						600: '#475569',
+						700: '#334155',
+						800: '#1E293B',
+						900: '#0F172A',
 					},
 					// Soft neutral cream
 					cream: {
-						DEFAULT: '#fef3c7',
-						light: '#fffbeb',
-						dark: '#fde68a',
+						DEFAULT: '#F8F5F2',
+						light: '#FCFBF9',
+						dark: '#E8E4DE',
 					},
-					// Deep, rich dark
-					dark: {
-						DEFAULT: '#0f172a', // slate-900
-						light: '#1e293b', // slate-800
-						lighter: '#334155', // slate-700
-					},
-					// Clean, bright light
-					light: {
-						DEFAULT: '#f8fafc', // slate-50
-						dark: '#f1f5f9', // slate-100
-					},
-					// Custom off-white
-					'off-white': {
-						DEFAULT: '#efefec',
-					},
-					// Primary green (now light blue)
-					'primary-green': {
-						DEFAULT: '#8fa3c4', // darker shade for contrast
-						light: '#e0e8f3', // base light blue
-						dark: '#5d6f9a', // darker for text
-					},
-					// Primary gold (now black)
+					// Primary gold (Replacing black with Gold)
 					'primary-gold': {
-						DEFAULT: '#000000',
-						light: '#404040',
-						dark: '#000000',
+						DEFAULT: '#D4AF37',
+						light: '#F4D03F',
+						dark: '#B7950B',
 					}
 				},
 				primary: {
@@ -286,14 +303,15 @@ export default {
 			},
 			backgroundImage: {
 				'islamic-pattern': "url('/pattern.svg')",
-				'hero-gradient': 'linear-gradient(135deg, #8fa3c4 0%, #7689af 50%, #1e40af 100%)',
-				'hero-gradient-alt': 'linear-gradient(to bottom right, rgba(224, 232, 243, 0.95), rgba(143, 163, 196, 0.9), rgba(30, 64, 175, 0.95))',
-				'card-gradient': 'linear-gradient(135deg, #8fa3c4 0%, #7689af 100%)',
-				'gold-gradient': 'linear-gradient(90deg, #000000 0%, #404040 50%, #000000 100%)',
+				'hero-gradient': 'linear-gradient(135deg, #1E293B 0%, #0F172A 100%)',
+				'hero-gradient-alt': 'linear-gradient(to bottom right, #334155, #1E293B, #0F172A)',
+				'card-gradient': 'linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.4) 100%)',
+				'gold-gradient': 'linear-gradient(135deg, #D4AF37 0%, #F4D03F 40%, #B7950B 100%)',
+				'gold-shine': 'linear-gradient(45deg, transparent 25%, rgba(255,215,0,0.3) 50%, transparent 75%)',
 				'mesh-gradient': 'radial-gradient(at 40% 20%, rgba(224, 232, 243, 0.3) 0px, transparent 50%), radial-gradient(at 80% 0%, rgba(143, 163, 196, 0.3) 0px, transparent 50%), radial-gradient(at 0% 50%, rgba(30, 64, 175, 0.3) 0px, transparent 50%), radial-gradient(at 80% 50%, rgba(200, 162, 74, 0.22) 0px, transparent 50%), radial-gradient(at 0% 100%, rgba(224, 232, 243, 0.2) 0px, transparent 50%)',
 				'shimmer-gradient': 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent)'
 			}
 		}
 	},
-	plugins: [require("tailwindcss-animate")],
+	plugins: [tailwindcssAnimate],
 } satisfies Config;

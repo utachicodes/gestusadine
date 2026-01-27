@@ -326,7 +326,7 @@ export async function clearSampleData(apiUrl: string = '/api/council'): Promise<
 
 // Export for use in frontend
 export const COUNCIL_INFO = {
-    name: 'XamSaDine AI - Circle of Knowledge',
+    name: 'GëstuSaDine - Circle of Knowledge',
     version: '2.0.0',
     members: [
         {

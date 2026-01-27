@@ -58,42 +58,35 @@ export class ErrorBoundary extends Component<Props, State> {
       }
 
       return (
-        <div className="min-h-screen flex items-center justify-center bg-islamic-light p-4">
-          <Card className="w-full max-w-2xl">
-            <CardHeader>
-              <div className="flex items-center gap-3">
-                <AlertTriangle className="h-6 w-6 text-destructive" />
-                <CardTitle>Something went wrong</CardTitle>
+        <div className="min-h-screen flex items-center justify-center bg-background p-4">
+          <Card className="w-full max-w-md border-border/50 shadow-lg">
+            <CardHeader className="text-center">
+              <div className="flex justify-center mb-4">
+                <div className="h-12 w-12 rounded-full bg-destructive/10 flex items-center justify-center">
+                  <AlertTriangle className="h-6 w-6 text-destructive" />
+                </div>
               </div>
-              <CardDescription>
-                An unexpected error occurred. Please try refreshing the page.
+              <CardTitle className="text-xl">Something went wrong</CardTitle>
+              <CardDescription className="text-base mt-2">
+                We encountered an unexpected issue.
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              {import.meta.env.DEV && this.state.error && (
-                <div className="bg-muted p-4 rounded-lg">
-                  <p className="text-sm font-mono text-destructive mb-2">
-                    {this.state.error.toString()}
-                  </p>
-                  {this.state.errorInfo && (
-                    <details className="text-xs">
-                      <summary className="cursor-pointer mb-2">Stack trace</summary>
-                      <pre className="overflow-auto max-h-64">
-                        {this.state.errorInfo.componentStack}
-                      </pre>
-                    </details>
-                  )}
-                </div>
-              )}
-              <div className="flex gap-2">
-                <Button onClick={this.handleReset} variant="outline">
-                  Try Again
-                </Button>
+            <CardContent className="space-y-6">
+
+              <div className="flex flex-col gap-3">
                 <Button
                   onClick={() => window.location.reload()}
                   variant="default"
+                  className="w-full"
                 >
                   Refresh Page
+                </Button>
+                <Button
+                  onClick={() => window.location.href = '/'}
+                  variant="outline"
+                  className="w-full"
+                >
+                  Return Home
                 </Button>
               </div>
             </CardContent>

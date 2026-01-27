@@ -1,12 +1,5 @@
--- ========================================================
--- RAG (Retrieval-Augmented Generation) Database Setup
--- Run this in your Supabase SQL Editor
--- ========================================================
-
--- 1. Enable the pgvector extension to work with embeddings
 CREATE EXTENSION IF NOT EXISTS vector;
 
--- 2. Create the table for ingested document metadata
 CREATE TABLE IF NOT EXISTS public.rag_ingested_documents (
   id TEXT PRIMARY KEY,
   title TEXT NOT NULL,
@@ -17,8 +10,6 @@ CREATE TABLE IF NOT EXISTS public.rag_ingested_documents (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 3. Create the table for vector embeddings (chunks)
--- Note: all-MiniLM-L6-v2 uses 384 dimensions
 CREATE TABLE IF NOT EXISTS public.rag_vectors (
   id TEXT PRIMARY KEY,
   doc_id TEXT REFERENCES public.rag_ingested_documents(id) ON DELETE CASCADE,

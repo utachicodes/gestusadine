@@ -7,9 +7,9 @@ import path from "node:path";
 import express from "express";
 import cors from "cors";
 import { translationServiceManager } from "./translation-service-manager.js";
-import { requireAdmin, requireAuth } from "./auth";
-import { configService } from "../../config-service/config.service";
-import { documentManager } from "../../rag-service/document-manager";
+import { requireAdmin, requireAuth } from "./auth.js";
+import { configService } from "../../config-service/config.service.js";
+import { documentManager } from "../../rag-service/document-manager.js";
 
 // Get project root
 const __filename = fileURLToPath(import.meta.url);
@@ -36,16 +36,16 @@ try {
 }
 
 // Import routes after env is loaded
-const { postFatwa } = await import("./routes/fatwa.ts");
-const { getDaily } = await import("./routes/daily.ts");
+const { postFatwa } = await import("./routes/fatwa.js");
+const { getDaily } = await import("./routes/daily.js");
 const libraryRoutesModule = await import("./routes/library.js");
 const libraryRoutes = libraryRoutesModule.default;
 import chatRoutes from "./chat.js";
 import { videoRoutes } from "../../video-service/src/routes/video.routes.js";
 import { eventRoutes } from "../../event-service/src/routes/event.routes.js";
-import { commerceRoutes } from "../../commerce-service/src/routes/commerce.routes.js"; // Direct import for monolith
-import { tarteelRoutes } from "./routes/tarteel.ts";
+import { tarteelRoutes } from "./routes/tarteel.js";
 import { councilRoutes } from "./routes/council.routes.js";
+
 
 // Catch unhandled promise rejections
 process.on("unhandledRejection", (reason: any, promise) => {
@@ -140,9 +140,18 @@ const indexHtmlPath = distPath ? path.join(distPath, "index.html") : "";
 const fallbackIndexHtmlPath = path.join(projectRoot, "index.html");
 
 // Initialize services
-// Initialize services
+app.use('/api', chatRoutes); // Mount chat routes at /api (e.g. /api/chat, /api/health)
 app.use('/api/tarteel', tarteelRoutes);
 app.use('/api/council', councilRoutes);
+
+// Health Checks
+app.get('/api/config/health', (_req, res) => {
+  res.json({ status: 'healthy', service: 'config', timestamp: new Date().toISOString() });
+});
+
+app.get('/api/rag/health', (_req, res) => {
+  res.json({ status: 'healthy', service: 'rag', timestamp: new Date().toISOString() });
+});
 
 
 configService.loadConfig().then(() => {
@@ -169,7 +178,7 @@ app.get("/", (_req, res) => {
     return;
   }
 
-  res.json({ message: "XamSaDine API Gateway is running!", status: "ok" });
+  res.json({ message: "API Gateway is running!", status: "ok" });
 });
 
 // Test endpoint for fatwa
@@ -232,7 +241,7 @@ app.get("/api/daily", async (req, res) => {
 
 app.post("/api/ask", async (req, res) => {
   try {
-    const { askCircle } = await import("./routes/circle.ts");
+    const { askCircle } = await import("./routes/circle.js");
     await askCircle(req, res);
   } catch (error: any) {
     console.error("💥 Unhandled error in /api/ask route:", error);
@@ -250,7 +259,7 @@ app.post("/api/ask", async (req, res) => {
 // Config routes
 app.get("/api/config/agents", requireAdmin, async (req, res) => {
   try {
-    const { getAgents } = await import("./routes/config.ts");
+    const { getAgents } = await import("./routes/config.js");
     await getAgents(req, res);
   } catch (error: any) {
     console.error("💥 Error in /api/config/agents:", error);
@@ -262,7 +271,7 @@ app.get("/api/config/agents", requireAdmin, async (req, res) => {
 
 app.post("/api/config/agents/:agentId", requireAdmin, async (req, res) => {
   try {
-    const { updateAgent } = await import("./routes/config.ts");
+    const { updateAgent } = await import("./routes/config.js");
     await updateAgent(req, res);
   } catch (error: any) {
     console.error("💥 Error in /api/config/agents/:agentId:", error);
@@ -274,7 +283,7 @@ app.post("/api/config/agents/:agentId", requireAdmin, async (req, res) => {
 
 app.get("/api/config/models", requireAdmin, async (req, res) => {
   try {
-    const { getModels } = await import("./routes/config.ts");
+    const { getModels } = await import("./routes/config.js");
     await getModels(req, res);
   } catch (error: any) {
     console.error("💥 Error in /api/config/models:", error);
@@ -284,10 +293,83 @@ app.get("/api/config/models", requireAdmin, async (req, res) => {
   }
 });
 
+// Firestore initialization endpoint (one-time setup)
+app.post("/api/admin/init-firestore", requireAdmin, async (req, res) => {
+  try {
+    const { db } = await import("./lib/firebase-admin.js");
+    const results = {
+      created: [] as string[],
+      existing: [] as string[],
+      errors: [] as string[]
+    };
+
+    // 1. Create config collection with default settings
+    const configRef = db.collection('config').doc('app-settings');
+    const configSnapshot = await configRef.get();
+
+    if (!configSnapshot.exists) {
+      await configRef.set({
+        appName: 'DeenAkDiamano',
+        version: '1.0.0',
+        features: {
+          chat: true,
+          library: true,
+          videos: true,
+          subscriptions: true,
+          translation: true,
+          rag: true
+        },
+        theme: {
+          primaryColor: '#10b981',
+          darkMode: true
+        },
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      });
+      results.created.push('config/app-settings');
+    } else {
+      results.existing.push('config/app-settings');
+    }
+
+    // 2. Initialize collections with placeholders
+    const collections = ['documents', 'vectors', 'user_activity', 'daily_content', 'videos', 'library_books', 'events'];
+    for (const collectionName of collections) {
+      try {
+        const placeholderRef = db.collection(collectionName).doc('_placeholder');
+        const snapshot = await placeholderRef.get();
+
+        if (!snapshot.exists) {
+          await placeholderRef.set({
+            _placeholder: true,
+            note: 'This document initializes the collection. Can be safely deleted.',
+            createdAt: new Date().toISOString()
+          });
+          results.created.push(collectionName);
+        } else {
+          results.existing.push(collectionName);
+        }
+      } catch (error: any) {
+        results.errors.push(`${collectionName}: ${error.message}`);
+      }
+    }
+
+    res.json({
+      success: true,
+      message: 'Firestore initialization complete',
+      results
+    });
+  } catch (error: any) {
+    console.error("💥 Error initializing Firestore:", error);
+    if (!res.headersSent) {
+      res.status(500).json({ error: "Failed to initialize Firestore", message: error.message });
+    }
+  }
+});
+
 // Document routes
 app.post("/api/documents/upload", requireAdmin, async (req, res) => {
   try {
-    const { uploadMiddleware, uploadDocument } = await import("./routes/documents.ts");
+    const { uploadMiddleware, uploadDocument } = await import("./routes/documents.js");
     uploadMiddleware(req, res, async (err: any) => {
       if (err) {
         res.status(500).json({ error: "Upload failed", message: err.message });
@@ -305,7 +387,7 @@ app.post("/api/documents/upload", requireAdmin, async (req, res) => {
 
 app.get("/api/documents", requireAdmin, async (req, res) => {
   try {
-    const { listDocuments } = await import("./routes/documents.ts");
+    const { listDocuments } = await import("./routes/documents.js");
     await listDocuments(req, res);
   } catch (error: any) {
     console.error("💥 Error in /api/documents:", error);
@@ -317,7 +399,7 @@ app.get("/api/documents", requireAdmin, async (req, res) => {
 
 app.delete("/api/documents/:id", requireAdmin, async (req, res) => {
   try {
-    const { deleteDocument } = await import("./routes/documents.ts");
+    const { deleteDocument } = await import("./routes/documents.js");
     await deleteDocument(req, res);
   } catch (error: any) {
     console.error("💥 Error in /api/documents/:id:", error);
@@ -329,7 +411,7 @@ app.delete("/api/documents/:id", requireAdmin, async (req, res) => {
 
 app.get("/api/documents/:id/url", requireAdmin, async (req, res) => {
   try {
-    const { getDocumentSignedUrl } = await import("./routes/documents.ts");
+    const { getDocumentSignedUrl } = await import("./routes/documents.js");
     await getDocumentSignedUrl(req, res);
   } catch (error: any) {
     console.error("💥 Error in /api/documents/:id/url:", error);
@@ -350,11 +432,14 @@ app.use('/api/media/video', videoRoutes);
 // Event Service routes
 app.use('/api/events', eventRoutes);
 
-// Commerce Service routes
-app.use('/api/shop', commerceRoutes);
+
 
 // Library Service routes
 app.use('/api/library', libraryRoutes);
+
+// Theme Service routes
+import themeRoutes from './routes/theme.routes.js';
+app.use('/api/themes', themeRoutes);
 
 app.get("/health", (_req, res) => {
   res.json({ status: "ok" });

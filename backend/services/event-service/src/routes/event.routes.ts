@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { EventService } from '../event.service.js';
-import { requireAuth, requireAdmin } from '../../../api-gateway/src/auth.ts';
+import { requireAuth, requireAdmin } from '../../../api-gateway/src/auth.js';
 
 export const eventRoutes = Router();
 

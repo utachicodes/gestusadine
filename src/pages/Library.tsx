@@ -1,9 +1,9 @@
 import * as React from "react";
-import { useState, useMemo } from "react";
-import { 
-  BookOpen, 
-  Download, 
-  Search, 
+import { useState, useMemo, useEffect } from "react";
+import {
+  BookOpen,
+  Download,
+  Search,
   Star,
   FileText,
   Globe
@@ -20,41 +20,74 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { MOCK_BOOKS } from "@/lib/mock-data";
 import type { DigitalBook, BookCategory, BookLanguage, BookFormat } from "@/types/ecosystem";
 import { toast } from "sonner";
+import { getDocuments, updateDocument, orderBy } from "@/lib/firebase-helpers";
 
 export default function Library() {
   const { t } = useLanguage();
-  
+
+  const [books, setBooks] = useState<DigitalBook[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [selectedLanguage, setSelectedLanguage] = useState<string>("all");
   const [selectedFormat, setSelectedFormat] = useState<string>("all");
-  
+
+  useEffect(() => {
+    loadBooks();
+  }, []);
+
+  const loadBooks = async () => {
+    setLoading(true);
+    try {
+      const data = await getDocuments('library_books', [
+        orderBy('created_at', 'desc')
+      ]);
+      setBooks(data as DigitalBook[]);
+    } catch (error: any) {
+      console.error('Failed to load books:', error);
+      toast.error('Failed to load books');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const filteredBooks = useMemo(() => {
-    return MOCK_BOOKS.filter(book => {
-      const matchesSearch = 
+    return books.filter(book => {
+      const matchesSearch =
         book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         book.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
         book.description.toLowerCase().includes(searchQuery.toLowerCase());
-      
+
       const matchesCategory = selectedCategory === "all" || book.category === selectedCategory;
       const matchesLanguage = selectedLanguage === "all" || book.language === selectedLanguage;
       const matchesFormat = selectedFormat === "all" || book.format === selectedFormat;
-      
+
       return matchesSearch && matchesCategory && matchesLanguage && matchesFormat;
     });
-  }, [searchQuery, selectedCategory, selectedLanguage, selectedFormat]);
-  
-  const handleDownload = (book: DigitalBook) => {
-    // In production, this would trigger actual download from book.file_url
-    toast.success(`Downloading: ${book.title}`, {
-      description: `Format: ${book.format.toUpperCase()} | Size: ${book.file_size_mb} MB`
-    });
-    
-    // Simulate download
-    console.log("Downloading:", book.title, "from", book.file_url);
+  }, [books, searchQuery, selectedCategory, selectedLanguage, selectedFormat]);
+
+  const handleDownload = async (book: DigitalBook) => {
+    try {
+      // Increment download count
+      await updateDocument('library_books', book.id, {
+        downloads: book.downloads + 1
+      });
+
+      // Trigger download
+      window.open(book.file_url, '_blank');
+
+      toast.success(`Downloading: ${book.title}`, {
+        description: `Format: ${book.format.toUpperCase()} | Size: ${book.file_size_mb} MB`
+      });
+
+      // Reload books to update download count
+      await loadBooks();
+    } catch (error: any) {
+      console.error('Download error:', error);
+      toast.error('Failed to download book');
+    }
   };
 
   // Helper to get translated category/language/format
@@ -63,9 +96,9 @@ export default function Library() {
   const getFormatLabel = (fmt: string) => t(`library.formats.${fmt}`);
 
   // Get unique values for filters
-  const categories = useMemo(() => [...new Set(MOCK_BOOKS.map(b => b.category))], []);
-  const languages = useMemo(() => [...new Set(MOCK_BOOKS.map(b => b.language))], []);
-  const formats = useMemo(() => [...new Set(MOCK_BOOKS.map(b => b.format))], []);
+  const categories = useMemo(() => [...new Set(books.map(b => b.category))], [books]);
+  const languages = useMemo(() => [...new Set(books.map(b => b.language))], [books]);
+  const formats = useMemo(() => [...new Set(books.map(b => b.format))], [books]);
 
   return (
     <div className="flex-1">
@@ -85,7 +118,7 @@ export default function Library() {
             </p>
           </div>
         </header>
-        
+
         {/* Search and Filters */}
         <div className="islamic-card p-6 mb-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -164,7 +197,11 @@ export default function Library() {
         </div>
 
         {/* Books Grid */}
-        {filteredBooks.length === 0 ? (
+        {loading ? (
+          <div className="flex items-center justify-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-islamic-primary-green"></div>
+          </div>
+        ) : filteredBooks.length === 0 ? (
           <div className="text-center py-16">
             <BookOpen className="h-16 w-16 mx-auto text-muted-foreground/30 mb-4" />
             <p className="text-xl text-muted-foreground">{t('library.no_results')}</p>
@@ -192,12 +229,12 @@ export default function Library() {
                   <CardTitle className="line-clamp-2 text-foreground">{book.title}</CardTitle>
                   <CardDescription className="text-muted-foreground">{book.author}</CardDescription>
                 </CardHeader>
-                
+
                 <CardContent>
                   <p className="text-sm text-muted-foreground line-clamp-3 mb-4">
                     {book.description}
                   </p>
-                  
+
                   <div className="flex flex-wrap gap-2 mb-4">
                     <Badge variant="secondary" className="bg-muted text-foreground">
                       {getCategoryLabel(book.category)}
@@ -211,7 +248,7 @@ export default function Library() {
                       {getFormatLabel(book.format)}
                     </Badge>
                   </div>
-                  
+
                   <div className="text-xs text-muted-foreground space-y-1">
                     {book.page_count && (
                       <div>{book.page_count} {t('library.pages')}</div>
@@ -225,9 +262,9 @@ export default function Library() {
                     </div>
                   </div>
                 </CardContent>
-                
+
                 <CardFooter>
-                  <Button 
+                  <Button
                     className="w-full btn-islamic h-auto py-3 text-white"
                     onClick={() => handleDownload(book)}
                   >

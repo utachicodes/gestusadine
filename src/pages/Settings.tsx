@@ -16,7 +16,7 @@ const Settings: React.FC = () => {
               Settings
             </p>
             <h1 className="text-3xl md:text-4xl font-bold text-islamic-dark">
-              Tune XamSaDine to{" "}
+              Tune GëstuSaDine to{" "}
               <span className="text-gradient">your rhythm</span>
             </h1>
             <p className="mt-2 text-islamic-dark/70 max-w-xl">
@@ -45,7 +45,7 @@ const Settings: React.FC = () => {
             </div>
 
             <p className="text-sm text-islamic-dark/80">
-              Wolof, French, and English can be mixed â€“ XamSaDine will follow
+              Wolof, French, and English can be mixed â€“ GëstuSaDine will follow
               your speech gently.
             </p>
           </div>

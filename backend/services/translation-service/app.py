@@ -6,30 +6,55 @@ Provides REST endpoints for Wolof translation
 import sys
 import io
 
-# Fix UTF-8 encoding for Windows console
-if sys.platform == "win32":
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
-    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
+# Reconfigure stdout/stderr to handle subprocess environment
+# This prevents "I/O operation on closed file" errors when spawned
+try:
+    if sys.stdout.closed:
+        sys.stdout = io.TextIOWrapper(open(sys.stdout.fileno(), 'wb', 0), write_through=True)
+    if sys.stderr.closed:
+        sys.stderr = io.TextIOWrapper(open(sys.stderr.fileno(), 'wb', 0), write_through=True)
+except:
+    # If that fails, redirect to a safe default
+    sys.stdout = io.StringIO()
+    sys.stderr = io.StringIO()
 
+import logging
 from flask import Flask, request, jsonify
 from wolof_translator import get_translator
 import os
 from typing import Dict, Any
 
+# Configure logging AFTER fixing stdout/stderr
+logging.basicConfig(
+    level=logging.INFO,
+    format='[TranslationAPI] %(message)s',
+    handlers=[logging.StreamHandler(sys.stderr)],
+    force=True  # Force reconfiguration
+)
+
 app = Flask(__name__)
 
-# Initialize translator
-translator = get_translator()
+# Lazy initialization - translator will be initialized on first use
+translator = None
+
+
+def ensure_translator():
+    """Lazy initialization of translator to avoid startup issues"""
+    global translator
+    if translator is None:
+        translator = get_translator()
+    return translator
 
 
 @app.route('/health', methods=['GET'])
 def health():
     """Health check endpoint"""
+    trans = ensure_translator()
     return jsonify({
         'status': 'healthy',
         'service': 'translation-service',
         'model': os.getenv('TRANSLATION_MODEL', 'galsenai/wolofToFrenchTranslator_nllb'),
-        'device': 'cuda' if translator.device == 'cuda' else 'cpu'
+        'device': 'cuda' if trans.device == 'cuda' else 'cpu'
     })
 
 
@@ -56,11 +81,12 @@ def translate():
         target_lang = data.get('target_lang')
         
         # Translate
-        result = translator.translate(text, source_lang, target_lang)
+        trans = ensure_translator()
+        result = trans.translate(text, source_lang, target_lang)
         
         # Detect actual source language if not provided
         if not source_lang:
-            source_lang = translator.detect_language(text)
+            source_lang = trans.detect_language(text)
         if not target_lang:
             target_lang = 'wo' if source_lang == 'fr' else 'fr'
         
@@ -103,7 +129,8 @@ def translate_batch():
             return jsonify({'error': 'texts must be a list'}), 400
         
         # Translate all texts
-        translations = translator.batch_translate(texts, source_lang)
+        trans = ensure_translator()
+        translations = trans.batch_translate(texts, source_lang)
         
         return jsonify({
             'success': True,
@@ -135,7 +162,8 @@ def detect_language():
             return jsonify({'error': 'Missing text field'}), 400
         
         text = data['text']
-        lang = translator.detect_language(text)
+        trans = ensure_translator()
+        lang = trans.detect_language(text)
         language_names = {'fr': 'French', 'wo': 'Wolof'}
         
         return jsonify({
@@ -154,5 +182,5 @@ def detect_language():
 
 if __name__ == '__main__':
     port = int(os.getenv('TRANSLATION_PORT', 5000))
-    print(f"Translation service starting on port {port}")
+    logging.info(f"Translation service starting on port {port}")
     app.run(host='0.0.0.0', port=port, debug=False)

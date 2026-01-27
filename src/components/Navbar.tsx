@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useAuth } from '@/auth/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Globe } from 'lucide-react';
@@ -8,46 +8,23 @@ import { Globe } from 'lucide-react';
 const Navbar = () => {
   const { user, isAdmin, signOut } = useAuth();
   const { language, setLanguage, t } = useLanguage();
-  const location = useLocation();
 
-  const navItems = user
-    ? isAdmin
-      ? [
-        { title: t('nav.circle'), href: '/circle' },
-        { title: t('nav.admin'), href: '/admin' },
-        { title: t('nav.documents'), href: '/documents' },
-      ]
-      : []
-    : location.pathname === '/login'
-      ? []
-      : [{ title: t('nav.signin'), href: '/login' }];
 
   return (
     <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-lg shadow-sm">
       <div className="container flex items-center justify-between h-16">
         <div>
           <Link to="/" className="flex items-center">
-            <img 
-              src="/logo.png" 
-              alt="XamSaDine AI" 
+            <img
+              src="/logofinal.png"
+              alt="GëstuSaDine"
               className="h-12 w-auto object-contain brightness-110 dark:brightness-0 dark:invert"
             />
           </Link>
         </div>
 
         <div className="flex items-center space-x-4">
-          {/* Navigation Links */}
-          <nav className="hidden md:flex items-center space-x-6">
-            {navItems.map((item) => (
-              <Link
-                key={item.title}
-                to={item.href}
-                className="text-sm font-medium text-foreground hover:text-primary transition-colors"
-              >
-                {item.title}
-              </Link>
-            ))}
-          </nav>
+
 
           {/* Language Selector */}
           <div className="relative">
@@ -80,32 +57,7 @@ const Navbar = () => {
           )}
         </div>
 
-        {/* Mobile Menu */}
-        <div className="md:hidden">
-          <div className="flex items-center space-x-2">
-            {navItems.slice(0, user ? 2 : 1).map((item) => (
-              <Link
-                key={item.title}
-                to={item.href}
-                className="text-sm font-medium text-foreground hover:text-primary px-2"
-              >
-                {item.title}
-              </Link>
-            ))}
-            {user && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  signOut();
-                  window.location.href = '/';
-                }}
-              >
-                {t('nav.signout')}
-              </Button>
-            )}
-          </div>
-        </div>
+
       </div>
     </header>
   );

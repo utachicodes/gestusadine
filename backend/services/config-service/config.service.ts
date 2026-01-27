@@ -1,35 +1,12 @@
 import fs from 'fs/promises';
 import path from 'path';
-import { SystemConfig, AgentConfig, LLMConfig } from '../../shared/config-types';
-import { createClient } from '@supabase/supabase-js';
+import { SystemConfig, AgentConfig, LLMConfig } from '../../shared/config-types.js';
+import { db } from '../api-gateway/src/lib/firebase-admin.js';
 
 const CONFIG_FILE = path.join(process.cwd(), 'backend', 'config.json');
 
-const SUPABASE_TABLE = process.env.SUPABASE_CONFIG_TABLE || 'system_config';
-const SUPABASE_CONFIG_ID = process.env.SUPABASE_CONFIG_ID || 'default';
-
-function getSupabaseAdmin() {
-    const url = (process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || '').trim();
-    const key = (process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_SERVICE_ROLE_KEY || '').trim();
-
-    // Validate format
-    if (!url || !url.startsWith('http') || url.includes('your-supabase-url')) {
-        console.warn('⚠️  Supabase URL missing or invalid in ConfigService. Falling back to local storage.');
-        return null;
-    }
-
-    if (!key || key.includes('your-supabase-key')) {
-        console.warn('⚠️  Supabase Key missing or invalid in ConfigService. Falling back to local storage.');
-        return null;
-    }
-
-    try {
-        return createClient(url, key, { auth: { persistSession: false } });
-    } catch (error: any) {
-        console.error('❌ Failed to initialize Supabase client in ConfigService:', error.message);
-        return null;
-    }
-}
+const FIRESTORE_COLLECTION = 'system_config';
+const FIRESTORE_CONFIG_ID = 'default';
 
 // Default configuration
 const DEFAULT_CONFIG: SystemConfig = {
@@ -100,68 +77,65 @@ const DEFAULT_CONFIG: SystemConfig = {
 
 export class ConfigService {
     private config: SystemConfig | null = null;
-    private supabase = getSupabaseAdmin();
 
     async loadConfig(): Promise<SystemConfig> {
-        if (this.supabase) {
-            try {
-                const { data, error } = await this.supabase
-                    .from(SUPABASE_TABLE)
-                    .select('config')
-                    .eq('id', SUPABASE_CONFIG_ID)
-                    .maybeSingle();
+        try {
+            // Try loading from Firestore first
+            const doc = await db.collection(FIRESTORE_COLLECTION).doc(FIRESTORE_CONFIG_ID).get();
 
-                if (error) throw error;
+            if (doc.exists) {
+                const data = doc.data();
                 if (data?.config) {
                     this.config = data.config as SystemConfig;
                     return this.config;
                 }
+            }
 
+            // If not in Firestore, try local file
+            try {
+                const fileData = await fs.readFile(CONFIG_FILE, 'utf-8');
+                this.config = JSON.parse(fileData);
+                // Save to Firestore for future use
+                await this.saveConfig(this.config!);
+                return this.config!;
+            } catch {
+                // If no file, use default
+                console.log('Config not found, creating default...');
                 await this.saveConfig(DEFAULT_CONFIG);
                 this.config = DEFAULT_CONFIG;
                 return DEFAULT_CONFIG;
-            } catch {
-                try {
-                    const data = await fs.readFile(CONFIG_FILE, 'utf-8');
-                    this.config = JSON.parse(data);
-                    return this.config!;
-                } catch {
-                    await this.saveConfig(DEFAULT_CONFIG);
-                    this.config = DEFAULT_CONFIG;
-                    return DEFAULT_CONFIG;
-                }
             }
-        }
-
-        try {
-            const data = await fs.readFile(CONFIG_FILE, 'utf-8');
-            this.config = JSON.parse(data);
-            return this.config!;
-        } catch {
-            // If file doesn't exist, create default
-            console.log('Config file not found, creating default...');
-            await this.saveConfig(DEFAULT_CONFIG);
-            this.config = DEFAULT_CONFIG;
-            return DEFAULT_CONFIG;
+        } catch (error) {
+            console.error('Error loading config from Firestore:', error);
+            // Fallback to local file
+            try {
+                const data = await fs.readFile(CONFIG_FILE, 'utf-8');
+                this.config = JSON.parse(data);
+                return this.config!;
+            } catch {
+                console.log('Config file not found, creating default...');
+                await this.saveConfig(DEFAULT_CONFIG);
+                this.config = DEFAULT_CONFIG;
+                return DEFAULT_CONFIG;
+            }
         }
     }
 
     async saveConfig(config: SystemConfig): Promise<void> {
         config.lastUpdated = new Date().toISOString();
 
-        if (this.supabase) {
-            const row = {
-                id: SUPABASE_CONFIG_ID,
+        try {
+            // Save to Firestore
+            await db.collection(FIRESTORE_COLLECTION).doc(FIRESTORE_CONFIG_ID).set({
                 config,
                 updated_at: config.lastUpdated,
-            };
-            const { error } = await this.supabase.from(SUPABASE_TABLE).upsert(row, { onConflict: 'id' });
-            if (error) {
-                await fs.writeFile(CONFIG_FILE, JSON.stringify(config, null, 2), 'utf-8');
-            }
-        } else {
-            await fs.writeFile(CONFIG_FILE, JSON.stringify(config, null, 2), 'utf-8');
+            }, { merge: true });
+        } catch (error) {
+            console.error('Error saving config to Firestore:', error);
         }
+
+        // Always save to local file as backup
+        await fs.writeFile(CONFIG_FILE, JSON.stringify(config, null, 2), 'utf-8');
 
         this.config = config;
     }

@@ -7,7 +7,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { Event } from '@/types/ecosystem';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
-import { supabase } from '@/lib/supabase';
+import { getDocuments, addDocument, updateDocument, deleteDocument, orderBy } from '@/lib/firebase-helpers';
 
 export default function ManageEvents() {
     const { t } = useLanguage();
@@ -33,13 +33,10 @@ export default function ManageEvents() {
     const loadEvents = async () => {
         setLoading(true);
         try {
-            const { data, error } = await supabase
-                .from('events')
-                .select('*')
-                .order('created_at', { ascending: false });
-
-            if (error) throw error;
-            setEvents(data || []);
+            const data = await getDocuments('events', [
+                orderBy('created_at', 'desc')
+            ]);
+            setEvents(data as Event[]);
         } catch (error: any) {
             console.error('Failed to load events:', error);
             toast.error('Failed to load events');
@@ -63,24 +60,11 @@ export default function ManageEvents() {
             };
 
             if (editingId) {
-                // Update event
-                const { error } = await supabase
-                    .from('events')
-                    .update(eventData)
-                    .eq('id', editingId);
-
-                if (error) throw error;
+                await updateDocument('events', editingId, eventData);
                 toast.success('Event updated successfully');
                 setEditingId(null);
             } else {
-                // Create event
-                const { data, error } = await supabase
-                    .from('events')
-                    .insert([eventData])
-                    .select()
-                    .single();
-
-                if (error) throw error;
+                await addDocument('events', eventData);
                 toast.success('Event created successfully');
                 setIsCreating(false);
             }
@@ -121,12 +105,7 @@ export default function ManageEvents() {
         if (!confirm('Are you sure you want to delete this event?')) return;
 
         try {
-            const { error } = await supabase
-                .from('events')
-                .delete()
-                .eq('id', id);
-
-            if (error) throw error;
+            await deleteDocument('events', id);
             toast.success('Event deleted successfully');
             await loadEvents();
         } catch (error: any) {
@@ -313,4 +292,3 @@ export default function ManageEvents() {
         </div>
     );
 }
-

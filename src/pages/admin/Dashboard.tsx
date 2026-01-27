@@ -1,71 +1,54 @@
 import React, { useState, useEffect } from 'react';
-import { Users, MessageSquare, FileText, Settings, Activity, Calendar, Video, ShoppingBag, BookOpen, TestTube } from 'lucide-react';
+import { Users, MessageSquare, FileText, Settings, Activity, Calendar, Video, BookOpen } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/auth/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '@/lib/supabase';
+import { getDocuments, getDocumentCount, where, orderBy, limit, Timestamp } from '@/lib/firebase-helpers';
 import { formatDistanceToNow } from 'date-fns';
 
 const RecentActivity = () => {
   const [activities, setActivities] = useState<Array<{ user: string; action: string; time: string }>>([]);
   const [loading, setLoading] = useState(true);
 
+  interface UserActivity {
+    id: string;
+    userId: string;
+    email?: string;
+    activityType: string;
+    created_at: Timestamp;
+  }
+
   useEffect(() => {
     const fetchActivities = async () => {
       try {
         // Fetch recent user activity
-        const { data: recentActivity } = await supabase
-          .from('user_activity')
-          .select(`
-            *,
-            profiles:user_id (
-              email,
-              full_name
-            )
-          `)
-          .order('created_at', { ascending: false })
-          .limit(5);
-
-        // Fetch recent profile creations
-        const { data: recentUsers } = await supabase
-          .from('profiles')
-          .select('email, full_name, created_at')
-          .order('created_at', { ascending: false })
-          .limit(2);
+        const recentActivity = await getDocuments('user_activity', [
+          orderBy('created_at', 'desc'),
+          limit(5)
+        ]) as UserActivity[];
 
         const formattedActivities: Array<{ user: string; action: string; time: string }> = [];
 
         // Add user activities
-        recentActivity?.forEach((activity: any) => {
-          const userEmail = activity.profiles?.email || 'Unknown';
+        for (const activity of recentActivity) {
+          // Fetch user profile
+          const userDoc = await getDocuments('users', [where('__name__', '==', activity.userId)]) as { email?: string }[];
+          const userEmail = userDoc[0]?.email || 'Unknown';
+
           const actionMap: Record<string, string> = {
             'chat_query': 'Asked a question',
             'video_watch': 'Watched a video',
             'event_register': 'Registered for an event',
             'purchase': 'Made a purchase',
           };
+
           formattedActivities.push({
             user: userEmail,
-            action: actionMap[activity.activity_type] || 'Performed an action',
-            time: formatDistanceToNow(new Date(activity.created_at), { addSuffix: true }),
+            action: actionMap[activity.activityType] || 'Performed an action',
+            time: activity.created_at ? formatDistanceToNow(activity.created_at.toDate(), { addSuffix: true }) : 'Recently',
           });
-        });
-
-        // Add new user registrations
-        recentUsers?.forEach((user: any) => {
-          formattedActivities.push({
-            user: user.email || 'Unknown',
-            action: 'Created an account',
-            time: formatDistanceToNow(new Date(user.created_at), { addSuffix: true }),
-          });
-        });
-
-        // Sort by time and limit to 5
-        formattedActivities.sort((a, b) => {
-          // Simple sort - in real app, parse dates properly
-          return 0;
-        });
+        }
 
         setActivities(formattedActivities.slice(0, 5));
       } catch (error) {
@@ -129,56 +112,49 @@ export const AdminDashboard = () => {
       return;
     }
 
-    // Fetch dashboard stats from Supabase
+    // Fetch dashboard stats from Firebase
     const fetchStats = async () => {
       try {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
-        const todayISO = today.toISOString();
+        const todayTimestamp = Timestamp.fromDate(today);
 
-        // Fetch total users
-        const { count: totalUsers } = await supabase
-          .from('profiles')
-          .select('*', { count: 'exact', head: true });
-
-        // Fetch active users (users with activity in last 7 days)
         const sevenDaysAgo = new Date();
         sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-        const { data: activeUsersData } = await supabase
-          .from('user_activity')
-          .select('user_id')
-          .gte('created_at', sevenDaysAgo.toISOString());
-        const activeUsers = new Set(activeUsersData?.map(a => a.user_id) || []).size;
+        const sevenDaysTimestamp = Timestamp.fromDate(sevenDaysAgo);
 
-        // Fetch total documents from digital_books
-        const { count: totalDocuments } = await supabase
-          .from('digital_books')
-          .select('*', { count: 'exact', head: true });
+        // Fetch total users
+        const totalUsers = await getDocumentCount('users');
+
+        // Fetch active users (users with activity in last 7 days)
+        const activeUsersData = await getDocuments('user_activity', [
+          where('created_at', '>=', sevenDaysTimestamp)
+        ]) as unknown as { userId: string }[];
+        const activeUsers = new Set(activeUsersData?.map(a => a.userId) || []).size;
+
+        // Fetch total documents from library_books
+        const totalDocuments = await getDocumentCount('library_books');
 
         // Fetch new users today
-        const { count: newUsersToday } = await supabase
-          .from('profiles')
-          .select('*', { count: 'exact', head: true })
-          .gte('created_at', todayISO);
+        const newUsersToday = await getDocumentCount('users', [
+          where('created_at', '>=', todayTimestamp)
+        ]);
 
         // Fetch admin users
-        const { count: adminUsers } = await supabase
-          .from('profiles')
-          .select('*', { count: 'exact', head: true })
-          .eq('role', 'admin');
+        const adminUsers = await getDocumentCount('users', [
+          where('role', '==', 'admin')
+        ]);
 
-        // For queries, we'll use user_activity with activity_type = 'chat_query'
-        // If chat_messages table exists, use that instead
-        const { count: totalQueries } = await supabase
-          .from('user_activity')
-          .select('*', { count: 'exact', head: true })
-          .eq('activity_type', 'chat_query');
+        // Fetch total queries
+        const totalQueries = await getDocumentCount('user_activity', [
+          where('activityType', '==', 'chat_query')
+        ]);
 
-        const { count: todayQueries } = await supabase
-          .from('user_activity')
-          .select('*', { count: 'exact', head: true })
-          .eq('activity_type', 'chat_query')
-          .gte('created_at', todayISO);
+        // Fetch today's queries
+        const todayQueries = await getDocumentCount('user_activity', [
+          where('activityType', '==', 'chat_query'),
+          where('created_at', '>=', todayTimestamp)
+        ]);
 
         setStats({
           totalUsers: totalUsers || 0,
@@ -254,18 +230,18 @@ export const AdminDashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-islamic-cream/30 via-[#efefec] to-islamic-gold/10 p-6">
+    <div className="min-h-screen bg-background p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-islamic-dark">Admin Dashboard</h1>
-          <p className="text-islamic-dark/70 mt-2">Manage your XamSaDine AI platform</p>
+          <p className="text-islamic-dark/70 mt-2">Manage your GëstuSaDine platform</p>
         </div>
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
           {statCards.map((stat, index) => (
-            <Card key={index} className="bg-[#efefec]/80 backdrop-blur-sm border border-islamic-gold/30">
+            <Card key={index} className="bg-card/80 backdrop-blur-sm border border-border">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
@@ -323,14 +299,7 @@ export const AdminDashboard = () => {
                 <Video className="mr-2 h-4 w-4" />
                 Manage Videos
               </Button>
-              <Button
-                variant="islamicOutline"
-                className="w-full justify-start"
-                onClick={() => navigate('/admin/products')}
-              >
-                <ShoppingBag className="mr-2 h-4 w-4" />
-                Manage Products
-              </Button>
+
               <Button
                 variant="islamicOutline"
                 className="w-full justify-start"

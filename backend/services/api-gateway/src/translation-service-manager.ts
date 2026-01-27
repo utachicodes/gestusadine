@@ -42,11 +42,16 @@ class TranslationServiceManager {
     try {
       managerLogger.info('🚀 Starting translation service...');
 
-      // Spawn Python process running the Flask app
-      this.process = spawn(this.pythonExecutable, ['app.py'], {
+      // Spawn Python process running the Flask app with unbuffered I/O
+      // -u flag prevents stdout/stderr buffering issues in subprocess
+      this.process = spawn(this.pythonExecutable, ['-u', 'app.py'], {
         cwd: this.translationServicePath,
         stdio: ['pipe', 'pipe', 'pipe'],
         detached: false,
+        env: {
+          ...process.env,
+          PYTHONUNBUFFERED: '1', // Prevent buffering
+        },
       });
 
       // Handle process events

@@ -1,4 +1,4 @@
-import { LLMConfig } from '../../shared/config-types';
+import { LLMConfig } from '../../shared/config-types.js';
 
 export class LLMService {
     async generate(config: LLMConfig, prompt: string): Promise<string> {
@@ -26,8 +26,8 @@ export class LLMService {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${apiKey}`,
-                'HTTP-Referer': 'https://xamsadine.ai',
-                'X-Title': 'XamSaDine AI'
+                'HTTP-Referer': 'https://deenakdiamano.com',
+                'X-Title': 'DeenAkDiamano'
             },
             body: JSON.stringify({
                 model: 'openai/text-embedding-3-small', // efficient default
@@ -97,7 +97,7 @@ export class LLMService {
             throw new Error(`Anthropic API error: ${error}`);
         }
 
-        const data = await response.json();
+        const data = await response.json() as { content: { text: string }[] };
         return data.content[0]?.text || '';
     }
 
@@ -130,8 +130,8 @@ export class LLMService {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${config.apiKey}`,
-                'HTTP-Referer': 'https://xamsadine.ai',
-                'X-Title': 'XamSaDine AI'
+                'HTTP-Referer': 'https://platform.example.com',
+                'X-Title': 'AI Platform'
             },
             body: JSON.stringify({
                 model: config.model || 'meta-llama/llama-3.2-3b-instruct:free',

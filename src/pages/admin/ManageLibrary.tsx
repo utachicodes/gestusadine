@@ -1,15 +1,12 @@
 import * as React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   BookOpen,
   Plus,
   Search,
   Edit,
   Trash2,
-  Upload,
-  Download,
-  Star,
-  Eye
+  Upload
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -44,8 +41,7 @@ import { Switch } from "@/components/ui/switch";
 import type { DigitalBook, BookCategory, BookLanguage, BookFormat } from "@/types/ecosystem";
 import { toast } from "sonner";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { supabase } from "@/lib/supabase";
-import { useEffect } from "react";
+import { getDocuments, addDocument, updateDocument, deleteDocument, uploadFile, deleteFile, orderBy } from "@/lib/firebase-helpers";
 
 export default function ManageLibrary() {
   const { t } = useLanguage();
@@ -67,13 +63,10 @@ export default function ManageLibrary() {
   const loadBooks = async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase
-        .from('digital_books')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setBooks(data || []);
+      const data = await getDocuments('library_books', [
+        orderBy('created_at', 'desc')
+      ]);
+      setBooks(data as DigitalBook[]);
     } catch (error: any) {
       console.error('Failed to load books:', error);
       toast.error('Failed to load books');
@@ -91,24 +84,16 @@ export default function ManageLibrary() {
 
     try {
       const fileExt = file.name.split('.').pop();
-      const fileName = `${Math.random()}.${fileExt}`;
+      const fileName = `${Date.now()}.${fileExt}`;
       const folder = type === 'book' ? 'library' : 'library-covers';
       const filePath = `${folder}/${fileName}`;
 
-      const { error: uploadError } = await supabase.storage
-        .from('library')
-        .upload(filePath, file);
-
-      if (uploadError) throw uploadError;
-
-      const { data } = supabase.storage
-        .from('library')
-        .getPublicUrl(filePath);
+      const url = await uploadFile(filePath, file);
 
       if (type === 'book') {
-        setFormData({ ...formData, file_url: data.publicUrl });
+        setFormData({ ...formData, file_url: url });
       } else {
-        setFormData({ ...formData, cover_image_url: data.publicUrl });
+        setFormData({ ...formData, cover_image_url: url });
       }
 
       toast.success(`${type === 'book' ? 'File' : 'Cover'} uploaded successfully`);
@@ -184,7 +169,6 @@ export default function ManageLibrary() {
   };
 
   const handleSaveAdd = async () => {
-    // Validate required fields
     if (!formData.title || !formData.author || !formData.file_url) {
       toast.error('Missing required fields', {
         description: 'Please fill in title, author, and file URL'
@@ -211,14 +195,7 @@ export default function ManageLibrary() {
         featured: formData.featured || false,
       };
 
-      const { data, error } = await supabase
-        .from('digital_books')
-        .insert([bookData])
-        .select()
-        .single();
-
-      if (error) throw error;
-
+      await addDocument('library_books', bookData);
       setIsAddDialogOpen(false);
       setFormData({});
       await loadBooks();
@@ -236,7 +213,6 @@ export default function ManageLibrary() {
   const handleSaveEdit = async () => {
     if (!selectedBook) return;
 
-    // Validate required fields
     if (!formData.title || !formData.author || !formData.file_url) {
       toast.error('Missing required fields', {
         description: 'Please fill in title, author, and file URL'
@@ -262,13 +238,7 @@ export default function ManageLibrary() {
         featured: formData.featured || false,
       };
 
-      const { error } = await supabase
-        .from('digital_books')
-        .update(bookData)
-        .eq('id', selectedBook.id);
-
-      if (error) throw error;
-
+      await updateDocument('library_books', selectedBook.id, bookData);
       setIsEditDialogOpen(false);
       setSelectedBook(null);
       setFormData({});
@@ -290,26 +260,27 @@ export default function ManageLibrary() {
     try {
       // Delete associated files from storage
       if (selectedBook.file_url && selectedBook.file_url.includes('library/')) {
-        const filePath = selectedBook.file_url.split('/library/')[1];
-        if (filePath) {
-          await supabase.storage.from('library').remove([`library/${filePath}`]);
+        try {
+          const filePath = selectedBook.file_url.split('/library/')[1].split('?')[0];
+          if (filePath) {
+            await deleteFile(`library/${filePath}`);
+          }
+        } catch (err) {
+          console.warn('Failed to delete book file:', err);
         }
       }
       if (selectedBook.cover_image_url && selectedBook.cover_image_url.includes('library-covers/')) {
-        const coverPath = selectedBook.cover_image_url.split('/library-covers/')[1];
-        if (coverPath) {
-          await supabase.storage.from('library').remove([`library-covers/${coverPath}`]);
+        try {
+          const coverPath = selectedBook.cover_image_url.split('/library-covers/')[1].split('?')[0];
+          if (coverPath) {
+            await deleteFile(`library-covers/${coverPath}`);
+          }
+        } catch (err) {
+          console.warn('Failed to delete cover:', err);
         }
       }
 
-      // Delete database entry
-      const { error } = await supabase
-        .from('digital_books')
-        .delete()
-        .eq('id', selectedBook.id);
-
-      if (error) throw error;
-
+      await deleteDocument('library_books', selectedBook.id);
       const bookTitle = selectedBook.title;
       setIsDeleteDialogOpen(false);
       setSelectedBook(null);
@@ -330,12 +301,7 @@ export default function ManageLibrary() {
     if (!book) return;
 
     try {
-      const { error } = await supabase
-        .from('digital_books')
-        .update({ featured: !book.featured })
-        .eq('id', bookId);
-
-      if (error) throw error;
+      await updateDocument('library_books', bookId, { featured: !book.featured });
       await loadBooks();
       toast.info(
         book.featured ? 'Removed from featured' : 'Added to featured',
@@ -811,7 +777,7 @@ export default function ManageLibrary() {
           <DialogHeader>
             <DialogTitle>Delete Book</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete "{selectedBook?.title}"? This action cannot be undone.
+              Are you sure you want to delete "{selectedBook?.title}"? This action cannot be undone and will also delete associated files.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -827,4 +793,3 @@ export default function ManageLibrary() {
     </div>
   );
 }
-

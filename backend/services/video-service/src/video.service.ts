@@ -1,99 +1,87 @@
-import { createClient } from '@supabase/supabase-js';
+import { db } from '../../api-gateway/src/lib/firebase-admin.js';
 import { MediaContent, MediaProgress } from '../../../shared/ecosystem-types.js';
-
-
-let supabaseInstance: ReturnType<typeof createClient> | null = null;
-
-function getSupabase() {
-    if (supabaseInstance) return supabaseInstance;
-    const supabaseUrl = process.env.SUPABASE_URL!;
-    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-    if (!supabaseUrl || !supabaseKey) throw new Error("Missing Supabase credentials");
-    supabaseInstance = createClient<any>(supabaseUrl, supabaseKey);
-    return supabaseInstance;
-}
 
 export const VideoService = {
     // Get all videos with optional filtering
     async getVideos(filters?: { audience?: string; language?: string }) {
-        const supabase = getSupabase();
-        let query = supabase
-            .from('media_content')
-            .select('*')
-            .eq('type', 'video')
-            .order('published_at', { ascending: false });
+        let query = db.collection('media_content')
+            .where('type', '==', 'video')
+            .orderBy('published_at', 'desc');
 
         if (filters?.audience) {
-            query = query.eq('audience', filters.audience);
+            query = query.where('audience', '==', filters.audience);
         }
         if (filters?.language) {
-            query = query.eq('language', filters.language);
+            query = query.where('language', '==', filters.language);
         }
 
-        const { data, error } = await query;
-        if (error) throw error;
-        return data as MediaContent[];
+        const snapshot = await query.get();
+        return snapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        })) as MediaContent[];
     },
 
     // Get single video
     async getVideoById(id: string) {
-        const supabase = getSupabase();
-        const { data, error } = await supabase
-            .from('media_content')
-            .select('*')
-            .eq('id', id)
-            .single();
-
-        if (error) throw error;
-        return data as MediaContent;
+        const doc = await db.collection('media_content').doc(id).get();
+        if (!doc.exists) {
+            throw new Error('Video not found');
+        }
+        return {
+            id: doc.id,
+            ...doc.data()
+        } as MediaContent;
     },
 
     // Update progress
     async updateProgress(userId: string, mediaId: string, seconds: number, totalDuration: number) {
-        const supabase = getSupabase();
         const isCompleted = seconds >= (totalDuration * 0.9); // 90% watched = completed
 
-        const { data, error } = await supabase
-            .from('media_progress')
-            .upsert({
-                user_id: userId,
-                media_id: mediaId,
-                progress_seconds: seconds,
-                completed: isCompleted,
-                last_watched_at: new Date().toISOString()
-            })
-            .select()
-            .single();
+        const progressRef = db.collection('media_progress').doc(`${userId}_${mediaId}`);
+        const progressData = {
+            user_id: userId,
+            media_id: mediaId,
+            progress_seconds: seconds,
+            completed: isCompleted,
+            last_watched_at: new Date().toISOString()
+        };
 
-        if (error) throw error;
+        await progressRef.set(progressData, { merge: true });
 
         // If completed, log activity
         if (isCompleted) {
-            await supabase.from('user_activity').insert({
+            await db.collection('user_activity').add({
                 user_id: userId,
                 activity_type: 'video_watch',
                 target_id: mediaId,
-                metadata: { completed_at: new Date().toISOString() }
+                metadata: { completed_at: new Date().toISOString() },
+                created_at: new Date().toISOString()
             });
         }
 
-        return data as MediaProgress;
+        return {
+            id: progressRef.id,
+            ...progressData
+        } as MediaProgress;
     },
 
     // Admin: Create Video
     async createVideo(video: Omit<MediaContent, 'id' | 'created_at' | 'published_at'>) {
-        const supabase = getSupabase();
-        const { data, error } = await supabase
-            .from('media_content')
-            .insert({
-                ...video,
-                type: 'video'
-            })
-            .select()
-            .single();
+        const videoData = {
+            ...video,
+            type: 'video',
+            created_at: new Date().toISOString(),
+            published_at: new Date().toISOString()
+        };
 
+        const docRef = await db.collection('media_content').add(videoData);
+        const doc = await docRef.get();
 
-        if (error) throw error;
+        const data = {
+            id: doc.id,
+            ...doc.data()
+        } as MediaContent;
 
         // Index into RAG for Search
         if (data.transcript || data.description) {
@@ -111,6 +99,6 @@ export const VideoService = {
             }
         }
 
-        return data as MediaContent;
+        return data;
     }
 };

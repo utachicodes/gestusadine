@@ -1,37 +1,14 @@
-import { DocumentMetadata } from '../../shared/document-types';
+import { DocumentMetadata } from '../../shared/document-types.js';
 import fs from 'fs/promises';
 import path from 'path';
-import { ragService } from './rag.service';
-import { createClient } from '@supabase/supabase-js';
+import { ragService } from './rag.service.js';
+import { db, storage } from '../api-gateway/src/lib/firebase-admin.js';
 
 const UPLOAD_DIR = path.join(process.cwd(), 'backend', 'uploads');
 const METADATA_FILE = path.join(process.cwd(), 'backend', 'documents.json');
 
-const SUPABASE_BUCKET = process.env.SUPABASE_RAG_BUCKET || 'rag-documents';
-const SUPABASE_TABLE = process.env.SUPABASE_RAG_TABLE || 'rag_documents';
-
-function getSupabaseAdmin() {
-    const url = (process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || '').trim();
-    const key = (process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_SERVICE_ROLE_KEY || '').trim();
-
-    // Validate format
-    if (!url || !url.startsWith('http') || url.includes('your-supabase-url')) {
-        console.warn('⚠️  Supabase URL missing or invalid in DocumentManager. Falling back to local storage.');
-        return null;
-    }
-
-    if (!key || key.includes('your-supabase-key')) {
-        console.warn('⚠️  Supabase Key missing or invalid in DocumentManager. Falling back to local storage.');
-        return null;
-    }
-
-    try {
-        return createClient(url, key, { auth: { persistSession: false } });
-    } catch (error: any) {
-        console.error('❌ Failed to initialize Supabase client in DocumentManager:', error.message);
-        return null;
-    }
-}
+const FIRESTORE_DOCS_COLLECTION = 'rag_documents';
+const STORAGE_BUCKET_NAME = process.env.FIREBASE_STORAGE_BUCKET || 'rag-documents';
 
 // Ensure upload directory exists
 async function ensureUploadDir() {
@@ -44,43 +21,32 @@ async function ensureUploadDir() {
 
 export class DocumentManager {
     private documents: Record<string, DocumentMetadata> = {};
-    private supabase = getSupabaseAdmin();
 
     async init() {
         await ensureUploadDir();
-        if (this.supabase) {
-            try {
-                const { data, error } = await this.supabase
-                    .from(SUPABASE_TABLE)
-                    .select('*')
-                    .order('uploaded_at', { ascending: false });
+        try {
+            const snapshot = await db.collection(FIRESTORE_DOCS_COLLECTION)
+                .orderBy('uploaded_at', 'desc')
+                .get();
 
-                if (error) throw error;
-
-                const next: Record<string, DocumentMetadata> = {};
-                for (const row of data ?? []) {
-                    next[String(row.id)] = {
-                        id: String(row.id),
-                        filename: String(row.filename),
-                        category: String(row.category ?? 'general'),
-                        uploadedAt: String(row.uploaded_at),
-                        processedAt: row.processed_at ? String(row.processed_at) : undefined,
-                        status: (row.status as any) ?? 'uploaded',
-                        chunkCount: typeof row.chunk_count === 'number' ? row.chunk_count : undefined,
-                        storageBucket: String(row.storage_bucket ?? SUPABASE_BUCKET),
-                        storagePath: row.storage_path ? String(row.storage_path) : undefined,
-                    };
-                }
-                this.documents = next;
-            } catch {
-                try {
-                    const data = await fs.readFile(METADATA_FILE, 'utf-8');
-                    this.documents = JSON.parse(data);
-                } catch {
-                    this.documents = {};
-                }
-            }
-        } else {
+            const next: Record<string, DocumentMetadata> = {};
+            snapshot.forEach((doc) => {
+                const data = doc.data();
+                next[doc.id] = {
+                    id: doc.id,
+                    filename: String(data.filename),
+                    category: String(data.category ?? 'general'),
+                    uploadedAt: String(data.uploaded_at),
+                    processedAt: data.processed_at ? String(data.processed_at) : undefined,
+                    status: (data.status as any) ?? 'uploaded',
+                    chunkCount: typeof data.chunk_count === 'number' ? data.chunk_count : undefined,
+                    storageBucket: String(data.storage_bucket ?? STORAGE_BUCKET_NAME),
+                    storagePath: data.storage_path ? String(data.storage_path) : undefined,
+                };
+            });
+            this.documents = next;
+        } catch (error) {
+            console.warn('⚠️ Firestore unavailable or empty in DocumentManager. Falling back to local storage.');
             try {
                 const data = await fs.readFile(METADATA_FILE, 'utf-8');
                 this.documents = JSON.parse(data);
@@ -92,25 +58,24 @@ export class DocumentManager {
     }
 
     async saveMetadata() {
-        if (!this.supabase) {
-            await fs.writeFile(METADATA_FILE, JSON.stringify(this.documents, null, 2));
-            return;
-        }
-
-        const rows = Object.values(this.documents).map((d) => ({
-            id: d.id,
-            filename: d.filename,
-            category: d.category,
-            uploaded_at: d.uploadedAt,
-            processed_at: d.processedAt ?? null,
-            status: d.status,
-            chunk_count: d.chunkCount ?? null,
-            storage_bucket: d.storageBucket ?? SUPABASE_BUCKET,
-            storage_path: d.storagePath ?? null,
-        }));
-
-        const { error } = await this.supabase.from(SUPABASE_TABLE).upsert(rows, { onConflict: 'id' });
-        if (error) {
+        try {
+            const batch = db.batch();
+            Object.values(this.documents).forEach((d) => {
+                const docRef = db.collection(FIRESTORE_DOCS_COLLECTION).doc(d.id);
+                batch.set(docRef, {
+                    filename: d.filename,
+                    category: d.category,
+                    uploaded_at: d.uploadedAt,
+                    processed_at: d.processedAt ?? null,
+                    status: d.status,
+                    chunk_count: d.chunkCount ?? null,
+                    storage_bucket: d.storageBucket ?? STORAGE_BUCKET_NAME,
+                    storage_path: d.storagePath ?? null,
+                }, { merge: true });
+            });
+            await batch.commit();
+        } catch (error) {
+            console.error('Error saving metadata to Firestore:', error);
             await fs.writeFile(METADATA_FILE, JSON.stringify(this.documents, null, 2));
         }
     }
@@ -118,17 +83,23 @@ export class DocumentManager {
     async uploadDocument(filename: string, content: Buffer, category: string): Promise<DocumentMetadata> {
         const id = `doc_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
         let storagePath: string | undefined;
-        if (this.supabase) {
+
+        try {
+            const bucket = storage.bucket(STORAGE_BUCKET_NAME);
             storagePath = `${id}/${filename}`;
-            const { error } = await this.supabase.storage
-                .from(SUPABASE_BUCKET)
-                .upload(storagePath, content, {
-                    upsert: true,
-                    contentType: 'application/octet-stream',
-                });
-            if (error) {
-                storagePath = undefined;
-            }
+            const file = bucket.file(storagePath);
+            await file.save(content, {
+                contentType: 'application/octet-stream',
+                metadata: {
+                    metadata: {
+                        originalName: filename,
+                        category: category
+                    }
+                }
+            });
+        } catch (error) {
+            console.error('Error uploading to Firebase Storage:', error);
+            storagePath = undefined;
         }
 
         if (!storagePath) {
@@ -142,7 +113,7 @@ export class DocumentManager {
             category,
             uploadedAt: new Date().toISOString(),
             status: 'uploaded',
-            storageBucket: storagePath ? SUPABASE_BUCKET : undefined,
+            storageBucket: storagePath ? STORAGE_BUCKET_NAME : undefined,
             storagePath: storagePath
         };
 
@@ -164,13 +135,11 @@ export class DocumentManager {
 
         try {
             let content: string;
-            if (this.supabase && doc.storageBucket && doc.storagePath) {
-                const { data, error } = await this.supabase.storage
-                    .from(doc.storageBucket)
-                    .download(doc.storagePath);
-                if (error || !data) throw error;
-                const buf = Buffer.from(await data.arrayBuffer());
-                content = buf.toString('utf-8');
+            if (doc.storageBucket && doc.storagePath) {
+                const bucket = storage.bucket(doc.storageBucket);
+                const file = bucket.file(doc.storagePath);
+                const [buffer] = await file.download();
+                content = buffer.toString('utf-8');
             } else {
                 const filepath = path.join(UPLOAD_DIR, `${id}_${doc.filename}`);
                 content = await fs.readFile(filepath, 'utf-8');
@@ -229,8 +198,13 @@ export class DocumentManager {
         const doc = this.documents[id];
         if (!doc) throw new Error('Document not found');
 
-        if (this.supabase && doc.storageBucket && doc.storagePath) {
-            await this.supabase.storage.from(doc.storageBucket).remove([doc.storagePath]);
+        if (doc.storageBucket && doc.storagePath) {
+            try {
+                const bucket = storage.bucket(doc.storageBucket);
+                await bucket.file(doc.storagePath).delete();
+            } catch (error) {
+                console.warn('Error deleting file from Firebase Storage:', error);
+            }
         } else {
             const filepath = path.join(UPLOAD_DIR, `${id}_${doc.filename}`);
             try {
@@ -243,19 +217,22 @@ export class DocumentManager {
         await ragService.removeDocument(id);
 
         delete this.documents[id];
+        // Also delete from Firestore
+        await db.collection(FIRESTORE_DOCS_COLLECTION).doc(id).delete();
         await this.saveMetadata();
     }
 
     async getSignedUrl(id: string, expiresInSeconds: number = 60 * 5): Promise<string> {
         const doc = this.documents[id];
         if (!doc) throw new Error('Document not found');
-        if (!this.supabase || !doc.storageBucket || !doc.storagePath) throw new Error('Signed URLs unavailable');
+        if (!doc.storageBucket || !doc.storagePath) throw new Error('Signed URLs unavailable');
 
-        const { data, error } = await this.supabase.storage
-            .from(doc.storageBucket)
-            .createSignedUrl(doc.storagePath, expiresInSeconds);
-        if (error || !data?.signedUrl) throw (error ?? new Error('Failed to create signed URL'));
-        return data.signedUrl;
+        const bucket = storage.bucket(doc.storageBucket);
+        const [url] = await bucket.file(doc.storagePath).getSignedUrl({
+            action: 'read',
+            expires: Date.now() + expiresInSeconds * 1000
+        });
+        return url;
     }
 }
 

@@ -4,17 +4,18 @@ Integrates Galsen AI's FrenchWolofTranslator for bidirectional translation
 """
 
 import sys
-import io
-
-# Fix UTF-8 encoding for Windows console
-if sys.platform == "win32":
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
-    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
-
+import logging
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 import torch
 import os
 from typing import Optional, Dict, List
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='[TranslationService] %(message)s',
+    handlers=[logging.StreamHandler(sys.stderr)]
+)
 
 
 class FrenchWolofTranslator:
@@ -29,14 +30,14 @@ class FrenchWolofTranslator:
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         
         try:
-            print(f"🔄 Loading Wolof translation model: {model_checkpoint}")
+            logging.info(f"🔄 Loading Wolof translation model: {model_checkpoint}")
             self.tokenizer = AutoTokenizer.from_pretrained(model_checkpoint)
             self.model = AutoModelForSeq2SeqLM.from_pretrained(model_checkpoint)
             self.model.to(self.device)
             self.model.eval()
-            print(f"✅ Model loaded successfully on {self.device}")
+            logging.info(f"✅ Model loaded successfully on {self.device}")
         except Exception as e:
-            print(f"❌ Error loading model: {e}")
+            logging.error(f"❌ Error loading model: {e}")
             raise
 
     def detect_language(self, text: str) -> str:
@@ -121,7 +122,7 @@ class FrenchWolofTranslator:
             translated_text = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
             return translated_text
         except Exception as e:
-            print(f"❌ Translation error: {e}")
+            logging.error(f"❌ Translation error: {e}")
             return text
 
     def batch_translate(self, texts: List[str], source_lang: Optional[str] = None) -> List[str]:
@@ -152,12 +153,12 @@ if __name__ == "__main__":
     # Test French to Wolof
     french_text = "Bonjour"
     wolof_text = translator.translate_french_to_wolof(french_text)
-    print(f"French: {french_text}")
-    print(f"Wolof: {wolof_text}")
+    logging.info(f"French: {french_text}")
+    logging.info(f"Wolof: {wolof_text}")
     
     # Test Wolof to French
     wolof_text = "Naka nga def?"
     french_text = translator.translate_wolof_to_french(wolof_text)
-    print(f"Wolof: {wolof_text}")
-    print(f"French: {french_text}")
+    logging.info(f"Wolof: {wolof_text}")
+    logging.info(f"French: {french_text}")
 

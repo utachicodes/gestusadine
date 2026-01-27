@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
-import { llmCouncil } from '../../../../services/llm-service/llm-council';
-import { ragService } from '../../../../services/rag-service/rag.service';
-import { logger } from '../../../../shared/logger';
-import { Validator } from '../../../../shared/validator';
-import { translationClient } from '../../../translation-service/client';
-import { Source } from '../../../../services/rag-service/types';
+import { llmCouncil } from '../../../../services/llm-service/llm-council.js';
+import { ragService } from '../../../../services/rag-service/rag.service.js';
+import { logger } from '../../../../shared/logger.js';
+import { Validator } from '../../../../shared/validator.js';
+import { translationClient } from '../../../translation-service/client.js';
+import { Source } from '../../../../services/rag-service/types.js';
 
 const routeLogger = logger.prefixed('CouncilRoute');
 

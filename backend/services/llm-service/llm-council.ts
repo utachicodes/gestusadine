@@ -1,7 +1,7 @@
-import { OpenRouterClient, openRouterClient, COUNCIL_MODELS } from './openrouter-client';
-import { ragService } from '../rag-service/rag.service';
-import { logger } from '../../shared/logger';
-import { configService } from '../config-service/config.service';
+import { OpenRouterClient, openRouterClient, COUNCIL_MODELS } from './openrouter-client.js';
+import { ragService } from '../rag-service/rag.service.js';
+import { logger } from '../../shared/logger.js';
+import { configService } from '../config-service/config.service.js';
 
 export interface CouncilMember {
     id: string;

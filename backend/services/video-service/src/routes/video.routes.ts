@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { VideoService } from '../video.service.js';
-import { requireAuth, requireAdmin } from '../../../api-gateway/src/auth.ts';
+import { requireAuth, requireAdmin } from '../../../api-gateway/src/auth.js';
 
 export const videoRoutes = Router();
 

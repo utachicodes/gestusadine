@@ -10,8 +10,7 @@ services:
       - PORT=4000
       - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
       - NABOOPAY_API_KEY=${NABOOPAY_API_KEY}
-      - SUPABASE_URL=${SUPABASE_URL}
-      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+      - FIREBASE_SERVICE_ACCOUNT=${FIREBASE_SERVICE_ACCOUNT}
     volumes:
       - ./backend/data:/app/backend/data # Persist local RAG/Vector data
     restart: unless-stopped

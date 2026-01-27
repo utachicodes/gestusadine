@@ -1,6 +1,6 @@
-import { CouncilAgentResponse } from '../shared/types';
-import { llmService } from '../services/llm-service/llm.service';
-import { LLMConfig } from '../shared/config-types';
+import { CouncilAgentResponse } from '../shared/types.js';
+import { llmService } from '../services/llm-service/llm.service.js';
+import { LLMConfig } from '../shared/config-types.js';
 
 export class CouncilAgent {
     constructor(
@@ -34,7 +34,7 @@ Provide your response from the perspective of your persona. Be concise but deep.
                 agentType: 'COUNCIL_MEMBER',
                 personaName: this.personaName,
                 timestamp: new Date().toISOString(),
-                confidence: 0.9, // Placeholder for model confidence
+                confidence: 0.9,
                 trace: [`Processed by ${this.modelConfig.model} (${this.modelConfig.provider})`],
                 content: content
             };

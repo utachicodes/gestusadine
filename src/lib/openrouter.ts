@@ -24,7 +24,7 @@ export class OpenRouterClient {
 
   constructor(apiKey?: string) {
     this.apiKey = apiKey || import.meta.env.VITE_OPENROUTER_API_KEY || '';
-    
+
     if (!this.apiKey) {
       console.warn('VITE_OPENROUTER_API_KEY not configured. OpenRouter calls will fail.');
     }
@@ -49,7 +49,7 @@ export class OpenRouterClient {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${this.apiKey}`,
           'HTTP-Referer': window.location.origin,
-          'X-Title': 'XamSaDine AI'
+          'X-Title': 'GëstuSaDine'
         },
         body: JSON.stringify({
           model,
@@ -115,7 +115,7 @@ export class OpenRouterClient {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${this.apiKey}`,
           'HTTP-Referer': window.location.origin,
-          'X-Title': 'XamSaDine AI'
+          'X-Title': 'GëstuSaDine'
         },
         body: JSON.stringify({
           model: this.embeddingModel,

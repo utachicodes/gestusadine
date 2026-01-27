@@ -75,7 +75,7 @@ export class OpenRouterClient {
     private referer: string;
     private title: string;
 
-    constructor(apiKey?: string, referer: string = 'https://xamsadine.ai', title: string = 'XamSaDine AI') {
+    constructor(apiKey?: string, referer: string = 'https://deenakdiamano.com', title: string = 'DeenAkDiamano') {
         this.apiKey = apiKey || process.env.OPENROUTER_API_KEY || '';
         this.referer = referer;
         this.title = title;
