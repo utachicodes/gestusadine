@@ -1,7 +1,10 @@
-# DeenAkDiamano v2
-### *The Digital Ecosystem for Modern Islamic Living*
+<div align="center">
+  <img src="public/logofinal.png" alt="GëstuSaDine" width="120" />
+  <h1>GëstuSaDine</h1>
+  <p><em>The Digital Ecosystem for Modern Islamic Living</em></p>
+</div>
 
-DeenAkDiamano is more than just a chatbot; it is a **comprehensive Service-Oriented Platform** that merges traditional Islamic scholarship with state-of-the-art AI. Designed for scalability and epistemic integrity, it offers a unified interface for commerce, education, and spiritual guidance.
+GëstuSaDine is more than just a chatbot; it is a **comprehensive Service-Oriented Platform** that merges traditional Islamic scholarship with state-of-the-art AI. Designed for scalability and epistemic integrity, it offers a unified interface for commerce, education, and spiritual guidance.
 
 ![Maintained](https://img.shields.io/badge/Maintained-yes-34D399?style=for-the-badge)
 ![License](https://img.shields.io/badge/License-MIT-3B82F6?style=for-the-badge)
@@ -9,13 +12,13 @@ DeenAkDiamano is more than just a chatbot; it is a **comprehensive Service-Orien
 
 ---
 
-## Why DeenAkDiamano?
+## Why GëstuSaDine?
 
-In an era of generic AI, **DeenAkDiamano** stands out by enforcing strictly grounded, scholar-verified responses through its unique "Council" architecture. Whether you're shopping for exclusive merchandise, perfecting your recitation, or seeking a fatwa, we provide a premium, authenticated experience.
+In an era of generic AI, **GëstuSaDine** stands out by enforcing strictly grounded, scholar-verified responses through its unique "Council" architecture. Whether you're shopping for exclusive merchandise, perfecting your recitation, or seeking a fatwa, we provide a premium, authenticated experience.
 
 ---
 
-## 🏗 System Architecture
+## System Architecture
 
 The platform follows a **Microservices-inspired Monolith** pattern using an API Gateway to bridge the React frontend with specialized backend logic.
 
@@ -77,17 +80,17 @@ A turnkey commerce solution:
 
 ---
 
-## 💳 Subscription Tiers
+## Subscription Tiers
 
 The platform offers three subscription tiers with different feature access:
 
-### 🆓 Free — Access Tier
+### Free — Access Tier
 - **Price**: 0 XOF
 - **Chat Credits**: 50/month
 - **Purpose**: Discovery and first exposure
 - **Features**: Basic guidance only
 
-### 🌙 Core — Primary Tier
+### Core — Primary Tier
 - **Price**: 5,000 XOF/month (~$8.50 USD)
 - **Chat Credits**: 500/month
 - **Purpose**: Main experience for most users
@@ -98,7 +101,7 @@ The platform offers three subscription tiers with different feature access:
   - Templates & planners
   - Priority model responses
 
-### 🧠 Pro / Builder — Advanced Tier
+### Pro / Builder — Advanced Tier
 - **Price**: 10,000 XOF/month (~$17 USD)
 - **Chat Credits**: Unlimited
 - **Purpose**: For serious, long-term users
@@ -147,10 +150,9 @@ The application is optimized for containerized environments.
 
 ---
 
-## 🤝 Support & License
+## Support & License
 
 - **License**: MIT
 - **Contact**: [contact@example.com](mailto:contact@example.com)
 
 *Built for the Global Islamic Community.*
-
