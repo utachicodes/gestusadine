@@ -6,7 +6,8 @@
 
 @layer base {
   :root {
-    --background: 40 10% 98%; /* Cream-white for paper feel */
+    --background: 40 10% 98%;
+    /* Cream-white for paper feel */
     --foreground: 222.2 84% 4.9%;
 
     --card: 0 0% 100%;
@@ -24,7 +25,8 @@
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 43 74% 49%; /* Gold */
+    --accent: 43 74% 49%;
+    /* Gold */
     --accent-foreground: 222.2 47.4% 11.2%;
 
     --destructive: 0 84.2% 60.2%;
@@ -166,6 +168,128 @@
       transform: translateY(-10px);
     }
   }
+
+  /* New Premium Animations */
+  @keyframes float-continuous {
+
+    0%,
+    100% {
+      transform: translateY(0px) translateX(0px);
+    }
+
+    25% {
+      transform: translateY(-20px) translateX(10px);
+    }
+
+    50% {
+      transform: translateY(-15px) translateX(-10px);
+    }
+
+    75% {
+      transform: translateY(-25px) translateX(5px);
+    }
+  }
+
+  @keyframes gradient-flow {
+
+    0%,
+    100% {
+      background-position: 0% 50%;
+    }
+
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+
+  @keyframes pulse-glow {
+
+    0%,
+    100% {
+      box-shadow: 0 0 10px rgba(143, 163, 196, 0.3),
+        0 0 20px rgba(143, 163, 196, 0.2);
+    }
+
+    50% {
+      box-shadow: 0 0 20px rgba(143, 163, 196, 0.5),
+        0 0 40px rgba(143, 163, 196, 0.3);
+    }
+  }
+
+  @keyframes shimmer-sweep {
+    0% {
+      transform: translateX(-100%) skewX(-15deg);
+      opacity: 0;
+    }
+
+    50% {
+      opacity: 1;
+    }
+
+    100% {
+      transform: translateX(200%) skewX(-15deg);
+      opacity: 0;
+    }
+  }
+
+  @keyframes scale-in {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes slide-fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slide-fade-down {
+    from {
+      opacity: 0;
+      transform: translateY(-30px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes rotate-slow {
+    from {
+      transform: rotate(0deg);
+    }
+
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes bounce-subtle {
+
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(-5px);
+    }
+  }
+
 
   @keyframes fadeInUp {
     from {
@@ -431,7 +555,7 @@
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.4);
-    box-shadow: 
+    box-shadow:
       0 4px 6px -1px rgba(0, 0, 0, 0.02),
       0 2px 4px -1px rgba(0, 0, 0, 0.02),
       inset 0 1px 1px rgba(255, 255, 255, 0.6);
@@ -439,10 +563,11 @@
 
   .islamic-card:hover {
     transform: translateY(-2px);
-    box-shadow: 
+    box-shadow:
       0 20px 25px -5px rgba(0, 0, 0, 0.05),
       0 10px 10px -5px rgba(0, 0, 0, 0.02),
-      0 0 0 1px rgba(212, 175, 55, 0.2); /* Golden border on hover */
+      0 0 0 1px rgba(212, 175, 55, 0.2);
+    /* Golden border on hover */
   }
 
   /* Premium Glassmorphic Card - Dark variant */
@@ -519,48 +644,88 @@
 
   /* Premium Button - Primary */
   .btn-islamic {
-    @apply px-8 py-4 font-semibold rounded-full text-white shadow-lg transition-all duration-300 transform;
+    @apply px-8 py-4 font-semibold rounded-full text-white shadow-lg transition-all duration-300 transform relative overflow-hidden;
     background: linear-gradient(135deg, #8fa3c4 0%, #7689af 100%);
-    box-shadow: 0 10px 25px rgba(224, 232, 243, 0.25),
+    background-size: 200% 200%;
+    box-shadow: 0 10px 25px rgba(143, 163, 196, 0.25),
       0 4px 12px rgba(0, 0, 0, 0.1);
-    position: relative;
-    overflow: hidden;
+    will-change: transform, box-shadow, background-position;
   }
 
   .btn-islamic::before {
-    @apply absolute inset-0 opacity-0 transition-opacity duration-300;
+    @apply absolute inset-0 transition-opacity duration-300;
     content: '';
     background: linear-gradient(135deg, #a8bdd9 0%, #8fa3c4 100%);
+    opacity: 0;
+  }
+
+  .btn-islamic::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
   }
 
   .btn-islamic:hover {
-    box-shadow: 0 15px 35px rgba(224, 232, 243, 0.35),
-      0 6px 16px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 15px 35px rgba(143, 163, 196, 0.35),
+      0 6px 16px rgba(0, 0, 0, 0.12),
+      0 0 20px rgba(143, 163, 196, 0.3);
+    background-position: 100% 50%;
   }
 
   .btn-islamic:hover::before {
     opacity: 1;
   }
 
-  .btn-islamic:active {}
+  .btn-islamic:hover::after {
+    width: 300px;
+    height: 300px;
+  }
+
+  .btn-islamic:active {
+    transform: translateY(0) scale(0.98);
+  }
 
   /* Premium Button - Outlined */
   .btn-islamic-outlined {
-    @apply px-8 py-3.5 font-semibold rounded-full bg-transparent transition-all duration-300;
+    @apply px-8 py-3.5 font-semibold rounded-full bg-transparent transition-all duration-300 relative overflow-hidden;
     color: #8fa3c4;
     border: 2px solid #8fa3c4;
-    background: rgba(224, 232, 243, 0.05);
-    box-shadow: 0 4px 12px rgba(224, 232, 243, 0.1);
+    background: rgba(143, 163, 196, 0.05);
+    box-shadow: 0 4px 12px rgba(143, 163, 196, 0.1);
+    will-change: transform, box-shadow, background;
+  }
+
+  .btn-islamic-outlined::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(143, 163, 196, 0.1), rgba(118, 137, 175, 0.1));
+    opacity: 0;
+    transition: opacity 0.3s;
   }
 
   .btn-islamic-outlined:hover {
-    background: rgba(224, 232, 243, 0.1);
-    box-shadow: 0 6px 20px rgba(224, 232, 243, 0.2);
-    transform: translateY(-1px);
+    background: rgba(143, 163, 196, 0.12);
+    box-shadow: 0 6px 20px rgba(143, 163, 196, 0.25),
+      0 0 30px rgba(143, 163, 196, 0.15);
+    transform: translateY(-2px) scale(1.02);
+    border-color: #a8bdd9;
+  }
+
+  .btn-islamic-outlined:hover::before {
+    opacity: 1;
   }
 
   .btn-islamic-outlined:active {
-    transform: translateY(0);
+    transform: translateY(0) scale(0.98);
   }
 
   /* Topic/Feature Cards */
