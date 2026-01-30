@@ -1,7 +1,7 @@
 ﻿import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, Sparkles, Star } from 'lucide-react';
-import { useLanguage } from '@'/contexts/LanguageContext';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const HeroSection = () => {
   const navigate = useNavigate();
@@ -12,21 +12,21 @@ const HeroSection = () => {
       {/* Animated Background Elements */}
       <div className='absolute inset-0 overflow-hidden'>
         {/* Floating Blobs */}
-        <div 
+        <div
           className='absolute top-1/4 left-1/4 w-96 h-96 bg-islamic-green/10 rounded-full blur-3xl opacity-30'
           style={{ animation: 'float-continuous 15s ease-in-out infinite' }}
         />
-        <div 
+        <div
           className='absolute bottom-1/4 right-1/4 w-80 h-80 bg-islamic-blue/10 rounded-full blur-3xl opacity-30'
           style={{ animation: 'float-continuous 12s ease-in-out infinite 2s' }}
         />
-        <div 
+        <div
           className='absolute top-1/2 right-1/3 w-72 h-72 bg-islamic-gold/5 rounded-full blur-3xl opacity-40'
           style={{ animation: 'float-continuous 18s ease-in-out infinite 4s' }}
         />
-        
+
         {/* Animated Gradient Overlay */}
-        <div 
+        <div
           className='absolute inset-0 opacity-20'
           style={{
             background: 'linear-gradient(135deg, rgba(143, 163, 196, 0.1) 0%, rgba(224, 232, 243, 0.05) 50%, rgba(143, 163, 196, 0.1) 100%)',
@@ -40,7 +40,7 @@ const HeroSection = () => {
       <div className='container relative z-10 px-6'>
         <div className='max-w-5xl mx-auto text-center'>
           {/* Badge */}
-          <div 
+          <div
             className='inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8 islamic-card'
             style={{ animation: 'scale-in 0.6s ease-out' }}
           >
@@ -51,12 +51,12 @@ const HeroSection = () => {
           </div>
 
           {/* Main Heading with Stagger Animation */}
-          <h1 
+          <h1
             className='text-5xl md:text-6xl lg:text-7xl font-bold text-islamic-dark mb-6 leading-tight'
             style={{ animation: 'slide-fade-up 0.8s ease-out 0.2s both' }}
           >
             {t('hero.title_1') || 'Your Digital'}{' '}
-            <span 
+            <span
               className='text-gradient relative inline-block'
               style={{ animation: 'slide-fade-up 0.8s ease-out 0.4s both' }}
             >
@@ -65,7 +65,7 @@ const HeroSection = () => {
           </h1>
 
           {/* Subtitle */}
-          <p 
+          <p
             className='text-xl md:text-2xl text-islamic-dark/70 mb-10 max-w-3xl mx-auto leading-relaxed'
             style={{ animation: 'slide-fade-up 0.8s ease-out 0.6s both' }}
           >
@@ -73,7 +73,7 @@ const HeroSection = () => {
           </p>
 
           {/* CTA Buttons */}
-          <div 
+          <div
             className='flex flex-col sm:flex-row gap-4 justify-center items-center'
             style={{ animation: 'slide-fade-up 0.8s ease-out 0.8s both' }}
           >
@@ -86,7 +86,7 @@ const HeroSection = () => {
                 <ArrowRight className='w-5 h-5 transition-transform group-hover:translate-x-1' />
               </span>
             </button>
-            
+
             <button
               onClick={() => navigate('/about')}
               className='btn-islamic-outlined group'
@@ -99,7 +99,7 @@ const HeroSection = () => {
           </div>
 
           {/* Social Proof / Trust Indicators */}
-          <div 
+          <div
             className='mt-12 flex flex-wrap justify-center items-center gap-8 text-islamic-dark/60'
             style={{ animation: 'slide-fade-up 0.8s ease-out 1s both' }}
           >
@@ -130,7 +130,7 @@ const HeroSection = () => {
       </div>
 
       {/* Scroll Indicator */}
-      <div 
+      <div
         className='absolute bottom-8 left-1/2 -translate-x-1/2'
         style={{ animation: 'bounce-subtle 2s ease-in-out infinite' }}
       >
