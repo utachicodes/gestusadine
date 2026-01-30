@@ -7,7 +7,7 @@ import { AuthProvider } from "@/auth/AuthContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { ProtectedRoute } from "@/components/layout/ProtectedRoute";
 import { PublicRoute } from "@/components/layout/PublicRoute";
-import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { ErrorBoundary } from "@/components/layout/ErrorBoundary";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import Index from "./pages/core/Index";
 import NotFound from "./pages/core/NotFound";
