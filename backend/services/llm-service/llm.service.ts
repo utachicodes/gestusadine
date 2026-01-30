@@ -10,6 +10,8 @@ export class LLMService {
             return this.callLocal(config, prompt);
         } else if (config.provider === 'openrouter') {
             return this.callOpenRouter(config, prompt);
+        } else if (config.provider === 'groq') {
+            return this.callGroq(config, prompt);
         }
         throw new Error(`Unknown provider: ${config.provider}`);
     }
@@ -144,6 +146,34 @@ export class LLMService {
         if (!response.ok) {
             const error = await response.text();
             throw new Error(`OpenRouter API error: ${error}`);
+        }
+
+        const data = await response.json();
+        return data.choices[0]?.message?.content || '';
+    }
+
+    private async callGroq(config: LLMConfig, prompt: string): Promise<string> {
+        if (!config.apiKey) {
+            throw new Error('Groq API key not configured. Get it from https://console.groq.com/');
+        }
+
+        const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${config.apiKey}`
+            },
+            body: JSON.stringify({
+                model: config.model || 'llama3-70b-8192',
+                messages: [{ role: 'user', content: prompt }],
+                temperature: config.temperature ?? 0.7,
+                max_tokens: config.maxTokens ?? 2048
+            })
+        });
+
+        if (!response.ok) {
+            const error = await response.text();
+            throw new Error(`Groq API error: ${error}`);
         }
 
         const data = await response.json();
