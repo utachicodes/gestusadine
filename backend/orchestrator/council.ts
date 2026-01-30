@@ -13,9 +13,9 @@ export class CouncilOrchestrator {
     constructor() {
         this.agents = [];
         this.debateConfig = {
-            provider: 'openrouter',
-            model: 'meta-llama/llama-3.1-8b-instruct:free',
-            apiKey: process.env.OPENROUTER_API_KEY,
+            provider: 'groq',
+            model: 'llama3-70b-8192',
+            apiKey: process.env.GROQ_API_KEY,
             temperature: 0.5
         };
     }
@@ -40,9 +40,9 @@ export class CouncilOrchestrator {
             const config = agentConfigs[agentId];
             if (config) {
                 const llmConfig: LLMConfig = {
-                    provider: 'openrouter',
-                    model: config.modelId || 'meta-llama/llama-3.2-3b-instruct:free',
-                    apiKey: process.env.OPENROUTER_API_KEY,
+                    provider: 'groq',
+                    model: config.modelId || 'llama3-70b-8192',
+                    apiKey: process.env.GROQ_API_KEY,
                     temperature: config.temperature || 0.5
                 };
 
@@ -81,9 +81,9 @@ export class CouncilOrchestrator {
                 name: 'Fiqh Reasoning Agent',
                 systemPrompt: 'You are the Fiqh Reasoning Agent. Analyze questions from an Islamic jurisprudence perspective, providing reasoning based on Quran, Sunnah, and scholarly consensus (Ijma).',
                 llmConfig: {
-                    provider: 'openrouter',
-                    model: 'meta-llama/llama-3.2-3b-instruct:free',
-                    apiKey: process.env.OPENROUTER_API_KEY,
+                    provider: 'groq',
+                    model: 'llama3-70b-8192',
+                    apiKey: process.env.GROQ_API_KEY,
                     temperature: 0.3
                 }
             },
