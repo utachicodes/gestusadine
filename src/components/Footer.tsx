@@ -1,43 +1,186 @@
-import React from 'react';
-import { Facebook, Instagram, Mail, Phone, Twitter, Youtube } from 'lucide-react';
+﻿import * as React from 'react';
+import { Link } from 'react-router-dom';
+import { Facebook, Twitter, Instagram, Youtube, Mail, Phone, MapPin, ArrowUp, Heart } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 const Footer = () => {
   const { t } = useLanguage();
+  const [showScrollTop, setShowScrollTop] = React.useState(false);
+
+  React.useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 400);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="relative bg-islamic-dark dark:bg-gray-900 text-islamic-cream dark:text-gray-300 py-12 border-t border-islamic-gold/20 dark:border-gray-700">
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-islamic-gold/5 to-transparent dark:via-primary/5" />
-      <div className="container relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-          <div>
-            <div className="mb-4">
-              <img
-                src="/logo.png"
-                alt="G�stuSaDine"
-                className="h-12 w-auto object-contain brightness-0 invert"
-              />
+    <footer className="relative bg-gradient-to-b from-background to-islamic-cream/10 border-t border-border/50 overflow-hidden">
+      {/* Background decorative elements */}
+      <div className="absolute inset-0 opacity-20">
+        <div 
+          className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-islamic-green/30 to-transparent rounded-full blur-3xl"
+          style={{ animation: 'float-continuous 20s ease-in-out infinite' }}
+        />
+        <div 
+          className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-tl from-islamic-blue/30 to-transparent rounded-full blur-3xl"
+          style={{ animation: 'float-continuous 25s ease-in-out infinite reverse' }}
+        />
+      </div>
+
+      <div className="container relative z-10 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+          {/* Brand Section */}
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-2xl font-bold text-gradient mb-3">GëstuSaDine</h3>
+              <p className="text-muted-foreground leading-relaxed text-sm">
+                {t('footer.description') || 'Your comprehensive Islamic platform powered by AI, providing authentic guidance, education, and spiritual growth.'}
+              </p>
             </div>
-            <p className="text-secondary-foreground/70 mb-4">
-              {t('footer.description')}
-            </p>
+            
+            {/* Social Links */}
+            <div className="flex gap-3">
+              {[
+                { icon: Facebook, href: '#', label: 'Facebook' },
+                { icon: Twitter, href: '#', label: 'Twitter' },
+                { icon: Instagram, href: '#', label: 'Instagram' },
+                { icon: Youtube, href: '#', label: 'YouTube' }
+              ].map((social) => (
+                <a
+                  key={social.label}
+                  href={social.href}
+                  aria-label={social.label}
+                  className="w-10 h-10 rounded-lg bg-islamic-cream/50 dark:bg-muted/30 border border-border/50 flex items-center justify-center text-muted-foreground hover:text-islamic-green hover:border-islamic-green/50 hover:shadow-lg transition-all hover:scale-110 group"
+                >
+                  <social.icon className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                </a>
+              ))}
+            </div>
           </div>
 
+          {/* Quick Links */}
           <div>
-            <h4 className="text-lg font-semibold mb-4">{t('footer.contact')}</h4>
+            <h4 className="font-bold text-foreground mb-6 flex items-center gap-2">
+              <span className="w-1 h-6 bg-gradient-to-b from-islamic-green to-islamic-blue rounded-full" />
+              Quick Links
+            </h4>
+            <ul className="space-y-3">
+              {[
+                { to: '/dashboard', label: 'Dashboard' },
+                { to: '/fatwa', label: 'Ask Question' },
+                { to: '/library', label: 'Library' },
+                { to: '/about', label: 'About Us' },
+              ].map((link) => (
+                <li key={link.to}>
+                  <Link
+                    to={link.to}
+                    className="text-muted-foreground hover:text-islamic-green transition-colors inline-flex items-center gap-2 group text-sm"
+                  >
+                    <span className="w-0 h-px bg-islamic-green transition-all group-hover:w-3" />
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Features */}
+          <div>
+            <h4 className="font-bold text-foreground mb-6 flex items-center gap-2">
+              <span className="w-1 h-6 bg-gradient-to-b from-islamic-blue to-islamic-gold rounded-full" />
+              Features
+            </h4>
+            <ul className="space-y-3">
+              {[
+                { to: '/council', label: 'AI Council' },
+                { to: '/hadith', label: 'Hadith Collection' },
+                { to: '/events', label: 'Events' },
+                { to: '/media', label: 'Media Library' },
+              ].map((link) => (
+                <li key={link.to}>
+                  <Link
+                    to={link.to}
+                    className="text-muted-foreground hover:text-islamic-blue transition-colors inline-flex items-center gap-2 group text-sm"
+                  >
+                    <span className="w-0 h-px bg-islamic-blue transition-all group-hover:w-3" />
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Contact Info */}
+          <div>
+            <h4 className="font-bold text-foreground mb-6 flex items-center gap-2">
+              <span className="w-1 h-6 bg-gradient-to-b from-islamic-gold to-islamic-green rounded-full" />
+              {t('footer.contact') || 'Contact'}
+            </h4>
             <ul className="space-y-4">
-              <li className="flex items-start">
-                <Phone className="w-5 h-5 text-primary mr-3 mt-1" />
-                <a href="tel:+221765770810" className="text-secondary-foreground/70 hover:text-primary transition-colors">+221 76 577 08 10</a>
+              <li className="flex items-start gap-3 text-sm text-muted-foreground group">
+                <Mail className="w-5 h-5 flex-shrink-0 mt-0.5 text-islamic-green group-hover:scale-110 transition-transform" />
+                <a href="mailto:contact@gestusadine.com" className="hover:text-islamic-green transition-colors">
+                  contact@gestusadine.com
+                </a>
+              </li>
+              <li className="flex items-start gap-3 text-sm text-muted-foreground group">
+                <Phone className="w-5 h-5 flex-shrink-0 mt-0.5 text-islamic-blue group-hover:scale-110 transition-transform" />
+                <a href="tel:+221123456789" className="hover:text-islamic-blue transition-colors">
+                  +221 12 345 67 89
+                </a>
+              </li>
+              <li className="flex items-start gap-3 text-sm text-muted-foreground">
+                <MapPin className="w-5 h-5 flex-shrink-0 mt-0.5 text-islamic-gold" />
+                <span>Dakar, Senegal</span>
               </li>
             </ul>
           </div>
         </div>
 
-        <div className="border-t border-secondary-foreground/10 pt-8 mt-8 text-center text-secondary-foreground/50 text-sm">
-          <p>© {new Date().getFullYear()} G�stuSaDine. {t('footer.rights')}</p>
+        {/* Bottom Bar */}
+        <div className="pt-8 border-t border-border/50">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-sm text-muted-foreground flex items-center gap-2">
+               {currentYear} GëstuSaDine. {t('footer.rights') || 'All rights reserved.'}
+              <span className="hidden md:inline"></span>
+              <span className="flex items-center gap-1">
+                Made with <Heart className="w-4 h-4 text-red-500 animate-pulse" fill="currentColor" /> for the Ummah
+              </span>
+            </p>
+            <div className="flex gap-6 text-sm">
+              <Link to="/privacy" className="text-muted-foreground hover:text-islamic-green transition-colors">
+                Privacy
+              </Link>
+              <Link to="/terms" className="text-muted-foreground hover:text-islamic-green transition-colors">
+                Terms
+              </Link>
+              <Link to="/contact" className="text-muted-foreground hover:text-islamic-green transition-colors">
+                Contact
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
+
+      {/* Scroll to Top Button */}
+      <button
+        onClick={scrollToTop}
+        className={`fixed bottom-8 right-8 w-12 h-12 rounded-full bg-gradient-to-br from-islamic-green to-islamic-blue text-white shadow-xl hover:shadow-2xl transition-all z-50 flex items-center justify-center group ${
+          showScrollTop ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16 pointer-events-none'
+        }`}
+        aria-label="Scroll to top"
+      >
+        <ArrowUp className="w-5 h-5 group-hover:-translate-y-1 transition-transform" />
+      </button>
     </footer>
   );
 };
