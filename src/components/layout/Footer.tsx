@@ -26,11 +26,11 @@ const Footer = () => {
     <footer className="relative bg-gradient-to-b from-background to-islamic-cream/10 border-t border-border/50 overflow-hidden">
       {/* Background decorative elements */}
       <div className="absolute inset-0 opacity-20">
-        <div 
+        <div
           className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-islamic-green/30 to-transparent rounded-full blur-3xl"
           style={{ animation: 'float-continuous 20s ease-in-out infinite' }}
         />
-        <div 
+        <div
           className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-tl from-islamic-blue/30 to-transparent rounded-full blur-3xl"
           style={{ animation: 'float-continuous 25s ease-in-out infinite reverse' }}
         />
@@ -46,7 +46,7 @@ const Footer = () => {
                 {t('footer.description') || 'Your comprehensive Islamic platform powered by AI, providing authentic guidance, education, and spiritual growth.'}
               </p>
             </div>
-            
+
             {/* Social Links */}
             <div className="flex gap-3">
               {[
@@ -150,11 +150,9 @@ const Footer = () => {
         <div className="pt-8 border-t border-border/50">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-sm text-muted-foreground flex items-center gap-2">
-               {currentYear} GëstuSaDine. {t('footer.rights') || 'All rights reserved.'}
+              {currentYear} GëstuSaDine. {t('footer.rights') || 'All rights reserved.'}
               <span className="hidden md:inline"></span>
-              <span className="flex items-center gap-1">
-                Made with <Heart className="w-4 h-4 text-red-500 animate-pulse" fill="currentColor" /> for the Ummah
-              </span>
+              <span className="hidden md:inline"></span>
             </p>
             <div className="flex gap-6 text-sm">
               <Link to="/privacy" className="text-muted-foreground hover:text-islamic-green transition-colors">
@@ -174,9 +172,8 @@ const Footer = () => {
       {/* Scroll to Top Button */}
       <button
         onClick={scrollToTop}
-        className={`fixed bottom-8 right-8 w-12 h-12 rounded-full bg-gradient-to-br from-islamic-green to-islamic-blue text-white shadow-xl hover:shadow-2xl transition-all z-50 flex items-center justify-center group ${
-          showScrollTop ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16 pointer-events-none'
-        }`}
+        className={`fixed bottom-8 right-8 w-12 h-12 rounded-full bg-gradient-to-br from-islamic-green to-islamic-blue text-white shadow-xl hover:shadow-2xl transition-all z-50 flex items-center justify-center group ${showScrollTop ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16 pointer-events-none'
+          }`}
         aria-label="Scroll to top"
       >
         <ArrowUp className="w-5 h-5 group-hover:-translate-y-1 transition-transform" />
