@@ -3,11 +3,13 @@ import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/auth/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { Globe } from 'lucide-react';
+import { useTheme } from '@/contexts/ThemeContext';
+import { Globe, Moon, Sun } from 'lucide-react';
 
 const Navbar = () => {
   const { user, isAdmin, signOut } = useAuth();
   const { language, setLanguage, t } = useLanguage();
+  const { theme, setTheme } = useTheme();
 
 
   return (
@@ -39,6 +41,19 @@ const Navbar = () => {
             </select>
             <Globe className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
           </div>
+
+          {/* Theme Toggle */}
+          <button
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            className="p-2 rounded-md border border-input hover:border-primary transition-colors"
+            aria-label="Toggle theme"
+          >
+            {theme === 'dark' ? (
+              <Sun className="w-4 h-4 text-foreground" />
+            ) : (
+              <Moon className="w-4 h-4 text-foreground" />
+            )}
+          </button>
 
           {/* Sign Out Button for logged-in users */}
           {user && (

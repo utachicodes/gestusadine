@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Sparkles, Sun, MoonStar, HelpCircle, Star } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-// import { CreditUsageWidget } from "@/components/subscription/CreditUsageWidget";
+import { CreditUsageWidget } from "@/components/subscription/CreditUsageWidget";
 import { RankDisplay } from "@/components/gamification/RankDisplay";
 import { BadgeList, BadgeType } from "@/components/gamification/BadgeList";
 
@@ -364,7 +364,7 @@ const Dashboard: React.FC = () => {
 
           {/* Credit Usage Widget */}
           {/* Credit Usage Widget replaced by Rank Display */}
-          {/* <CreditUsageWidget /> */}
+          <CreditUsageWidget />
           <div className="md:col-span-1 space-y-4">
             <RankDisplay currentRank="Talib" currentPoints={45} />
 

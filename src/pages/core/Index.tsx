@@ -1,5 +1,5 @@
 import * as React from 'react';
-import HeroSection from '@/components/HeroSection';
+import HeroSection from '@/components/landing/HeroSection';
 import { Link, useNavigate } from 'react-router-dom';
 import { MessageSquare, Calendar, BookOpen, Sparkles, ArrowRight, Library } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
