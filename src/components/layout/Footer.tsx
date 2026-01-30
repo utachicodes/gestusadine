@@ -41,7 +41,7 @@ const Footer = () => {
           {/* Brand Section */}
           <div className="space-y-6">
             <div>
-              <h3 className="text-2xl font-bold text-gradient mb-3">GëstuSaDine</h3>
+              <h3 className="text-2xl font-bold text-gradient mb-3">GestuSaDine</h3>
               <p className="text-muted-foreground leading-relaxed text-sm">
                 {t('footer.description') || 'Your comprehensive Islamic platform powered by AI, providing authentic guidance, education, and spiritual growth.'}
               </p>
@@ -150,7 +150,7 @@ const Footer = () => {
         <div className="pt-8 border-t border-border/50">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-sm text-muted-foreground flex items-center gap-2">
-              {currentYear} GëstuSaDine. {t('footer.rights') || 'All rights reserved.'}
+              {currentYear} GestuSaDine. {t('footer.rights') || 'All rights reserved.'}
               <span className="hidden md:inline"></span>
               <span className="hidden md:inline"></span>
             </p>

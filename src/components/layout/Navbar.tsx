@@ -19,7 +19,7 @@ const Navbar = () => {
           <Link to="/" className="flex items-center">
             <img
               src="/logofinal.png"
-              alt="GëstuSaDine"
+              alt="GestuSaDine"
               className="h-12 w-auto object-contain brightness-110 dark:brightness-0 dark:invert"
             />
           </Link>
