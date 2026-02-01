@@ -34,7 +34,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       const savedTheme = localStorage.getItem('theme') as ThemeMode;
       if (savedTheme) return savedTheme;
     }
-    return 'light';
+    return 'dark';
   });
 
   const [colors, setColors] = useState<ThemeColors>(() => {
