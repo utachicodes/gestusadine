@@ -2,11 +2,28 @@ import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, PlayCircle, Star } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { motion } from 'framer-motion';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 
 const HeroSection = () => {
   const navigate = useNavigate();
   const { t } = useLanguage();
+
+  // Mouse tilt effect state
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  // Smooth spring physics for tilt
+  const mouseX = useSpring(x, { stiffness: 50, damping: 20 });
+  const mouseY = useSpring(y, { stiffness: 50, damping: 20 });
+
+  function handleMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent) {
+    const { left, top, width, height } = currentTarget.getBoundingClientRect();
+    x.set((clientX - left) / width - 0.5);
+    y.set((clientY - top) / height - 0.5);
+  }
+
+  const rotateX = useTransform(mouseY, [-0.5, 0.5], [5, -5]);
+  const rotateY = useTransform(mouseX, [-0.5, 0.5], [-5, 5]);
 
   return (
     <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
@@ -38,15 +55,15 @@ const HeroSection = () => {
           GestuSaDine
           <span className="block text-gradient mt-2 drop-shadow-lg">
             {t('hero.title_highlight') || 'Islamic Companion'}
-          </span>
-        </motion.h1>
+          </motion.div>
+        </div>
 
-        {/* Subtitle */}
+        {/* 4. Subtitle - Fade Up */}
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="text-xl md:text-2xl text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed"
+          transition={{ delay: 0.5 }}
+          className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-2xl mx-auto text-center leading-relaxed"
         >
           {t('hero.subtitle') || 'Authentic knowledge, prayer tools, and AI guidance in one beautiful platform.'}
         </motion.p>
@@ -58,7 +75,9 @@ const HeroSection = () => {
           transition={{ delay: 0.3 }}
           className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16"
         >
-          <button
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             onClick={() => navigate('/login')}
             className="btn-islamic flex items-center gap-2 group"
           >
@@ -66,7 +85,9 @@ const HeroSection = () => {
             <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
           </button>
 
-          <button
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             onClick={() => navigate('/about')}
             className="btn-islamic-outlined flex items-center gap-2 group"
           >
@@ -77,10 +98,11 @@ const HeroSection = () => {
 
         {/* Hero Visual - Enhanced Glass Mockup */}
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 1 }}
-          className="relative max-w-5xl mx-auto"
+          style={{ rotateX, rotateY, perspective: 1000 }}
+          initial={{ opacity: 0, y: 50, rotateX: 20 }}
+          animate={{ opacity: 1, y: 0, rotateX: 0 }}
+          transition={{ delay: 0.4, duration: 1, type: "spring" }}
+          className="relative w-full max-w-6xl mx-auto perspective-1000"
         >
           {/* Glow Effect behind image - Stronger */}
           <div className="absolute -inset-1 bg-gradient-to-r from-islamic-green/40 to-islamic-blue/40 opacity-40 blur-3xl rounded-[30px] animate-pulse-glow" />
@@ -107,7 +129,7 @@ const HeroSection = () => {
                 <div className="h-4 w-3/4 bg-white/5 rounded animate-pulse delay-300" />
               </div>
 
-              {/* Main Content */}
+              {/* Main Feed */}
               <div className="col-span-12 md:col-span-7 space-y-4">
                 <div className="h-32 w-full bg-gradient-to-r from-islamic-green/10 to-islamic-blue/10 rounded-xl border border-white/10 shadow-inner backdrop-blur-sm" />
                 <div className="grid grid-cols-2 gap-4">
