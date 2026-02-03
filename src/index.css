@@ -6,9 +6,11 @@
 
 @layer base {
   :root {
-    --background: 40 10% 98%;
-    /* Cream-white base */
+    /* Smart Banking Light Theme */
+    --background: 210 40% 98%;
+    /* #F8FAFC - Cool White */
     --foreground: 222.2 84% 4.9%;
+    /* #020817 - Deep Navy */
 
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
@@ -16,61 +18,64 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 210 20% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 221.2 83.2% 53.3%;
+    /* #2563EB - Trustworthy Blue */
+    --primary-foreground: 210 40% 98%;
 
-    --secondary: 45 40% 96%;
+    --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
 
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 43 74% 49%;
-    /* Gold */
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 262.1 83.3% 57.8%;
+    /* Soft Purple for gradients */
+    --accent-foreground: 210 40% 98%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 220 25% 57%;
+    --ring: 221.2 83.2% 53.3%;
 
     --radius: 1rem;
+
+    /* Custom Islamic Colors for the new theme - slightly muted/pastel */
+    --islamic-green: 150 60% 45%;
+    --islamic-gold: 45 80% 50%;
+    --islamic-blue: 210 90% 50%;
   }
 
-  /* Deep Cosmic Theme */
+  /* Dark mode preserved but de-prioritized for landing page */
   .dark {
-    --background: 230 35% 7%;
-    /* Deep midnight blue #0B0E1E */
+    --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
 
-    --card: 229 30% 10%;
+    --card: 222.2 84% 4.9%;
     --card-foreground: 210 40% 98%;
 
-    --popover: 229 30% 10%;
+    --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 210 100% 60%;
-    /* Vibrant Blue/Cyan Pulse */
+    --primary: 210 40% 98%;
     --primary-foreground: 222.2 47.4% 11.2%;
 
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
 
-    --muted: 217.2 32.6% 14%;
+    --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
 
-    --accent: 45 90% 50%;
-    /* Electric Gold */
+    --accent: 217.2 32.6% 17.5%;
     --accent-foreground: 210 40% 98%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 217.2 32.6% 15%;
-    --input: 217.2 32.6% 15%;
-    --ring: 212 96% 78%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
   }
 
   body {
@@ -80,7 +85,6 @@
     overflow-x: hidden;
   }
 
-  /* Smooth Scrolling */
   html {
     scroll-behavior: smooth;
   }
@@ -88,98 +92,86 @@
 
 @layer components {
 
-  /* Cosmic Glass Card */
+  /* Modern "Smart" Glass Card */
   .glass-card {
-    background: rgba(13, 16, 28, 0.4);
-    backdrop-filter: blur(16px) saturate(180%);
-    -webkit-backdrop-filter: blur(16px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    @apply bg-white/70 backdrop-blur-xl border border-white/40 shadow-xl;
+    /* Soft diffuse shadow for depth */
+    box-shadow:
+      0 4px 6px -1px rgba(0, 0, 0, 0.05),
+      0 2px 4px -1px rgba(0, 0, 0, 0.03),
+      0 0 0 1px rgba(255, 255, 255, 0.5) inset;
   }
 
   .glass-card:hover {
-    border-color: rgba(255, 255, 255, 0.15);
-    background: rgba(13, 16, 28, 0.6);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4),
-      0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+    @apply bg-white/80 border-white/60;
+    box-shadow:
+      0 10px 15px -3px rgba(0, 0, 0, 0.08),
+      0 4px 6px -2px rgba(0, 0, 0, 0.04),
+      0 0 0 1px rgba(255, 255, 255, 0.6) inset;
   }
 
-  /* Golden Text Gradient */
-  .text-gradient-gold {
-    background: linear-gradient(135deg, #F4D03F 0%, #D4AF37 50%, #B7950B 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.3));
-  }
-
-  /* Cosmic Blue Gradient */
-  .text-gradient-cosmic {
-    background: linear-gradient(135deg, #60A5FA 0%, #3B82F6 50%, #A855F7 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    filter: drop-shadow(0 0 15px rgba(59, 130, 246, 0.3));
-  }
-
-  /* Neon Button */
-  .btn-cosmic {
-    @apply px-8 py-4 font-semibold rounded-full text-white relative overflow-hidden transition-all duration-300;
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.8), rgba(168, 85, 247, 0.8));
+  /* Frosted Panel - For darker contrast areas */
+  .glass-panel-dark {
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.4), inset 0 0 10px rgba(255, 255, 255, 0.1);
   }
 
-  .btn-cosmic:hover {
+  /* Modern Gradient Text */
+  .text-gradient {
+    background: linear-gradient(135deg, #0F172A 0%, #334155 100%);
+    /* Dark Slate */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-blue {
+    background: linear-gradient(135deg, #2563EB 0%, #4F46E5 100%);
+    /* Blue to Indigo */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-gold {
+    background: linear-gradient(135deg, #B45309 0%, #F59E0B 100%);
+    /* Sharper gold for light mode */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Modern Button Styles */
+  .btn-primary-smart {
+    @apply px-6 py-3 rounded-full font-semibold text-white transition-all duration-300 relative overflow-hidden;
+    background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+    box-shadow: 0 4px 14px 0 rgba(15, 23, 42, 0.3);
+  }
+
+  .btn-primary-smart:hover {
     transform: translateY(-2px);
-    box-shadow: 0 0 30px rgba(59, 130, 246, 0.6), inset 0 0 20px rgba(255, 255, 255, 0.2);
+    box-shadow: 0 6px 20px rgba(15, 23, 42, 0.4);
   }
 
-  .btn-cosmic::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 50%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-    transform: skewX(-20deg);
-    transition: 0.5s;
-    pointer-events: none;
+  .btn-secondary-smart {
+    @apply px-6 py-3 rounded-full font-semibold text-slate-700 transition-all duration-300 border border-slate-200 bg-white/50 backdrop-blur-sm;
   }
 
-  .btn-cosmic:hover::before {
-    left: 150%;
-    transition: 0.7s;
-  }
-
-  /* Scrollbar */
-  ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 99px;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.2);
+  .btn-secondary-smart:hover {
+    @apply bg-white border-slate-300;
+    transform: translateY(-2px);
   }
 }
 
 @layer utilities {
-  .animate-float {
+  .animate-float-slow {
     animation: float 6s ease-in-out infinite;
   }
 
-  .animate-pulse-slow {
-    animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  .animate-float-medium {
+    animation: float 5s ease-in-out infinite;
+    animation-delay: 1s;
   }
 
   .perspective-1000 {
@@ -203,28 +195,32 @@
   }
 }
 
-@keyframes pulse {
+@keyframes pulse-soft {
 
   0%,
   100% {
-    opacity: 1;
+    opacity: 0.8;
   }
 
   50% {
-    opacity: .5;
+    opacity: 0.4;
   }
 }
 
-@keyframes spin-slow {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
 }
 
-.dark ::-webkit-scrollbar-thumb {
-  @apply bg-muted-foreground/30 hover:bg-muted-foreground/50;
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(15, 23, 42, 0.1);
+  border-radius: 99px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(15, 23, 42, 0.2);
 }
