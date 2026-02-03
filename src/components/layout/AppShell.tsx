@@ -13,13 +13,12 @@ const AppShell: React.FC<AppShellProps> = ({ children }) => {
   const location = useLocation();
 
   return (
-    <div className="app-shell bg-background text-foreground transition-colors duration-300">
-      <div className="app-shell-gradient" />
+    <div className="app-shell min-h-screen bg-deep-slate text-white selection:bg-cyan-glow/30 selection:text-white">
       <GeometricBackground />
 
       <Navbar />
 
-      <main className="app-shell-main">
+      <main className="relative z-10">
         <PageTransition key={location.pathname}>{children}</PageTransition>
       </main>
 

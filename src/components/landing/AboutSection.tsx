@@ -4,89 +4,84 @@ import { Book, GraduationCap, Heart, Map } from 'lucide-react';
 
 const AboutSection = () => {
   return (
-    <section id="about" className="py-24 bg-white">
-      <div className="container">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 inline-block relative">
-            About <span className="text-gradient">Dr. Ahmed Lo</span>
-            <span className="absolute -bottom-2 left-0 right-0 h-1 bg-islamic-gold rounded-full"></span>
+    <section id="about" className="py-24 bg-deep-slate relative overflow-hidden">
+      {/* Background accents */}
+      <div className="absolute top-1/2 left-0 -translate-y-1/2 w-64 h-64 bg-cyan-glow/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute top-1/2 right-0 -translate-y-1/2 w-64 h-64 bg-blue-600/5 rounded-full blur-[120px] pointer-events-none" />
+
+      <div className="container relative z-10 px-4">
+        <div className="text-center mb-20">
+          <h2 className="text-4xl md:text-5xl font-black mb-6 tracking-tight">
+            Academic <span className="text-glow-cyan text-transparent bg-clip-text bg-gradient-to-r from-cyan-glow to-blue-400">Legacy</span>
           </h2>
-          <p className="text-lg text-islamic-dark/70 max-w-2xl mx-auto">
-            A journey of knowledge, dedication, and service to the Islamic community
+          <p className="text-lg text-white/40 max-w-2xl mx-auto font-medium leading-relaxed">
+            A life dedicated to the pursuit of authentic knowledge and the bridge between traditional scholarship and modern intelligence.
           </p>
         </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          <div className="relative">
-            <div className="absolute -top-6 -left-6 w-24 h-24 bg-islamic-pattern opacity-10 rounded-full"></div>
-            <div className="islamic-border rounded-xl overflow-hidden h-full">
-              <div className="bg-white p-8 h-full">
-                <div className="flex items-center mb-6">
-                  <GraduationCap className="w-8 h-8 text-islamic-green mr-4" />
-                  <h3 className="text-xl font-bold">Early Life and Education</h3>
-                </div>
-                <p className="mb-4">
-                  Dr. Ahmed Lo was born in 1955 in Tawfekh near Touba. He memorized the Quran in Ndame, in the Louga region of Senegal. He learned basic Islamic knowledge first in Touba and then in Saint-Louis.
-                </p>
-                <p>
-                  During this time, he developed an excellent level in Arabic, allowing him to write beautiful poems. However, he felt the need to learn more about his religion despite financial constraints.
-                </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+          {/* Card 1 */}
+          <div className="glass-card-premium p-10 group relative border border-white/5 transition-all hover:border-cyan-glow/20">
+            <div className="flex items-center mb-8">
+              <div className="p-4 rounded-2xl bg-white/5 border border-white/10 text-cyan-glow group-hover:bg-cyan-glow/5 group-hover:border-cyan-glow/30 transition-all">
+                <GraduationCap className="w-8 h-8" />
               </div>
+              <h3 className="ml-6 text-2xl font-black text-white group-hover:text-cyan-glow transition-colors tracking-tight">Early Life & Roots</h3>
             </div>
+            <p className="text-white/40 leading-relaxed font-medium mb-4">
+              Dr. Ahmed Lo was born in 1955 in Tawfekh near Touba. He memorized the Holy Quran in Ndame, Senegal, before mastering traditional sciences in Touba and Saint-Louis.
+            </p>
+            <p className="text-white/40 leading-relaxed font-medium">
+              His exceptional mastery of Arabic and early poetic works signaled the emergence of a brilliant mind dedicated to Islamic scholarship.
+            </p>
           </div>
-          
-          <div className="relative">
-            <div className="absolute -top-6 -right-6 w-24 h-24 bg-islamic-pattern opacity-10 rounded-full"></div>
-            <div className="islamic-border rounded-xl overflow-hidden h-full">
-              <div className="bg-white p-8 h-full">
-                <div className="flex items-center mb-6">
-                  <Map className="w-8 h-8 text-islamic-green mr-4" />
-                  <h3 className="text-xl font-bold">Journey for Knowledge</h3>
-                </div>
-                <p className="mb-4">
-                  An adventurer in search of knowledge, he traveled with friends through Mali, Côte d'Ivoire, Benin, Nigeria, and Egypt, where he worked briefly to fund his pilgrimage to Umrah in Saudi Arabia in 1980.
-                </p>
-                <p>
-                  Unable to enroll in university, he decided to write a poem about his goal of studying Islam, which he presented to the rector of the University of Medina, Dr. Abdullah Zaïd, after a prayer.
-                </p>
+
+          {/* Card 2 */}
+          <div className="glass-card-premium p-10 group relative border border-white/5 transition-all hover:border-cyan-glow/20">
+            <div className="flex items-center mb-8">
+              <div className="p-4 rounded-2xl bg-white/5 border border-white/10 text-cyan-glow group-hover:bg-cyan-glow/5 group-hover:border-cyan-glow/30 transition-all">
+                <Map className="w-8 h-8" />
               </div>
+              <h3 className="ml-6 text-2xl font-black text-white group-hover:text-cyan-glow transition-colors tracking-tight">The Quest for Truth</h3>
             </div>
+            <p className="text-white/40 leading-relaxed font-medium mb-4">
+              An explorer of knowledge, his journey spanned West Africa and Egypt, eventually leading to the holy city of Medina in 1980 through unwavering perseverance.
+            </p>
+            <p className="text-white/40 leading-relaxed font-medium">
+              Faced with academic barriers, his poetic plea for knowledge moved the rector of Medina University, opening the gates to higher scholarship.
+            </p>
           </div>
-          
-          <div className="relative">
-            <div className="absolute -bottom-6 -left-6 w-24 h-24 bg-islamic-pattern opacity-10 rounded-full"></div>
-            <div className="islamic-border rounded-xl overflow-hidden h-full">
-              <div className="bg-white p-8 h-full">
-                <div className="flex items-center mb-6">
-                  <Book className="w-8 h-8 text-islamic-green mr-4" />
-                  <h3 className="text-xl font-bold">Academic Achievements</h3>
-                </div>
-                <p className="mb-4">
-                  Dr. Lo began his studies in 1980-81 at the age of 25, passing the entrance exam to secondary school in three months, and obtaining his baccalaureate three years later.
-                </p>
-                <p>
-                  He was selected for his oral examination by a university jury to pursue his doctorate, focusing on the sensitive topic of "The Sanctification of Saints in Light of Sufi Doctrine."
-                </p>
+
+          {/* Card 3 */}
+          <div className="glass-card-premium p-10 group relative border border-white/5 transition-all hover:border-cyan-glow/20">
+            <div className="flex items-center mb-8">
+              <div className="p-4 rounded-2xl bg-white/5 border border-white/10 text-cyan-glow group-hover:bg-cyan-glow/5 group-hover:border-cyan-glow/30 transition-all">
+                <Book className="w-8 h-8" />
               </div>
+              <h3 className="ml-6 text-2xl font-black text-white group-hover:text-cyan-glow transition-colors tracking-tight">Academic Brilliance</h3>
             </div>
+            <p className="text-white/40 leading-relaxed font-medium mb-4">
+              Dr. Lo's trajectory was meteoric, completing his secondary studies in months and securing a doctorate on complex theological dimensions within Sufi doctrine.
+            </p>
+            <p className="text-white/40 leading-relaxed font-medium">
+              His work stands as a cornerstone of rigorous academic analysis, merging traditional depth with modern critical inquiry.
+            </p>
           </div>
-          
-          <div className="relative">
-            <div className="absolute -bottom-6 -right-6 w-24 h-24 bg-islamic-pattern opacity-10 rounded-full"></div>
-            <div className="islamic-border rounded-xl overflow-hidden h-full">
-              <div className="bg-white p-8 h-full">
-                <div className="flex items-center mb-6">
-                  <Heart className="w-8 h-8 text-islamic-green mr-4" />
-                  <h3 className="text-xl font-bold">Community Involvement</h3>
-                </div>
-                <p className="mb-4">
-                  Dr. Lo has been involved in various community outreach programs, helping to educate individuals about Islamic teachings and practices.
-                </p>
-                <p>
-                  He has also successfully resolved sensitive diplomatic issues through personal initiatives, without expecting any compensation from the Senegalese state.
-                </p>
+
+          {/* Card 4 */}
+          <div className="glass-card-premium p-10 group relative border border-white/5 transition-all hover:border-cyan-glow/20">
+            <div className="flex items-center mb-8">
+              <div className="p-4 rounded-2xl bg-white/5 border border-white/10 text-cyan-glow group-hover:bg-cyan-glow/5 group-hover:border-cyan-glow/30 transition-all">
+                <Heart className="w-8 h-8" />
               </div>
+              <h3 className="ml-6 text-2xl font-black text-white group-hover:text-cyan-glow transition-colors tracking-tight">Faith in Action</h3>
             </div>
+            <p className="text-white/40 leading-relaxed font-medium mb-4">
+              Beyond the classroom, Dr. Lo has been a pillar of community guidance and a diplomat of faith, resolving sensitive regional issues with quiet wisdom.
+            </p>
+            <p className="text-white/40 leading-relaxed font-medium">
+              His life honors the Prophetic tradition of selfless service, providing a blueprint for the modern Muslim intellectual.
+            </p>
           </div>
         </div>
       </div>

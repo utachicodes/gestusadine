@@ -2,9 +2,9 @@ import React from "react";
 import { motion } from "framer-motion";
 
 const shapes = [
-  { size: 220, x: "-10%", y: "8%", color: "bg-islamic-gold/10" },
-  { size: 180, x: "78%", y: "16%", color: "bg-islamic-teal/10" },
-  { size: 260, x: "5%", y: "68%", color: "bg-islamic-blue/8" },
+  { size: 400, x: "-10%", y: "-10%", color: "bg-cyan-glow/5" },
+  { size: 300, x: "80%", y: "10%", color: "bg-purple-500/5" },
+  { size: 500, x: "10%", y: "70%", color: "bg-blue-600/5" },
 ];
 
 const GeometricBackground: React.FC = () => {

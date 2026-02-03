@@ -1,208 +1,72 @@
-import * as React from "react";
-import { BookMarked, Sun, Moon, Palette, Globe, Check } from "lucide-react";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { useTheme, ThemeMode } from "@/contexts/ThemeContext";
+import * as React from 'react';
+import { motion } from 'framer-motion';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { Globe, ArrowRight } from 'lucide-react';
 
-type Madhab = "hanafi" | "maliki" | "shafii" | "hanbali";
+const languages = [
+    { code: 'en', name: 'English', native: 'English', flag: '🇺🇸' },
+    { code: 'fr', name: 'French', native: 'Français', flag: '🇫🇷' },
+    { code: 'ar', name: 'Arabic', native: 'العربية', flag: '🇸🇦' },
+    { code: 'wo', name: 'Wolof', native: 'Wolof', flag: '🇸🇳' }
+];
 
-const Language: React.FC = () => {
-  const { language, setLanguage, t } = useLanguage();
-  const { theme, setTheme, colors, setColors } = useTheme();
-  const [madhab, setMadhab] = React.useState<Madhab>("maliki");
+export default function Language() {
+    const { language, setLanguage, t } = useLanguage();
 
-  const madhabs: { value: Madhab; label: string; region: string }[] = [
-    { value: "hanafi", label: "Hanafi", region: "Türkiye, Pakistan, India, Central Asia" },
-    { value: "maliki", label: "Maliki", region: "West & North Africa (Senegal, Morocco, etc.)" },
-    { value: "shafii", label: "Shafi'i", region: "East Africa, Southeast Asia, Yemen" },
-    { value: "hanbali", label: "Hanbali", region: "Gulf region, Saudi Arabia" },
-  ];
+    return (
+        <div className="flex-1 bg-deep-slate relative overflow-hidden min-h-screen">
+            <div className="absolute top-0 left-0 w-full h-full bg-mesh-cyan opacity-5 pointer-events-none" />
 
-  const languages = [
-    { code: 'en', label: 'English' },
-    { code: 'fr', label: 'Français' },
-    { code: 'wo', label: 'Wolof' },
-  ];
-
-  const themes: { value: ThemeMode; label: string; icon: React.ReactNode; description: string }[] = [
-    { value: "light", label: "Light", icon: <Sun className="w-5 h-5" />, description: "Bright and clear interface" },
-    { value: "dark", label: "Dark", icon: <Moon className="w-5 h-5" />, description: "Easy on the eyes" },
-    { value: "personalized", label: "Personalized", icon: <Palette className="w-5 h-5" />, description: "Customize your colors" },
-  ];
-
-  React.useEffect(() => {
-    // Load saved madhab preference
-    const savedMadhab = localStorage.getItem('G�stuSaDine-madhab') as Madhab;
-    if (savedMadhab && ['hanafi', 'maliki', 'shafii', 'hanbali'].includes(savedMadhab)) {
-      setMadhab(savedMadhab);
-    }
-  }, []);
-
-  const handleMadhabChange = (newMadhab: Madhab) => {
-    setMadhab(newMadhab);
-    localStorage.setItem('G�stuSaDine-madhab', newMadhab);
-  };
-
-  return (
-    <div className="flex-1 bg-background text-foreground transition-colors duration-300">
-      <section className="container py-10 md:py-16 space-y-10">
-        <header>
-          <div>
-            <p className="inline-flex items-center text-xs uppercase tracking-[0.22em] text-muted-foreground mb-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-primary mr-2" />
-              Settings
-            </p>
-            <h1 className="text-3xl md:text-4xl font-bold text-foreground">
-              <span className="text-gradient">Preferences</span>
-            </h1>
-            <p className="mt-2 text-muted-foreground max-w-xl">
-              Customize your experience, language, and theme. G�stuSaDine will tailor everything to your choices.
-            </p>
-          </div>
-        </header>
-
-        {/* Language Section */}
-        <div>
-          <div className="flex items-center gap-2 mb-4">
-            <Globe className="w-5 h-5 text-primary" />
-            <h2 className="text-xl font-semibold text-foreground">Language</h2>
-          </div>
-          <div className="grid gap-4 md:grid-cols-3">
-            {languages.map((l) => (
-              <button
-                key={l.code}
-                onClick={() => setLanguage(l.code as any)}
-                className={`islamic-card p-5 text-left transition-all border rounded-xl ${language === l.code
-                    ? "ring-2 ring-primary bg-primary/5 border-primary"
-                    : "hover:bg-muted/50 border-border"
-                  }`}
-              >
-                <div className="flex items-center justify-between">
-                  <p className="text-base font-semibold text-foreground">{l.label}</p>
-                  {language === l.code && <Check className="w-5 h-5 text-primary" />}
-                </div>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Theme section */}
-        <div>
-          <div className="flex items-center gap-2 mb-4">
-            <Palette className="w-5 h-5 text-primary" />
-            <h2 className="text-xl font-semibold text-foreground">Theme</h2>
-          </div>
-          <div className="grid gap-4 md:grid-cols-3 mb-6">
-            {themes.map((t) => (
-              <button
-                key={t.value}
-                onClick={() => setTheme(t.value)}
-                className={`islamic-card p-5 text-left transition-all border rounded-xl ${theme === t.value
-                    ? "ring-2 ring-primary bg-primary/5 border-primary"
-                    : "hover:bg-muted/50 border-border"
-                  }`}
-              >
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <div className={`p-2 rounded-lg ${theme === t.value ? 'bg-primary/10 text-primary' : 'bg-muted/50 text-muted-foreground'}`}>
-                      {t.icon}
+            <div className="container relative z-10 py-32 px-4 max-w-4xl">
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8 }}
+                >
+                    <div className="text-center mb-24">
+                        <Globe className="w-16 h-16 text-cyan-glow mx-auto mb-8 animate-pulse-glow" />
+                        <h1 className="text-5xl md:text-7xl font-black text-white mb-6 tracking-tighter">
+                            Localization <span className="text-glow-cyan">Matrix</span>
+                        </h1>
+                        <p className="text-xl text-white/40 max-w-2xl mx-auto font-medium">
+                            Select your preferred linguistic interface for authentic guidance.
+                        </p>
                     </div>
-                    <p className="text-base font-semibold text-foreground">{t.label}</p>
-                  </div>
-                  {theme === t.value && (
-                    <Check className="w-5 h-5 text-primary" />
-                  )}
-                </div>
-                <p className="text-xs text-muted-foreground">{t.description}</p>
-              </button>
-            ))}
-          </div>
 
-          {theme === 'personalized' && (
-            <div className="grid gap-6 md:grid-cols-3 p-6 border rounded-xl bg-card animate-in fade-in zoom-in-95 duration-300">
-              <div>
-                <label className="block text-sm font-medium mb-2 text-foreground">Primary Color</label>
-                <div className="flex items-center gap-2">
-                  <input
-                    type="color"
-                    value={colors.primary}
-                    onChange={(e) => setColors({ ...colors, primary: e.target.value })}
-                    className="w-10 h-10 rounded cursor-pointer border-none p-0"
-                  />
-                  <span className="text-sm text-muted-foreground">{colors.primary}</span>
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-2 text-foreground">Secondary Color</label>
-                <div className="flex items-center gap-2">
-                  <input
-                    type="color"
-                    value={colors.secondary}
-                    onChange={(e) => setColors({ ...colors, secondary: e.target.value })}
-                    className="w-10 h-10 rounded cursor-pointer border-none p-0"
-                  />
-                  <span className="text-sm text-muted-foreground">{colors.secondary}</span>
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-2 text-foreground">Accent Color</label>
-                <div className="flex items-center gap-2">
-                  <input
-                    type="color"
-                    value={colors.accent}
-                    onChange={(e) => setColors({ ...colors, accent: e.target.value })}
-                    className="w-10 h-10 rounded cursor-pointer border-none p-0"
-                  />
-                  <span className="text-sm text-muted-foreground">{colors.accent}</span>
-                </div>
-              </div>
+                    <div className="grid md:grid-cols-2 gap-6">
+                        {languages.map((lang) => (
+                            <button
+                                key={lang.code}
+                                onClick={() => setLanguage(lang.code as any)}
+                                className={`glass-card-premium p-8 flex items-center justify-between group transition-all duration-500 border-white/5 ${language === lang.code ? 'border-cyan-glow/50 bg-cyan-glow/5 shadow-[0_0_40px_rgba(0,245,255,0.1)]' : 'hover:border-cyan-glow/20'}`}
+                            >
+                                <div className="flex items-center gap-6">
+                                    <span className="text-4xl">{lang.flag}</span>
+                                    <div className="text-left">
+                                        <p className="text-lg font-black text-white group-hover:text-cyan-glow transition-colors">{lang.native}</p>
+                                        <p className="text-[10px] uppercase tracking-widest text-white/20 font-black">{lang.name}</p>
+                                    </div>
+                                </div>
+                                {language === lang.code && (
+                                    <motion.div
+                                        layoutId="active-indicator"
+                                        className="w-2 h-2 rounded-full bg-cyan-glow shadow-glow-cyan"
+                                    />
+                                )}
+                            </button>
+                        ))}
+                    </div>
+
+                    <div className="mt-20 text-center">
+                        <a
+                            href="/"
+                            className="inline-flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em] text-white/40 hover:text-cyan-glow transition-colors group"
+                        >
+                            Back to Core <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-1" />
+                        </a>
+                    </div>
+                </motion.div>
             </div>
-          )}
         </div>
-
-        {/* Madhab section */}
-        <div>
-          <div className="flex items-center gap-2 mb-4">
-            <BookMarked className="w-5 h-5 text-primary" />
-            <h2 className="text-xl font-semibold text-foreground">Madhab (School of Fiqh)</h2>
-          </div>
-          <div className="grid gap-4 md:grid-cols-2">
-            {madhabs.map((m) => (
-              <button
-                key={m.value}
-                onClick={() => handleMadhabChange(m.value)}
-                className={`islamic-card p-5 text-left transition-all border rounded-xl ${madhab === m.value
-                    ? "ring-2 ring-primary bg-primary/5 border-primary"
-                    : "hover:bg-muted/50 border-border"
-                  }`}
-              >
-                <div className="flex items-center justify-between mb-2">
-                  <p className="text-base font-semibold text-foreground">{m.label}</p>
-                  {madhab === m.value && (
-                    <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center">
-                      <Check className="w-3 h-3 text-primary-foreground" />
-                    </div>
-                  )}
-                </div>
-                <p className="text-xs text-muted-foreground">Common in: {m.region}</p>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="islamic-card p-6 flex items-start gap-4 bg-muted/30 border rounded-xl">
-          <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-            <BookMarked className="w-5 h-5" />
-          </div>
-          <div className="text-sm text-muted-foreground space-y-2">
-            <p className="font-medium text-foreground">Your choices shape every answer</p>
-            <p>
-              When you ask a question in Guided Fatwa or explore Daily Islam, G�stuSaDine will prioritize references, rulings, and explanations from your selected madhab and present them in your chosen language.
-            </p>
-          </div>
-        </div>
-      </section>
-    </div>
-  );
-};
-
-export default Language;
+    );
+}

@@ -1,5 +1,6 @@
-import { motion } from 'framer-motion';
-import { ChevronDown } from 'lucide-react';
+import * as React from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Plus, Minus, HelpCircle } from 'lucide-react';
 import { useState } from 'react';
 
 interface FAQItem {
@@ -9,97 +10,97 @@ interface FAQItem {
 
 const faqs: FAQItem[] = [
     {
-        question: 'What is GëstuSaDine?',
-        answer: 'GëstuSaDine is an AI-powered platform that provides authentic Islamic guidance in Wolof, French, and English. We use advanced AI to help answer your questions based on Quran, authentic Hadith, and recognized Islamic scholarship.',
+        question: "What is GÃ«stuSaDine exactly?",
+        answer: "GÃ«stuSaDine is a premium digital ecosystem that bridges authentic Islamic scholarship with advanced AI. It provides verified guidance on Fiqh, Tawheed, and daily Islamic living through a sophisticated, data-driven platform."
     },
     {
-        question: 'Is the information provided authentic?',
-        answer: 'Yes! All our responses are based on the Quran, authentic Hadith collections, and the works of recognized Islamic scholars. We prioritize accuracy and authenticity in all our guidance.',
+        question: "How is the AI guidance verified?",
+        answer: "Our RAG (Retrieval-Augmented Generation) technology is grounded in a curated library of authentic Islamic texts. Every response is generated from these trusted sources and is subject to auditing by qualified scholars."
     },
     {
-        question: 'What are the different subscription tiers?',
-        answer: 'We offer three tiers: Free (50 credits/month), Core (500 credits/month + specialized modes, themes, templates), and Pro (unlimited credits + all features). Each tier provides increasing access to our features.',
+        question: "Is there a mobile app available?",
+        answer: "The platform is currently optimized for web and mobile browsers. A dedicated native mobile experience is in development to provide seamless access to Islamic knowledge on the go."
     },
     {
-        question: 'How does credit usage work?',
-        answer: 'Each question you ask uses 1 credit. Free users get 50 credits per month, Core users get 500, and Pro users have unlimited credits. Your credits reset at the beginning of each month.',
+        question: "How do the credits work?",
+        answer: "Credits are used to interact with our advanced AI modules. Free users receive a monthly allocation, while Core and Pro users enjoy significantly higher or unlimited access to all platform features."
     },
     {
-        question: 'Can I change my subscription?',
-        answer: 'Yes! You can upgrade or downgrade your subscription at any time from your account settings. Changes take effect immediately, and you\'ll retain access to your current tier features until the end of your billing period.',
-    },
-    {
-        question: 'What madhabs do you support?',
-        answer: 'We primarily focus on the Maliki madhab, which is predominant in West Africa. However, we also provide perspectives from other recognized madhabs when relevant.',
-    },
-    {
-        question: 'Is my data secure?',
-        answer: 'Yes, we take security seriously. All your data is encrypted, and we never share your personal information with third parties. Your conversations are private and stored securely.',
-    },
-    {
-        question: 'How can I report an error?',
-        answer: 'If you notice an error or have concerns about any response, please contact us at +221 76 577 08 10. We review all reports and continuously improve our system.',
-    },
+        question: "Can I cancel my subscription anytime?",
+        answer: "Yes, you can manage your subscription from your dashboard. Cancellations take effect at the end of the current billing cycle, and you will retain access to your plan until then."
+    }
 ];
 
 export default function FAQ() {
-    const [openIndex, setOpenIndex] = useState<number | null>(null);
+    const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
     return (
-        <div className="flex-1 overflow-y-auto">
-            <div className="container py-12 max-w-4xl">
+        <div className="flex-1 bg-deep-slate relative overflow-hidden min-h-screen">
+            {/* Background patterns */}
+            <div className="absolute top-0 right-0 w-full h-full bg-mesh-cyan opacity-5 pointer-events-none" />
+
+            <div className="container relative z-10 py-32 px-4 max-w-4xl">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
+                    transition={{ duration: 0.8 }}
                 >
-                    {/* Header */}
-                    <div className="text-center mb-12">
-                        <p className="inline-flex items-center text-xs uppercase tracking-[0.22em] text-muted-foreground mb-3">
-                            <span className="w-1.5 h-1.5 rounded-full bg-primary mr-2" />
-                            HELP CENTER
+                    <div className="text-center mb-24">
+                        <p className="text-cyan-glow font-black uppercase tracking-[0.4em] text-[10px] mb-4">
+                            Knowledge Base
                         </p>
-                        <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-                            Frequently Asked <span className="text-gradient">Questions</span>
+                        <h1 className="text-5xl md:text-7xl font-black text-white mb-6 tracking-tighter">
+                            Common <span className="text-glow-cyan">Inquiries</span>
                         </h1>
-                        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                            Find answers to common questions about GëstuSaDine
+                        <p className="text-xl text-white/40 max-w-2xl mx-auto font-medium">
+                            Clarifying the path between faith and technology.
                         </p>
                     </div>
 
-                    {/* FAQ Items */}
                     <div className="space-y-4">
                         {faqs.map((faq, index) => (
-                            <div key={index} className="islamic-card overflow-hidden">
+                            <div
+                                key={index}
+                                className="glass-card-premium overflow-hidden border border-white/5 transition-all hover:border-cyan-glow/20"
+                            >
                                 <button
-                                    onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                                    className="w-full p-6 text-left flex items-center justify-between hover:bg-muted/50 transition-colors"
+                                    onClick={() => setActiveIndex(activeIndex === index ? null : index)}
+                                    className="w-full p-8 flex items-center justify-between text-left group"
                                 >
-                                    <h3 className="font-semibold text-foreground pr-8">{faq.question}</h3>
-                                    <ChevronDown
-                                        className={`w-5 h-5 text-muted-foreground transition-transform flex-shrink-0 ${openIndex === index ? 'rotate-180' : ''
-                                            }`}
-                                    />
-                                </button>
-                                {openIndex === index && (
-                                    <div className="px-6 pb-6">
-                                        <p className="text-muted-foreground leading-relaxed">{faq.answer}</p>
+                                    <span className={`text-lg font-black tracking-tight transition-colors ${activeIndex === index ? 'text-cyan-glow' : 'text-white'}`}>
+                                        {faq.question}
+                                    </span>
+                                    <div className={`p-2 rounded-xl bg-white/5 border border-white/10 text-white/40 group-hover:text-cyan-glow transition-all ${activeIndex === index ? 'rotate-180 text-cyan-glow' : ''}`}>
+                                        {activeIndex === index ? <Minus className="w-5 h-5" /> : <Plus className="w-5 h-5" />}
                                     </div>
-                                )}
+                                </button>
+
+                                <AnimatePresence>
+                                    {activeIndex === index && (
+                                        <motion.div
+                                            initial={{ height: 0, opacity: 0 }}
+                                            animate={{ height: 'auto', opacity: 1 }}
+                                            exit={{ height: 0, opacity: 0 }}
+                                            transition={{ duration: 0.3, ease: 'easeInOut' }}
+                                        >
+                                            <div className="px-8 pb-8 text-white/40 font-medium leading-relaxed border-t border-white/5 pt-6">
+                                                {faq.answer}
+                                            </div>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
                             </div>
                         ))}
                     </div>
 
-                    {/* Contact CTA */}
-                    <div className="mt-12 islamic-card p-8 text-center">
-                        <h3 className="text-xl font-semibold text-foreground mb-2">
-                            Still have questions?
-                        </h3>
-                        <p className="text-muted-foreground mb-4">
-                            We're here to help! Reach out to our support team.
-                        </p>
-                        <a href="/contact" className="btn-islamic inline-flex">
-                            Contact Us
+                    <div className="mt-24 text-center">
+                        <p className="text-white/20 text-sm font-bold uppercase tracking-widest mb-6">Still have questions?</p>
+                        <a
+                            href="/contact"
+                            className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-white/5 border border-white/10 text-white hover:text-cyan-glow hover:border-cyan-glow/50 hover:bg-cyan-glow/5 transition-all group"
+                        >
+                            <HelpCircle className="w-5 h-5" />
+                            <span>Reach our support team</span>
                         </a>
                     </div>
                 </motion.div>

@@ -13,54 +13,53 @@ const Navbar = () => {
 
 
   return (
-    <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-lg shadow-sm">
-      <div className="container flex items-center justify-between h-16">
+    <header className="sticky top-0 z-50 bg-deep-slate/50 backdrop-blur-2xl border-b border-white/5">
+      <div className="container flex items-center justify-between h-20">
         <div>
-          <Link to="/" className="flex items-center">
+          <Link to="/" className="flex items-center group">
             <img
               src="/logofinal.png"
               alt="GestuSaDine"
-              className="h-12 w-auto object-contain brightness-110 dark:brightness-0 dark:invert"
+              className="h-14 w-auto object-contain brightness-200 contrast-125 transition-transform group-hover:scale-105"
             />
           </Link>
         </div>
 
-        <div className="flex items-center space-x-4">
-
-
+        <div className="flex items-center space-x-6">
           {/* Language Selector */}
-          <div className="relative">
+          <div className="relative group">
             <select
               value={language}
               onChange={(e) => setLanguage(e.target.value as 'en' | 'fr' | 'wo')}
-              className="appearance-none bg-transparent border border-input rounded-md pl-3 pr-8 py-1.5 text-sm font-medium text-foreground hover:border-primary focus:outline-none focus:ring-1 focus:ring-ring transition-colors"
+              className="appearance-none bg-white/5 border border-white/10 rounded-xl pl-4 pr-10 py-2 text-sm font-bold text-white/80 hover:border-cyan-glow/50 hover:text-white focus:outline-none focus:ring-1 focus:ring-cyan-glow transition-all cursor-pointer"
             >
-              <option value="en">EN</option>
-              <option value="fr">FR</option>
-              <option value="wo">WO</option>
+              <option value="en" className="bg-deep-slate">EN</option>
+              <option value="fr" className="bg-deep-slate">FR</option>
+              <option value="wo" className="bg-deep-slate">WO</option>
             </select>
-            <Globe className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+            <Globe className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-cyan-glow/60 pointer-events-none group-hover:text-cyan-glow transition-colors" />
           </div>
 
-          {/* Theme Toggle */}
+          {/* Theme Toggle (Hidden or stylized for dark-first) */}
           <button
             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            className="p-2 rounded-md border border-input hover:border-primary transition-colors"
+            className="p-2.5 rounded-xl border border-white/10 bg-white/5 hover:border-cyan-glow/50 hover:bg-cyan-glow/5 transition-all text-white/60 hover:text-cyan-glow"
             aria-label="Toggle theme"
           >
             {theme === 'dark' ? (
-              <Sun className="w-4 h-4 text-foreground" />
+              <Sun className="w-4.5 h-4.5" />
             ) : (
-              <Moon className="w-4 h-4 text-foreground" />
+              <Moon className="w-4.5 h-4.5" />
             )}
           </button>
 
-          {/* Sign Out Button for logged-in users */}
+          {/* Sign Out Button */}
           {user && (
             <div className="hidden md:block">
               <Button
-                variant="outline"
+                variant="ghost"
                 size="sm"
+                className="rounded-xl font-bold text-white/60 hover:text-white hover:bg-white/5 border border-transparent hover:border-white/10 transition-all"
                 onClick={() => {
                   signOut();
                   window.location.href = '/';
@@ -71,8 +70,6 @@ const Navbar = () => {
             </div>
           )}
         </div>
-
-
       </div>
     </header>
   );

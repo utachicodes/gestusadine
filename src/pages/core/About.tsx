@@ -1,95 +1,58 @@
+import * as React from 'react';
 import { motion } from 'framer-motion';
-import { Heart, Users, BookOpen, Award } from 'lucide-react';
-import { useLanguage } from '@/contexts/LanguageContext';
+import AboutSection from '@/components/landing/AboutSection';
 
 export default function About() {
-    const { t } = useLanguage();
-
     return (
-        <div className="flex-1 overflow-y-auto">
-            <div className="container py-12 max-w-4xl">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                >
-                    {/* Header */}
-                    <div className="text-center mb-12">
-                        <p className="inline-flex items-center text-xs uppercase tracking-[0.22em] text-muted-foreground mb-3">
-                            <span className="w-1.5 h-1.5 rounded-full bg-primary mr-2" />
-                            ABOUT US
+        <div className="flex-1 bg-deep-slate">
+            {/* Hero Section for About Page */}
+            <section className="relative pt-32 pb-20 overflow-hidden">
+                <div className="container relative z-10 px-4">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8 }}
+                        className="text-center"
+                    >
+                        <p className="text-cyan-glow font-black uppercase tracking-[0.4em] text-[10px] mb-6">
+                            Architects of Faith
                         </p>
-                        <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-                            About <span className="text-gradient">GÎstuSaDine</span>
+                        <h1 className="text-6xl md:text-8xl font-black text-white tracking-tighter mb-8">
+                            Our <span className="text-glow-cyan">Mission</span>
                         </h1>
-                        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                            Making authentic Islamic knowledge accessible in Wolof, French, and English
+                        <p className="text-2xl text-white/40 max-w-3xl mx-auto font-medium leading-relaxed">
+                            Pioneering the next generation of spiritual technology by merging authentic Islamic scholarship with computational intelligence.
                         </p>
-                    </div>
+                    </motion.div>
+                </div>
 
-                    {/* Mission */}
-                    <div className="islamic-card p-8 mb-8">
-                        <div className="flex items-start gap-4 mb-4">
-                            <div className="p-3 bg-primary/10 rounded-lg">
-                                <Heart className="w-6 h-6 text-primary" />
+                {/* Background glow */}
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_50%_0%,rgba(0,245,255,0.1),transparent_70%)] pointer-events-none" />
+            </section>
+
+            <AboutSection />
+
+            {/* Vision Section */}
+            <section className="py-32 relative overflow-hidden border-t border-white/5">
+                <div className="container px-4">
+                    <div className="max-w-4xl mx-auto">
+                        <div className="grid md:grid-cols-2 gap-16">
+                            <div>
+                                <h2 className="text-3xl font-black text-white mb-6 tracking-tight">The Vision</h2>
+                                <p className="text-white/40 leading-relaxed font-medium">
+                                    We believe that faith and intelligence are not distinct realms, but interconnected dimensions of the human experience. Our goal is to make divine wisdom accessible, verifiable, and relevant in the digital age.
+                                </p>
                             </div>
                             <div>
-                                <h2 className="text-2xl font-bold text-foreground mb-2">Our Mission</h2>
-                                <p className="text-muted-foreground leading-relaxed">
-                                    GÎstuSaDine bridges the gap between traditional Islamic scholarship and modern technology.
-                                    We provide AI-powered guidance rooted in authentic sources, making Islamic knowledge accessible
-                                    to Senegalese and West African Muslims in their native languages.
+                                <h2 className="text-3xl font-black text-white mb-6 tracking-tight">The Tech</h2>
+                                <p className="text-white/40 leading-relaxed font-medium">
+                                    Leveraging state-of-the-art RAG (Retrieval-Augmented Generation) and authentic datasets, we ensure that every interaction is grounded in verified scholarship, audited by experts.
                                 </p>
                             </div>
                         </div>
                     </div>
-
-                    {/* Values */}
-                    <div className="grid md:grid-cols-2 gap-6 mb-8">
-                        <div className="islamic-card p-6">
-                            <BookOpen className="w-8 h-8 text-primary mb-3" />
-                            <h3 className="text-xl font-semibold text-foreground mb-2">Authentic Sources</h3>
-                            <p className="text-muted-foreground text-sm">
-                                All guidance is derived from Quran, authentic Hadith, and recognized Islamic scholarship
-                            </p>
-                        </div>
-
-                        <div className="islamic-card p-6">
-                            <Users className="w-8 h-8 text-accent mb-3" />
-                            <h3 className="text-xl font-semibold text-foreground mb-2">Multi-Perspective</h3>
-                            <p className="text-muted-foreground text-sm">
-                                We present multiple scholarly viewpoints to give you a comprehensive understanding
-                            </p>
-                        </div>
-
-                        <div className="islamic-card p-6">
-                            <Award className="w-8 h-8 text-secondary mb-3" />
-                            <h3 className="text-xl font-semibold text-foreground mb-2">Cultural Relevance</h3>
-                            <p className="text-muted-foreground text-sm">
-                                Designed specifically for West African Muslims, with support for Wolof, French, and English
-                            </p>
-                        </div>
-
-                        <div className="islamic-card p-6">
-                            <Heart className="w-8 h-8 text-islamic-gold mb-3" />
-                            <h3 className="text-xl font-semibold text-foreground mb-2">Community Driven</h3>
-                            <p className="text-muted-foreground text-sm">
-                                Built by and for the Muslim community, continuously improving based on your feedback
-                            </p>
-                        </div>
-                    </div>
-
-                    {/* Team Note */}
-                    <div className="islamic-card p-8 text-center">
-                        <p className="text-muted-foreground mb-4">
-                            Built with ‚ù§Ô∏è in Senegal for the Muslim Ummah
-                        </p>
-                        <p className="text-sm text-muted-foreground/70">
-                            May Allah accept this effort and make it beneficial for all
-                        </p>
-                    </div>
-                </motion.div>
-            </div>
+                </div>
+            </section>
         </div>
     );
 }

@@ -54,17 +54,17 @@ export const GlassTiltCard = ({ children, className = "", delay = 0 }: GlassTilt
                 perspective: "1000px",
             }}
         >
-            {/* Glare effect - adjusted for light mode */}
+            {/* Glare effect - adjusted for premium dark mode */}
             <div
-                className="absolute inset-0 rounded-xl pointer-events-none opacity-0 transition-opacity duration-300 z-10"
+                className="absolute inset-0 rounded-3xl pointer-events-none opacity-0 transition-opacity duration-300 z-10"
                 style={{
-                    opacity: isHovered ? 0.3 : 0,
-                    background: `linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 100%)`
+                    opacity: isHovered ? 0.4 : 0,
+                    background: `radial-gradient(circle at ${rotation.y * 10 + 50}% ${-rotation.x * 10 + 50}%, rgba(0,245,255,0.15), transparent 70%)`
                 }}
             />
 
-            {/* Glass Content - Uses new .glass-card utility */}
-            <div className={`h-full w-full glass-card rounded-xl p-8 relative z-0 transition-colors duration-300 ${isHovered ? 'bg-white/90 border-blue-200/50' : 'bg-white/70 border-white/40'}`}>
+            {/* Glass Content - Uses glass-card-premium utility */}
+            <div className={`h-full w-full glass-card-premium rounded-3xl p-8 relative z-0 transition-all duration-500 border border-white/5 ${isHovered ? 'border-cyan-glow/30 bg-white/10 shadow-[0_0_40px_rgba(0,245,255,0.1)]' : 'bg-white/5'}`}>
                 {children}
             </div>
         </motion.div>

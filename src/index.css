@@ -6,221 +6,133 @@
 
 @layer base {
   :root {
-    /* Smart Banking Light Theme */
-    --background: 210 40% 98%;
-    /* #F8FAFC - Cool White */
-    --foreground: 222.2 84% 4.9%;
-    /* #020817 - Deep Navy */
-
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 221.2 83.2% 53.3%;
-    /* #2563EB - Trustworthy Blue */
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 262.1 83.3% 57.8%;
-    /* Soft Purple for gradients */
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
-
-    --radius: 1rem;
-
-    /* Custom Islamic Colors for the new theme - slightly muted/pastel */
-    --islamic-green: 150 60% 45%;
-    --islamic-gold: 45 80% 50%;
-    --islamic-blue: 210 90% 50%;
-  }
-
-  /* Dark mode preserved but de-prioritized for landing page */
-  .dark {
-    --background: 222.2 84% 4.9%;
+    /* Premium dark foundation as default */
+    --background: 222 47% 4%;
     --foreground: 210 40% 98%;
 
-    --card: 222.2 84% 4.9%;
+    --card: 222 47% 4%;
     --card-foreground: 210 40% 98%;
 
-    --popover: 222.2 84% 4.9%;
+    --popover: 222 47% 4%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 210 40% 98%;
+    --primary: 180 100% 50%;
+    /* Pure Cyan */
     --primary-foreground: 222.2 47.4% 11.2%;
 
-    --secondary: 217.2 32.6% 17.5%;
+    --secondary: 217.2 32.6% 12%;
     --secondary-foreground: 210 40% 98%;
 
-    --muted: 217.2 32.6% 17.5%;
+    --muted: 217.2 32.6% 12%;
     --muted-foreground: 215 20.2% 65.1%;
 
-    --accent: 217.2 32.6% 17.5%;
+    --accent: 180 100% 50%;
     --accent-foreground: 210 40% 98%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --border: 217.2 32.6% 15%;
+    --input: 217.2 32.6% 15%;
+    --ring: 180 100% 50%;
+
+    --radius: 1.25rem;
+  }
+
+  .dark {
+    /* Keep the same for consistency in this overhaul */
+    --background: 222 47% 4%;
+    --foreground: 210 40% 98%;
   }
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    font-feature-settings: "rlig" 1, "calt" 1;
-    overflow-x: hidden;
-  }
-
-  html {
-    scroll-behavior: smooth;
+    font-family: 'Inter', -apple-system, sans-serif;
+    letter-spacing: -0.01em;
+    background-image:
+      radial-gradient(at 0% 0%, hsla(180, 100%, 50%, 0.05) 0, transparent 50%),
+      radial-gradient(at 100% 0%, hsla(263, 70%, 50%, 0.05) 0, transparent 50%);
   }
 }
 
 @layer components {
 
-  /* Modern "Smart" Glass Card */
-  .glass-card {
-    @apply bg-white/70 backdrop-blur-xl border border-white/40 shadow-xl;
-    /* Soft diffuse shadow for depth */
+  /* Premium Glassmorphism */
+  .glass-card-premium {
+    @apply bg-[#030712]/40 backdrop-blur-2xl border border-white/10 relative overflow-hidden;
     box-shadow:
-      0 4px 6px -1px rgba(0, 0, 0, 0.05),
-      0 2px 4px -1px rgba(0, 0, 0, 0.03),
-      0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+      0 0 0 1px rgba(255, 255, 255, 0.05) inset,
+      0 20px 40px -10px rgba(0, 0, 0, 0.5);
   }
 
-  .glass-card:hover {
-    @apply bg-white/80 border-white/60;
-    box-shadow:
-      0 10px 15px -3px rgba(0, 0, 0, 0.08),
-      0 4px 6px -2px rgba(0, 0, 0, 0.04),
-      0 0 0 1px rgba(255, 255, 255, 0.6) inset;
+  .glass-card-premium::before {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent pointer-events-none;
   }
 
-  /* Frosted Panel - For darker contrast areas */
-  .glass-panel-dark {
-    background: rgba(15, 23, 42, 0.6);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+  /* Neon Cyan Glows */
+  .text-glow-cyan {
+    text-shadow: 0 0 15px rgba(0, 245, 255, 0.5);
+  }
+
+  .border-glow-cyan {
+    box-shadow: 0 0 20px rgba(0, 245, 255, 0.2);
+    @apply border-cyan-glow/50;
   }
 
   /* Modern Gradient Text */
   .text-gradient {
-    background: linear-gradient(135deg, #0F172A 0%, #334155 100%);
-    /* Dark Slate */
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-white via-white to-white/50;
   }
 
-  .text-gradient-blue {
-    background: linear-gradient(135deg, #2563EB 0%, #4F46E5 100%);
-    /* Blue to Indigo */
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+  .text-gradient-cyan {
+    @apply bg-clip-text text-transparent bg-gradient-to-br from-cyan-glow via-cyan-glow/80 to-blue-500;
   }
 
-  .text-gradient-gold {
-    background: linear-gradient(135deg, #B45309 0%, #F59E0B 100%);
-    /* Sharper gold for light mode */
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+  /* Premium Buttons */
+  .btn-premium {
+    @apply relative px-8 py-4 rounded-full font-bold text-deep-slate bg-cyan-glow transition-all duration-500 overflow-hidden;
+    box-shadow: 0 10px 30px -10px rgba(0, 245, 255, 0.5);
   }
 
-  /* Modern Button Styles */
-  .btn-primary-smart {
-    @apply px-6 py-3 rounded-full font-semibold text-white transition-all duration-300 relative overflow-hidden;
-    background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
-    box-shadow: 0 4px 14px 0 rgba(15, 23, 42, 0.3);
+  .btn-premium:hover {
+    @apply scale-105;
+    box-shadow: 0 15px 40px -10px rgba(0, 245, 255, 0.7);
   }
 
-  .btn-primary-smart:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(15, 23, 42, 0.4);
+  .btn-premium::after {
+    content: '';
+    @apply absolute inset-0 bg-white/20 translate-x-[-100%] transition-transform duration-700 skew-x-[-20deg];
   }
 
-  .btn-secondary-smart {
-    @apply px-6 py-3 rounded-full font-semibold text-slate-700 transition-all duration-300 border border-slate-200 bg-white/50 backdrop-blur-sm;
+  .btn-premium:hover::after {
+    @apply translate-x-[100%];
   }
 
-  .btn-secondary-smart:hover {
-    @apply bg-white border-slate-300;
-    transform: translateY(-2px);
+  /* Premium Outlined */
+  .btn-premium-outline {
+    @apply px-8 py-4 rounded-full font-bold text-white border border-white/20 bg-white/5 backdrop-blur-md transition-all duration-300;
+  }
+
+  .btn-premium-outline:hover {
+    @apply bg-white/10 border-white/40 border-glow-cyan;
   }
 }
 
 @layer utilities {
-  .animate-float-slow {
-    animation: float 6s ease-in-out infinite;
-  }
-
-  .animate-float-medium {
-    animation: float 5s ease-in-out infinite;
-    animation-delay: 1s;
-  }
-
-  .perspective-1000 {
-    perspective: 1000px;
-  }
-
-  .preserve-3d {
-    transform-style: preserve-3d;
-  }
-}
-
-@keyframes float {
-
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-20px);
-  }
-}
-
-@keyframes pulse-soft {
-
-  0%,
-  100% {
-    opacity: 0.8;
-  }
-
-  50% {
-    opacity: 0.4;
+  .bg-grid-white {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke='rgb(255 255 255 / 0.03)'%3E%3Cpath d='M0 .5H31.5V32'/%3E%3C/svg%3E");
   }
 }
 
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  @apply bg-deep-slate;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(15, 23, 42, 0.1);
-  border-radius: 99px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(15, 23, 42, 0.2);
+  @apply bg-white/20 rounded-full hover:bg-cyan-glow/50 transition-colors;
 }

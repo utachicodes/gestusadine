@@ -1,106 +1,66 @@
+import * as React from 'react';
 import { motion } from 'framer-motion';
 
 export default function Terms() {
     return (
-        <div className="flex-1 overflow-y-auto">
-            <div className="container py-12 max-w-4xl">
+        <div className="flex-1 bg-deep-slate relative overflow-hidden min-h-screen">
+            <div className="absolute top-0 left-0 w-full h-full bg-mesh-cyan opacity-5 pointer-events-none" />
+
+            <div className="container relative z-10 py-24 px-4 max-w-4xl">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
+                    transition={{ duration: 0.8 }}
                 >
-                    <div className="text-center mb-12">
-                        <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-                            Terms of Service
+                    <div className="text-center mb-20">
+                        <p className="text-cyan-glow font-black uppercase tracking-[0.4em] text-[10px] mb-4">
+                            Operational Framework
+                        </p>
+                        <h1 className="text-5xl md:text-7xl font-black text-white mb-6 tracking-tighter">
+                            Terms of <span className="text-glow-cyan">Service</span>
                         </h1>
-                        <p className="text-muted-foreground">
+                        <p className="text-white/40 font-medium">
                             Last updated: January 16, 2026
                         </p>
                     </div>
 
-                    <div className="islamic-card p-8 space-y-6 prose prose-sm max-w-none text-foreground">
-                        <section>
-                            <h2 className="text-2xl font-semibold mb-3">1. Acceptance of Terms</h2>
-                            <p className="text-muted-foreground">
-                                By accessing and using GëstuSaDine, you accept and agree to be bound by these Terms of Service.
-                                If you do not agree to these terms, please do not use our service.
+                    <div className="glass-card-premium p-10 space-y-12 border border-white/5">
+                        <section className="relative">
+                            <div className="flex items-center gap-4 mb-6">
+                                <div className="w-1.5 h-1.5 rounded-full bg-cyan-glow animate-pulse" />
+                                <h2 className="text-2xl font-black text-white tracking-tight uppercase">1. Acceptance of Terms</h2>
+                            </div>
+                            <p className="text-white/40 leading-relaxed font-medium pl-6 border-l border-white/5">
+                                By accessing GÃ«stuSaDine, you agree to be bound by these premium operational terms. Our service is a sophisticated vehicle for Islamic knowledge, and its use implies commitment to ethical interaction.
                             </p>
                         </section>
 
-                        <section>
-                            <h2 className="text-2xl font-semibold mb-3">2. Description of Service</h2>
-                            <p className="text-muted-foreground">
-                                GëstuSaDine provides AI-powered Islamic guidance based on the Quran, authentic Hadith, and recognized Islamic scholarship.
-                                Our service is for informational and educational purposes only.
+                        <section className="relative">
+                            <div className="flex items-center gap-4 mb-6">
+                                <div className="w-1.5 h-1.5 rounded-full bg-cyan-glow animate-pulse" />
+                                <h2 className="text-2xl font-black text-white tracking-tight uppercase">2. Intellectual Property</h2>
+                            </div>
+                            <p className="text-white/40 leading-relaxed font-medium pl-6 border-l border-white/5">
+                                All algorithmic outputs, curated datasets, and interface designs are the exclusive property of GÃ«stuSaDine. Unauthorized replication or extraction of knowledge models is strictly prohibited.
                             </p>
                         </section>
 
-                        <section>
-                            <h2 className="text-2xl font-semibold mb-3">3. User Responsibilities</h2>
-                            <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
-                                <li>You must be at least 13 years old to use our service</li>
-                                <li>You are responsible for maintaining the confidentiality of your account</li>
-                                <li>You agree to use the service in accordance with Islamic principles</li>
-                                <li>You will not misuse or attempt to harm the service</li>
-                                <li>You will not share false or misleading information</li>
-                            </ul>
-                        </section>
-
-                        <section>
-                            <h2 className="text-2xl font-semibold mb-3">4. Subscriptions and Payments</h2>
-                            <p className="text-muted-foreground">
-                                Subscription fees are billed monthly in advance. You may cancel your subscription at any time,
-                                and you will retain access until the end of your billing period. Refunds are provided on a case-by-case basis.
+                        <section className="relative">
+                            <div className="flex items-center gap-4 mb-6">
+                                <div className="w-1.5 h-1.5 rounded-full bg-cyan-glow animate-pulse" />
+                                <h2 className="text-2xl font-black text-white tracking-tight uppercase">3. Disclaimer of Guidance</h2>
+                            </div>
+                            <p className="text-white/40 leading-relaxed font-medium pl-6 border-l border-white/5 italic">
+                                While our AI is grounded in authentic scholarship, users are encouraged to consult directly with local scholars for life-altering decisions. The platform serves as a high-precision assistance tool, not a replacement for direct human scholarly interaction.
                             </p>
                         </section>
 
-                        <section>
-                            <h2 className="text-2xl font-semibold mb-3">5. Intellectual Property</h2>
-                            <p className="text-muted-foreground">
-                                All content provided by GëstuSaDine, including responses, templates, and educational materials,
-                                is protected by copyright. You may use this content for personal, non-commercial purposes only.
-                            </p>
-                        </section>
-
-                        <section>
-                            <h2 className="text-2xl font-semibold mb-3">6. Disclaimer</h2>
-                            <p className="text-muted-foreground">
-                                While we strive for accuracy, GëstuSaDine is an AI-powered tool and should not replace consultation
-                                with qualified Islamic scholars for important religious matters. Always verify important rulings with
-                                knowledgeable scholars.
-                            </p>
-                        </section>
-
-                        <section>
-                            <h2 className="text-2xl font-semibold mb-3">7. Limitation of Liability</h2>
-                            <p className="text-muted-foreground">
-                                GëstuSaDine is provided "as is" without warranties. We are not liable for any decisions made
-                                based on information from our service. Use at your own discretion.
-                            </p>
-                        </section>
-
-                        <section>
-                            <h2 className="text-2xl font-semibold mb-3">8. Account Termination</h2>
-                            <p className="text-muted-foreground">
-                                We reserve the right to suspend or terminate accounts that violate these terms or engage in
-                                harmful behavior. You may delete your account at any time from your account settings.
-                            </p>
-                        </section>
-
-                        <section>
-                            <h2 className="text-2xl font-semibold mb-3">9. Changes to Terms</h2>
-                            <p className="text-muted-foreground">
-                                We may update these terms from time to time. Continued use of our service after changes
-                                constitutes acceptance of the new terms.
-                            </p>
-                        </section>
-
-                        <section>
-                            <h2 className="text-2xl font-semibold mb-3">10. Contact</h2>
-                            <p className="text-muted-foreground">
-                                For questions about these terms, contact us at:{' '}
-                                <a href="tel:+221765770810" className="text-primary hover:underline">
-                                    +221 76 577 08 10
+                        <section className="pt-12 border-t border-white/5">
+                            <h2 className="text-sm font-black text-white/20 uppercase tracking-[0.3em] mb-6">Institutional Oversight</h2>
+                            <p className="text-white/40 leading-relaxed font-medium">
+                                For formal legal inquiries or institutional partnership terms, contact:{' '}
+                                <a href="mailto:legal@gestusadine.com" className="text-cyan-glow hover:underline underline-offset-4">
+                                    legal@gestusadine.com
                                 </a>
                             </p>
                         </section>

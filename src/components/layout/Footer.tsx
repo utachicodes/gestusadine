@@ -1,185 +1,133 @@
 ﻿import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { Facebook, Twitter, Instagram, Youtube, Mail, Phone, MapPin, ArrowUp, Heart } from 'lucide-react';
+import { Twitter, Mail, Phone, MapPin, ArrowUp } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 const Footer = () => {
   const { t } = useLanguage();
-  const [showScrollTop, setShowScrollTop] = React.useState(false);
-
-  React.useEffect(() => {
-    const handleScroll = () => {
-      setShowScrollTop(window.scrollY > 400);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const currentYear = new Date().getFullYear();
-
   return (
-    <footer className="relative bg-gradient-to-b from-background to-islamic-cream/10 border-t border-border/50 overflow-hidden">
+    <footer className="relative bg-deep-slate border-t border-white/5 pt-24 pb-12 overflow-hidden">
       {/* Background decorative elements */}
-      <div className="absolute inset-0 opacity-20">
+      <div className="absolute inset-0 opacity-10">
         <div
-          className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-islamic-green/30 to-transparent rounded-full blur-3xl"
-          style={{ animation: 'float-continuous 20s ease-in-out infinite' }}
-        />
-        <div
-          className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-tl from-islamic-blue/30 to-transparent rounded-full blur-3xl"
-          style={{ animation: 'float-continuous 25s ease-in-out infinite reverse' }}
+          className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-[500px] bg-[radial-gradient(circle_at_50%_100%,rgba(0,245,255,0.1),transparent_70%)] rounded-full blur-3xl"
         />
       </div>
 
-      <div className="container relative z-10 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+      <div className="container relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-20">
           {/* Brand Section */}
           <div className="space-y-6">
-            <div>
-              <h3 className="text-2xl font-bold text-gradient mb-3">GestuSaDine</h3>
-              <p className="text-muted-foreground leading-relaxed text-sm">
-                {t('footer.description') || 'Your comprehensive Islamic platform powered by AI, providing authentic guidance, education, and spiritual growth.'}
-              </p>
-            </div>
-
-            {/* Social Links */}
-            <div className="flex gap-3">
-              {[
-                { icon: Facebook, href: '#', label: 'Facebook' },
-                { icon: Twitter, href: '#', label: 'Twitter' },
-                { icon: Instagram, href: '#', label: 'Instagram' },
-                { icon: Youtube, href: '#', label: 'YouTube' }
-              ].map((social) => (
-                <a
-                  key={social.label}
-                  href={social.href}
-                  aria-label={social.label}
-                  className="w-10 h-10 rounded-lg bg-islamic-cream/50 dark:bg-muted/30 border border-border/50 flex items-center justify-center text-muted-foreground hover:text-islamic-green hover:border-islamic-green/50 hover:shadow-lg transition-all hover:scale-110 group"
-                >
-                  <social.icon className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                </a>
-              ))}
+            <Link to="/" className="inline-block group">
+              <img
+                src="/logofinal.png"
+                alt="GestuSaDine"
+                className="h-14 w-auto brightness-200 contrast-125 transition-transform group-hover:scale-105"
+              />
+            </Link>
+            <p className="text-white/40 text-sm leading-relaxed font-medium">
+              {t('footer.description') || 'The Digital Ecosystem for Modern Islamic Living. Merging authentic scholarship with advanced artificial intelligence.'}
+            </p>
+            <div className="flex space-x-4">
+              <SocialIcon icon={<Twitter className="w-5 h-5" />} href="https://x.com/deenakdiamano" />
+              <SocialIcon icon={<Mail className="w-5 h-5" />} href="mailto:contact@gestusadine.com" />
             </div>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h4 className="font-bold text-foreground mb-6 flex items-center gap-2">
-              <span className="w-1 h-6 bg-gradient-to-b from-islamic-green to-islamic-blue rounded-full" />
-              Quick Links
-            </h4>
-            <ul className="space-y-3">
-              {[
-                { to: '/dashboard', label: 'Dashboard' },
-                { to: '/fatwa', label: 'Ask Question' },
-                { to: '/library', label: 'Library' },
-                { to: '/about', label: 'About Us' },
-              ].map((link) => (
-                <li key={link.to}>
-                  <Link
-                    to={link.to}
-                    className="text-muted-foreground hover:text-islamic-green transition-colors inline-flex items-center gap-2 group text-sm"
-                  >
-                    <span className="w-0 h-px bg-islamic-green transition-all group-hover:w-3" />
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
+            <h4 className="text-white font-black uppercase tracking-[0.2em] text-xs mb-8">{t('footer.quick_links') || 'Explore'}</h4>
+            <ul className="space-y-4">
+              <FooterLink to="/" label={t('nav.home') || 'Home'} />
+              <FooterLink to="/about" label={t('nav.about') || 'About'} />
+              <FooterLink to="/pricing" label={t('nav.pricing') || 'Pricing'} />
+              <FooterLink to="/contact" label={t('nav.contact') || 'Contact'} />
             </ul>
           </div>
 
           {/* Features */}
           <div>
-            <h4 className="font-bold text-foreground mb-6 flex items-center gap-2">
-              <span className="w-1 h-6 bg-gradient-to-b from-islamic-blue to-islamic-gold rounded-full" />
-              Features
-            </h4>
-            <ul className="space-y-3">
-              {[
-                { to: '/council', label: 'AI Council' },
-                { to: '/hadith', label: 'Hadith Collection' },
-                { to: '/events', label: 'Events' },
-                { to: '/media', label: 'Media Library' },
-              ].map((link) => (
-                <li key={link.to}>
-                  <Link
-                    to={link.to}
-                    className="text-muted-foreground hover:text-islamic-blue transition-colors inline-flex items-center gap-2 group text-sm"
-                  >
-                    <span className="w-0 h-px bg-islamic-blue transition-all group-hover:w-3" />
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
+            <h4 className="text-white font-black uppercase tracking-[0.2em] text-xs mb-8">{t('footer.features') || 'Modules'}</h4>
+            <ul className="space-y-4">
+              <FooterLink to="/fiqh" label="Islamic Law (Fiqh)" />
+              <FooterLink to="/tawhid" label="Theology (Tawhid)" />
+              <FooterLink to="/hadith" label="Prophetic Traditions" />
+              <FooterLink to="/library" label="Digital Archive" />
             </ul>
           </div>
 
           {/* Contact Info */}
           <div>
-            <h4 className="font-bold text-foreground mb-6 flex items-center gap-2">
-              <span className="w-1 h-6 bg-gradient-to-b from-islamic-gold to-islamic-green rounded-full" />
-              {t('footer.contact') || 'Contact'}
-            </h4>
-            <ul className="space-y-4">
-              <li className="flex items-start gap-3 text-sm text-muted-foreground group">
-                <Mail className="w-5 h-5 flex-shrink-0 mt-0.5 text-islamic-green group-hover:scale-110 transition-transform" />
-                <a href="mailto:contact@gestusadine.com" className="hover:text-islamic-green transition-colors">
-                  contact@gestusadine.com
-                </a>
+            <h4 className="text-white font-black uppercase tracking-[0.2em] text-xs mb-8">{t('footer.contact_us') || 'Reach Out'}</h4>
+            <ul className="space-y-6">
+              <li className="flex items-start space-x-4 group">
+                <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-cyan-glow group-hover:border-cyan-glow/30 transition-all">
+                  <Mail className="w-4 h-4" />
+                </div>
+                <div>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-white/30 mb-1">Email</p>
+                  <a href="mailto:contact@gestusadine.com" className="text-white/70 hover:text-cyan-glow transition-colors font-medium">contact@gestusadine.com</a>
+                </div>
               </li>
-              <li className="flex items-start gap-3 text-sm text-muted-foreground group">
-                <Phone className="w-5 h-5 flex-shrink-0 mt-0.5 text-islamic-blue group-hover:scale-110 transition-transform" />
-                <a href="tel:+221123456789" className="hover:text-islamic-blue transition-colors">
-                  +221 12 345 67 89
-                </a>
-              </li>
-              <li className="flex items-start gap-3 text-sm text-muted-foreground">
-                <MapPin className="w-5 h-5 flex-shrink-0 mt-0.5 text-islamic-gold" />
-                <span>Dakar, Senegal</span>
+              <li className="flex items-start space-x-4 group">
+                <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-cyan-glow group-hover:border-cyan-glow/30 transition-all">
+                  <Phone className="w-4 h-4" />
+                </div>
+                <div>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-white/30 mb-1">Phone</p>
+                  <a href="tel:+221765770810" className="text-white/70 hover:text-cyan-glow transition-colors font-medium">+221 76 577 08 10</a>
+                </div>
               </li>
             </ul>
           </div>
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 border-t border-border/50">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-sm text-muted-foreground flex items-center gap-2">
-              {currentYear} GestuSaDine. {t('footer.rights') || 'All rights reserved.'}
-              <span className="hidden md:inline"></span>
-              <span className="hidden md:inline"></span>
-            </p>
-            <div className="flex gap-6 text-sm">
-              <Link to="/privacy" className="text-muted-foreground hover:text-islamic-green transition-colors">
-                Privacy
-              </Link>
-              <Link to="/terms" className="text-muted-foreground hover:text-islamic-green transition-colors">
-                Terms
-              </Link>
-              <Link to="/contact" className="text-muted-foreground hover:text-islamic-green transition-colors">
-                Contact
-              </Link>
-            </div>
+        <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
+          <p className="text-white/20 text-xs font-bold uppercase tracking-widest">
+            &copy; {new Date().getFullYear()} GESTUSADINE. FAITH MEETS INTELLIGENCE.
+          </p>
+
+          <button
+            onClick={scrollToTop}
+            className="p-3 rounded-full bg-white/5 border border-white/10 text-white/40 hover:text-cyan-glow hover:border-cyan-glow/50 hover:bg-cyan-glow/5 transition-all group"
+          >
+            <ArrowUp className="w-5 h-5 transition-transform group-hover:-translate-y-1" />
+          </button>
+
+          <div className="flex gap-8">
+            <Link to="/privacy" className="text-[10px] font-black uppercase tracking-widest text-white/20 hover:text-white transition-colors">{t('footer.privacy') || 'Privacy'}</Link>
+            <Link to="/terms" className="text-[10px] font-black uppercase tracking-widest text-white/20 hover:text-white transition-colors">{t('footer.terms') || 'Terms'}</Link>
           </div>
         </div>
       </div>
-
-      {/* Scroll to Top Button */}
-      <button
-        onClick={scrollToTop}
-        className={`fixed bottom-8 right-8 w-12 h-12 rounded-full bg-gradient-to-br from-islamic-green to-islamic-blue text-white shadow-xl hover:shadow-2xl transition-all z-50 flex items-center justify-center group ${showScrollTop ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16 pointer-events-none'
-          }`}
-        aria-label="Scroll to top"
-      >
-        <ArrowUp className="w-5 h-5 group-hover:-translate-y-1 transition-transform" />
-      </button>
     </footer>
   );
 };
+
+const SocialIcon = ({ icon, href }: { icon: React.ReactNode; href: string }) => (
+  <a
+    href={href}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="p-3 rounded-xl bg-white/5 border border-white/10 text-white/40 hover:text-cyan-glow hover:border-cyan-glow/50 hover:bg-cyan-glow/5 transition-all"
+  >
+    {icon}
+  </a>
+);
+
+const FooterLink = ({ to, label }: { to: string; label: string }) => (
+  <li>
+    <Link to={to} className="text-white/40 hover:text-cyan-glow transition-all flex items-center group font-medium text-sm">
+      <span className="w-1.5 h-1.5 rounded-full bg-white/10 mr-3 group-hover:bg-cyan-glow group-hover:shadow-[0_0_8px_rgba(0,245,255,0.5)] transition-all" />
+      {label}
+    </Link>
+  </li>
+);
 
 export default Footer;

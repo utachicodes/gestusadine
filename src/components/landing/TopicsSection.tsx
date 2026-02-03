@@ -63,15 +63,17 @@ const TopicsSection = () => {
   };
 
   return (
-    <section id="topics" className="py-24 bg-islamic-light pattern-bg">
-      <div className="container">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 inline-block relative">
-            Explore <span className="text-gradient">Topics</span>
-            <span className="absolute -bottom-2 left-0 right-0 h-1 bg-islamic-gold rounded-full"></span>
+    <section id="topics" className="py-24 bg-deep-slate relative overflow-hidden">
+      {/* Background patterns and glows */}
+      <div className="absolute top-0 left-0 w-full h-full bg-mesh-cyan opacity-5 pointer-events-none" />
+
+      <div className="container relative z-10 px-4">
+        <div className="text-center mb-20">
+          <h2 className="text-4xl md:text-5xl font-black mb-6 tracking-tight">
+            Explore <span className="text-glow-cyan text-transparent bg-clip-text bg-gradient-to-r from-cyan-glow to-blue-400">Divine Wisdom</span>
           </h2>
-          <p className="text-lg text-islamic-dark/70 max-w-2xl mx-auto">
-            Discover various aspects of Islamic knowledge through our curated collection of topics.
+          <p className="text-lg text-white/40 max-w-2xl mx-auto font-medium leading-relaxed">
+            Navigate through various dimensions of Islamic knowledge, powered by the convergence of faith and intelligence.
           </p>
         </div>
 
@@ -79,29 +81,32 @@ const TopicsSection = () => {
           {topics.map((topic, index) => (
             <div
               key={index}
-              className="topic-card group"
+              className="glass-card-premium p-8 group cursor-pointer transition-all hover:scale-[1.02] border border-white/5"
               onClick={() => handleTopicClick(topic.question)}
             >
-              <div className={`mb-4 w-12 h-12 rounded-full bg-gradient-to-br flex items-center justify-center text-white ${topic.gradient}`}>
-                <topic.icon className="h-6 w-6" />
+              <div className={`mb-6 w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-cyan-glow group-hover:border-cyan-glow/50 group-hover:bg-cyan-glow/5 transition-all shadow-[0_0_20px_rgba(0,245,255,0.05)]`}>
+                <topic.icon className="h-7 w-7 transition-transform group-hover:scale-110" />
               </div>
-              <h3 className="text-xl font-bold mb-2 group-hover:text-islamic-green transition-colors">
+
+              <h3 className="text-xl font-black mb-3 text-white group-hover:text-cyan-glow transition-colors tracking-tight">
                 {topic.title}
               </h3>
-              <p className="text-islamic-dark/70">
+
+              <p className="text-white/40 text-sm leading-relaxed font-medium mb-6">
                 {topic.description}
               </p>
-              <div className="mt-4 text-sm text-islamic-green font-medium opacity-0 group-hover:opacity-100 transition-opacity flex items-center">
-                <span>Ask about this</span>
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+
+              <div className="flex items-center text-xs font-black uppercase tracking-widest text-white/20 group-hover:text-cyan-glow transition-all">
+                <span>Inquire Now</span>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-2 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>
               </div>
             </div>
           ))}
         </div>
       </div>
-    </section >
+    </section>
   );
 };
 
