@@ -55,8 +55,8 @@ const HeroSection = () => {
           GestuSaDine
           <span className="block text-gradient mt-2 drop-shadow-lg">
             {t('hero.title_highlight') || 'Islamic Companion'}
-          </motion.div>
-        </div>
+          </span>
+        </motion.h1>
 
         {/* 4. Subtitle - Fade Up */}
         <motion.p
@@ -83,7 +83,7 @@ const HeroSection = () => {
           >
             {t('hero.cta_primary') || 'Get Started'}
             <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
-          </button>
+          </motion.button>
 
           <motion.button
             whileHover={{ scale: 1.05 }}
@@ -93,7 +93,7 @@ const HeroSection = () => {
           >
             <PlayCircle className="w-5 h-5 transition-transform group-hover:scale-110" />
             {t('hero.cta_secondary') || 'Learn More'}
-          </button>
+          </motion.button>
         </motion.div>
 
         {/* Hero Visual - Enhanced Glass Mockup */}
@@ -141,8 +141,8 @@ const HeroSection = () => {
               {/* Right Sidebar - Floating Widget */}
               <div className="hidden md:block col-span-3 space-y-4">
                 <div
-                   className="h-40 w-full rounded-xl border border-white/10 bg-white/5 backdrop-blur-md shadow-lg flex items-center justify-center text-muted-foreground/40 text-sm"
-                   style={{ animation: 'float-slow 6s ease-in-out infinite' }}
+                  className="h-40 w-full rounded-xl border border-white/10 bg-white/5 backdrop-blur-md shadow-lg flex items-center justify-center text-muted-foreground/40 text-sm"
+                  style={{ animation: 'float-slow 6s ease-in-out infinite' }}
                 >
                   Prayer Times Widget
                 </div>
