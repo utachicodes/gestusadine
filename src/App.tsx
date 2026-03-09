@@ -41,19 +41,14 @@ import Terms from "./pages/core/Terms";
 import Classes from "./pages/knowledge/Classes";
 import HadithPage from "./pages/islamic/Hadith";
 import TawhidPage from "./pages/islamic/Tawhid";
+import PodcastsPage from "./pages/knowledge/PodcastsPage";
+import CommunityPage from "./pages/community/CommunityPage";
 
 import { ThemeProvider } from "@/contexts/ThemeContext";
-
-import { useState } from "react";
-
 
 const queryClient = new QueryClient();
 
 const App = () => {
-
-
-
-
   return (
     <ErrorBoundary>
       <AuthProvider>
@@ -293,6 +288,22 @@ const App = () => {
                       element={
                         <AppShell>
                           <TawhidPage />
+                        </AppShell>
+                      }
+                    />
+                    <Route
+                      path="/podcasts"
+                      element={
+                        <AppShell>
+                          <PodcastsPage />
+                        </AppShell>
+                      }
+                    />
+                    <Route
+                      path="/community"
+                      element={
+                        <AppShell>
+                          <CommunityPage />
                         </AppShell>
                       }
                     />

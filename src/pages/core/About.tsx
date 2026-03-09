@@ -1,52 +1,42 @@
 import * as React from 'react';
-import { motion } from 'framer-motion';
 import AboutSection from '@/components/landing/AboutSection';
 
 export default function About() {
     return (
-        <div className="flex-1 bg-deep-slate">
-            {/* Hero Section for About Page */}
-            <section className="relative pt-32 pb-20 overflow-hidden">
-                <div className="container relative z-10 px-4">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8 }}
-                        className="text-center"
-                    >
-                        <p className="text-cyan-glow font-black uppercase tracking-[0.4em] text-[10px] mb-6">
-                            Architects of Faith
-                        </p>
-                        <h1 className="text-6xl md:text-8xl font-black text-white tracking-tighter mb-8">
-                            Our <span className="text-glow-cyan">Mission</span>
-                        </h1>
-                        <p className="text-2xl text-white/40 max-w-3xl mx-auto font-medium leading-relaxed">
-                            Pioneering the next generation of spiritual technology by merging authentic Islamic scholarship with computational intelligence.
-                        </p>
-                    </motion.div>
-                </div>
+        <div className="flex-1">
+            {/* Hero */}
+            <section className="relative pt-20 pb-12 overflow-hidden">
+                <div className="absolute inset-0 bg-warm-base -z-10" />
 
-                {/* Background glow */}
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_50%_0%,rgba(0,245,255,0.1),transparent_70%)] pointer-events-none" />
+                <div className="container relative z-10 px-4">
+                    <div className="text-center max-w-3xl mx-auto">
+                        <h1 className="text-4xl md:text-5xl font-serif font-bold text-deep-green mb-5 tracking-tight">
+                            Why GëstuSaDine exists
+                        </h1>
+                        <p className="text-lg text-deep-green/55 leading-relaxed">
+                            Muslims in West Africa deserve better than random internet fatwas. We built a platform that checks every answer against multiple scholarly perspectives before showing it to you.
+                        </p>
+                    </div>
+                </div>
             </section>
 
             <AboutSection />
 
-            {/* Vision Section */}
-            <section className="py-32 relative overflow-hidden border-t border-white/5">
+            {/* How the AI Council Works */}
+            <section className="py-20 relative overflow-hidden bg-warm-sand/20 border-t border-warm-sand/60">
                 <div className="container px-4">
-                    <div className="max-w-4xl mx-auto">
-                        <div className="grid md:grid-cols-2 gap-16">
-                            <div>
-                                <h2 className="text-3xl font-black text-white mb-6 tracking-tight">The Vision</h2>
-                                <p className="text-white/40 leading-relaxed font-medium">
-                                    We believe that faith and intelligence are not distinct realms, but interconnected dimensions of the human experience. Our goal is to make divine wisdom accessible, verifiable, and relevant in the digital age.
+                    <div className="max-w-3xl mx-auto">
+                        <div className="grid md:grid-cols-2 gap-6">
+                            <div className="glass-card-warm p-7 rounded-2xl">
+                                <h2 className="text-xl font-serif font-bold text-deep-green mb-4">The problem</h2>
+                                <p className="text-deep-green/55 leading-relaxed text-sm">
+                                    Most Islamic Q&A apps give you one answer from one source. You don't know if it's Hanafi or Maliki, you don't see the evidence, and you can't tell if the AI just made it up.
                                 </p>
                             </div>
-                            <div>
-                                <h2 className="text-3xl font-black text-white mb-6 tracking-tight">The Tech</h2>
-                                <p className="text-white/40 leading-relaxed font-medium">
-                                    Leveraging state-of-the-art RAG (Retrieval-Augmented Generation) and authentic datasets, we ensure that every interaction is grounded in verified scholarship, audited by experts.
+                            <div className="glass-card-warm p-7 rounded-2xl">
+                                <h2 className="text-xl font-serif font-bold text-deep-green mb-4">Our approach</h2>
+                                <p className="text-deep-green/55 leading-relaxed text-sm">
+                                    We run every question through four specialized AI agents — each with a different focus — then a synthesis engine combines their answers into a clear, referenced response. If the AI isn't sure, it says so.
                                 </p>
                             </div>
                         </div>

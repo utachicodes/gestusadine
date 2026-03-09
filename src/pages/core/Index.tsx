@@ -1,136 +1,113 @@
 import * as React from 'react';
 import HeroSection from '@/components/landing/HeroSection';
 import { Link, useNavigate } from 'react-router-dom';
-import { MessageSquare, Calendar, BookOpen, Sparkles, ArrowRight, Library, Star } from 'lucide-react';
+import { MessageSquare, Calendar, Library, ArrowRight } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { PricingComparison } from '@/components/landing/PricingComparison';
-import { GlassTiltCard } from '@/components/ui/GlassTiltCard';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 const Index = () => {
   const { t } = useLanguage();
   const navigate = useNavigate();
-  const { scrollY } = useScroll();
-
-  // Parallax effect for background elements
-  const y1 = useTransform(scrollY, [0, 1000], [0, 200]);
-  const y2 = useTransform(scrollY, [0, 1000], [0, -150]);
 
   return (
-    <div className="min-h-screen flex flex-col relative overflow-hidden bg-deep-slate text-white selection:bg-cyan-glow/30 selection:text-white">
-      {/* Global Ambient Background */}
-      <div className="fixed inset-0 pointer-events-none z-0">
-        <motion.div style={{ y: y1 }} className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-cyan-glow/5 rounded-full blur-[150px]" />
-        <motion.div style={{ y: y2 }} className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-600/5 rounded-full blur-[150px]" />
-      </div>
+    <div className="min-h-screen flex flex-col relative overflow-hidden">
 
-      <main className="flex-grow relative z-10">
+      <main className="flex-grow">
         <HeroSection />
 
         {/* Features Section */}
-        <section className="py-32 relative">
+        <section className="py-20 relative">
           <div className="container relative z-10 px-4">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="text-center mb-24"
-            >
-              <h2 className="text-4xl md:text-5xl font-black mb-6 tracking-tight">
-                Discover Your <span className="text-glow-cyan text-transparent bg-clip-text bg-gradient-to-r from-cyan-glow to-blue-400">Digital Gateway</span>
+            <div className="text-center mb-14">
+              <h2 className="text-3xl md:text-4xl font-serif font-bold text-deep-green mb-4 tracking-tight">
+                {t('index.features_title') || 'What you get'}
               </h2>
-              <p className="text-xl text-white/40 max-w-2xl mx-auto font-medium leading-relaxed">
-                Everything you need to strengthen your faith, powered by the convergence of authentic scholarship and advanced intelligence.
+              <p className="text-base text-deep-green/55 max-w-xl mx-auto leading-relaxed">
+                {t('index.features_subtitle') || 'Islamic guidance, daily content, and a full library — all in one place.'}
               </p>
-            </motion.div>
+            </div>
 
-            <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
-              <GlassTiltCard delay={0.1}>
-                <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-cyan-glow mb-10 group-hover:border-cyan-glow/50 group-hover:bg-cyan-glow/5 transition-all shadow-[0_0_20px_rgba(0,245,255,0.05)]">
-                  <MessageSquare className="w-8 h-8" />
+            <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+              <div className="glass-card-warm p-7 rounded-2xl transition-all duration-200 hover:shadow-md">
+                <div className="w-12 h-12 rounded-xl bg-deep-green/8 flex items-center justify-center text-deep-green mb-5">
+                  <MessageSquare className="w-6 h-6" />
                 </div>
-                <h3 className="text-2xl font-black text-white mb-4 tracking-tight">{t('index.guided_fatwa_title') || "AI-Guided Fatwa"}</h3>
-                <p className="text-white/40 leading-relaxed mb-10 font-medium">
-                  {t('index.guided_fatwa_desc') || "Get precise, context-aware answers derived from authentic Islamic sources instantly."}
+                <h3 className="text-lg font-bold text-deep-green mb-2">{t('index.guided_fatwa_title') || "Ask a Question"}</h3>
+                <p className="text-deep-green/50 leading-relaxed mb-5 text-sm">
+                  {t('index.guided_fatwa_desc') || "Get a structured fatwa with the ruling, evidence, and explanation — checked across four madhhabs."}
                 </p>
-                <Link to="/fatwa" className="inline-flex items-center text-cyan-glow font-black uppercase tracking-widest text-xs hover:gap-4 transition-all group/link">
-                  {t('index.try_it_now') || "Explore Fatwas"} <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover/link:translate-x-1" />
+                <Link to="/fatwa" className="inline-flex items-center gap-1.5 text-warm-gold font-bold text-xs uppercase tracking-widest hover:gap-3 transition-all">
+                  {t('index.try_it_now') || "Try it"}
+                  <ArrowRight className="w-4 h-4" />
                 </Link>
-              </GlassTiltCard>
+              </div>
 
-              <GlassTiltCard delay={0.2}>
-                <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-cyan-glow mb-10 group-hover:border-cyan-glow/50 group-hover:bg-cyan-glow/5 transition-all shadow-[0_0_20px_rgba(0,245,255,0.05)]">
-                  <Calendar className="w-8 h-8" />
+              <div className="glass-card-warm p-7 rounded-2xl transition-all duration-200 hover:shadow-md">
+                <div className="w-12 h-12 rounded-xl bg-warm-gold/8 flex items-center justify-center text-warm-gold mb-5">
+                  <Calendar className="w-6 h-6" />
                 </div>
-                <h3 className="text-2xl font-black text-white mb-4 tracking-tight">{t('index.daily_islam_title') || "Daily Guidance"}</h3>
-                <p className="text-white/40 leading-relaxed mb-10 font-medium">
-                  {t('index.daily_islam_desc') || "Stay connected with daily reminders, prayer times, and personalized spiritual tracking."}
+                <h3 className="text-lg font-bold text-deep-green mb-2">{t('index.daily_islam_title') || "Daily Reminders"}</h3>
+                <p className="text-deep-green/50 leading-relaxed mb-5 text-sm">
+                  {t('index.daily_islam_desc') || "A daily ayah, hadith, and dua. Plus a weekly quiz to keep your knowledge sharp."}
                 </p>
-                <Link to="/dashboard" className="inline-flex items-center text-cyan-glow font-black uppercase tracking-widest text-xs hover:gap-4 transition-all group/link">
-                  {t('index.see_today') || "Go to Dashboard"} <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover/link:translate-x-1" />
+                <Link to="/dashboard" className="inline-flex items-center gap-1.5 text-warm-gold font-bold text-xs uppercase tracking-widest hover:gap-3 transition-all">
+                  {t('index.see_today') || "See today's"}
+                  <ArrowRight className="w-4 h-4" />
                 </Link>
-              </GlassTiltCard>
+              </div>
 
-              <GlassTiltCard delay={0.3}>
-                <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-cyan-glow mb-10 group-hover:border-cyan-glow/50 group-hover:bg-cyan-glow/5 transition-all shadow-[0_0_20px_rgba(0,245,255,0.05)]">
-                  <Library className="w-8 h-8" />
+              <div className="glass-card-warm p-7 rounded-2xl transition-all duration-200 hover:shadow-md">
+                <div className="w-12 h-12 rounded-xl bg-sage-green/8 flex items-center justify-center text-sage-green-dark mb-5">
+                  <Library className="w-6 h-6" />
                 </div>
-                <h3 className="text-2xl font-black text-white mb-4 tracking-tight">{t('index.library_title') || "Rich Library"}</h3>
-                <p className="text-white/40 leading-relaxed mb-10 font-medium">
-                  {t('index.library_desc') || "Access a vast collection of Islamic texts, hadiths, and scholarly works in multiple languages."}
+                <h3 className="text-lg font-bold text-deep-green mb-2">{t('index.library_title') || "Islamic Library"}</h3>
+                <p className="text-deep-green/50 leading-relaxed mb-5 text-sm">
+                  {t('index.library_desc') || "Books, PDFs, and resources on Fiqh, Aqeedah, Seerah, and more."}
                 </p>
-                <Link to="/library" className="inline-flex items-center text-cyan-glow font-black uppercase tracking-widest text-xs hover:gap-4 transition-all group/link">
-                  {t('index.browse_books') || "Browse Library"} <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover/link:translate-x-1" />
+                <Link to="/library" className="inline-flex items-center gap-1.5 text-warm-gold font-bold text-xs uppercase tracking-widest hover:gap-3 transition-all">
+                  {t('index.browse_books') || "Browse"}
+                  <ArrowRight className="w-4 h-4" />
                 </Link>
-              </GlassTiltCard>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* How it works */}
-        <section className="py-32 relative bg-white/[0.01] border-y border-white/5">
+        {/* How It Works */}
+        <section className="py-20 relative bg-warm-sand/20 border-y border-warm-sand/60">
           <div className="container relative z-10 px-4">
-            <div className="max-w-5xl mx-auto">
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8 }}
-                className="text-center mb-24"
-              >
-                <h2 className="text-4xl md:text-5xl font-black text-white mb-6 tracking-tight">
-                  The Journey to <span className="text-glow-cyan">Enlightenment</span>
+            <div className="max-w-4xl mx-auto">
+              <div className="text-center mb-12">
+                <h2 className="text-3xl md:text-4xl font-serif font-bold text-deep-green mb-4 tracking-tight">
+                  {t('index.how_title_prefix') || 'How it works'}
                 </h2>
-                <p className="text-xl text-white/40 font-medium leading-relaxed">{t('index.how_subtitle')}</p>
-              </motion.div>
+                <p className="text-base text-deep-green/55">{t('index.how_subtitle') || 'Every answer follows a structured process rooted in authentic sources.'}</p>
+              </div>
 
-              <div className="grid md:grid-cols-2 gap-8">
-                {[1, 2, 3, 4].map((step, idx) => (
-                  <motion.div
+              <div className="grid md:grid-cols-2 gap-5">
+                {[1, 2, 3, 4].map((step) => (
+                  <div
                     key={step}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: idx * 0.1 }}
-                    className="glass-card-premium p-10 border border-white/5 hover:border-cyan-glow/20 transition-all group"
+                    className="glass-card-warm p-6 rounded-2xl transition-all duration-200 hover:shadow-md"
                   >
-                    <div className="flex items-start gap-8">
-                      <div className={`w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center flex-shrink-0 text-cyan-glow group-hover:border-cyan-glow/50 group-hover:bg-cyan-glow/5 transition-all font-black text-xl shadow-[0_0_20px_rgba(0,245,255,0.05)]`}>
+                    <div className="flex items-start gap-4">
+                      <div className="w-10 h-10 rounded-xl bg-deep-green flex items-center justify-center flex-shrink-0 text-warm-cream font-bold text-sm">
                         {step}
                       </div>
                       <div>
-                        <h4 className="text-xl font-black text-white mb-3 tracking-tight">{t(`index.step${step}_title`)}</h4>
-                        <p className="text-white/40 leading-relaxed font-medium text-sm">{t(`index.step${step}_desc`)}</p>
+                        <h4 className="text-base font-bold text-deep-green mb-1.5">{t(`index.step${step}_title`)}</h4>
+                        <p className="text-deep-green/50 leading-relaxed text-sm">{t(`index.step${step}_desc`)}</p>
                       </div>
                     </div>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
             </div>
           </div>
         </section>
 
-        {/* Pricing Comparison */}
+        {/* Pricing */}
         <PricingComparison onSelectPlan={(tier) => {
           if (tier === 'free') {
             navigate('/login');
@@ -140,27 +117,28 @@ const Index = () => {
         }} />
 
         {/* Final CTA */}
-        <section className="py-48 relative overflow-hidden">
-          <div className="container relative z-10 px-4">
-            <div className="glass-card-premium max-w-5xl mx-auto text-center !p-20 relative border border-white/10 group">
-              <div className="absolute inset-0 bg-gradient-to-b from-cyan-glow/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+        <section className="py-24 relative overflow-hidden">
+          <div className="absolute inset-0 bg-deep-green -z-10" />
 
-              <div className="w-24 h-24 rounded-3xl bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-10 group-hover:border-cyan-glow/50 group-hover:bg-cyan-glow/5 transition-all shadow-[0_0_30px_rgba(0,245,255,0.1)]">
-                <Sparkles className="w-12 h-12 text-cyan-glow animate-pulse" />
-              </div>
+          <div className="container relative z-10 px-4 text-center">
+            <div className="max-w-3xl mx-auto">
+              <p className="font-arabic text-4xl text-warm-gold/50 mb-5">بسم الله الرحمن الرحيم</p>
 
-              <h2 className="text-4xl md:text-7xl font-black text-white mb-10 tracking-tighter leading-tight">
-                {t('index.final_cta_title')}
+              <h2 className="text-3xl md:text-5xl font-serif font-bold text-warm-cream mb-6 leading-tight">
+                {t('index.final_cta_title') || 'Ready to ask your first question?'}
               </h2>
 
-              <p className="text-2xl text-white/40 mb-16 leading-relaxed max-w-3xl mx-auto font-medium">
-                {t('index.final_cta_desc')}
+              <p className="text-lg text-warm-cream/50 mb-10 max-w-xl mx-auto">
+                {t('index.final_cta_desc') || 'Start a fatwa session or explore the daily content. Free to try, no credit card needed.'}
               </p>
 
-              <div className="flex flex-wrap justify-center gap-6">
-                <Link to="/login" className="btn-premium px-16 py-6 text-xl">
-                  {t('index.ask_question_btn')}
-                  <ArrowRight className="ml-3 w-6 h-6" />
+              <div className="flex flex-wrap justify-center gap-4">
+                <Link to="/login" className="btn-gold flex items-center gap-3 group">
+                  {t('index.ask_question_btn') || 'Get started'}
+                  <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+                </Link>
+                <Link to="/about" className="btn-spiritual-outline text-warm-cream border-warm-cream/20 hover:bg-warm-cream/5 hover:border-warm-cream/40 flex items-center gap-2">
+                  {t('index.learn_more') || 'Learn more'}
                 </Link>
               </div>
             </div>

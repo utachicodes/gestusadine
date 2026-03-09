@@ -1,6 +1,5 @@
-import { motion } from 'framer-motion';
+import React from 'react';
 import { Check, X, Sparkles, Zap, Crown } from 'lucide-react';
-import { Button } from '../ui/button';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 interface PricingTier {
@@ -16,24 +15,24 @@ const tiers: PricingTier[] = [
     {
         tier: 'free',
         price: '0 XOF',
-        icon: <Sparkles className="w-6 h-6 text-white/50" />,
+        icon: <Sparkles className="w-5 h-5 text-deep-green/40" />,
         credits: '50',
-        description: 'First exposure to authentic guidance'
+        description: 'Try the platform with 50 monthly credits'
     },
     {
         tier: 'core',
         price: '5,000 XOF',
-        icon: <Zap className="w-6 h-6 text-cyan-glow" />,
+        icon: <Zap className="w-5 h-5 text-warm-gold" />,
         highlighted: true,
         credits: '500',
-        description: 'The main experience for practitioners'
+        description: 'For regular use — 500 credits and full features'
     },
     {
         tier: 'pro',
         price: '10,000 XOF',
-        icon: <Crown className="w-6 h-6 text-purple-400" />,
+        icon: <Crown className="w-5 h-5 text-deep-green-light" />,
         credits: 'Unlimited',
-        description: 'For serious, long-term builders of knowledge'
+        description: 'Unlimited access to everything'
     },
 ];
 
@@ -45,9 +44,7 @@ export function PricingComparison({ onSelectPlan }: PricingComparisonProps) {
     const { t } = useLanguage();
 
     const handleSelect = (tier: 'free' | 'core' | 'pro') => {
-        if (onSelectPlan) {
-            onSelectPlan(tier);
-        }
+        if (onSelectPlan) onSelectPlan(tier);
     };
 
     const getFeatures = (tier: 'free' | 'core' | 'pro') => {
@@ -79,80 +76,68 @@ export function PricingComparison({ onSelectPlan }: PricingComparisonProps) {
     };
 
     return (
-        <section id="pricing" className="py-32 bg-deep-slate relative overflow-hidden">
-            {/* Background Glow */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_50%_50%,rgba(0,245,255,0.05),transparent_70%)] pointer-events-none" />
+        <section id="pricing" className="py-24 relative overflow-hidden">
+            <div className="absolute inset-0 bg-warm-sand/20 -z-10" />
 
             <div className="container px-4 relative z-10">
-                <div className="text-center mb-20">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                    >
-                        <p className="inline-flex items-center text-xs uppercase tracking-[0.3em] text-cyan-glow font-bold mb-4">
-                            <span className="w-2 h-2 rounded-full bg-cyan-glow mr-3 animate-pulse" />
-                            {t('pricing.section_label') || 'Tiered Access'}
-                        </p>
-                        <h2 className="text-5xl md:text-6xl font-black text-white mb-6 tracking-tighter">
-                            {t('pricing.title_prefix') || 'Choose Your'} <span className="text-gradient-cyan">{t('pricing.title_gradient') || 'Path'}</span>
-                        </h2>
-                        <p className="text-xl text-white/40 max-w-2xl mx-auto font-medium">
-                            {t('pricing.subtitle') || 'Fuel your spiritual evolution with precision tools and verified knowledge.'}
-                        </p>
-                    </motion.div>
+                <div className="text-center mb-14">
+                    <h2 className="text-3xl md:text-4xl font-serif font-bold text-deep-green mb-4 tracking-tight">
+                        {t('pricing.title_prefix') || 'Pricing'}
+                    </h2>
+                    <p className="text-base text-deep-green/55 max-w-xl mx-auto">
+                        {t('pricing.subtitle') || 'Start free. Upgrade when you need more.'}
+                    </p>
                 </div>
 
-                <div className="grid lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-                    {tiers.map((tier, index) => (
-                        <motion.div
-                            key={tier.tier}
-                            initial={{ opacity: 0, y: 30 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.6, delay: index * 0.1 }}
-                            className="relative"
-                        >
-                            <div className={`h-full glass-card-premium rounded-3xl p-8 flex flex-col transition-all duration-500 hover:translate-y-[-10px] ${tier.highlighted ? 'border-cyan-glow/30 shadow-[0_0_50px_rgba(0,245,255,0.1)] scale-105 z-10' : 'hover:border-white/20'}`}>
+                <div className="grid lg:grid-cols-3 gap-6 max-w-5xl mx-auto items-start">
+                    {tiers.map((tier) => (
+                        <div key={tier.tier} className="relative">
+                            <div className={`glass-card-warm rounded-2xl p-7 flex flex-col transition-all duration-200 hover:shadow-md ${
+                                tier.highlighted
+                                    ? 'border-warm-gold/40 shadow-lg scale-[1.02] z-10'
+                                    : ''
+                            }`}>
                                 {tier.highlighted && (
-                                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-cyan-glow text-deep-slate text-[10px] font-black uppercase tracking-[0.2em] px-4 py-1.5 rounded-full shadow-glow-cyan">
-                                        {t('pricing.most_popular') || 'Recommended'}
+                                    <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-warm-gold text-white text-[10px] font-bold uppercase tracking-[0.15em] px-4 py-1 rounded-full">
+                                        {t('pricing.most_popular') || 'Most popular'}
                                     </div>
                                 )}
 
-                                <div className="mb-8">
-                                    <div className="flex items-center gap-3 mb-6">
-                                        <div className={`p-3 rounded-2xl bg-white/5 border border-white/10 ${tier.highlighted ? 'border-cyan-glow/20' : ''}`}>
+                                <div className="mb-6">
+                                    <div className="flex items-center gap-3 mb-4">
+                                        <div className={`p-2 rounded-lg bg-warm-sand/40 border ${tier.highlighted ? 'border-warm-gold/30' : 'border-warm-sand'}`}>
                                             {tier.icon}
                                         </div>
-                                        <h3 className="text-2xl font-black text-white uppercase tracking-tight">
+                                        <h3 className="text-lg font-bold text-deep-green uppercase tracking-tight">
                                             {t(`pricing.tier.${tier.tier}.name`) || tier.tier}
                                         </h3>
                                     </div>
                                     <div className="flex items-baseline gap-2 mb-2">
-                                        <span className="text-5xl font-black text-white">{tier.price}</span>
+                                        <span className="text-3xl font-black text-deep-green">{tier.price}</span>
                                         {tier.tier !== 'free' && (
-                                            <span className="text-white/40 font-bold uppercase text-xs tracking-widest">{t('pricing.per_month') || '/ Month'}</span>
+                                            <span className="text-deep-green/40 font-semibold text-xs uppercase tracking-widest">
+                                                {t('pricing.per_month') || '/ month'}
+                                            </span>
                                         )}
                                     </div>
-                                    <p className="text-white/50 text-sm font-medium leading-relaxed">
+                                    <p className="text-deep-green/50 text-sm">
                                         {t(`pricing.tier.${tier.tier}.description`) || tier.description}
                                     </p>
                                 </div>
 
-                                <div className="space-y-4 flex-1 mb-10">
+                                <div className="space-y-3 flex-1 mb-7">
                                     {getFeatures(tier.tier).map((feature, i) => (
                                         <div key={i} className="flex items-center gap-3">
                                             {feature.included ? (
-                                                <div className="w-5 h-5 rounded-full bg-cyan-glow/10 flex items-center justify-center border border-cyan-glow/20">
-                                                    <Check className="w-3 h-3 text-cyan-glow" />
+                                                <div className="w-5 h-5 rounded-full bg-sage-green/15 flex items-center justify-center border border-sage-green/25 flex-shrink-0">
+                                                    <Check className="w-3 h-3 text-sage-green-dark" />
                                                 </div>
                                             ) : (
-                                                <div className="w-5 h-5 rounded-full bg-white/5 flex items-center justify-center border border-white/5">
-                                                    <X className="w-3 h-3 text-white/20" />
+                                                <div className="w-5 h-5 rounded-full bg-warm-sand/30 flex items-center justify-center border border-warm-sand flex-shrink-0">
+                                                    <X className="w-3 h-3 text-deep-green/25" />
                                                 </div>
                                             )}
-                                            <span className={`text-sm font-semibold transition-colors ${feature.included ? 'text-white/80' : 'text-white/20'}`}>
+                                            <span className={`text-sm ${feature.included ? 'text-deep-green/80' : 'text-deep-green/25'}`}>
                                                 {feature.name}
                                             </span>
                                         </div>
@@ -161,17 +146,18 @@ export function PricingComparison({ onSelectPlan }: PricingComparisonProps) {
 
                                 <button
                                     onClick={() => handleSelect(tier.tier)}
-                                    className={`w-full py-4 rounded-2xl font-black uppercase tracking-[0.15em] text-xs transition-all duration-300 ${tier.highlighted
-                                        ? 'bg-cyan-glow text-deep-slate shadow-glow-cyan hover:scale-[1.02]'
-                                        : 'bg-white/5 text-white border border-white/10 hover:bg-white/10'
-                                        }`}
+                                    className={`w-full py-3 rounded-xl font-bold uppercase tracking-[0.1em] text-xs transition-all duration-200 ${
+                                        tier.highlighted
+                                            ? 'bg-deep-green text-warm-cream hover:bg-deep-green-light shadow-md'
+                                            : 'bg-warm-sand/40 text-deep-green border border-warm-sand hover:bg-warm-sand/70'
+                                    }`}
                                 >
                                     {tier.tier === 'free'
-                                        ? t('pricing.get_started_free') || 'Activate Free'
+                                        ? t('pricing.get_started_free') || 'Start free'
                                         : `${t('pricing.upgrade_prefix') || 'Upgrade to'} ${tier.tier}`}
                                 </button>
                             </div>
-                        </motion.div>
+                        </div>
                     ))}
                 </div>
             </div>

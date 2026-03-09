@@ -1,48 +1,53 @@
-
 import React from 'react';
-import { BookOpen, Compass, Globe, Heart, LayoutList, Scale } from 'lucide-react';
+import { BookOpen, Compass, Globe, Heart, LayoutList, Scale, ArrowRight } from 'lucide-react';
 
 const topics = [
   {
-    title: 'Islamic Beliefs',
-    description: 'Understanding Tawheed, Prophethood, etc.',
+    title: 'Aqeedah',
+    description: 'Tawheed, the six pillars of faith, and what Muslims believe and why.',
     icon: BookOpen,
-    gradient: 'from-islamic-green to-islamic-teal',
+    color: 'text-deep-green',
+    bg: 'bg-deep-green/8',
     question: 'What are the six articles of faith in Islam?'
   },
   {
-    title: 'Islamic Law (Sharia)',
-    description: 'Fiqh, Halal, and Haram',
+    title: 'Fiqh',
+    description: 'Rulings on halal, haram, and daily life across all four madhhabs.',
     icon: Scale,
-    gradient: 'from-islamic-blue to-islamic-teal',
+    color: 'text-warm-gold',
+    bg: 'bg-warm-gold/8',
     question: 'What is the concept of Halal in Islamic law?'
   },
   {
-    title: 'Prophet Muhammad (PBUH)',
-    description: 'His Life and Teachings',
+    title: 'Seerah',
+    description: 'The life of the Prophet (PBUH), his character, and his teachings.',
     icon: Heart,
-    gradient: 'from-islamic-gold to-yellow-500',
+    color: 'text-sage-green-dark',
+    bg: 'bg-sage-green/8',
     question: 'What are some important teachings of Prophet Muhammad?'
   },
   {
     title: 'Islamic History',
-    description: 'Key Events and Figures',
+    description: 'The Rashidun, major scholars, and how Islam shaped civilizations.',
     icon: Globe,
-    gradient: 'from-islamic-green to-islamic-blue',
+    color: 'text-deep-green-light',
+    bg: 'bg-deep-green/6',
     question: 'Can you explain the early history of Islam?'
   },
   {
-    title: 'Islamic Ethics',
-    description: 'Moral Values in Islam',
+    title: 'Akhlaq',
+    description: 'Character, honesty, patience, and how Islam shapes behavior.',
     icon: Compass,
-    gradient: 'from-islamic-teal to-islamic-blue',
+    color: 'text-warm-gold-dark',
+    bg: 'bg-warm-gold/8',
     question: 'What are the core ethical values in Islam?'
   },
   {
-    title: 'Islamic Practices',
-    description: 'Prayer, Fasting, Charity, etc.',
+    title: 'Ibadah',
+    description: 'Salah, fasting, zakat, hajj — the acts of worship and how to perform them.',
     icon: LayoutList,
-    gradient: 'from-islamic-gold to-islamic-green',
+    color: 'text-sage-green',
+    bg: 'bg-sage-green/8',
     question: 'How should Muslims perform the five daily prayers?'
   }
 ];
@@ -52,8 +57,6 @@ const TopicsSection = () => {
     const heroSection = document.querySelector('section');
     if (heroSection) {
       heroSection.scrollIntoView({ behavior: 'smooth' });
-
-      // Find the search input and set its value
       const searchInput = document.querySelector('input.search-input') as HTMLInputElement;
       if (searchInput) {
         searchInput.value = question;
@@ -63,44 +66,39 @@ const TopicsSection = () => {
   };
 
   return (
-    <section id="topics" className="py-24 bg-deep-slate relative overflow-hidden">
-      {/* Background patterns and glows */}
-      <div className="absolute top-0 left-0 w-full h-full bg-mesh-cyan opacity-5 pointer-events-none" />
-
+    <section id="topics" className="py-20 relative overflow-hidden">
       <div className="container relative z-10 px-4">
-        <div className="text-center mb-20">
-          <h2 className="text-4xl md:text-5xl font-black mb-6 tracking-tight">
-            Explore <span className="text-glow-cyan text-transparent bg-clip-text bg-gradient-to-r from-cyan-glow to-blue-400">Divine Wisdom</span>
+        <div className="text-center mb-14">
+          <h2 className="text-3xl md:text-4xl font-serif font-bold text-deep-green mb-4 tracking-tight">
+            What you can ask about
           </h2>
-          <p className="text-lg text-white/40 max-w-2xl mx-auto font-medium leading-relaxed">
-            Navigate through various dimensions of Islamic knowledge, powered by the convergence of faith and intelligence.
+          <p className="text-base text-deep-green/55 max-w-xl mx-auto leading-relaxed">
+            Every question goes through our multi-scholar AI council. Pick a topic or ask anything.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {topics.map((topic, index) => (
             <div
               key={index}
-              className="glass-card-premium p-8 group cursor-pointer transition-all hover:scale-[1.02] border border-white/5"
+              className="glass-card-warm p-6 group cursor-pointer transition-all duration-200 hover:shadow-md rounded-2xl"
               onClick={() => handleTopicClick(topic.question)}
             >
-              <div className={`mb-6 w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-cyan-glow group-hover:border-cyan-glow/50 group-hover:bg-cyan-glow/5 transition-all shadow-[0_0_20px_rgba(0,245,255,0.05)]`}>
-                <topic.icon className="h-7 w-7 transition-transform group-hover:scale-110" />
+              <div className={`mb-4 w-11 h-11 rounded-xl ${topic.bg} flex items-center justify-center ${topic.color}`}>
+                <topic.icon className="h-5 w-5" />
               </div>
 
-              <h3 className="text-xl font-black mb-3 text-white group-hover:text-cyan-glow transition-colors tracking-tight">
+              <h3 className="text-base font-bold mb-1.5 text-deep-green group-hover:text-warm-gold transition-colors">
                 {topic.title}
               </h3>
 
-              <p className="text-white/40 text-sm leading-relaxed font-medium mb-6">
+              <p className="text-deep-green/50 text-sm leading-relaxed mb-4">
                 {topic.description}
               </p>
 
-              <div className="flex items-center text-xs font-black uppercase tracking-widest text-white/20 group-hover:text-cyan-glow transition-all">
-                <span>Inquire Now</span>
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-2 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                </svg>
+              <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-deep-green/25 group-hover:text-warm-gold transition-all">
+                <span>Ask now</span>
+                <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
               </div>
             </div>
           ))}
