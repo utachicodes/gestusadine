@@ -1,75 +1,125 @@
 import React, { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, Phone } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { ArrowRight, Sparkles } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
+import IslamicPattern from '@/components/effects/IslamicPattern';
 
 const HeroSection = () => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const container = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
     const tl = gsap.timeline();
     
-    tl.from(".hero-badge", { y: 20, opacity: 0, duration: 0.8, ease: "back.out(1.7)" })
-      .from(".hero-title", { y: 100, opacity: 0, duration: 1, ease: "power4.out" }, "-=0.4")
-      .from(".hero-descr", { y: 20, opacity: 0, duration: 1, ease: "power3.out" }, "-=0.6")
-      .from(".hero-cta", { y: 20, opacity: 0, duration: 0.8, stagger: 0.2, ease: "power2.out" }, "-=0.6");
+    tl.from(".hero-glow", { 
+      scale: 0.8, 
+      opacity: 0, 
+      duration: 2.5, 
+      ease: "expo.out" 
+    })
+    .from(".hero-content > *", { 
+      y: 40, 
+      opacity: 0, 
+      duration: 1.2, 
+      stagger: 0.15, 
+      ease: "expo.out" 
+    }, "-=1.8")
+    .to(".hero-pattern", {
+      opacity: 0.1,
+      duration: 3,
+      ease: "power2.inOut"
+    }, "-=1.5");
+
+    // Interactive mouse glow
+    const glow = document.querySelector(".mouse-glow") as HTMLElement;
+    window.addEventListener("mousemove", (e) => {
+      const { clientX, clientY } = e;
+      gsap.to(glow, {
+        x: clientX,
+        y: clientY,
+        duration: 0.8,
+        ease: "power2.out"
+      });
+    });
   }, { scope: container });
 
   return (
-    <section ref={container} className="relative pt-44 pb-32 lg:pt-64 lg:pb-48 bg-premium-gray overflow-hidden">
-      <div className="container mx-auto px-4 lg:px-8 flex flex-col items-center text-center">
-        
-        {/* Mirror: "Make your guests feel special with Guest Feature" Badge */}
-        <div className="hero-badge mb-10">
-          <button className="group flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-950/[0.03] border border-slate-950/[0.05] hover:bg-slate-950/[0.05] transition-all">
-            <span className="bg-slate-950 text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase">Now</span>
-            <span className="text-[11px] font-bold text-slate-600">The Council is ready to consult with you —</span>
-            <span className="text-[11px] font-black text-slate-950 border-b border-slate-950/20 group-hover:border-slate-950 transition-all">Start consultation →</span>
-          </button>
-        </div>
+    <section ref={container} className="relative min-h-screen flex items-center justify-center pt-32 pb-20 overflow-hidden bg-moving-gradient">
+      {/* Background Layers */}
+      <IslamicPattern opacity={0.03} className="hero-pattern" />
+      
+      {/* Immersive Center Glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] bg-primary/20 rounded-full blur-[150px] hero-glow pointer-events-none" />
+      
+      {/* Mouse Interaction Glow */}
+      <div className="mouse-glow fixed top-0 left-0 w-96 h-96 bg-primary/5 rounded-full blur-[100px] pointer-events-none -translate-x-1/2 -translate-y-1/2 z-0" />
 
-        {/* Mirror: THE BIG TITLE */}
-        <h1 className="hero-title max-w-5xl text-6xl md:text-8xl lg:text-[7vw] font-black text-slate-950 tracking-tightest leading-[0.9] mb-12">
-          A knowledge system <br className="hidden md:block" />
-          that works like a <span className="pill-highlight-mint animate-pulse">Council</span>
-        </h1>
-
-        {/* Mirror: Description */}
-        <p className="hero-descr max-w-3xl text-lg md:text-xl text-slate-500 font-medium leading-relaxed mb-14 px-4">
-          Great journeys deserve a system that does it all—from making sense of 1,400 years of tradition to providing documented clarity for every modern inquiry.
-        </p>
-
-        {/* Mirror: DUAL CTAs */}
-        <div className="hero-cta flex flex-wrap justify-center gap-4">
-          <button
-            onClick={() => navigate('/login')}
-            className="pill-primary shadow-2xl shadow-slate-300"
-          >
-            <span>Start Consultation</span>
-            <ArrowRight className="w-5 h-5 group-hover:translate-x-1" />
-          </button>
+      <div className="container relative z-10 mx-auto px-4 text-center">
+        <div className="hero-content flex flex-col items-center max-w-5xl mx-auto">
           
-          <button
-            onClick={() => navigate('/podcasts')}
-            className="pill-secondary"
-          >
-            <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center -ml-5 mr-3 overflow-hidden border border-slate-200">
-               <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=50" className="w-full h-full object-cover" />
-            </div>
-            <span>Listen to Library</span>
-          </button>
-        </div>
+          {/* Elite Badge */}
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-pill border-white/10 mb-8 hover:border-primary/30 transition-all cursor-pointer group">
+            <Sparkles className="w-4 h-4 text-primary animate-pulse" />
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/60 group-hover:text-white transition-colors">
+              {t('hero.badge_text')}
+            </span>
+            <ArrowRight className="w-3 h-3 text-primary group-hover:translate-x-1 transition-transform" />
+          </div>
 
-        {/* --- Background Shader Decorations --- */}
-        <div className="absolute top-1/2 left-0 w-full h-px bg-slate-200 opacity-20 -z-1" />
-        <div className="absolute top-1/2 left-1/4 w-px h-64 bg-slate-200 opacity-20 -z-1" />
-        <div className="absolute top-1/2 right-1/4 w-px h-64 bg-slate-200 opacity-20 -z-1" />
+          {/* Main Title - Out of this world animations would involve more custom work, but let's start with strong GSAP foundation */}
+          <h1 className="text-6xl md:text-8xl lg:text-[8vw] font-black text-white tracking-tightest leading-[0.85] mb-12">
+            <span className="block text-reveal">
+               <span>{t('hero.title_part1')}</span>
+            </span>
+            <span className="block text-reveal text-gradient-emerald">
+               <span>{t('hero.title_part2')} {t('hero.title_highlight')}</span>
+            </span>
+          </h1>
+
+          {/* Subtitle */}
+          <p className="max-w-2xl text-lg md:text-xl text-white/50 font-medium leading-relaxed mb-16 px-4">
+            {t('hero.description')}
+          </p>
+
+          {/* Premium CTAs */}
+          <div className="flex flex-wrap justify-center gap-6">
+            <button
+              onClick={() => navigate('/login')}
+              className="btn-premium group"
+            >
+              <span className="relative z-10 flex items-center gap-3">
+                {t('hero.cta_primary')}
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
+              </span>
+            </button>
+            
+            <button
+              onClick={() => navigate('/media')}
+              className="btn-premium-outline group"
+            >
+              <span className="relative z-10">
+                 {t('hero.cta_secondary')}
+              </span>
+            </button>
+          </div>
+        </div>
       </div>
+
+      {/* Modern Scroll Indicator */}
+      <motion.div 
+        animate={{ y: [0, 10, 0] }}
+        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3"
+      >
+        <div className="w-px h-12 bg-gradient-to-b from-primary/0 via-primary to-primary/0" />
+        <span className="text-[8px] font-black uppercase tracking-[0.4em] text-white/20">Scroll</span>
+      </motion.div>
     </section>
   );
 };
 
 export default HeroSection;
+

@@ -2,7 +2,6 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { auth, db } from '@/lib/firebase';
-import { logger } from '../../backend/shared/logger'; // Or use frontend logger if available
 
 interface AuthContextType {
     user: User | null;
@@ -16,7 +15,6 @@ const AuthContext = createContext<AuthContextType>({
     isAdmin: false
 });
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -29,22 +27,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setUser(currentUser);
 
             if (currentUser) {
-                // Check and create user profile in Firestore
+                // Hardcoded Admin Bypass for the Vision Team
+                if (currentUser.email === 'admin@gestusadine.com') {
+                    setIsAdmin(true);
+                    setLoading(false);
+                    return;
+                }
+
+                // Standard Firestore Role Check
                 const userRef = doc(db, 'users', currentUser.uid);
                 try {
                     const userSnap = await getDoc(userRef);
 
                     if (!userSnap.exists()) {
-                        // Create new user profile
                         await setDoc(userRef, {
                             email: currentUser.email,
-                            role: 'user', // Default role
+                            role: 'user',
                             created_at: new Date().toISOString(),
                             updated_at: new Date().toISOString()
                         });
-                        console.log('Created new user profile for', currentUser.uid);
                     } else {
-                        // Check if admin
                         const userData = userSnap.data();
                         setIsAdmin(userData?.role === 'admin');
                     }

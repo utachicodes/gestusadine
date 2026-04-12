@@ -1,93 +1,125 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Quote } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useLanguage } from '@/contexts/LanguageContext';
 import HeroSection from '@/components/landing/HeroSection';
 import FeatureGrid from '@/components/landing/FeatureGrid';
 import PricingComparison from '@/components/landing/PricingComparison';
-import GrainShader from '@/components/effects/GrainShader';
+import IslamicPattern from '@/components/effects/IslamicPattern';
 
 const Index = () => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   return (
-    <div className="min-h-screen flex flex-col relative overflow-hidden bg-premium-gray selection:bg-slate-950 selection:text-white">
-      {/* Global Texture Overlay */}
-      <GrainShader />
-
+    <div className="min-h-screen flex flex-col relative overflow-hidden bg-[#050505] selection:bg-primary/30 selection:text-white">
       <main className="flex-grow">
-        {/* --- Phase 1: Mirrored Hero --- */}
+        {/* Cinematic Hero */}
         <HeroSection />
 
-        {/* --- Phase 2: High Contrast Feature Grid (Step 1-3) --- */}
-        <FeatureGrid />
+        {/* --- The Manifesto: Language of the Heart --- */}
+        <section className="py-40 lg:py-64 relative bg-[#050505] overflow-hidden border-y border-white/5">
+           <IslamicPattern opacity={0.02} className="rotate-45 scale-150" />
+           
+           <div className="container relative z-10 mx-auto px-4 text-center">
+              <motion.div
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 1.5, ease: "expo.out" }}
+                className="max-w-4xl mx-auto"
+              >
+                 <div className="w-16 h-1 bg-primary mx-auto mb-16 rounded-full" />
+                 
+                 <h2 className="text-4xl md:text-6xl font-black text-white mb-16 tracking-tightest leading-tight">
+                    "Knowledge is not locked behind foreign terms anymore—it is spoken in the <span className="text-gradient-emerald">language the heart</span> thinks, feels, and lives in."
+                 </h2>
 
-        {/* --- Phase 3: Centered Testimonial / Philosophy (Mirror Reference) --- */}
-        <section className="py-32 lg:py-56 relative overflow-hidden bg-premium-gray border-t border-slate-950/[0.03]">
-          <div className="container relative z-10 px-4 mx-auto text-center flex flex-col items-center">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-              className="max-w-4xl"
-            >
-              {/* Reference Check: Centered Circular Headshot */}
-              <div className="w-20 h-20 rounded-full bg-slate-200 mx-auto mb-10 overflow-hidden border-2 border-white shadow-xl">
-                 <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=100" className="w-full h-full object-cover" />
-              </div>
-
-              <h3 className="text-2xl font-black text-slate-950 tracking-tighter mb-8 italic leading-relaxed">
-                "Quick and Easy Setup"
-              </h3>
-              
-              <blockquote className="text-xl md:text-2xl text-slate-500 font-medium leading-relaxed mb-12 max-w-2xl mx-auto">
-                "We've scaled to thousands of documents daily — Scribblit's dashboard is the only thing that keeps our research sane."
-              </blockquote>
-
-              <div className="space-y-1">
-                <p className="text-sm font-black uppercase tracking-[0.2em] text-slate-950">Jade Bird</p>
-                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Event Manager, Blue Partner</p>
-              </div>
-            </motion.div>
-          </div>
+                 <div className="flex flex-col items-center gap-6">
+                    <div className="w-20 h-20 rounded-full border border-primary/30 p-1 flex items-center justify-center">
+                       <img 
+                        src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200" 
+                        alt="Islamic Vision" 
+                        className="w-full h-full object-cover rounded-full grayscale hover:grayscale-0 transition-all duration-700" 
+                       />
+                    </div>
+                    <div>
+                       <p className="text-sm font-black uppercase tracking-[0.4em] text-white">The Visionary Core</p>
+                       <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">GëstuSaDine Mission Team</p>
+                    </div>
+                 </div>
+              </motion.div>
+           </div>
         </section>
 
-        {/* --- Phase 4: Pricing Model --- */}
-        <PricingComparison />
+        {/* --- Interactive Feature Ecosystem --- */}
+        <FeatureGrid />
 
-        {/* --- Phase 5: Final CTA (Stay High Contrast) --- */}
-        <section className="py-48 lg:py-64 bg-slate-950 text-white relative overflow-hidden">
-           <div className="absolute inset-0 z-0 opacity-20 pointer-events-none">
-              <div className="absolute -top-[20%] -right-[20%] w-[100%] h-[100%] bg-brand-600 rounded-full blur-[200px]" />
-           </div>
+        {/* --- Global Impact / Pricing --- */}
+        <div className="relative bg-[#050505] py-40 overflow-hidden">
+           <IslamicPattern opacity={0.015} scale={2} />
+           <PricingComparison />
+        </div>
 
+        {/* --- Final Ascension CTA --- */}
+        <section className="py-64 lg:py-96 bg-moving-gradient relative overflow-hidden">
+           {/* Immersive Background */}
+           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] bg-primary/10 rounded-full blur-[200px] pointer-events-none" />
+           
            <div className="container relative z-10 px-4 mx-auto text-center">
               <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
-                transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-                className="max-w-5xl mx-auto"
+                transition={{ duration: 1.5, ease: "expo.out" }}
+                className="max-w-6xl mx-auto"
               >
-                  <h2 className="text-7xl md:text-9xl lg:text-[10vw] font-black leading-[0.8] tracking-tightest mb-16">
+                  <h2 className="text-8xl md:text-[12vw] lg:text-[15vw] font-black leading-[0.75] tracking-tightest mb-24 text-white">
                     Start your <br />
-                    <span className="text-slate-400">cultivation.</span>
+                    <span className="text-white/20">ascension.</span>
                   </h2>
-                  <motion.button
-                    whileHover={{ scale: 1.05, y: -5 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => navigate('/login')}
-                    className="px-20 py-8 bg-white text-slate-950 rounded-full font-black text-xl uppercase tracking-[0.3em] shadow-2xl transition-all"
+                  
+                  <motion.div 
+                    whileHover={{ scale: 1.02 }}
+                    className="inline-block"
                   >
-                    Get Started Now
-                  </motion.button>
+                    <button
+                      onClick={() => navigate('/login')}
+                      className="btn-premium px-24 py-10 text-xl"
+                    >
+                      {t('nav.signin')}
+                    </button>
+                  </motion.div>
+
+                  <p className="mt-16 text-white/30 font-black uppercase tracking-[0.5em] text-[10px]">
+                    Making Islam Beautiful - As It Truly Is
+                  </p>
               </motion.div>
            </div>
         </section>
       </main>
+      
+      {/* Simple Premium Footer */}
+      <footer className="py-20 bg-[#050505] border-t border-white/5 relative z-10">
+         <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-10">
+            <img src="/logofinal.png" alt="Logo" className="h-6 brightness-0 invert opacity-40" />
+            
+            <div className="flex gap-10">
+               {['About', 'Privacy', 'Terms', 'Contact'].map(link => (
+                  <button key={link} className="text-[10px] font-black uppercase tracking-[0.3em] text-white/20 hover:text-primary transition-colors">
+                     {link}
+                  </button>
+               ))}
+            </div>
+            
+            <p className="text-[9px] font-medium text-white/10 uppercase tracking-widest">
+               &copy; {new Date().getFullYear()} GëstuSaDine Platform. ALL RIGHTS RESERVED.
+            </p>
+         </div>
+      </footer>
     </div>
   );
 };
 
 export default Index;
+

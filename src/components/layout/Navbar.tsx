@@ -1,43 +1,43 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/auth/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { Globe, Menu, X } from 'lucide-react';
+import { Menu, X, LogOut, LayoutDashboard, Globe } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 
-const navLinks = [
-  { label: 'Start Here', href: '/' },
-  { label: 'Library', href: '/media' },
-  { label: 'Podcasts', href: '/podcasts' },
-  { label: 'Community', href: '/community' },
-  { label: 'Shop', href: '/shop' },
-];
-
 const Navbar = () => {
   const { user, signOut } = useAuth();
-  const { language, setLanguage } = useLanguage();
+  const { language, setLanguage, t } = useLanguage();
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const container = useRef<HTMLDivElement>(null);
 
+  const navLinks = [
+    { label: t('nav.home'), href: '/' },
+    { label: t('nav.media'), href: '/media' },
+    { label: t('nav.podcasts'), href: '/podcasts' },
+    { label: t('nav.community'), href: '/community' },
+    { label: t('nav.shop'), href: '/shop' },
+  ];
+
   useGSAP(() => {
-    gsap.from(".pill-nav", {
-      y: -100,
+    gsap.from(".nav-container", {
+      y: -50,
       opacity: 0,
-      duration: 1.2,
+      duration: 1.5,
       ease: "expo.out",
-      delay: 0.5
+      delay: 0.2
     });
   }, { scope: container });
 
   return (
-    <div ref={container} className="fixed top-8 inset-x-0 z-[100] flex justify-center px-4 pointer-events-none">
-      <header className="pill-nav pointer-events-auto bg-white/95 backdrop-blur-3xl border border-slate-200/60 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.15)] rounded-full h-16 flex items-center px-6 lg:px-8 gap-10 max-w-fit mx-auto">
+    <div ref={container} className="fixed top-6 inset-x-0 z-[100] flex justify-center px-4 pointer-events-none">
+      <header className="nav-container pointer-events-auto glass-premium rounded-full h-16 flex items-center px-4 lg:px-6 gap-8 max-w-fit mx-auto border-white/10">
         {/* Logo */}
-        <Link to="/" className="flex items-center -ml-2 shrink-0">
-          <img src="/logofinal.png" alt="Scribblit" className="h-8 w-auto object-contain" />
+        <Link to="/" className="flex items-center shrink-0 hover:scale-105 transition-transform">
+          <img src="/logofinal.png" alt={t('brand.name')} className="h-7 w-auto object-contain brightness-0 invert" />
         </Link>
 
         {/* Desktop Nav */}
@@ -46,16 +46,16 @@ const Navbar = () => {
             <Link
               key={link.href}
               to={link.href}
-              className={`relative px-5 py-2 rounded-full text-[11px] font-black tracking-widest uppercase transition-all duration-300 ${
+              className={`relative px-5 py-2 rounded-full text-[10px] font-black tracking-widest uppercase transition-all duration-300 ${
                 location.pathname === link.href
-                  ? 'text-slate-950'
-                  : 'text-slate-400 hover:text-slate-600'
+                  ? 'text-white'
+                  : 'text-white/40 hover:text-white/70'
               }`}
             >
               {location.pathname === link.href && (
                 <motion.div
-                  layoutId="active-nav-pill"
-                  className="absolute inset-0 bg-slate-100/80 rounded-full z-[-1]"
+                  layoutId="active-pill"
+                  className="absolute inset-0 bg-white/10 rounded-full z-[-1]"
                   transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                 />
               )}
@@ -65,84 +65,114 @@ const Navbar = () => {
         </nav>
 
         {/* Global Controls Hub */}
-        <div className="flex items-center gap-6 pl-4 border-l border-slate-100">
-           {/* Language Toggle (Pill Style) */}
-           <div className="hidden md:flex items-center gap-2 bg-slate-50 border border-slate-100 rounded-full p-1">
-             <button 
-              onClick={() => setLanguage('en')}
-              className={`w-8 h-8 rounded-full text-[9px] font-black transition-all ${language === 'en' ? 'bg-white text-slate-950 shadow-sm' : 'text-slate-400'}`}
-             >
-               EN
-             </button>
-             <button 
-              onClick={() => setLanguage('fr')}
-              className={`w-8 h-8 rounded-full text-[9px] font-black transition-all ${language === 'fr' ? 'bg-white text-slate-950 shadow-sm' : 'text-slate-400'}`}
-             >
-               FR
-             </button>
+        <div className="flex items-center gap-4 pl-4 border-l border-white/10">
+           {/* Language Selector */}
+           <div className="hidden md:flex items-center bg-white/5 rounded-full p-1 border border-white/5">
+              <button 
+                onClick={() => setLanguage(language === 'en' ? 'fr' : 'en')}
+                className="flex items-center gap-2 px-3 py-1.5 text-[9px] font-black text-white/60 hover:text-white transition-colors"
+              >
+                <Globe className="w-3 h-3 text-primary" />
+                {language.toUpperCase()}
+              </button>
            </div>
 
-           {/* User Action / CTA */}
+           {/* User Action */}
            {user ? (
-             <div className="flex items-center gap-4">
+             <div className="flex items-center gap-2">
                 <Link 
                   to="/dashboard"
-                  className="text-[10px] font-black uppercase tracking-widest text-slate-950 hover:opacity-70 transition-opacity"
+                  className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/60 hover:text-primary hover:border-primary/50 transition-all group"
                 >
-                  Dashboard
+                  <LayoutDashboard className="w-4 h-4 group-hover:scale-110 transition-transform" />
                 </Link>
                 <button
                   onClick={() => signOut()}
-                  className="w-10 h-10 rounded-full bg-slate-950 text-white flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-lg shadow-slate-200"
+                  className="w-10 h-10 rounded-full bg-primary text-black flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_rgba(16,185,129,0.3)]"
                 >
-                  <X className="w-4 h-4" />
+                  <LogOut className="w-4 h-4" />
                 </button>
              </div>
            ) : (
              <Link
                to="/login"
-               className="bg-slate-950 text-white px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-slate-800 transition-all shadow-lg shadow-slate-200"
+               className="btn-premium py-2.5 px-6 text-[10px] h-10 flex items-center"
              >
-               View Plans
+               {t('nav.signin')}
              </Link>
            )}
 
            {/* Mobile Menu Trigger */}
            <button
              onClick={() => setMobileOpen(!mobileOpen)}
-             className="lg:hidden p-2 text-slate-950"
+             className="lg:hidden w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white"
            >
-             {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+             {mobileOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
            </button>
         </div>
       </header>
 
-      {/* Mobile Menu Redesign (Floating Panel) */}
+      {/* Mobile Menu (Immersive Overlay) */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="fixed top-28 inset-x-4 z-[99] bg-white rounded-[2.5rem] p-8 border border-slate-200 shadow-2xl lg:hidden pointer-events-auto"
+            initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
+            animate={{ opacity: 1, backdropFilter: "blur(20px)" }}
+            exit={{ opacity: 0, backdropFilter: "blur(0px)" }}
+            className="fixed inset-0 z-[99] bg-black/60 flex items-center justify-center lg:hidden pointer-events-auto"
           >
-            <nav className="flex flex-col gap-4 text-center">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  to={link.href}
-                  onClick={() => setMobileOpen(false)}
-                  className="text-2xl font-black text-slate-950 tracking-tighter py-2"
-                >
-                  {link.label}
-                </Link>
-              ))}
-              <div className="h-px bg-slate-100 my-4" />
-              <div className="flex justify-center gap-8">
-                 <button onClick={() => setLanguage('en')} className={`text-sm font-black ${language === 'en' ? 'text-slate-950 underline' : 'text-slate-300'}`}>English</button>
-                 <button onClick={() => setLanguage('fr')} className={`text-sm font-black ${language === 'fr' ? 'text-slate-950 underline' : 'text-slate-300'}`}>French</button>
-              </div>
-            </nav>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="w-full max-w-sm px-8"
+            >
+              <nav className="flex flex-col gap-6 text-center">
+                {navLinks.map((link, i) => (
+                  <motion.div
+                    key={link.href}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.1 }}
+                  >
+                    <Link
+                      to={link.href}
+                      onClick={() => setMobileOpen(false)}
+                      className="text-4xl font-black text-white hover:text-primary transition-colors tracking-tighter"
+                    >
+                      {link.label}
+                    </Link>
+                  </motion.div>
+                ))}
+                
+                <div className="h-px bg-white/10 my-6" />
+                
+                <div className="flex flex-col gap-4">
+                  <button 
+                    onClick={() => { setLanguage(language === 'en' ? 'fr' : 'en'); setMobileOpen(false); }}
+                    className="text-white/40 font-bold uppercase tracking-widest text-xs hover:text-white"
+                  >
+                    Switch to {language === 'en' ? 'French' : 'English'}
+                  </button>
+                  {!user && (
+                    <Link
+                      to="/login"
+                      onClick={() => setMobileOpen(false)}
+                      className="btn-premium"
+                    >
+                      {t('nav.signin')}
+                    </Link>
+                  )}
+                </div>
+              </nav>
+            </motion.div>
+            
+            <button
+              onClick={() => setMobileOpen(false)}
+              className="absolute top-8 right-8 w-12 h-12 rounded-full glass-premium flex items-center justify-center text-white"
+            >
+              <X className="w-6 h-6" />
+            </button>
           </motion.div>
         )}
       </AnimatePresence>
