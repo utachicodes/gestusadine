@@ -1,57 +1,51 @@
 import React, { useRef } from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { MessageSquare, Play, Users, Shirt, Radio, ArrowUpRight } from 'lucide-react';
+import { 
+  MessageSquare, Play, Users, Shirt, Radio, 
+  ArrowUpRight, Sparkles
+} from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const FeatureCard = ({ step, title, descr, children, index }: any) => {
+const FeatureCard = ({ step, title, descr, image, index }: any) => {
   const cardRef = useRef(null);
 
-  useGSAP(() => {
-    gsap.from(cardRef.current, {
-      scrollTrigger: {
-        trigger: cardRef.current,
-        start: "top bottom-=50px",
-        toggleActions: "play none none reverse"
-      },
-      y: 100,
-      opacity: 0,
-      duration: 1.5,
-      delay: index * 0.2,
-      ease: "expo.out"
-    });
-  }, { scope: cardRef });
-
   return (
-    <div ref={cardRef} className="group relative">
-      <div className="relative h-[500px] w-full glass-premium rounded-[3rem] p-10 flex flex-col justify-between overflow-hidden transition-all duration-700 hover:shadow-[0_0_80px_rgba(16,185,129,0.1)] group-hover:-translate-y-4">
-        {/* Animated Background Decoration */}
-        <div className="absolute -top-10 -right-10 w-40 h-40 bg-primary/10 rounded-full blur-3xl group-hover:bg-primary/20 transition-all duration-700" />
-        
-        <div className="relative z-10">
+    <div ref={cardRef} className="group relative h-full">
+      <div className="relative h-full flex flex-col justify-between overflow-hidden transition-all duration-700 p-8 lg:p-12 border-l border-white/5 hover:border-accent/20">
+        <div className="relative z-10 mb-20">
           <div className="flex justify-between items-start mb-12">
-            <span className="text-[10px] font-black tracking-[0.5em] text-primary uppercase">Pillar {step}</span>
-            <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-primary group-hover:text-black transition-all duration-500">
-               <ArrowUpRight className="w-5 h-5" />
-            </div>
+            <span className="text-[10px] font-black tracking-[0.6em] text-accent/30 uppercase italic font-serif-premium">Pillar {step}</span>
+             <Sparkles className="w-4 h-4 text-white/10 group-hover:text-accent transition-colors duration-700" />
           </div>
           
-          <h3 className="text-3xl font-black text-white mb-6 tracking-tight leading-none group-hover:text-primary transition-colors">
+          <h3 className="font-serif-premium text-4xl lg:text-5xl text-white mb-8 tracking-tightest leading-none group-hover:italic transition-all">
             {title}
           </h3>
-          <p className="text-sm font-medium text-white/40 leading-relaxed max-w-[200px]">
+          <p className="text-sm font-medium text-white/30 leading-relaxed max-w-[280px] tracking-wide">
             {descr}
           </p>
         </div>
 
-        {/* Dynamic Visual Content */}
-        <div className="relative h-48 w-full mt-8 preserve-3d perspective-1000">
-           <div className="w-full h-full transition-transform duration-1000 group-hover:rotate-y-12 group-hover:rotate-x-6">
-              {children}
+        {/* Artisanal Photography Mask */}
+        <div className="relative h-96 w-full mt-auto mask-radial-faded grayscale hover:grayscale-0 transition-all duration-1000 opacity-40 group-hover:opacity-100">
+           <img 
+            src={image} 
+            alt={title} 
+            className="w-full h-full object-cover rounded-[3rem] scale-110 group-hover:scale-100 transition-transform duration-1000" 
+           />
+           <div className="absolute inset-0 bg-gradient-to-t from-sacred-dark to-transparent opacity-60" />
+        </div>
+        
+        <div className="mt-8 flex justify-end">
+           <div className="flex items-center gap-4 text-white/20 group-hover:text-accent transition-colors">
+              <span className="text-[9px] font-black uppercase tracking-[0.4em]">Learn more</span>
+              <ArrowUpRight className="w-5 h-5" />
            </div>
         </div>
       </div>
@@ -61,146 +55,80 @@ const FeatureCard = ({ step, title, descr, children, index }: any) => {
 
 const FeatureGrid = () => {
   const { t } = useLanguage();
+  const navigate = useNavigate();
   const container = useRef(null);
 
   return (
-    <section ref={container} className="py-40 bg-[#050505] relative">
+    <section ref={container} className="py-24 bg-sacred-dark relative border-y border-white/5">
       <div className="container mx-auto px-4 lg:px-8">
         
-        <div className="mb-32 text-center max-w-3xl mx-auto">
-           <h2 className="text-4xl md:text-6xl font-black text-white mb-8 tracking-tightest">
-              Built for the <br />
-              <span className="text-gradient-emerald">Next Generation</span>
-           </h2>
-           <p className="text-white/40 font-medium">
-              We've redesigned the Islamic experience from the ground up, merging ancient wisdom with future technology.
+        <div className="mb-32 flex flex-col lg:flex-row items-end justify-between gap-12">
+           <div className="max-w-2xl">
+              <h2 className="font-serif-premium text-5xl md:text-8xl text-white tracking-tightest leading-[0.85] mb-8">
+                The Anatomy of <br />
+                <span className="text-gradient-platinum italic">Ascension.</span>
+              </h2>
+           </div>
+           <p className="text-white/30 font-medium max-w-sm mb-4 leading-relaxed tracking-wide">
+              We've crafted an ecosystem that speaks to the soul, merging traditional wisdom with modern elegance.
            </p>
         </div>
 
-        {/* Row 1: The Core 3 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           
           <FeatureCard 
             step="01"
             index={0}
             title={t('pillar.education.title')}
             descr={t('pillar.education.desc')}
-          >
-            <div className="w-full h-full flex items-center justify-center">
-               <div className="w-4/5 aspect-video bg-emerald-950/40 rounded-2xl border border-primary/20 flex flex-col gap-3 p-4 relative overflow-hidden">
-                  <Play className="w-8 h-8 text-primary/40 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
-                  <div className="h-4 w-1/2 bg-white/5 rounded-full" />
-                  <div className="space-y-2">
-                     <div className="h-1.5 w-full bg-white/5 rounded-full" />
-                     <div className="h-1.5 w-2/3 bg-white/5 rounded-full" />
-                  </div>
-                  <div className="mt-auto h-8 w-full bg-primary/10 rounded-lg border border-primary/10" />
-               </div>
-            </div>
-          </FeatureCard>
+            image="https://images.unsplash.com/photo-1542810634-71277d95dcbb?auto=format&fit=crop&q=80&w=800"
+          />
 
           <FeatureCard 
             step="02"
             index={1}
             title={t('pillar.ai.title')}
             descr={t('pillar.ai.desc')}
-          >
-            <div className="w-full h-full flex items-center justify-center">
-               <div className="w-4/5 h-full glass-premium rounded-3xl border-primary/30 flex flex-col gap-4 p-6 shadow-[0_0_40px_rgba(16,185,129,0.1)]">
-                  <div className="flex gap-3">
-                     <div className="w-10 h-10 rounded-full bg-primary text-black flex items-center justify-center">
-                        <MessageSquare className="w-5 h-5" />
-                     </div>
-                     <div className="space-y-1.5">
-                        <div className="h-2 w-20 bg-white/20 rounded-full" />
-                        <div className="h-1.5 w-32 bg-white/5 rounded-full" />
-                     </div>
-                  </div>
-                  <div className="mt-auto p-4 bg-white/5 rounded-2xl border border-white/5">
-                     <div className="h-1.5 w-full bg-white/10 rounded-full mb-2" />
-                     <div className="h-1.5 w-2/3 bg-white/10 rounded-full" />
-                  </div>
-               </div>
-            </div>
-          </FeatureCard>
+            image="https://images.unsplash.com/photo-1614850523296-e811cf9ee16d?auto=format&fit=crop&q=80&w=800"
+          />
 
           <FeatureCard 
             step="03"
             index={2}
             title={t('pillar.community.title')}
             descr={t('pillar.community.desc')}
-          >
-           <div className="w-full h-full flex items-center justify-center">
-               <div className="w-4/5 h-4/5 bg-white/5 rounded-3xl border border-white/10 flex flex-col p-6">
-                  <div className="flex items-center gap-4 mb-8">
-                     <Users className="w-6 h-6 text-primary" />
-                     <div className="h-2 w-32 bg-white/10 rounded-full" />
-                  </div>
-                  <div className="grid grid-cols-2 gap-4 flex-1">
-                     <div className="bg-primary/20 rounded-2xl border border-primary/20 p-4" />
-                     <div className="bg-white/5 rounded-2xl border border-white/5 p-4" />
-                     <div className="bg-white/5 rounded-2xl border border-white/5 p-4" />
-                     <div className="bg-white/5 rounded-2xl border border-white/5 p-4" />
-                  </div>
-               </div>
-            </div>
-          </FeatureCard>
+            image="https://images.unsplash.com/photo-1528605248644-14dd04cb11c1?auto=format&fit=crop&q=80&w=800"
+          />
 
           <FeatureCard 
             step="04"
             index={3}
             title={t('pillar.fashion.title')}
             descr={t('pillar.fashion.desc')}
-          >
-            <div className="w-full h-full flex items-center justify-center">
-               <div className="w-4/5 h-full bg-zinc-900 rounded-[3rem] border border-white/5 flex flex-col items-center justify-center gap-6 shadow-2xl">
-                  <Shirt className="w-16 h-16 text-primary/50" />
-                  <div className="flex gap-2">
-                     <div className="w-8 h-8 rounded-full border border-white/10" />
-                     <div className="w-8 h-8 rounded-full bg-primary" />
-                     <div className="w-8 h-8 rounded-full border border-white/10" />
-                  </div>
-               </div>
-            </div>
-          </FeatureCard>
+            image="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=800"
+          />
 
           <FeatureCard 
             step="05"
             index={4}
             title={t('pillar.podcasts.title')}
             descr={t('pillar.podcasts.desc')}
-          >
-            <div className="w-full h-full flex items-center justify-center p-8">
-               <div className="w-full h-full glass-premium rounded-[2.5rem] border-white/10 flex flex-col overflow-hidden">
-                  <div className="p-6 border-b border-white/5 flex gap-4">
-                     <Radio className="w-6 h-6 text-primary" />
-                     <div className="h-2 w-24 bg-white/20 rounded-full" />
-                  </div>
-                  <div className="flex-1 flex items-end gap-1 px-4 py-8">
-                     {[40, 70, 50, 90, 60, 80, 45, 65, 85].map((h, i) => (
-                        <div key={i} className="flex-1 bg-primary/20 rounded-full group-hover:bg-primary/40 transition-colors" style={{ height: `${h}%` }} />
-                     ))}
-                  </div>
-               </div>
-            </div>
-          </FeatureCard>
+            image="https://images.unsplash.com/photo-1478737270239-2fccd2c7fd94?auto=format&fit=crop&q=80&w=800"
+          />
 
-          {/* New Interactive Pillar / Join CTA */}
-          <div className="h-[500px] flex items-center justify-center">
-             <motion.button
-               whileHover={{ scale: 1.05 }}
-               whileTap={{ scale: 0.95 }}
-               onClick={() => navigate('/login')}
-               className="w-full h-full bg-primary/10 border border-primary/20 rounded-[3rem] p-10 flex flex-col items-center justify-center gap-6 group hover:bg-primary/20 transition-all duration-700"
-             >
-                <div className="w-20 h-20 rounded-full bg-primary text-black flex items-center justify-center shadow-[0_0_50px_rgba(16,185,129,0.4)] group-hover:scale-110 transition-transform">
-                   <ArrowUpRight className="w-10 h-10" />
-                </div>
-                <span className="text-xl font-black text-white uppercase tracking-widest">
-                   {t('index.learn_more')}
-                </span>
-             </motion.button>
+          {/* Editorial CTA */}
+          <div className="flex flex-col items-center justify-center p-12 text-center group">
+              <h4 className="font-serif-premium text-4xl text-white mb-10 opacity-40 group-hover:opacity-100 transition-opacity">
+                Your path is unique. <br /> Start it today.
+              </h4>
+              <button 
+                onClick={() => navigate('/login')}
+                className="btn-premium-outline px-12 group-hover:bg-accent group-hover:text-black transition-all"
+              >
+                Enter the Sacred
+              </button>
           </div>
+
         </div>
       </div>
     </section>
@@ -208,4 +136,3 @@ const FeatureGrid = () => {
 };
 
 export default FeatureGrid;
-

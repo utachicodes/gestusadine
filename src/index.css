@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&family=Amiri:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Amiri:wght@400;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,50 +6,41 @@
 
 @layer base {
   :root {
-    --background: 240 10% 3.9%; /* Deepest Black/Blue */
+    --background: 240 10% 3.5%; /* Midnight Coal #080809 */
     --foreground: 0 0% 98%;
-    --card: 240 10% 4.9%;
+    --card: 240 10% 4.5%;
     --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
+    --popover: 240 10% 3.5%;
     --popover-foreground: 0 0% 98%;
-    --primary: 161 72% 48%; /* GëstuSaDine Emerald Green */
-    --primary-foreground: 240 5.9% 10%;
-    --secondary: 240 3.7% 15.9%;
+    --primary: 161 80% 20%; /* Heritage Emerald #064E3B */
+    --primary-foreground: 210 20% 90%;
+    --secondary: 240 5% 10%;
     --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
+    --muted: 240 5% 10%;
+    --muted-foreground: 240 5% 60%;
+    --accent: 210 20% 90%; /* Platinum/Silver */
+    --accent-foreground: 240 10% 3.9%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 161 72% 48%;
-    --radius: 1.5rem;
-    --brand-mint: 161 100% 95%;
+    --border: 240 5% 15%;
+    --input: 240 5% 15%;
+    --ring: 210 20% 90%;
+    --radius: 2rem;
   }
 
-  .bg-moving-gradient {
-    background: radial-gradient(circle at 50% 50%, #0a1913 0%, #050505 100%);
+  .bg-sacred-dark {
+    @apply bg-[#080809];
+    background-image: 
+      radial-gradient(circle at 10% 10%, rgba(6, 78, 59, 0.08) 0%, transparent 40%),
+      radial-gradient(circle at 90% 90%, rgba(229, 231, 235, 0.04) 0%, transparent 40%);
     position: relative;
-    overflow: hidden;
   }
 
-  .bg-moving-gradient::before {
+  .bg-sacred-dark::after {
     content: "";
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle at center, rgba(16, 185, 129, 0.05) 0%, transparent 50%);
-    animation: rotate-gradient 20s linear infinite;
-    pointer-events: none;
-  }
-
-  @keyframes rotate-gradient {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+    @apply absolute inset-0 pointer-events-none opacity-[0.03];
+    background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+    filter: brightness(120%) contrast(150%);
   }
 
   * {
@@ -57,80 +48,68 @@
   }
 
   html {
-    scroll-behavior: initial; /* Lenis handles this */
+    scroll-behavior: initial;
     @apply antialiased;
   }
 
   body {
-    @apply bg-background text-foreground font-sans selection:bg-primary/30 selection:text-white;
+    @apply bg-background text-foreground font-sans selection:bg-white/10 selection:text-white;
     text-rendering: optimizeLegibility;
   }
 }
 
 @layer components {
-  /* Ultra-Premium Glassmorphism */
+  /* Editorial Serifs */
+  .font-serif-premium {
+    font-family: 'Cormorant Garamond', serif;
+  }
+
+  /* Stealth Glassmorphism (Less Neon, More Texture) */
   .glass-premium {
-    @apply bg-white/[0.03] backdrop-blur-2xl border border-white/[0.08] shadow-[0_8px_32px_0_rgba(0,0,0,0.37)];
+    @apply bg-white/[0.02] backdrop-blur-3xl border border-white/[0.05] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.7)];
   }
 
   .glass-pill {
-    @apply bg-white/[0.05] backdrop-blur-xl border border-white/[0.1] rounded-full;
+    @apply bg-white/[0.03] backdrop-blur-2xl border border-white/[0.08] rounded-full;
   }
 
-  /* Deep High-Impact Buttons */
+  /* Silent Luxury Buttons */
   .btn-premium {
-    @apply relative overflow-hidden px-8 py-4 bg-primary text-black font-black uppercase tracking-widest rounded-full transition-all duration-500 hover:scale-105 active:scale-95 hover:shadow-[0_0_40px_rgba(16,185,129,0.4)];
+    @apply relative overflow-hidden px-10 py-5 bg-white text-black font-bold uppercase tracking-[0.2em] rounded-full transition-all duration-700 hover:scale-[1.02] active:scale-95 hover:shadow-[0_0_50px_rgba(255,255,255,0.1)];
   }
 
   .btn-premium-outline {
-    @apply px-8 py-4 glass-pill text-white font-black uppercase tracking-widest transition-all duration-500 hover:bg-white/[0.1] active:scale-95 hover:border-white/20;
+    @apply px-10 py-5 glass-pill text-accent font-bold uppercase tracking-[0.2em] transition-all duration-700 hover:bg-white/[0.05] active:scale-95 border-white/10 hover:border-white/20;
   }
 
-  /* High-Impact Text Reveal */
-  .text-reveal {
-    @apply block overflow-hidden;
-  }
-
-  .text-reveal span {
-    @apply block;
-  }
-
-  /* GëstuSaDine Green Gradient */
-  .text-gradient-emerald {
-    @apply bg-clip-text text-transparent bg-gradient-to-br from-emerald-400 via-emerald-500 to-emerald-600;
+  .text-gradient-platinum {
+    @apply bg-clip-text text-transparent bg-gradient-to-br from-white via-slate-200 to-slate-400;
   }
 }
 
 @layer utilities {
-  .noise-grain {
-    position: relative;
+  .tracking-tightest {
+    letter-spacing: -0.05em;
   }
-  .noise-grain::after {
-    content: "";
-    @apply absolute inset-0 pointer-events-none opacity-[0.03] z-[100];
-    background-image: url("https://grainy-gradients.vercel.app/noise.svg");
-    filter: brightness(100%) contrast(150%);
+  
+  .tracking-widest-xl {
+    letter-spacing: 0.8em;
   }
 
-  .perspective-1000 {
-    perspective: 1000px;
-  }
-
-  .preserve-3d {
-    transform-style: preserve-3d;
+  .mask-radial-faded {
+    mask-image: radial-gradient(circle at center, black 0%, transparent 80%);
   }
 }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-background;
+  @apply bg-[#080809];
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-white/10 rounded-full hover:bg-white/20 transition-all;
+  @apply bg-white/5 rounded-full hover:bg-white/10 transition-all;
 }
-
