@@ -91,7 +91,11 @@ const Login = () => {
         <div className="bg-card border border-border/50 shadow-xl rounded-2xl p-8 md:p-10 backdrop-blur-sm">
 
           {/* Header Area */}
-          <div className="text-center mb-8">
+          <div className="text-center mb-10">
+            <div className="w-16 h-16 bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-sm">
+              <img src="/logofinal.png" alt="Logo" className="w-10 h-10 object-contain" />
+            </div>
+            
             <AnimatePresence mode="wait">
               <motion.div
                 key={view}
@@ -102,20 +106,20 @@ const Login = () => {
               >
                 {view === 'signin' && (
                   <>
-                    <h1 className="text-2xl font-bold tracking-tight mb-2">{t('login.title') || "Welcome Back"}</h1>
-                    <p className="text-muted-foreground text-sm">{t('login.subtitle') || "Sign in to your account"}</p>
+                    <h1 className="text-3xl font-black tracking-tight text-slate-950 mb-2">Welcome Back</h1>
+                    <p className="text-slate-500 font-medium text-sm">Sign in to your account</p>
                   </>
                 )}
                 {view === 'signup' && (
                   <>
-                    <h1 className="text-2xl font-bold tracking-tight mb-2">{t('login.create_account_title') || "Create Account"}</h1>
-                    <p className="text-muted-foreground text-sm">{t('login.create_account_subtitle') || "Join our community today"}</p>
+                    <h1 className="text-3xl font-black tracking-tight text-slate-950 mb-2">Create Account</h1>
+                    <p className="text-slate-500 font-medium text-sm">Join our circle of knowledge</p>
                   </>
                 )}
                 {view === 'forgot-password' && (
                   <>
-                    <h1 className="text-2xl font-bold tracking-tight mb-2">{t('login.forgot_password') || "Reset Password"}</h1>
-                    <p className="text-muted-foreground text-sm">{t('login.reset_desc') || "Enter your email to receive reset instructions"}</p>
+                    <h1 className="text-3xl font-black tracking-tight text-slate-950 mb-2">Reset Password</h1>
+                    <p className="text-slate-500 font-medium text-sm">Enter your email for instructions</p>
                   </>
                 )}
               </motion.div>

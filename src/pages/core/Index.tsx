@@ -1,148 +1,89 @@
 import * as React from 'react';
-import HeroSection from '@/components/landing/HeroSection';
-import { Link, useNavigate } from 'react-router-dom';
-import { MessageSquare, Calendar, Library, ArrowRight } from 'lucide-react';
-import { useLanguage } from '@/contexts/LanguageContext';
-import { PricingComparison } from '@/components/landing/PricingComparison';
+import { useNavigate } from 'react-router-dom';
+import { Quote } from 'lucide-react';
 import { motion } from 'framer-motion';
+import HeroSection from '@/components/landing/HeroSection';
+import FeatureGrid from '@/components/landing/FeatureGrid';
+import PricingComparison from '@/components/landing/PricingComparison';
+import GrainShader from '@/components/effects/GrainShader';
 
 const Index = () => {
-  const { t } = useLanguage();
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen flex flex-col relative overflow-hidden">
+    <div className="min-h-screen flex flex-col relative overflow-hidden bg-premium-gray selection:bg-slate-950 selection:text-white">
+      {/* Global Texture Overlay */}
+      <GrainShader />
 
       <main className="flex-grow">
+        {/* --- Phase 1: Mirrored Hero --- */}
         <HeroSection />
 
-        {/* Features Section */}
-        <section className="py-20 relative">
-          <div className="container relative z-10 px-4">
-            <div className="text-center mb-14">
-              <h2 className="text-3xl md:text-4xl font-serif font-bold text-deep-green mb-4 tracking-tight">
-                {t('index.features_title') || 'What you get'}
-              </h2>
-              <p className="text-base text-deep-green/55 max-w-xl mx-auto leading-relaxed">
-                {t('index.features_subtitle') || 'Islamic guidance, daily content, and a full library — all in one place.'}
-              </p>
-            </div>
+        {/* --- Phase 2: High Contrast Feature Grid (Step 1-3) --- */}
+        <FeatureGrid />
 
-            <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-              <div className="glass-card-warm p-7 rounded-2xl transition-all duration-200 hover:shadow-md">
-                <div className="w-12 h-12 rounded-xl bg-deep-green/8 flex items-center justify-center text-deep-green mb-5">
-                  <MessageSquare className="w-6 h-6" />
-                </div>
-                <h3 className="text-lg font-bold text-deep-green mb-2">{t('index.guided_fatwa_title') || "Ask a Question"}</h3>
-                <p className="text-deep-green/50 leading-relaxed mb-5 text-sm">
-                  {t('index.guided_fatwa_desc') || "Get a structured fatwa with the ruling, evidence, and explanation — checked across four madhhabs."}
-                </p>
-                <Link to="/fatwa" className="inline-flex items-center gap-1.5 text-warm-gold font-bold text-xs uppercase tracking-widest hover:gap-3 transition-all">
-                  {t('index.try_it_now') || "Try it"}
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
+        {/* --- Phase 3: Centered Testimonial / Philosophy (Mirror Reference) --- */}
+        <section className="py-32 lg:py-56 relative overflow-hidden bg-premium-gray border-t border-slate-950/[0.03]">
+          <div className="container relative z-10 px-4 mx-auto text-center flex flex-col items-center">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+              className="max-w-4xl"
+            >
+              {/* Reference Check: Centered Circular Headshot */}
+              <div className="w-20 h-20 rounded-full bg-slate-200 mx-auto mb-10 overflow-hidden border-2 border-white shadow-xl">
+                 <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=100" className="w-full h-full object-cover" />
               </div>
 
-              <div className="glass-card-warm p-7 rounded-2xl transition-all duration-200 hover:shadow-md">
-                <div className="w-12 h-12 rounded-xl bg-warm-gold/8 flex items-center justify-center text-warm-gold mb-5">
-                  <Calendar className="w-6 h-6" />
-                </div>
-                <h3 className="text-lg font-bold text-deep-green mb-2">{t('index.daily_islam_title') || "Daily Reminders"}</h3>
-                <p className="text-deep-green/50 leading-relaxed mb-5 text-sm">
-                  {t('index.daily_islam_desc') || "A daily ayah, hadith, and dua. Plus a weekly quiz to keep your knowledge sharp."}
-                </p>
-                <Link to="/dashboard" className="inline-flex items-center gap-1.5 text-warm-gold font-bold text-xs uppercase tracking-widest hover:gap-3 transition-all">
-                  {t('index.see_today') || "See today's"}
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-              </div>
+              <h3 className="text-2xl font-black text-slate-950 tracking-tighter mb-8 italic leading-relaxed">
+                "Quick and Easy Setup"
+              </h3>
+              
+              <blockquote className="text-xl md:text-2xl text-slate-500 font-medium leading-relaxed mb-12 max-w-2xl mx-auto">
+                "We've scaled to thousands of documents daily — Scribblit's dashboard is the only thing that keeps our research sane."
+              </blockquote>
 
-              <div className="glass-card-warm p-7 rounded-2xl transition-all duration-200 hover:shadow-md">
-                <div className="w-12 h-12 rounded-xl bg-sage-green/8 flex items-center justify-center text-sage-green-dark mb-5">
-                  <Library className="w-6 h-6" />
-                </div>
-                <h3 className="text-lg font-bold text-deep-green mb-2">{t('index.library_title') || "Islamic Library"}</h3>
-                <p className="text-deep-green/50 leading-relaxed mb-5 text-sm">
-                  {t('index.library_desc') || "Books, PDFs, and resources on Fiqh, Aqeedah, Seerah, and more."}
-                </p>
-                <Link to="/library" className="inline-flex items-center gap-1.5 text-warm-gold font-bold text-xs uppercase tracking-widest hover:gap-3 transition-all">
-                  {t('index.browse_books') || "Browse"}
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
+              <div className="space-y-1">
+                <p className="text-sm font-black uppercase tracking-[0.2em] text-slate-950">Jade Bird</p>
+                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Event Manager, Blue Partner</p>
               </div>
-            </div>
+            </motion.div>
           </div>
         </section>
 
-        {/* How It Works */}
-        <section className="py-20 relative bg-warm-sand/20 border-y border-warm-sand/60">
-          <div className="container relative z-10 px-4">
-            <div className="max-w-4xl mx-auto">
-              <div className="text-center mb-12">
-                <h2 className="text-3xl md:text-4xl font-serif font-bold text-deep-green mb-4 tracking-tight">
-                  {t('index.how_title_prefix') || 'How it works'}
-                </h2>
-                <p className="text-base text-deep-green/55">{t('index.how_subtitle') || 'Every answer follows a structured process rooted in authentic sources.'}</p>
-              </div>
+        {/* --- Phase 4: Pricing Model --- */}
+        <PricingComparison />
 
-              <div className="grid md:grid-cols-2 gap-5">
-                {[1, 2, 3, 4].map((step) => (
-                  <div
-                    key={step}
-                    className="glass-card-warm p-6 rounded-2xl transition-all duration-200 hover:shadow-md"
+        {/* --- Phase 5: Final CTA (Stay High Contrast) --- */}
+        <section className="py-48 lg:py-64 bg-slate-950 text-white relative overflow-hidden">
+           <div className="absolute inset-0 z-0 opacity-20 pointer-events-none">
+              <div className="absolute -top-[20%] -right-[20%] w-[100%] h-[100%] bg-brand-600 rounded-full blur-[200px]" />
+           </div>
+
+           <div className="container relative z-10 px-4 mx-auto text-center">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+                className="max-w-5xl mx-auto"
+              >
+                  <h2 className="text-7xl md:text-9xl lg:text-[10vw] font-black leading-[0.8] tracking-tightest mb-16">
+                    Start your <br />
+                    <span className="text-slate-400">cultivation.</span>
+                  </h2>
+                  <motion.button
+                    whileHover={{ scale: 1.05, y: -5 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => navigate('/login')}
+                    className="px-20 py-8 bg-white text-slate-950 rounded-full font-black text-xl uppercase tracking-[0.3em] shadow-2xl transition-all"
                   >
-                    <div className="flex items-start gap-4">
-                      <div className="w-10 h-10 rounded-xl bg-deep-green flex items-center justify-center flex-shrink-0 text-warm-cream font-bold text-sm">
-                        {step}
-                      </div>
-                      <div>
-                        <h4 className="text-base font-bold text-deep-green mb-1.5">{t(`index.step${step}_title`)}</h4>
-                        <p className="text-deep-green/50 leading-relaxed text-sm">{t(`index.step${step}_desc`)}</p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Pricing */}
-        <PricingComparison onSelectPlan={(tier) => {
-          if (tier === 'free') {
-            navigate('/login');
-          } else {
-            navigate('/login?upgrade=' + tier);
-          }
-        }} />
-
-        {/* Final CTA */}
-        <section className="py-24 relative overflow-hidden">
-          <div className="absolute inset-0 bg-deep-green -z-10" />
-
-          <div className="container relative z-10 px-4 text-center">
-            <div className="max-w-3xl mx-auto">
-              <p className="font-arabic text-4xl text-warm-gold/50 mb-5">بسم الله الرحمن الرحيم</p>
-
-              <h2 className="text-3xl md:text-5xl font-serif font-bold text-warm-cream mb-6 leading-tight">
-                {t('index.final_cta_title') || 'Ready to ask your first question?'}
-              </h2>
-
-              <p className="text-lg text-warm-cream/50 mb-10 max-w-xl mx-auto">
-                {t('index.final_cta_desc') || 'Start a fatwa session or explore the daily content. Free to try, no credit card needed.'}
-              </p>
-
-              <div className="flex flex-wrap justify-center gap-4">
-                <Link to="/login" className="btn-gold flex items-center gap-3 group">
-                  {t('index.ask_question_btn') || 'Get started'}
-                  <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
-                </Link>
-                <Link to="/about" className="btn-spiritual-outline text-warm-cream border-warm-cream/20 hover:bg-warm-cream/5 hover:border-warm-cream/40 flex items-center gap-2">
-                  {t('index.learn_more') || 'Learn more'}
-                </Link>
-              </div>
-            </div>
-          </div>
+                    Get Started Now
+                  </motion.button>
+              </motion.div>
+           </div>
         </section>
       </main>
     </div>

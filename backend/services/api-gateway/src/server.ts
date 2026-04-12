@@ -43,7 +43,7 @@ const libraryRoutes = libraryRoutesModule.default;
 import chatRoutes from "./chat.js";
 import { videoRoutes } from "../../video-service/src/routes/video.routes.js";
 import { eventRoutes } from "../../event-service/src/routes/event.routes.js";
-import { tarteelRoutes } from "./routes/tarteel.js";
+// import { tarteelRoutes } from "./routes/tarteel.js"; // Removed as requested
 import { councilRoutes } from "./routes/council.routes.js";
 
 
@@ -141,7 +141,7 @@ const fallbackIndexHtmlPath = path.join(projectRoot, "index.html");
 
 // Initialize services
 app.use('/api', chatRoutes); // Mount chat routes at /api (e.g. /api/chat, /api/health)
-app.use('/api/tarteel', tarteelRoutes);
+// app.use('/api/tarteel', tarteelRoutes); // Removed as requested
 app.use('/api/council', councilRoutes);
 
 // Health Checks

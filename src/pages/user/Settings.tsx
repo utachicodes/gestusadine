@@ -98,10 +98,10 @@ const Settings: React.FC = () => {
             </div>
             <div className="space-y-3">
               <Label className="text-base font-medium">Display Language</Label>
-              {(['en', 'fr', 'wo'] as const).map((lang) => (
+              {(['en', 'fr'] as const).map((lang) => (
                 <button key={lang} onClick={() => setLanguage(lang)} className={`w-full p-4 rounded-lg border-2 transition-all text-left ${language === lang ? 'border-primary bg-primary/10' : 'border-border hover:border-primary/50'}`}>
                   <p className={`font-medium ${language === lang ? 'text-primary' : 'text-foreground'}`}>
-                    {lang === 'en' ? 'English' : lang === 'fr' ? 'Français' : 'Wolof'}
+                    {lang === 'en' ? 'English' : 'Français'}
                   </p>
                   <p className="text-xs text-muted-foreground mt-1">{lang.toUpperCase()}</p>
                 </button>

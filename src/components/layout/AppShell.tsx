@@ -13,12 +13,10 @@ const AppShell: React.FC<AppShellProps> = ({ children }) => {
   const location = useLocation();
 
   return (
-    <div className="app-shell min-h-screen bg-deep-slate text-white selection:bg-cyan-glow/30 selection:text-white">
-      <GeometricBackground />
-
+    <div className="app-shell min-h-screen bg-saas-bg text-slate-900 selection:bg-brand-200 selection:text-brand-900 transition-colors duration-500">
       <Navbar />
 
-      <main className="relative z-10">
+      <main className="relative z-10 w-full overflow-x-hidden">
         <PageTransition key={location.pathname}>{children}</PageTransition>
       </main>
 
@@ -28,5 +26,3 @@ const AppShell: React.FC<AppShellProps> = ({ children }) => {
 };
 
 export default AppShell;
-
-

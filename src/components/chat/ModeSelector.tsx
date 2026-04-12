@@ -82,69 +82,50 @@ export function ModeSelector({ selectedMode, onModeChange, userTier }: ModeSelec
     };
 
     return (
-        <div className="mb-6">
-            <h3 className="text-sm font-semibold text-islamic-dark dark:text-white mb-3 flex items-center gap-2">
-                <BookOpen className="w-4 h-4" />
-                Specialized Mode
-            </h3>
+        <div className="flex flex-wrap gap-2">
+            {modes.map((mode) => {
+                const hasAccess = canAccessMode(mode.tier);
+                const isSelected = selectedMode === mode.id;
 
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                {modes.map((mode) => {
-                    const hasAccess = canAccessMode(mode.tier);
-                    const isSelected = selectedMode === mode.id;
-
-                    return (
-                        <Card
-                            key={mode.id}
-                            className={`relative p-4 cursor-pointer transition-all duration-200 ${isSelected
-                                ? 'border-primary border-2 shadow-lg'
+                return (
+                    <button
+                        key={mode.id}
+                        type="button"
+                        className={`relative px-4 py-2.5 rounded-2xl text-xs font-bold transition-all duration-300 flex items-center gap-2.5 border-2 ${
+                            isSelected
+                                ? 'bg-brand-50 border-brand-500 text-brand-700 shadow-lg shadow-brand-100'
                                 : hasAccess
-                                    ? 'hover:border-primary/50 hover:shadow-md'
-                                    : 'opacity-50 cursor-not-allowed'
-                                }`}
-                            onClick={() => hasAccess && onModeChange(mode.id)}
-                            onMouseEnter={() => setHoveredMode(mode.id)}
-                            onMouseLeave={() => setHoveredMode(null)}
-                        >
-                            {!hasAccess && (
-                                <div className="absolute top-2 right-2">
-                                    <Badge variant="secondary" className="text-xs bg-islamic-gold/10 text-islamic-gold border-islamic-gold/20">
-                                        {mode.tier === 'core' ? 'Core' : 'Pro'}
-                                    </Badge>
-                                </div>
-                            )}
+                                    ? 'bg-white border-slate-100 text-slate-500 hover:border-brand-200 hover:bg-slate-50/50 hover:text-slate-900'
+                                    : 'bg-slate-50 border-transparent text-slate-300 cursor-not-allowed grayscale'
+                        }`}
+                        onClick={() => hasAccess && onModeChange(mode.id)}
+                        onMouseEnter={() => setHoveredMode(mode.id)}
+                        onMouseLeave={() => setHoveredMode(null)}
+                    >
+                        <span className={`transition-transform duration-300 ${isSelected ? 'scale-110' : 'opacity-70'}`}>
+                            {mode.icon}
+                        </span>
+                        <span className="uppercase tracking-widest">{mode.name}</span>
 
-                            {isSelected && (
-                                <div className="absolute top-2 right-2">
-                                    <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center">
-                                        <Check className="w-3 h-3 text-white" />
-                                    </div>
-                                </div>
-                            )}
-
-                            <div className={`mb-3 ${mode.color}`}>
-                                {mode.icon}
+                        {!hasAccess && (
+                            <div className="flex items-center justify-center ml-1">
+                                <Crown className="w-3 h-3 text-slate-300" />
                             </div>
+                        )}
 
-                            <h4 className="font-semibold text-sm text-islamic-dark dark:text-white mb-1">
-                                {mode.name}
-                            </h4>
+                        {isSelected && (
+                            <div className="w-1.5 h-1.5 rounded-full bg-brand-600 animate-pulse ml-0.5" />
+                        )}
 
-                            <p className="text-xs text-islamic-dark/60 dark:text-gray-400 line-clamp-2">
-                                {mode.description}
-                            </p>
-
-                            {!hasAccess && hoveredMode === mode.id && (
-                                <div className="absolute inset-0 bg-black/80 rounded-lg flex items-center justify-center p-3">
-                                    <p className="text-xs text-white text-center font-medium">
-                                        Upgrade to {mode.tier === 'core' ? 'Core' : 'Pro'} to unlock
-                                    </p>
-                                </div>
-                            )}
-                        </Card>
-                    );
-                })}
-            </div>
+                        {!hasAccess && hoveredMode === mode.id && (
+                            <div className="absolute -top-10 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-slate-900 text-white rounded-xl text-[10px] whitespace-nowrap z-10 shadow-xl">
+                                Upgrade to {mode.tier.toUpperCase()}
+                                <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-slate-900" />
+                            </div>
+                        )}
+                    </button>
+                );
+            })}
         </div>
     );
 }

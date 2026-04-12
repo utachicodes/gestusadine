@@ -1,166 +1,147 @@
 import React from 'react';
-import { Check, X, Sparkles, Zap, Crown } from 'lucide-react';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { motion } from 'framer-motion';
+import { Check, ArrowRight } from 'lucide-react';
 
-interface PricingTier {
-    tier: 'free' | 'core' | 'pro';
-    highlighted?: boolean;
-    icon: React.ReactNode;
-    price: string;
-    credits: string;
-    description: string;
-}
-
-const tiers: PricingTier[] = [
-    {
-        tier: 'free',
-        price: '0 XOF',
-        icon: <Sparkles className="w-5 h-5 text-deep-green/40" />,
-        credits: '50',
-        description: 'Try the platform with 50 monthly credits'
-    },
-    {
-        tier: 'core',
-        price: '5,000 XOF',
-        icon: <Zap className="w-5 h-5 text-warm-gold" />,
-        highlighted: true,
-        credits: '500',
-        description: 'For regular use — 500 credits and full features'
-    },
-    {
-        tier: 'pro',
-        price: '10,000 XOF',
-        icon: <Crown className="w-5 h-5 text-deep-green-light" />,
-        credits: 'Unlimited',
-        description: 'Unlimited access to everything'
-    },
+const tiers = [
+  {
+    name: "Seeker",
+    price: "Free",
+    description: "Ideal for individual explorers beginning their journey into Islamic knowledge.",
+    features: [
+      "Access to Public Library",
+      "Limited AI Council Consultations",
+      "Daily Hadith & Ayah Widgets",
+      "Community Read Access"
+    ],
+    cta: "Start Learning",
+    popular: false,
+    dark: false
+  },
+  {
+    name: "Student",
+    price: "10,000",
+    unit: "/mo",
+    description: "For serious students seeking deep traditional guidance and AI-powered research tools.",
+    features: [
+      "Unlimited AI Council Access",
+      "Advanced Scholarly Archives",
+      "Priority Podcast Access",
+      "Full Community Participation",
+      "Document Analysis Tools"
+    ],
+    cta: "Join the Circle",
+    popular: true,
+    dark: true
+  },
+  {
+    name: "Institution",
+    price: "Negotiable",
+    description: "Custom solutions for mosques, schools, and organizations to manage their own RAG knowledge.",
+    features: [
+      "Multi-user Admin Console",
+      "Private RAG Knowledge Base",
+      "White-labeled Library",
+      "Advanced Analytic Insights",
+      "API Access for Developers"
+    ],
+    cta: "Contact Sales",
+    popular: false,
+    dark: false
+  }
 ];
 
-interface PricingComparisonProps {
-    onSelectPlan?: (tier: 'free' | 'core' | 'pro') => void;
-}
+const PricingComparison = () => {
+  return (
+    <section className="py-32 bg-premium-gray relative overflow-hidden">
+      <div className="container mx-auto px-4 lg:px-8">
+        <div className="text-center max-w-4xl mx-auto mb-24">
+          <motion.h3 
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="text-[10px] font-black uppercase tracking-[0.5em] text-brand-600 mb-8"
+          >
+            The Investment
+          </motion.h3>
+          <motion.h2 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            className="text-5xl md:text-7xl font-black text-slate-950 tracking-tighter leading-tight"
+          >
+            A path for every <br />
+            <span className="text-slate-300">student of knowledge.</span>
+          </motion.h2>
+        </div>
 
-export function PricingComparison({ onSelectPlan }: PricingComparisonProps) {
-    const { t } = useLanguage();
-
-    const handleSelect = (tier: 'free' | 'core' | 'pro') => {
-        if (onSelectPlan) onSelectPlan(tier);
-    };
-
-    const getFeatures = (tier: 'free' | 'core' | 'pro') => {
-        if (tier === 'free') {
-            return [
-                { name: t('pricing.feature.chat_credits', { count: '50' }), included: true },
-                { name: t('pricing.feature.basic_responses'), included: true },
-                { name: t('pricing.feature.standard_time'), included: true },
-                { name: t('pricing.feature.specialized_modes'), included: false },
-                { name: t('pricing.feature.personalized_themes'), included: false },
-            ];
-        } else if (tier === 'core') {
-            return [
-                { name: t('pricing.feature.chat_credits', { count: '500' }), included: true },
-                { name: t('pricing.feature.specialized_modes'), included: true },
-                { name: t('pricing.feature.personalized_themes'), included: true },
-                { name: t('pricing.feature.memory'), included: true },
-                { name: t('pricing.feature.priority'), included: true },
-            ];
-        } else {
-            return [
-                { name: t('pricing.feature.unlimited_credits'), included: true },
-                { name: t('pricing.feature.all_modes'), included: true },
-                { name: t('pricing.feature.full_customization'), included: true },
-                { name: t('pricing.feature.advanced_memory'), included: true },
-                { name: t('pricing.feature.early_access'), included: true },
-            ];
-        }
-    };
-
-    return (
-        <section id="pricing" className="py-24 relative overflow-hidden">
-            <div className="absolute inset-0 bg-warm-sand/20 -z-10" />
-
-            <div className="container px-4 relative z-10">
-                <div className="text-center mb-14">
-                    <h2 className="text-3xl md:text-4xl font-serif font-bold text-deep-green mb-4 tracking-tight">
-                        {t('pricing.title_prefix') || 'Pricing'}
-                    </h2>
-                    <p className="text-base text-deep-green/55 max-w-xl mx-auto">
-                        {t('pricing.subtitle') || 'Start free. Upgrade when you need more.'}
-                    </p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch max-w-7xl mx-auto">
+          {tiers.map((tier, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
+              whileHover={{ y: -12 }}
+              className={`relative p-12 rounded-[3.5rem] flex flex-col border transition-all duration-500 ${
+                tier.dark 
+                  ? 'bg-slate-950 border-slate-900 text-white shadow-[0_40px_80px_-20px_rgba(0,0,0,0.4)] z-10' 
+                  : 'bg-white border-slate-100 text-slate-950 hover:border-slate-200 shadow-xl shadow-slate-200/50'
+              }`}
+            >
+              {tier.popular && (
+                <div className="absolute top-0 right-12 -translate-y-1/2 px-6 py-2 bg-brand-600 text-[10px] font-black uppercase tracking-[0.2em] text-white rounded-full shadow-lg shadow-brand-500/30">
+                   recommended
                 </div>
+              )}
 
-                <div className="grid lg:grid-cols-3 gap-6 max-w-5xl mx-auto items-start">
-                    {tiers.map((tier) => (
-                        <div key={tier.tier} className="relative">
-                            <div className={`glass-card-warm rounded-2xl p-7 flex flex-col transition-all duration-200 hover:shadow-md ${
-                                tier.highlighted
-                                    ? 'border-warm-gold/40 shadow-lg scale-[1.02] z-10'
-                                    : ''
-                            }`}>
-                                {tier.highlighted && (
-                                    <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-warm-gold text-white text-[10px] font-bold uppercase tracking-[0.15em] px-4 py-1 rounded-full">
-                                        {t('pricing.most_popular') || 'Most popular'}
-                                    </div>
-                                )}
-
-                                <div className="mb-6">
-                                    <div className="flex items-center gap-3 mb-4">
-                                        <div className={`p-2 rounded-lg bg-warm-sand/40 border ${tier.highlighted ? 'border-warm-gold/30' : 'border-warm-sand'}`}>
-                                            {tier.icon}
-                                        </div>
-                                        <h3 className="text-lg font-bold text-deep-green uppercase tracking-tight">
-                                            {t(`pricing.tier.${tier.tier}.name`) || tier.tier}
-                                        </h3>
-                                    </div>
-                                    <div className="flex items-baseline gap-2 mb-2">
-                                        <span className="text-3xl font-black text-deep-green">{tier.price}</span>
-                                        {tier.tier !== 'free' && (
-                                            <span className="text-deep-green/40 font-semibold text-xs uppercase tracking-widest">
-                                                {t('pricing.per_month') || '/ month'}
-                                            </span>
-                                        )}
-                                    </div>
-                                    <p className="text-deep-green/50 text-sm">
-                                        {t(`pricing.tier.${tier.tier}.description`) || tier.description}
-                                    </p>
-                                </div>
-
-                                <div className="space-y-3 flex-1 mb-7">
-                                    {getFeatures(tier.tier).map((feature, i) => (
-                                        <div key={i} className="flex items-center gap-3">
-                                            {feature.included ? (
-                                                <div className="w-5 h-5 rounded-full bg-sage-green/15 flex items-center justify-center border border-sage-green/25 flex-shrink-0">
-                                                    <Check className="w-3 h-3 text-sage-green-dark" />
-                                                </div>
-                                            ) : (
-                                                <div className="w-5 h-5 rounded-full bg-warm-sand/30 flex items-center justify-center border border-warm-sand flex-shrink-0">
-                                                    <X className="w-3 h-3 text-deep-green/25" />
-                                                </div>
-                                            )}
-                                            <span className={`text-sm ${feature.included ? 'text-deep-green/80' : 'text-deep-green/25'}`}>
-                                                {feature.name}
-                                            </span>
-                                        </div>
-                                    ))}
-                                </div>
-
-                                <button
-                                    onClick={() => handleSelect(tier.tier)}
-                                    className={`w-full py-3 rounded-xl font-bold uppercase tracking-[0.1em] text-xs transition-all duration-200 ${
-                                        tier.highlighted
-                                            ? 'bg-deep-green text-warm-cream hover:bg-deep-green-light shadow-md'
-                                            : 'bg-warm-sand/40 text-deep-green border border-warm-sand hover:bg-warm-sand/70'
-                                    }`}
-                                >
-                                    {tier.tier === 'free'
-                                        ? t('pricing.get_started_free') || 'Start free'
-                                        : `${t('pricing.upgrade_prefix') || 'Upgrade to'} ${tier.tier}`}
-                                </button>
-                            </div>
-                        </div>
-                    ))}
+              <div className="mb-12">
+                <p className={`text-[11px] font-black uppercase tracking-[0.3em] mb-6 ${tier.dark ? 'text-brand-400' : 'text-slate-400'}`}>
+                  {tier.name}
+                </p>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-5xl font-black tracking-tightest">{tier.price}</span>
+                  {tier.unit && <span className={`text-lg font-bold ${tier.dark ? 'text-slate-500' : 'text-slate-400'}`}>{tier.unit}</span>}
                 </div>
-            </div>
-        </section>
-    );
-}
+                {tier.price !== 'Free' && tier.price !== 'Negotiable' && (
+                   <p className={`text-[10px] mt-2 font-black tracking-widest uppercase opacity-40`}>fcfa / month</p>
+                )}
+              </div>
+
+              <p className={`text-base font-medium leading-relaxed mb-12 ${tier.dark ? 'text-slate-400' : 'text-slate-500'}`}>
+                {tier.description}
+              </p>
+
+              <div className="space-y-5 mb-12 flex-1">
+                {tier.features.map((feature, fIdx) => (
+                  <div key={fIdx} className="flex items-center gap-4">
+                    <div className={`p-1.5 rounded-full ${tier.dark ? 'bg-slate-900' : 'bg-slate-50'}`}>
+                      <Check className={`w-3.5 h-3.5 ${tier.dark ? 'text-brand-400' : 'text-brand-600'}`} />
+                    </div>
+                    <span className={`text-sm font-bold tracking-tight ${tier.dark ? 'text-slate-300' : 'text-slate-600'}`}>
+                      {feature}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              <button
+                className={`w-full py-6 rounded-2xl text-[11px] font-black uppercase tracking-[0.3em] transition-all duration-300 flex items-center justify-center gap-3 ${
+                  tier.dark 
+                    ? 'bg-white text-slate-950 hover:bg-slate-100' 
+                    : 'bg-slate-950 text-white hover:bg-slate-800'
+                }`}
+              >
+                {tier.cta}
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default PricingComparison;

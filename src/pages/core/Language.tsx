@@ -7,7 +7,6 @@ const languages = [
     { code: 'en', name: 'English', native: 'English', flag: '🇺🇸' },
     { code: 'fr', name: 'French', native: 'Français', flag: '🇫🇷' },
     { code: 'ar', name: 'Arabic', native: 'العربية', flag: '🇸🇦' },
-    { code: 'wo', name: 'Wolof', native: 'Wolof', flag: '🇸🇳' }
 ];
 
 export default function Language() {

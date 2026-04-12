@@ -5,7 +5,7 @@ import { CreditUsageWidget } from "@/components/subscription/CreditUsageWidget";
 import { RankDisplay } from "@/components/gamification/RankDisplay";
 import { BadgeList, BadgeType } from "@/components/gamification/BadgeList";
 
-type LanguageCode = "wo" | "fr" | "en";
+type LanguageCode = "fr" | "en";
 type Difficulty = "easy" | "medium" | "advanced";
 
 
@@ -330,7 +330,7 @@ const Dashboard: React.FC = () => {
                     {t('dashboard.todayLabel')}
                   </p>
                   <p className="font-semibold text-foreground text-base">
-                    {daily?.gregorianDate ? new Date(daily.gregorianDate).toLocaleDateString(language === 'fr' ? 'fr-FR' : language === 'wo' ? 'wo-SN' : 'en-US', {
+                    {daily?.gregorianDate ? new Date(daily.gregorianDate).toLocaleDateString(language === 'fr' ? 'fr-FR' : 'en-US', {
                       weekday: 'short',
                       year: 'numeric',
                       month: 'short',

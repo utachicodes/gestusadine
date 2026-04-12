@@ -6,7 +6,7 @@ export type OrderStatus = 'pending' | 'paid' | 'shipped' | 'delivered';
 export type PaymentMethod = 'orange_money' | 'wave' | 'card' | 'cash';
 export type BookFormat = 'pdf' | 'epub' | 'mobi' | 'audio';
 export type BookCategory = 'quran' | 'hadith' | 'fiqh' | 'aqeedah' | 'seerah' | 'tafsir' | 'arabic' | 'dua' | 'general';
-export type BookLanguage = 'ar' | 'en' | 'fr' | 'wo';
+export type BookLanguage = 'ar' | 'en' | 'fr';
 
 export interface UserActivity {
     id: string;

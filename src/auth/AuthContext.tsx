@@ -11,12 +11,13 @@ import {
 import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
 import { auth, db } from "@/lib/firebase";
 
-type UserRole = 'user' | 'admin';
+export type SubscriptionTier = 'free' | 'student' | 'institution';
 
-type UserProfile = {
+export type UserProfile = {
   id: string;
   email: string;
   role: UserRole;
+  subscription_tier: SubscriptionTier;
   full_name?: string;
   avatar_url?: string;
   created_at: any;
@@ -130,6 +131,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         email: email,
         full_name: fullName,
         role: 'user',
+        subscription_tier: 'free',
         created_at: serverTimestamp()
       };
 

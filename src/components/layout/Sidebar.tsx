@@ -156,12 +156,11 @@ export const Sidebar = () => {
           <Globe className="w-5 h-5 flex-shrink-0" />
           <select
             value={language}
-            onChange={(e) => setLanguage(e.target.value as 'en' | 'fr' | 'wo')}
+            onChange={(e) => setLanguage(e.target.value as 'en' | 'fr')}
             className="flex-1 bg-transparent border-none text-sm font-medium focus:outline-none cursor-pointer appearance-none text-foreground"
           >
             <option value="en">English</option>
             <option value="fr">Français</option>
-            <option value="wo">Wolof</option>
           </select>
         </div>
 

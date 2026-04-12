@@ -1,7 +1,7 @@
 import React from "react";
 import { motion, LayoutGroup } from "framer-motion";
 
-type LanguageCode = "wo" | "fr" | "en";
+type LanguageCode = "fr" | "en";
 
 interface LanguageToggleProps {
   value: LanguageCode;
@@ -9,13 +9,12 @@ interface LanguageToggleProps {
 }
 
 const labels: Record<LanguageCode, string> = {
-  wo: "Wolof",
   fr: "Français",
   en: "English",
 };
 
 const LanguageToggle: React.FC<LanguageToggleProps> = ({ value, onChange }) => {
-  const items: LanguageCode[] = ["wo", "fr", "en"];
+  const items: LanguageCode[] = ["fr", "en"];
 
   return (
     <div className="inline-flex items-center rounded-full bg-[#efefec]/70 backdrop-blur-md border border-sand-300/70 px-1 py-1 shadow-card">

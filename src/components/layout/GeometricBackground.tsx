@@ -2,16 +2,21 @@ import React from "react";
 import { motion } from "framer-motion";
 
 const shapes = [
-  { size: 400, x: "-10%", y: "-10%", color: "bg-cyan-glow/5" },
-  { size: 300, x: "80%", y: "10%", color: "bg-purple-500/5" },
-  { size: 500, x: "10%", y: "70%", color: "bg-blue-600/5" },
+  { size: 500, x: "-8%", y: "-5%", color: "bg-warm-gold/8" },
+  { size: 350, x: "78%", y: "8%", color: "bg-sage-green/10" },
+  { size: 450, x: "15%", y: "65%", color: "bg-deep-green/5" },
 ];
 
 const GeometricBackground: React.FC = () => {
   return (
     <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-      <div className="absolute inset-0 bg-islamic-pattern opacity-[0.03] animate-pattern-rotate" />
+      {/* Subtle warm base gradient */}
+      <div className="absolute inset-0 bg-warm-base" />
 
+      {/* Geometric pattern overlay */}
+      <div className="absolute inset-0 bg-geometric-pattern opacity-100" />
+
+      {/* Ambient orbs */}
       {shapes.map((shape, index) => (
         <motion.div
           key={index}
@@ -25,14 +30,14 @@ const GeometricBackground: React.FC = () => {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{
             opacity: 1,
-            scale: [0.99, 1.01, 0.99],
-            y: [0, -4, 0],
+            scale: [0.98, 1.02, 0.98],
+            y: [0, -6, 0],
           }}
           transition={{
-            duration: 36,
+            duration: 40,
             repeat: Infinity,
             ease: "easeInOut",
-            delay: index * 2.5,
+            delay: index * 3,
           }}
         />
       ))}
@@ -41,5 +46,3 @@ const GeometricBackground: React.FC = () => {
 };
 
 export default GeometricBackground;
-
-

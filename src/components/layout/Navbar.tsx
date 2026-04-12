@@ -1,173 +1,152 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/auth/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Globe, Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 
-const getNavLinks = (t: (key: string) => string) => [
-  { label: t('nav.learn') || 'Learn', href: '/media' },
-  { label: t('nav.podcasts') || 'Podcasts', href: '/podcasts' },
-  { label: t('nav.community') || 'Community', href: '/community' },
-  { label: t('nav.ai_companion') || 'AI Companion', href: '/chat' },
+const navLinks = [
+  { label: 'Start Here', href: '/' },
+  { label: 'Library', href: '/media' },
+  { label: 'Podcasts', href: '/podcasts' },
+  { label: 'Community', href: '/community' },
+  { label: 'Shop', href: '/shop' },
 ];
 
 const Navbar = () => {
   const { user, signOut } = useAuth();
-  const { language, setLanguage, t } = useLanguage();
+  const { language, setLanguage } = useLanguage();
   const location = useLocation();
-  const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const navLinks = getNavLinks(t);
+  const container = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-
-  useEffect(() => {
-    setMobileOpen(false);
-  }, [location.pathname]);
+  useGSAP(() => {
+    gsap.from(".pill-nav", {
+      y: -100,
+      opacity: 0,
+      duration: 1.2,
+      ease: "expo.out",
+      delay: 0.5
+    });
+  }, { scope: container });
 
   return (
-    <>
-      <header
-        className={`sticky top-0 z-50 transition-all duration-300 ${
-          scrolled
-            ? 'bg-white/95 backdrop-blur-xl shadow-sm border-b border-warm-sand/60'
-            : 'bg-white/80 backdrop-blur-md border-b border-warm-sand/30'
-        }`}
-      >
-        <div className="container flex items-center justify-between h-18 py-3">
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-3 group">
-            <div className="w-9 h-9 rounded-xl bg-deep-green flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
-              <span className="text-warm-cream font-arabic text-lg leading-none">خ</span>
-            </div>
-            <div className="flex flex-col leading-none">
-              <span className="font-serif text-xl font-bold text-deep-green tracking-tight group-hover:text-deep-green-light transition-colors">
-                GëstuSaDine
-              </span>
-              <span className="text-[10px] font-medium text-warm-gold tracking-widest uppercase">
-                Islamic Knowledge
-              </span>
-            </div>
-          </Link>
+    <div ref={container} className="fixed top-8 inset-x-0 z-[100] flex justify-center px-4 pointer-events-none">
+      <header className="pill-nav pointer-events-auto bg-white/95 backdrop-blur-3xl border border-slate-200/60 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.15)] rounded-full h-16 flex items-center px-6 lg:px-8 gap-10 max-w-fit mx-auto">
+        {/* Logo */}
+        <Link to="/" className="flex items-center -ml-2 shrink-0">
+          <img src="/logofinal.png" alt="Scribblit" className="h-8 w-auto object-contain" />
+        </Link>
 
-          {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-1">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                to={link.href}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                  location.pathname === link.href
-                    ? 'text-deep-green bg-deep-green/8 font-semibold'
-                    : 'text-deep-green/70 hover:text-deep-green hover:bg-deep-green/5'
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
+        {/* Desktop Nav */}
+        <nav className="hidden lg:flex items-center gap-1">
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              to={link.href}
+              className={`relative px-5 py-2 rounded-full text-[11px] font-black tracking-widest uppercase transition-all duration-300 ${
+                location.pathname === link.href
+                  ? 'text-slate-950'
+                  : 'text-slate-400 hover:text-slate-600'
+              }`}
+            >
+              {location.pathname === link.href && (
+                <motion.div
+                  layoutId="active-nav-pill"
+                  className="absolute inset-0 bg-slate-100/80 rounded-full z-[-1]"
+                  transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                />
+              )}
+              {link.label}
+            </Link>
+          ))}
+        </nav>
 
-          {/* Right Controls */}
-          <div className="flex items-center gap-3">
-            {/* Language Selector */}
-            <div className="relative group hidden sm:block">
-              <select
-                value={language}
-                onChange={(e) => setLanguage(e.target.value as 'en' | 'fr')}
-                className="appearance-none bg-warm-sand/40 border border-warm-sand rounded-lg pl-3 pr-8 py-1.5 text-xs font-bold text-deep-green hover:border-warm-gold/50 focus:outline-none focus:ring-2 focus:ring-warm-gold/30 transition-all cursor-pointer"
-              >
-                <option value="en">EN</option>
-                <option value="fr">FR</option>
-              </select>
-              <Globe className="absolute right-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-deep-green/50 pointer-events-none" />
-            </div>
+        {/* Global Controls Hub */}
+        <div className="flex items-center gap-6 pl-4 border-l border-slate-100">
+           {/* Language Toggle (Pill Style) */}
+           <div className="hidden md:flex items-center gap-2 bg-slate-50 border border-slate-100 rounded-full p-1">
+             <button 
+              onClick={() => setLanguage('en')}
+              className={`w-8 h-8 rounded-full text-[9px] font-black transition-all ${language === 'en' ? 'bg-white text-slate-950 shadow-sm' : 'text-slate-400'}`}
+             >
+               EN
+             </button>
+             <button 
+              onClick={() => setLanguage('fr')}
+              className={`w-8 h-8 rounded-full text-[9px] font-black transition-all ${language === 'fr' ? 'bg-white text-slate-950 shadow-sm' : 'text-slate-400'}`}
+             >
+               FR
+             </button>
+           </div>
 
-            {user ? (
-              <div className="flex items-center gap-2">
-                <Link
+           {/* User Action / CTA */}
+           {user ? (
+             <div className="flex items-center gap-4">
+                <Link 
                   to="/dashboard"
-                  className="hidden sm:block px-4 py-2 rounded-lg text-sm font-semibold text-deep-green bg-deep-green/8 hover:bg-deep-green/12 transition-all"
+                  className="text-[10px] font-black uppercase tracking-widest text-slate-950 hover:opacity-70 transition-opacity"
                 >
                   Dashboard
                 </Link>
                 <button
-                  onClick={() => { signOut(); window.location.href = '/'; }}
-                  className="px-4 py-2 rounded-lg text-sm font-semibold text-warm-gold/80 hover:text-warm-gold transition-colors"
+                  onClick={() => signOut()}
+                  className="w-10 h-10 rounded-full bg-slate-950 text-white flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-lg shadow-slate-200"
                 >
-                  {t('nav.signout') || 'Sign out'}
+                  <X className="w-4 h-4" />
                 </button>
-              </div>
-            ) : (
-              <Link
-                to="/login"
-                className="btn-spiritual text-sm py-2 px-5"
-              >
-                {t('nav.signin') || 'Sign in'}
-              </Link>
-            )}
+             </div>
+           ) : (
+             <Link
+               to="/login"
+               className="bg-slate-950 text-white px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-slate-800 transition-all shadow-lg shadow-slate-200"
+             >
+               View Plans
+             </Link>
+           )}
 
-            {/* Mobile Menu Button */}
-            <button
-              onClick={() => setMobileOpen(!mobileOpen)}
-              className="md:hidden p-2 rounded-lg text-deep-green hover:bg-deep-green/5 transition-colors"
-              aria-label="Toggle menu"
-            >
-              {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
-          </div>
+           {/* Mobile Menu Trigger */}
+           <button
+             onClick={() => setMobileOpen(!mobileOpen)}
+             className="lg:hidden p-2 text-slate-950"
+           >
+             {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+           </button>
         </div>
       </header>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu Redesign (Floating Panel) */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
-            className="fixed top-[4.5rem] inset-x-0 z-40 bg-white border-b border-warm-sand shadow-lg md:hidden"
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            className="fixed top-28 inset-x-4 z-[99] bg-white rounded-[2.5rem] p-8 border border-slate-200 shadow-2xl lg:hidden pointer-events-auto"
           >
-            <nav className="container py-4 flex flex-col gap-1">
+            <nav className="flex flex-col gap-4 text-center">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   to={link.href}
-                  className={`px-4 py-3 rounded-xl text-sm font-medium transition-all ${
-                    location.pathname === link.href
-                      ? 'text-deep-green bg-deep-green/8 font-semibold'
-                      : 'text-deep-green/70 hover:bg-deep-green/5'
-                  }`}
+                  onClick={() => setMobileOpen(false)}
+                  className="text-2xl font-black text-slate-950 tracking-tighter py-2"
                 >
                   {link.label}
                 </Link>
               ))}
-              <div className="border-t border-warm-sand/60 mt-2 pt-3 flex items-center gap-3">
-                <Globe className="w-4 h-4 text-deep-green/50" />
-                <select
-                  value={language}
-                  onChange={(e) => setLanguage(e.target.value as 'en' | 'fr')}
-                  className="bg-warm-sand/40 border border-warm-sand rounded-lg px-3 py-1.5 text-xs font-bold text-deep-green focus:outline-none"
-                >
-                  <option value="en">English</option>
-                  <option value="fr">Français</option>
-                </select>
+              <div className="h-px bg-slate-100 my-4" />
+              <div className="flex justify-center gap-8">
+                 <button onClick={() => setLanguage('en')} className={`text-sm font-black ${language === 'en' ? 'text-slate-950 underline' : 'text-slate-300'}`}>English</button>
+                 <button onClick={() => setLanguage('fr')} className={`text-sm font-black ${language === 'fr' ? 'text-slate-950 underline' : 'text-slate-300'}`}>French</button>
               </div>
-              {!user && (
-                <Link to="/login" className="btn-spiritual text-sm py-2.5 px-5 mt-2 text-center">
-                  Sign in
-                </Link>
-              )}
             </nav>
           </motion.div>
         )}
       </AnimatePresence>
-    </>
+    </div>
   );
 };
 
