@@ -33,8 +33,7 @@ const HadithPage = () => {
         <div className="flex-1">
             <section className="container py-10 md:py-16 space-y-8">
                 <header className="text-center md:text-left">
-                    <p className="inline-flex items-center text-xs uppercase tracking-[0.22em] text-islamic-gold mb-2 font-semibold">
-                        <span className="w-1.5 h-1.5 rounded-full bg-islamic-gold mr-2" />
+                    <p className="text-xs uppercase tracking-[0.22em] text-islamic-gold mb-2 font-semibold">
                         {tr({ en: 'Prophetic Traditions', fr: 'Traditions prophétiques' })}
                     </p>
                     <h1 className="text-3xl md:text-5xl font-bold text-foreground">
@@ -70,7 +69,6 @@ const HadithPage = () => {
                                     « {featured.arabic} »
                                 </p>
                             )}
-                            <div className="h-px w-32 bg-gradient-to-r from-transparent via-islamic-gold to-transparent mx-auto" />
                             <p className="text-xl md:text-2xl italic text-islamic-cream leading-relaxed">
                                 "{featured.text}"
                             </p>
