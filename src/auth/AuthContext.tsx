@@ -179,22 +179,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return { error: new Error("An account with this email already exists.") };
       }
       await signIn("password", { email, password, name: fullName, flow: "signUp" });
-      // Send verification email via WorkOS
-      try {
-        await sendVerificationEmail({ email: trimmedEmail });
-      } catch (verr) {
-        console.error("Failed to send verification email:", verr);
-      }
-      // Sign out so user must verify before accessing the app
-      await convexSignOut();
-      return { error: null, verificationSent: true };
     } catch (err: any) {
       const msg = err?.message ?? "";
       if (msg.includes("already exists") || msg.includes("already in use")) {
         return { error: new Error("An account with this email already exists.") };
       }
+      if (msg.includes("Too many")) {
+        return { error: new Error(msg) };
+      }
       return { error: new Error(msg || "Sign up failed. Please try again.") };
     }
+
+    // Send verification email and sign out (account was created)
+    try {
+      await sendVerificationEmail({ email: email.toLowerCase().trim() });
+    } catch {
+      // Account created but verification failed — still sign out, surface the issue
+      await convexSignOut();
+      return { error: new Error("Account created but failed to send verification email. Please contact support.") };
+    }
+
+    await convexSignOut();
+    return { error: null, verificationSent: true };
   }, [signIn, sendVerificationEmail, convexSignOut, convex]);
 
   const signOutFn = React.useCallback(async () => {
