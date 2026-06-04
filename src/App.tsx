@@ -15,7 +15,6 @@ import Help from "./pages/core/Help";
 import NotFound from "./pages/core/NotFound";
 import Dashboard from "./pages/user/Dashboard";
 import Profile from "./pages/user/Profile";
-import Fiqh from "./pages/islamic/Fiqh";
 import Language from "./pages/core/Language";
 import AdminConfig from "./pages/admin/AdminConfig";
 import { AccessGuard } from "./components/auth/AccessGuard";
@@ -112,14 +111,6 @@ const App = () => {
                                 <Profile />
                               </DashboardLayout>
                             </ProtectedRoute>
-                          }
-                        />
-                        <Route
-                          path="/fiqh"
-                          element={
-                            <AppShell>
-                              <Fiqh />
-                            </AppShell>
                           }
                         />
                         <Route
