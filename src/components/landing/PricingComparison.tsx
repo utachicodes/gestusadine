@@ -101,7 +101,7 @@ const PricingComparison = () => {
         navigate('/contact');
       }
     } catch (err: any) {
-      toast.error(err.message ?? 'Payment failed');
+      toast.error(err.data || err.message || 'Payment failed');
     } finally {
       setLoading(false);
     }

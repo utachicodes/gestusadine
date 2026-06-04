@@ -1,6 +1,6 @@
 import { action, mutation } from "./_generated/server";
 import { internal } from "./_generated/api";
-import { v } from "convex/values";
+import { v, ConvexError } from "convex/values";
 
 const NABOOPAY_BASE = "https://api.naboopay.com";
 
@@ -20,14 +20,14 @@ export const createCheckoutSession = action({
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
-    if (!identity) throw new Error("Authentication required. Please sign in.");
+    if (!identity) throw new ConvexError("Authentication required. Please sign in.");
     const userId = identity.subject;
 
     const apiKey = process.env.NABOOPAY_API_KEY;
-    if (!apiKey) throw new Error("NABOOPAY_API_KEY not configured");
+    if (!apiKey) throw new ConvexError("NABOOPAY_API_KEY not configured");
 
     const tierInfo = TIER_PRICES[args.tier];
-    if (!tierInfo) throw new Error(`Unknown tier: ${args.tier}`);
+    if (!tierInfo) throw new ConvexError(`Unknown tier: ${args.tier}`);
 
     if (args.tier === "pro") {
       return { requiresContact: true, message: "Contact us for Pro pricing" };
@@ -69,7 +69,7 @@ export const createCheckoutSession = action({
 
     const data = await res.json();
     if (!res.ok) {
-      throw new Error(`NabooPay error: ${data.error ?? res.statusText}`);
+      throw new ConvexError(`NabooPay error: ${data.error ?? res.statusText}`);
     }
 
     const orderId = data.order_id ?? data.id;
