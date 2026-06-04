@@ -19,6 +19,7 @@ import Language from "./pages/core/Language";
 import AdminConfig from "./pages/admin/AdminConfig";
 import { AccessGuard } from "./components/auth/AccessGuard";
 import Login from "./pages/auth/Login";
+import VerificationSuccess from "./pages/auth/VerificationSuccess";
 import AppShell from "./components/layout/AppShell";
 import { ChatInterface } from "@/components/chat/ChatInterface";
 import { AdminDashboard } from "@/pages/admin/Dashboard";
@@ -85,6 +86,7 @@ const App = () => {
                         <Route path="/terms" element={<AppShell><Terms /></AppShell>} />
                         <Route path="/pricing" element={<AppShell><Pricing /></AppShell>} />
                         <Route path="/login" element={<Login />} />
+                        <Route path="/auth/verification-success" element={<AppShell><VerificationSuccess /></AppShell>} />
                         <Route
                           path="/shop"
                           element={

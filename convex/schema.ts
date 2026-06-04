@@ -20,9 +20,11 @@ const schema = defineSchema({
     xp: v.optional(v.number()),
     streak: v.optional(v.number()),
     lastActiveDate: v.optional(v.number()),
+    workosId: v.optional(v.string()),
   })
     .index("email", ["email"])
-    .index("phone", ["phone"]),
+    .index("phone", ["phone"])
+    .index("workosId", ["workosId"]),
 
   products: defineTable({
     name: v.string(),

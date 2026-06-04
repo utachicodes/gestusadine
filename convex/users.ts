@@ -55,6 +55,20 @@ export const setRole = mutation({
   },
 });
 
+export const getEmailVerificationStatus = query({
+  args: { email: v.string() },
+  handler: async (ctx, args) => {
+    const email = args.email.toLowerCase().trim();
+    if (!email) return null;
+    const user = await ctx.db
+      .query("users")
+      .withIndex("email", (q) => q.eq("email", email))
+      .first();
+    if (!user) return null;
+    return { verified: !!user.emailVerificationTime };
+  },
+});
+
 export const checkEmailExists = query({
   args: { email: v.string() },
   handler: async (ctx, args) => {

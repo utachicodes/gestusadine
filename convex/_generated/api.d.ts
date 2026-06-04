@@ -31,6 +31,7 @@ import type * as stats from "../stats.js";
 import type * as subscription from "../subscription.js";
 import type * as users from "../users.js";
 import type * as videos from "../videos.js";
+import type * as workos from "../workos.js";
 
 import type {
   ApiFromModules,
@@ -62,6 +63,7 @@ declare const fullApi: ApiFromModules<{
   subscription: typeof subscription;
   users: typeof users;
   videos: typeof videos;
+  workos: typeof workos;
 }>;
 
 /**

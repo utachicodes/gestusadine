@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useConvexAuth, useAuthActions } from "@convex-dev/auth/react";
-import { useQuery, useMutation, useConvex } from "convex/react";
+import { useQuery, useMutation, useAction, useConvex } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import type { Doc } from "../../convex/_generated/dataModel";
 import { UserRole } from "./rbac";
@@ -28,13 +28,18 @@ export type User = {
   photoURL: string | null;
 };
 
+type SignUpResult = {
+  error: Error | null;
+  verificationSent?: boolean;
+};
+
 type AuthState = {
   user: User | null;
   profile: UserProfile | null;
   isAdmin: boolean;
   loading: boolean;
   signInWithPassword: (params: { email: string; password: string }) => Promise<void>;
-  signUp: (params: { email: string; password: string; fullName: string }) => Promise<{ error: Error | null }>;
+  signUp: (params: { email: string; password: string; fullName: string }) => Promise<SignUpResult>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
   refreshProfile: () => Promise<void>;
@@ -61,6 +66,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { signIn, signOut: convexSignOut } = useAuthActions();
   const currentUser = useQuery(api.users.currentUser);
   const updateTier = useMutation(api.users.updateSubscriptionTier);
+  const sendVerificationEmail = useAction(api.workos.sendVerificationEmail);
   const convex = useConvex();
 
   const [hardcodedAdmin, setHardcodedAdmin] = React.useState<boolean>(() => {
@@ -155,7 +161,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
       throw new Error(msg || "Sign in failed. Please try again.");
     }
-  }, [signIn, convex]);
+
+    // Check if email is verified; if not, sign out and show error
+    const verificationStatus = await convex.query(api.users.getEmailVerificationStatus, { email: trimmedEmail });
+    if (verificationStatus && !verificationStatus.verified) {
+      await convexSignOut();
+      throw new Error("Please verify your email before signing in. Check your inbox.");
+    }
+  }, [signIn, convexSignOut, convex]);
 
   const signUp = React.useCallback(async ({ email, password, fullName }: { email: string; password: string; fullName: string }) => {
     try {
@@ -166,7 +179,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return { error: new Error("An account with this email already exists.") };
       }
       await signIn("password", { email, password, name: fullName, flow: "signUp" });
-      return { error: null };
+      // Send verification email via WorkOS
+      try {
+        await sendVerificationEmail({ email: trimmedEmail });
+      } catch (verr) {
+        console.error("Failed to send verification email:", verr);
+      }
+      // Sign out so user must verify before accessing the app
+      await convexSignOut();
+      return { error: null, verificationSent: true };
     } catch (err: any) {
       const msg = err?.message ?? "";
       if (msg.includes("already exists") || msg.includes("already in use")) {
@@ -174,7 +195,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
       return { error: new Error(msg || "Sign up failed. Please try again.") };
     }
-  }, [signIn, convex]);
+  }, [signIn, sendVerificationEmail, convexSignOut, convex]);
 
   const signOutFn = React.useCallback(async () => {
     setHardcodedAdmin(false);
