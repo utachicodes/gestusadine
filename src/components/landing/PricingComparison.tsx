@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Check, Loader2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Check, Loader2, AlertCircle } from 'lucide-react';
 import { useTr, type Loc } from '@/lib/i18n';
 import { useAction } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
@@ -73,6 +73,7 @@ const PricingComparison = () => {
   const { user, profile } = useAuth();
   const createCheckout = useAction(api.naboopay.createCheckoutSession);
   const [loading, setLoading] = useState(false);
+  const [showMaintenanceModal, setShowMaintenanceModal] = useState(false);
 
   const handleSubscribe = async () => {
     if (!user) {
@@ -83,28 +84,7 @@ const PricingComparison = () => {
       navigate('/dashboard');
       return;
     }
-    setLoading(true);
-    try {
-      const fullName = profile?.full_name || user?.displayName || '';
-      const firstName = fullName.split(' ')[0];
-      const lastName = fullName.split(' ').slice(1).join(' ');
-      const result = await createCheckout({
-        tier: 'student',
-        successUrl: window.location.origin + '/dashboard',
-        errorUrl: window.location.origin + '/pricing',
-        ...(firstName && { firstName }),
-        ...(lastName && { lastName }),
-      });
-      if (result.checkoutUrl) {
-        window.location.href = result.checkoutUrl;
-      } else if (result.requiresContact) {
-        navigate('/contact');
-      }
-    } catch (err: any) {
-      toast.error(err.data || err.message || 'Payment failed');
-    } finally {
-      setLoading(false);
-    }
+    setShowMaintenanceModal(true);
   };
 
   return (
@@ -181,6 +161,58 @@ const PricingComparison = () => {
           ))}
         </div>
       </div>
+
+      <AnimatePresence>
+        {showMaintenanceModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowMaintenanceModal(false)}
+              className="absolute inset-0 bg-stone-900/60 backdrop-blur-sm"
+            />
+
+            {/* Modal Box */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+              className="relative w-full max-w-md overflow-hidden rounded-2xl border border-stone-200 bg-white p-6 shadow-2xl z-10"
+            >
+              <div className="flex flex-col items-center text-center">
+                <div className="mb-4 rounded-full bg-amber-50 p-3 text-amber-600">
+                  <AlertCircle className="h-6 w-6" />
+                </div>
+
+                <h3 className="text-xl font-medium text-stone-900">
+                  {tr({
+                    en: "Upgrade Service Temporarily Offline",
+                    fr: "Service de mise à niveau temporairement indisponible"
+                  })}
+                </h3>
+
+                <p className="mt-3 text-sm leading-relaxed text-stone-600">
+                  {tr({
+                    en: "We are currently experiencing a temporary outage with our payment partner NabooPay. This upgrade service is a work in progress and will be up soon, Inshallah. We apologize for the inconvenience.",
+                    fr: "Nous rencontrons actuellement une interruption temporaire avec notre partenaire de paiement NabooPay. Ce service de mise à niveau est en cours de rétablissement et sera bientôt disponible, Inshallah. Nous vous prions de nous excuser pour ce désagrément."
+                  })}
+                </p>
+
+                <button
+                  type="button"
+                  onClick={() => setShowMaintenanceModal(false)}
+                  className="mt-6 w-full rounded-full bg-emerald-900 py-3 text-sm font-semibold text-[#FAF7F0] transition-colors hover:bg-emerald-800"
+                >
+                  {tr({ en: "Dismiss", fr: "Fermer" })}
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </section>
   );
 };
