@@ -18,6 +18,9 @@ async function fanarFetch(
   });
   if (!res.ok) {
     const err = await res.text();
+    if (res.status === 429) {
+      throw new Error("You've exceeded your Fanar API rate limit. Please wait a moment and try again.");
+    }
     throw new Error(`Fanar error (${res.status}): ${err}`);
   }
   return res.json();
