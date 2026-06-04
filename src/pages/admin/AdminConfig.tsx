@@ -102,8 +102,7 @@ const AdminConfig: React.FC = () => {
     <div className="flex-1 min-h-screen bg-gradient-to-br from-islamic-cream/30 via-white to-islamic-gold/10">
       <section className="container py-10 md:py-16">
         <header className="mb-12">
-          <p className="inline-flex items-center text-xs uppercase tracking-[0.22em] text-islamic-dark/60 mb-3">
-            <span className="w-1.5 h-1.5 rounded-full bg-islamic-gold mr-2" />
+          <p className="text-xs uppercase tracking-[0.22em] text-islamic-dark/60 mb-3">
             {tr({ en: "Admin Panel", fr: "Panneau admin" })}
           </p>
           <h1 className="text-4xl md:text-5xl font-bold text-islamic-dark mb-4">
