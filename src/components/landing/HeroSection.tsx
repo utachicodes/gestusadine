@@ -12,43 +12,50 @@ const HeroSection = () => {
 
   return (
     <section className="relative overflow-hidden bg-[#FAF7F0] pt-40 pb-28 lg:pt-48">
-      <div className="container mx-auto px-6">
+      {/* Premium subtle grid lines */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2ded5_1px,transparent_1px),linear-gradient(to_bottom,#e2ded5_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-[0.4] pointer-events-none" />
+      
+      {/* Elegant radial lighting effect */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(16,185,129,0.06),transparent_50%)] pointer-events-none" />
+
+      <div className="container mx-auto px-6 relative z-10">
         <div className="mx-auto max-w-3xl text-center">
           {/* Eyebrow */}
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="flex items-center justify-center gap-4 mb-10"
+            className="flex items-center justify-center gap-4 mb-8"
           >
-            <span className="h-px w-10 bg-stone-300" />
-            <span className="text-[11px] font-semibold uppercase tracking-[0.3em] text-stone-500">
+            <span className="h-px w-8 bg-stone-300/80" />
+            <span className="text-[11px] font-semibold uppercase tracking-[0.25em] text-stone-500">
               {tr({ en: 'The Council of Knowledge', fr: 'Le Conseil du Savoir' })}
             </span>
-            <span className="h-px w-10 bg-stone-300" />
+            <span className="h-px w-8 bg-stone-300/80" />
           </motion.div>
 
-          {/* Arabic mark */}
-          <motion.p
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
+          {/* Arabic mark - Styled calligraphic seal */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.9, ease }}
-            className="font-arabic text-4xl text-emerald-800/80 mb-7"
-            dir="rtl"
+            className="inline-flex items-center justify-center w-16 h-16 rounded-full border border-emerald-800/10 bg-emerald-800/5 shadow-[0_0_20px_rgba(6,95,70,0.03)] mb-8 select-none"
           >
-            اقْرَأْ
-          </motion.p>
+            <p className="font-arabic text-3xl text-emerald-800/90 leading-none">
+              اقْرَأْ
+            </p>
+          </motion.div>
 
           {/* Headline */}
           <motion.h1
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease, delay: 0.08 }}
-            className="text-5xl sm:text-6xl lg:text-[5.25rem] leading-[1.02] text-stone-900"
+            className="text-5xl sm:text-6xl lg:text-[4.75rem] font-medium tracking-tight text-stone-900 leading-[1.05]"
           >
             {tr({ en: 'Every question of faith,', fr: 'Chaque question de foi,' })}
             <br />
-            <span className="italic text-emerald-800">
+            <span className="italic text-emerald-800 font-serif">
               {tr({ en: 'answered with wisdom.', fr: 'éclairée par la sagesse.' })}
             </span>
           </motion.h1>
@@ -71,51 +78,57 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease, delay: 0.28 }}
-            className="mt-11 flex items-center justify-center gap-7"
+            className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-5"
           >
             <motion.button
               whileHover={{ y: -2 }}
-              whileTap={{ scale: 0.97 }}
+              whileTap={{ scale: 0.98 }}
               onClick={() => navigate('/login')}
-              className="rounded-full bg-emerald-900 px-9 py-3.5 text-sm font-semibold tracking-wide text-[#FAF7F0] shadow-lg shadow-emerald-900/15 hover:bg-emerald-800 transition-colors"
+              className="w-full sm:w-auto rounded-full bg-emerald-900 px-9 py-3.5 text-sm font-semibold tracking-wide text-[#FAF7F0] shadow-md shadow-emerald-900/10 hover:bg-emerald-800 hover:shadow-lg hover:shadow-emerald-900/20 transition-all duration-300"
             >
               {tr({ en: 'Begin', fr: 'Commencer' })}
             </motion.button>
-            <button
+            <motion.button
+              whileHover={{ y: -2 }}
+              whileTap={{ scale: 0.98 }}
               onClick={() => navigate('/chat')}
-              className="group inline-flex items-center gap-2 text-sm font-semibold text-stone-700 hover:text-emerald-800 transition-colors"
+              className="w-full sm:w-auto group inline-flex items-center justify-center gap-2 rounded-full border border-stone-300/80 bg-white/40 backdrop-blur-sm px-8 py-3.5 text-sm font-semibold text-stone-700 hover:text-emerald-800 hover:border-emerald-800/30 hover:bg-white/80 transition-all duration-300"
             >
               {tr({ en: 'Ask the council', fr: 'Consulter le conseil' })}
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-            </button>
+            </motion.button>
           </motion.div>
         </div>
 
-        {/* A real example, treated editorially — no fake UI chrome */}
+        {/* Elegant Floating Paper-like Quote Card */}
         <motion.figure
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 32 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease, delay: 0.4 }}
-          className="mx-auto mt-24 max-w-2xl border-t border-stone-200 pt-12 text-center"
+          transition={{ duration: 1.1, ease, delay: 0.4 }}
+          className="mx-auto mt-24 max-w-2xl rounded-2xl border border-stone-200/60 bg-white/50 backdrop-blur-md p-8 md:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.015)] text-center relative overflow-hidden"
         >
-          <p className="text-2xl sm:text-3xl italic leading-snug text-stone-800">
+          {/* Subtle gradient glow inside card */}
+          <div className="absolute -top-12 -right-12 w-32 h-32 bg-[radial-gradient(circle,rgba(16,185,129,0.04)_0%,transparent_70%)] pointer-events-none" />
+
+          <p className="text-xl sm:text-2xl font-serif italic leading-relaxed text-stone-800">
             {tr({
               en: '“Is it permissible to combine prayers while travelling?”',
               fr: '« Peut-on regrouper les prières en voyage ? »',
             })}
           </p>
-          <figcaption className="mt-5 text-sm leading-relaxed text-stone-500">
+          <figcaption className="mt-4 text-sm leading-relaxed text-stone-500 font-sans max-w-lg mx-auto">
             {tr({
               en: 'Answered in seconds, with the ruling across all four Sunni schools and citations you can verify.',
               fr: 'Une réponse en quelques secondes, avec l’avis des quatre écoles sunnites et des sources vérifiables.',
             })}
           </figcaption>
+          
           <div className="mt-8 flex items-center justify-center gap-4 text-stone-400">
-            <span className="h-px w-12 bg-stone-300" />
-            <span className="text-[11px] font-medium uppercase tracking-[0.25em]">
+            <span className="h-px w-8 bg-stone-300/80" />
+            <span className="text-[10px] font-semibold uppercase tracking-[0.25em] text-emerald-800/60 font-sans">
               {tr({ en: 'Fiqh · ʿAqīdah · Context · Humility', fr: 'Fiqh · ʿAqīda · Contexte · Humilité' })}
             </span>
-            <span className="h-px w-12 bg-stone-300" />
+            <span className="h-px w-8 bg-stone-300/80" />
           </div>
         </motion.figure>
       </div>
