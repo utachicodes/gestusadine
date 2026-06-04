@@ -32,8 +32,8 @@ const SplashScreen = ({ onFinish }: { onFinish: () => void }) => {
                     transition={{ duration: 0.8, ease: "easeOut" }}
                     className="mb-8"
                 >
-                    <h1 className="text-4xl md:text-6xl font-serif font-bold text-transparent bg-clip-text bg-gradient-to-r from-islamic-gold-light via-islamic-gold to-islamic-gold-dark">
-                        GëstuSaDine AI
+                    <h1 className="text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-islamic-gold-light via-islamic-gold to-islamic-gold-dark">
+                        Gï¿½stuSaDine AI
                     </h1>
                 </motion.div>
 

@@ -6,26 +6,25 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **GëstuSaDine** is a full-stack Islamic knowledge platform combining multi-agent AI consensus with e-commerce, education, and community features. The target market is West Africa (currency: XOF).
 
+**Architecture:** React SPA → **Convex** (auth, database, serverless functions, vector search, file storage). Express backend being retired.
+
 ## Development Commands
 
 ```bash
-# Run frontend + backend together
-npm run dev
+# Run frontend + Convex together
+npm run dev:full
 
 # Run individually
-npm run dev:frontend   # Vite dev server on port 3000
-npm run dev:backend    # Express API gateway on port 4000
+npm run dev:frontend      # Vite dev server on port 3000
+npm run dev:convex         # npx convex dev (watch convex/ functions)
 
 # Build
-npm run build          # Production build (Vite + Python translation deps)
-npm run build:dev      # Development build
+npm run build              # Production build (Vite only)
 
 # Lint & test
 npm run lint
-npm test               # Vitest
+npm test                   # Vitest
 ```
-
-Frontend proxies `/api` to `http://localhost:4000` (configured in `vite.config.ts`).
 
 ## Architecture
 
@@ -34,7 +33,10 @@ Frontend proxies `/api` to `http://localhost:4000` (configured in `vite.config.t
 React 18 + TypeScript + Vite SPA. App entry: `src/main.tsx` → `src/App.tsx`.
 
 **Provider nesting order (outermost first):**
-`ErrorBoundary → AuthProvider → QueryClientProvider → ThemeProvider → TooltipProvider → LanguageProvider → BrowserRouter`
+`ConvexAuthProvider → App → ErrorBoundary → AuthProvider → QueryClientProvider → ThemeProvider → TooltipProvider → LanguageProvider → CartProvider → BrowserRouter`
+
+**ConvexAuthProvider** (in `main.tsx`) handles JWT/session management.
+**AuthProvider** (in `src/auth/AuthContext.tsx`) wraps Convex Auth hooks into a stable `useAuth()` API consumed by 12+ components.
 
 **Routing** uses React Router v6 with two layout wrappers:
 - `AppShell` — public pages (navbar + footer)
@@ -42,66 +44,74 @@ React 18 + TypeScript + Vite SPA. App entry: `src/main.tsx` → `src/App.tsx`.
 - `ProtectedRoute` — guards authenticated + admin-only routes
 
 **State management:**
-- Firebase Auth state → `AuthContext` (`src/contexts/AuthContext.tsx`)
-- Theme (dark/light/personalized) → `ThemeContext` (persisted to localStorage)
-- i18n → `LanguageContext` (translations in `src/data/`)
-- Server state → TanStack React Query (used by `src/hooks/use-council.ts`)
+- Auth: Convex Auth → `AuthContext` (`src/auth/AuthContext.tsx`)
+- Theme: `ThemeContext` (persisted to localStorage)
+- i18n: `LanguageContext` (translations in `src/data/`)
+- Server state: Convex `useQuery`/`useMutation` hooks + TanStack React Query
 
-**API calls** go through `src/lib/api.ts` (`apiFetch()`), which attaches Firebase auth tokens automatically.
+**API calls:** Use Convex hooks (`useQuery(api.module.fn)`, `useMutation(api.module.fn)`) directly. The old `apiFetch()` is deprecated.
 
-### Backend (`/backend`)
+### Convex Backend (`convex/`)
 
-Single Express server (`backend/services/api-gateway/src/server.ts`) on port 4000 that handles all routes. Despite the `services/` folder structure, this is effectively a monolith — the sub-service folders contain specialized logic imported by the gateway.
+All backend logic lives in `convex/`:
 
-**Auth middleware** (`backend/services/api-gateway/src/auth.ts`): Firebase Admin SDK verifies JWT tokens. Use `requireAuth` and `requireAdmin` middleware on protected routes.
+| Path | Purpose |
+|------|---------|
+| `convex/schema.ts` | All tables, indexes, vector index for RAG |
+| `convex/auth.ts` | Convex Auth (Password provider, session config, admin detection) |
+| `convex/users.ts` | User queries/mutations (currentUser, updateProfile, setRole) |
+| `convex/products.ts` | Shop CRUD |
+| `convex/events.ts` | Events CRUD + registration |
+| `convex/videos.ts` | Video CRUD + progress tracking |
+| `convex/library.ts` | Library book CRUD |
+| `convex/daily.ts` | Daily content (ayah/hadith/dua/fact) |
+| `convex/rateLimiter.ts` | Rate limit definitions (failedLogins, signUp, council, chat) |
+| `convex/seed.ts` | Admin user seeding |
 
-**Key API routes:**
-- `/api/council/*` — multi-agent Islamic guidance (ask, documents, RAG search)
-- `/api/fatwa` — Islamic rulings
-- `/api/chat` — conversational AI
-- `/api/shop/*`, `/api/events/*`, `/api/media/video`, `/api/library/*`
+**Key Convex features:**
+- **Convex Auth** with Password provider, 7-day session expiry, 24hr inactivity timeout
+- **Rate limiter** component (10 failed logins/hour, 5 sign-ups/minute, 20 council asks/min)
+- **Vector index** on `ragChunks.embedding` (1536 dimensions, OpenAI) with category filter
+- **Admin auto-detection** via `ADMIN_EMAILS` env var in `auth.ts`'s `createOrUpdateUser` callback
+- **Row-level security** available via `convex-helpers` (wrap db access with authz checks)
 
-### The LLM Council (Core Feature)
+### The LLM Council (Core Feature — To Be Migrated)
 
-The platform's main AI feature: multiple specialized agents independently answer Islamic questions, then a synthesis layer produces a consensus response with a confidence score.
+The platform's main AI feature lives in `backend/` and needs migration to Convex actions:
+- 4 agents (Fiqh, Aqeedah, Context, Humility) + synthesis engine
+- RAG document search via vector index
+- Fanar API calls via Convex actions (key server-side only)
 
-**Agents** (in `backend/agents/`):
-- `fiqh.ts` — Islamic jurisprudence (temp=0.3)
-- `aqeedah.ts` — Islamic theology, acts as a boundary guard (temp=0.1)
-- `context.ts` — Contemporary context (temp=0.5)
-- `humility.ts` — Epistemic caution / hallucination prevention
+## Provider Nesting in src/App.tsx
 
-**Flow:** User query → RAG document search → each agent runs independently → `backend/synthesis/` combines responses → confidence score returned.
-
-**Agent LLM config** is in `backend/config.json`. Models are served via OpenRouter API (`src/lib/openrouter.ts`).
-
-Frontend integration: `src/hooks/use-council.ts` (React Query mutations/queries).
-
-### Firebase
-
-- **Auth**: Email/password
-- **Firestore**: User profiles, documents, orders, subscriptions, chat history
-- **Storage**: Uploaded Islamic texts for RAG
-- Config: `src/lib/firebase.ts` (frontend), `backend/services/api-gateway/src/lib/firebase-admin.ts` (backend)
-- Security rules: `firestore.rules`
-
-### UI Components
-
-Uses **shadcn/ui** (configured in `components.json`) built on Radix UI primitives. Base components live in `src/components/ui/`. The design system is "Premium Dark Fintech" aesthetic using Tailwind CSS + Framer Motion animations.
+```
+ErrorBoundary
+  → AuthProvider (Convex Auth-backed, same useAuth() API)
+    → QueryClientProvider
+      → ThemeProvider
+        → TooltipProvider
+          → Toaster + Sonner
+            → LanguageProvider
+              → CartProvider
+                → BrowserRouter
+```
 
 ## Key Files
 
 | Path | Purpose |
 |------|---------|
-| `src/App.tsx` | All route definitions |
-| `src/lib/api.ts` | Auth-aware API fetch wrapper |
-| `src/contexts/AuthContext.tsx` | Firebase auth + Firestore profile |
-| `src/hooks/use-council.ts` | Council API integration (React Query) |
-| `backend/services/api-gateway/src/server.ts` | Express app + route registration |
-| `backend/agents/council-agent.ts` | Base agent class |
-| `backend/config.json` | Agent LLM model configuration |
-| `vite.config.ts` | Frontend build + API proxy config |
+| `convex/auth.ts` | Convex Auth config (Password, session, admin detection) |
+| `convex/schema.ts` | Full database schema (all tables) |
+| `convex/_generated/api.d.ts` | Auto-generated Convex API types |
+| `src/main.tsx` | App entry (ConvexAuthProvider wraps App) |
+| `src/auth/AuthContext.tsx` | Auth context (Convex Auth-backed, stable useAuth() API) |
+| `src/auth/rbac.ts` | Role/permission model |
+| `src/App.tsx` | Route definitions |
+| `vite.config.ts` | Frontend build config (no Express proxy) |
 
 ## Environment
 
-Copy `.env.example` to `.env`. Required variables include Firebase config, OpenRouter API key, and backend URL. The backend reads env via `backend/services/api-gateway/src/config-env.ts`.
+Copy `.env.example` to `.env`. Required variables:
+- `VITE_CONVEX_URL` — Convex deployment URL
+- `ADMIN_EMAILS` — comma-separated admin emails (set via `npx convex env set`)
+- `AUTH_SECRET` — Convex Auth secret (set via `npx convex env set`)

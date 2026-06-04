@@ -1,16 +1,10 @@
-/**
- * Environment variable validation and access
- * Ensures all required environment variables are present at runtime
- */
-
 interface EnvConfig {
-
+  VITE_CONVEX_URL: string;
   VITE_ADMIN_EMAIL?: string;
-  VITE_OPENROUTER_API_KEY?: string;
   VITE_API_URL?: string;
 }
 
-const requiredEnvVars = [] as const;
+const requiredEnvVars = ['VITE_CONVEX_URL'] as const;
 
 function validateEnv(): EnvConfig {
   const missing: string[] = [];
@@ -29,12 +23,10 @@ function validateEnv(): EnvConfig {
   }
 
   return {
-
+    VITE_CONVEX_URL: import.meta.env.VITE_CONVEX_URL,
     VITE_ADMIN_EMAIL: import.meta.env.VITE_ADMIN_EMAIL,
-    VITE_OPENROUTER_API_KEY: import.meta.env.VITE_OPENROUTER_API_KEY,
-    VITE_API_URL: import.meta.env.VITE_API_URL || 'http://localhost:4000',
+    VITE_API_URL: import.meta.env.VITE_API_URL,
   };
 }
 
 export const env = validateEnv();
-

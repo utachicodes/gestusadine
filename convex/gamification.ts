@@ -1,0 +1,118 @@
+import { query, mutation } from "./_generated/server";
+import { v } from "convex/values";
+import { getCurrentUser, getCurrentUserOrThrow } from "./authz";
+
+const RANK_THRESHOLDS = [
+  { rank: "Talib", minXp: 0 },
+  { rank: "Murid", minXp: 100 },
+  { rank: "Bahith", minXp: 500 },
+  { rank: "Alim", minXp: 1000 },
+  { rank: "Faqih", minXp: 2500 },
+] as const;
+
+export type Rank = (typeof RANK_THRESHOLDS)[number]["rank"];
+
+function computeRank(xp: number): Rank {
+  let current: Rank = "Talib";
+  for (const r of RANK_THRESHOLDS) {
+    if (xp >= r.minXp) current = r.rank as Rank;
+  }
+  return current;
+}
+
+function nextRankThreshold(xp: number): number {
+  for (const r of RANK_THRESHOLDS) {
+    if (xp < r.minXp) return r.minXp;
+  }
+  return RANK_THRESHOLDS[RANK_THRESHOLDS.length - 1].minXp;
+}
+
+export const myStats = query({
+  args: {},
+  handler: async (ctx) => {
+    const user = await getCurrentUser(ctx);
+    if (!user) return null;
+
+    const xp = user.xp ?? 0;
+    const streak = user.streak ?? 0;
+    const rank = computeRank(xp);
+    const nextThreshold = nextRankThreshold(xp);
+    const quizzesTaken = await ctx.db
+      .query("quizAttempts")
+      .withIndex("userId", (q) => q.eq("userId", user._id))
+      .collect();
+
+    const perfectScores = quizzesTaken.filter((a) => a.correct).length;
+
+    return {
+      xp,
+      streak,
+      rank,
+      nextRankThreshold: nextThreshold,
+      progressToNext: nextThreshold > 0 ? Math.min(1, xp / nextThreshold) : 1,
+      quizzesTaken: quizzesTaken.length,
+      perfectScores,
+    };
+  },
+});
+
+export const leaderboard = query({
+  args: { limit: v.optional(v.number()) },
+  handler: async (ctx, args) => {
+    const users = await ctx.db.query("users").collect();
+    return users
+      .filter((u) => (u.xp ?? 0) > 0)
+      .sort((a, b) => (b.xp ?? 0) - (a.xp ?? 0))
+      .slice(0, args.limit ?? 50)
+      .map((u) => ({
+        userId: u._id,
+        fullName: u.fullName ?? u.email ?? "Anonymous",
+        xp: u.xp ?? 0,
+        rank: computeRank(u.xp ?? 0),
+      }));
+  },
+});
+
+export const awardXp = mutation({
+  args: {
+    amount: v.number(),
+    reason: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const user = await getCurrentUserOrThrow(ctx);
+    const currentXp = user.xp ?? 0;
+    await ctx.db.patch(user._id, { xp: currentXp + args.amount });
+    await ctx.db.insert("userActivity", {
+      userId: user._id,
+      activityType: "xp_awarded",
+      metadata: { amount: args.amount, reason: args.reason, totalXp: currentXp + args.amount },
+      createdAt: Date.now(),
+    });
+  },
+});
+
+export const recordDailyActivity = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const user = await getCurrentUserOrThrow(ctx);
+    const now = Date.now();
+    const today = new Date(now).setHours(0, 0, 0, 0);
+    const lastActive = user.lastActiveDate ?? 0;
+    const yesterday = today - 86_400_000;
+
+    let streak = user.streak ?? 0;
+    if (lastActive < today) {
+      if (lastActive >= yesterday) {
+        streak += 1;
+      } else {
+        streak = 1;
+      }
+    }
+
+    await ctx.db.patch(user._id, {
+      streak,
+      lastActiveDate: now,
+      xp: (user.xp ?? 0) + 10,
+    });
+  },
+});

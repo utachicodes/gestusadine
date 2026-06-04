@@ -2,16 +2,16 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/auth/AuthContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { CartProvider } from "@/contexts/CartContext";
-import LenisProvider from "@/components/effects/LenisProvider";
 import { ProtectedRoute } from "@/components/layout/ProtectedRoute";
 import { PublicRoute } from "@/components/layout/PublicRoute";
 import { ErrorBoundary } from "@/components/layout/ErrorBoundary";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import Index from "./pages/core/Index";
+import Help from "./pages/core/Help";
 import NotFound from "./pages/core/NotFound";
 import Dashboard from "./pages/user/Dashboard";
 import Profile from "./pages/user/Profile";
@@ -27,7 +27,6 @@ import Login from "./pages/auth/Login";
 import AppShell from "./components/layout/AppShell";
 import { ChatInterface } from "@/components/chat/ChatInterface";
 import { AdminDashboard } from "@/pages/admin/Dashboard";
-import MediaPage from "./pages/knowledge/MediaPage";
 import EventsPage from "./pages/knowledge/EventsPage";
 import ManageEvents from "./pages/admin/ManageEvents";
 import ManageVideos from "./pages/admin/ManageVideos";
@@ -35,6 +34,8 @@ import ManageDaily from "./pages/admin/ManageDaily";
 import Library from "./pages/knowledge/Library";
 import ManageLibrary from "./pages/admin/ManageLibrary";
 import RAGTest from "./pages/admin/RAGTest";
+import ManageQuizzes from "./pages/admin/ManageQuizzes";
+import ManagePodcasts from "./pages/admin/ManagePodcasts";
 
 import About from "./pages/core/About";
 import Contact from "./pages/core/Contact";
@@ -46,7 +47,15 @@ import HadithPage from "./pages/islamic/Hadith";
 import TawhidPage from "./pages/islamic/Tawhid";
 import PodcastsPage from "./pages/knowledge/PodcastsPage";
 import CommunityPage from "./pages/community/CommunityPage";
+import CircleDetail from "./pages/community/CircleDetail";
 import IslamicShop from "./pages/islamic/IslamicShop";
+import Settings from "./pages/user/Settings";
+import Pricing from "./pages/core/Pricing";
+import Quran from "./pages/quran/Quran";
+import SurahView from "./pages/quran/SurahView";
+import PrayerTimes from "./pages/tools/PrayerTimes";
+import HijriCalendar from "./pages/tools/HijriCalendar";
+import ZakatCalculator from "./pages/tools/ZakatCalculator";
 
 import { ThemeProvider } from "@/contexts/ThemeContext";
 
@@ -63,9 +72,8 @@ const App = () => {
               <Sonner />
               <LanguageProvider>
                 <CartProvider>
-                  <LenisProvider>
-                    <BrowserRouter>
-                      <Routes>
+                  <BrowserRouter>
+                    <Routes>
                         <Route
                           path="/"
                           element={
@@ -81,14 +89,8 @@ const App = () => {
                         <Route path="/faq" element={<AppShell><FAQ /></AppShell>} />
                         <Route path="/privacy" element={<AppShell><Privacy /></AppShell>} />
                         <Route path="/terms" element={<AppShell><Terms /></AppShell>} />
-                        <Route
-                          path="/login"
-                          element={
-                            <AppShell>
-                              <Login />
-                            </AppShell>
-                          }
-                        />
+                        <Route path="/pricing" element={<AppShell><Pricing /></AppShell>} />
+                        <Route path="/login" element={<Login />} />
                         <Route
                           path="/shop"
                           element={
@@ -144,6 +146,76 @@ const App = () => {
                           }
                         />
                         <Route
+                          path="/settings"
+                          element={
+                            <ProtectedRoute>
+                              <DashboardLayout>
+                                <Settings />
+                              </DashboardLayout>
+                            </ProtectedRoute>
+                          }
+                        />
+                        <Route
+                          path="/help"
+                          element={
+                            <ProtectedRoute>
+                              <DashboardLayout>
+                                <Help />
+                              </DashboardLayout>
+                            </ProtectedRoute>
+                          }
+                        />
+                        <Route
+                          path="/quran"
+                          element={
+                            <ProtectedRoute>
+                              <DashboardLayout>
+                                <Quran />
+                              </DashboardLayout>
+                            </ProtectedRoute>
+                          }
+                        />
+                        <Route
+                          path="/quran/:number"
+                          element={
+                            <ProtectedRoute>
+                              <DashboardLayout>
+                                <SurahView />
+                              </DashboardLayout>
+                            </ProtectedRoute>
+                          }
+                        />
+                        <Route
+                          path="/prayer-times"
+                          element={
+                            <ProtectedRoute>
+                              <DashboardLayout>
+                                <PrayerTimes />
+                              </DashboardLayout>
+                            </ProtectedRoute>
+                          }
+                        />
+                        <Route
+                          path="/calendar"
+                          element={
+                            <ProtectedRoute>
+                              <DashboardLayout>
+                                <HijriCalendar />
+                              </DashboardLayout>
+                            </ProtectedRoute>
+                          }
+                        />
+                        <Route
+                          path="/zakat"
+                          element={
+                            <ProtectedRoute>
+                              <DashboardLayout>
+                                <ZakatCalculator />
+                              </DashboardLayout>
+                            </ProtectedRoute>
+                          }
+                        />
+                        <Route
                           path="/circle"
                           element={
                             <ProtectedRoute adminOnly>
@@ -153,15 +225,16 @@ const App = () => {
                             </ProtectedRoute>
                           }
                         />
+                        {/* Council is open to all signed-in users — Seekers get a
+                            metered "taste" (monthly cap enforced in ChatInterface),
+                            paid tiers get more. */}
                         <Route
                           path="/chat"
                           element={
                             <ProtectedRoute>
-                              <AccessGuard requiredTier="student">
-                                <DashboardLayout>
-                                  <ChatInterface />
-                                </DashboardLayout>
-                              </AccessGuard>
+                              <DashboardLayout>
+                                <ChatInterface />
+                              </DashboardLayout>
                             </ProtectedRoute>
                           }
                         />
@@ -227,16 +300,8 @@ const App = () => {
                             </ProtectedRoute>
                           }
                         />
-                        <Route
-                          path="/media"
-                          element={
-                            <ProtectedRoute>
-                              <DashboardLayout>
-                                <MediaPage />
-                              </DashboardLayout>
-                            </ProtectedRoute>
-                          }
-                        />
+                        {/* Media merged into Library — keep old links working. */}
+                        <Route path="/media" element={<Navigate to="/library" replace />} />
                         <Route
                           path="/events"
                           element={
@@ -279,15 +344,38 @@ const App = () => {
                             </ProtectedRoute>
                           }
                         />
+                        <Route
+                          path="/admin/quizzes"
+                          element={
+                            <ProtectedRoute adminOnly>
+                              <DashboardLayout>
+                                <ManageQuizzes />
+                              </DashboardLayout>
+                            </ProtectedRoute>
+                          }
+                        />
+                        <Route
+                          path="/admin/podcasts"
+                          element={
+                            <ProtectedRoute adminOnly>
+                              <DashboardLayout>
+                                <ManagePodcasts />
+                              </DashboardLayout>
+                            </ProtectedRoute>
+                          }
+                        />
 
                         {/* Islamic Education Routes */}
+                        {/* Courses & classes are a Student-tier feature. */}
                         <Route
                           path="/classes"
                           element={
                             <ProtectedRoute>
-                              <DashboardLayout>
-                                <Classes />
-                              </DashboardLayout>
+                              <AccessGuard requiredTier="student">
+                                <DashboardLayout>
+                                  <Classes />
+                                </DashboardLayout>
+                              </AccessGuard>
                             </ProtectedRoute>
                           }
                         />
@@ -323,6 +411,14 @@ const App = () => {
                             </AppShell>
                           }
                         />
+                        <Route
+                          path="/community/:circleId"
+                          element={
+                            <AppShell>
+                              <CircleDetail />
+                            </AppShell>
+                          }
+                        />
 
                         {/* Catch-all */}
                         <Route
@@ -334,8 +430,7 @@ const App = () => {
                           }
                         />
                       </Routes>
-                    </BrowserRouter>
-                  </LenisProvider>
+                  </BrowserRouter>
                 </CartProvider>
               </LanguageProvider>
             </TooltipProvider>

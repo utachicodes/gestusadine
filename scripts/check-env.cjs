@@ -25,7 +25,7 @@ const requiredKeys = [
     'VITE_FIREBASE_STORAGE_BUCKET',
     'VITE_FIREBASE_MESSAGING_SENDER_ID',
     'VITE_FIREBASE_APP_ID',
-    'VITE_OPENROUTER_API_KEY'
+    'FANAR_API_KEY'
 ];
 
 console.log('Environment Variable Check:');

@@ -1,124 +1,173 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Check, ArrowRight, Sparkles, Zap, Shield } from 'lucide-react';
+import { Check, Loader2 } from 'lucide-react';
+import { useTr, type Loc } from '@/lib/i18n';
+import { useAction } from 'convex/react';
+import { api } from '../../../convex/_generated/api';
+import { useAuth } from '@/auth/AuthContext';
+import { toast } from 'sonner';
 
-const tiers = [
+const ease = [0.22, 1, 0.36, 1] as const;
+
+type Tier = {
+  name: Loc;
+  price: Loc;
+  unit?: Loc;
+  description: Loc;
+  features: Loc[];
+  cta: Loc;
+  to: string;
+  popular: boolean;
+};
+
+const tiers: Tier[] = [
   {
-    name: "Seeker",
-    price: "Free",
-    icon: Sparkles,
-    description: "Ideal for individual explorers beginning their journey into Islamic knowledge.",
+    name: { en: 'Seeker', fr: 'Chercheur' },
+    price: { en: 'Free', fr: 'Gratuit' },
+    description: { en: 'For anyone beginning their journey.', fr: 'Pour celles et ceux qui débutent.' },
     features: [
-      "Access to Public Library",
-      "Limited AI Council Consultations",
-      "Daily Hadith & Ayah Widgets"
+      { en: 'The public library', fr: 'La bibliothèque publique' },
+      { en: 'A taste of the Council', fr: 'Un aperçu du Conseil' },
+      { en: 'Daily ayah & dua', fr: 'Verset et invocation du jour' },
+      { en: 'Read the community', fr: 'Lecture de la communauté' },
     ],
-    cta: "Start Learning",
-    popular: false
+    cta: { en: 'Start free', fr: 'Commencer' },
+    to: '/login',
+    popular: false,
   },
   {
-    name: "Student",
-    price: "10,000",
-    unit: "/mo",
-    icon: Zap,
-    description: "For serious students seeking deep traditional guidance and AI-powered research tools.",
+    name: { en: 'Student', fr: 'Étudiant' },
+    price: { en: '10,000', fr: '10 000' },
+    unit: { en: 'FCFA / mo', fr: 'FCFA / mois' },
+    description: { en: 'For those who want to go deeper.', fr: 'Pour aller plus loin.' },
     features: [
-      "Unlimited AI Council Access",
-      "Advanced Scholarly Archives",
-      "Priority Podcast Access",
-      "Full Community Participation"
+      { en: 'Unlimited Council access', fr: 'Accès illimité au Conseil' },
+      { en: 'Full scholarly archives', fr: 'Archives savantes complètes' },
+      { en: 'Courses & classes', fr: 'Cours et leçons' },
+      { en: 'Full community access', fr: 'Accès complet à la communauté' },
     ],
-    cta: "Join the Circle",
-    popular: true
+    cta: { en: 'Join the circle', fr: 'Rejoindre le cercle' },
+    to: '/login',
+    popular: true,
   },
   {
-    name: "Institution",
-    price: "Custom",
-    icon: Shield,
-    description: "Custom solutions for mosques, schools, and organizations to manage their own knowledge.",
+    name: { en: 'Institution', fr: 'Institution' },
+    price: { en: 'Custom', fr: 'Sur mesure' },
+    description: { en: 'For mosques, schools, and organisations.', fr: 'Pour mosquées, écoles et organisations.' },
     features: [
-      "Multi-user Admin Console",
-      "Private RAG Knowledge Base",
-      "White-labeled Library",
-      "API Access for Developers"
+      { en: 'Multi-user console', fr: 'Console multi-utilisateurs' },
+      { en: 'Private knowledge base', fr: 'Base de connaissances privée' },
+      { en: 'White-labelled library', fr: 'Bibliothèque en marque blanche' },
+      { en: 'Priority support', fr: 'Support prioritaire' },
     ],
-    cta: "Contact Sales",
-    popular: false
-  }
+    cta: { en: 'Contact us', fr: 'Nous contacter' },
+    to: '/contact',
+    popular: false,
+  },
 ];
 
 const PricingComparison = () => {
+  const navigate = useNavigate();
+  const tr = useTr();
+  const { user } = useAuth();
+  const createCheckout = useAction(api.naboopay.createCheckoutSession);
+  const [loading, setLoading] = useState(false);
+
+  const handleSubscribe = async () => {
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+    setLoading(true);
+    try {
+      const result = await createCheckout({
+        tier: 'student',
+        successUrl: window.location.origin + '/dashboard',
+        errorUrl: window.location.origin + '/pricing',
+      });
+      if (result.checkoutUrl) {
+        window.location.href = result.checkoutUrl;
+      } else if (result.requiresContact) {
+        navigate('/contact');
+      }
+    } catch (err: any) {
+      toast.error(err.message ?? 'Payment failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <section className="py-24 bg-sacred-dark relative overflow-hidden">
-      <div className="container mx-auto px-4 lg:px-8">
-        <div className="flex flex-col lg:flex-row items-end justify-between mb-32 gap-12">
-            <div className="max-w-2xl">
-               <h2 className="font-serif-premium text-5xl md:text-8xl text-white tracking-tightest leading-none">
-                 The Path to <br />
-                 <span className="text-accent italic">Knowledge.</span>
-               </h2>
-            </div>
-            <p className="text-white/30 font-medium max-w-sm mb-4 tracking-wide">
-              Investment in your growth, guided by wisdom and supported by modern intelligence.
-            </p>
-        </div>
+    <section className="bg-[#FAF7F0] py-28">
+      <div className="container mx-auto px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.7, ease }}
+          className="mx-auto max-w-2xl text-center"
+        >
+          <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-emerald-800/70 mb-4">
+            {tr({ en: 'Pricing', fr: 'Tarifs' })}
+          </p>
+          <h2 className="text-4xl sm:text-5xl leading-tight text-stone-900">
+            {tr({ en: 'Begin free. Grow when you\'re ready.', fr: 'Gratuit pour commencer. Évoluez à votre rythme.' })}
+          </h2>
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border border-white/5 bg-white/[0.01]">
-          {tiers.map((tier, index) => (
+        <div className="mx-auto mt-16 grid max-w-5xl gap-6 lg:grid-cols-3">
+          {tiers.map((tier, i) => (
             <motion.div
-              key={index}
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1, delay: index * 0.2 }}
-              className={`group relative p-12 lg:p-16 flex flex-col transition-all duration-700 hover:bg-white/[0.02] ${
-                index !== 2 ? 'border-b md:border-b-0 md:border-r border-white/10' : ''
-              } ${tier.popular ? 'bg-white/[0.02]' : ''}`}
+              key={tier.name.en}
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-40px' }}
+              transition={{ duration: 0.55, ease, delay: i * 0.08 }}
+              className={`relative flex flex-col rounded-2xl border p-8 ${
+                tier.popular
+                  ? 'border-emerald-800/30 bg-white shadow-xl shadow-emerald-900/5'
+                  : 'border-stone-200 bg-white/40'
+              }`}
             >
-              <div className="relative z-10 mb-16">
-                <div className="text-accent/20 mb-8">
-                   <tier.icon className="w-8 h-8" />
-                </div>
-                
-                <h3 className="font-serif-premium text-2xl text-white mb-10 tracking-widest uppercase italic">
-                  {tier.name}
-                </h3>
-                
-                <div className="flex items-baseline gap-3 mb-6">
-                  <span className="text-6xl font-serif-premium text-white">{tier.price}</span>
-                  {tier.unit && (
-                    <div className="flex flex-col">
-                       <span className="text-sm font-black text-accent">{tier.unit}</span>
-                       <span className="text-[10px] font-bold text-white/20 uppercase tracking-widest mt-1">FCFA</span>
-                    </div>
-                  )}
-                </div>
+              {tier.popular && (
+                <span className="absolute -top-3 left-8 rounded-full bg-emerald-900 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#FAF7F0]">
+                  {tr({ en: 'Most chosen', fr: 'Le plus choisi' })}
+                </span>
+              )}
+
+              <h3 className="text-2xl text-stone-900">{tr(tier.name)}</h3>
+              <p className="mt-1 text-sm text-stone-500">{tr(tier.description)}</p>
+
+              <div className="mt-6 flex items-baseline gap-2">
+                <span className="text-5xl text-stone-900">{tr(tier.price)}</span>
+                {tier.unit && <span className="text-sm font-medium text-stone-400">{tr(tier.unit)}</span>}
               </div>
 
-              <p className="relative z-10 text-sm font-medium leading-relaxed mb-16 text-white/40 h-20 overflow-hidden">
-                {tier.description}
-              </p>
+              <div className="my-7 h-px bg-stone-200" />
 
-              <div className="relative z-10 space-y-6 mb-20 flex-1">
-                {tier.features.map((feature, fIdx) => (
-                  <div key={fIdx} className="flex items-start gap-4">
-                    <Check className="w-4 h-4 text-accent/40 mt-0.5" />
-                    <span className="text-[13px] font-bold tracking-tight text-white/60">
-                      {feature}
-                    </span>
-                  </div>
+              <ul className="flex-1 space-y-3.5">
+                {tier.features.map((f) => (
+                  <li key={f.en} className="flex items-start gap-3 text-sm text-stone-600">
+                    <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-700" />
+                    <span>{tr(f)}</span>
+                  </li>
                 ))}
-              </div>
+              </ul>
 
-              <button
-                className={`relative z-10 w-full py-6 rounded-none text-[10px] font-black uppercase tracking-[0.4em] transition-all duration-700 border ${
-                  tier.popular 
-                    ? 'bg-accent text-black border-accent' 
-                    : 'bg-transparent text-white border-white/10 hover:border-white/40'
-                }`}
-              >
-                {tier.cta}
-              </button>
+              {tier.popular ? (
+                <button onClick={handleSubscribe} disabled={loading} className="btn-push mt-8 w-full inline-flex items-center justify-center gap-2">
+                  {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+                  {tr(tier.cta)}
+                </button>
+              ) : (
+                <button
+                  onClick={() => navigate(tier.to)}
+                  className="mt-8 w-full rounded-full border border-stone-300 py-3 text-sm font-semibold text-stone-800 transition-colors hover:border-emerald-800 hover:text-emerald-800"
+                >
+                  {tr(tier.cta)}
+                </button>
+              )}
             </motion.div>
           ))}
         </div>

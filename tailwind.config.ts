@@ -22,6 +22,7 @@ export default {
 			fontFamily: {
 				sans: ["Inter", "sans-serif"],
 				display: ["Outfit", "Inter", "sans-serif"],
+				serif: ['"Cormorant Garamond"', "ui-serif", "Georgia", "serif"],
 				arabic: ["Amiri", "serif"],
 			},
 			colors: {
@@ -30,19 +31,21 @@ export default {
 				ring: 'hsl(var(--ring))',
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
-				// Premium SaaS Palette (Trickly Inspired)
+				// Brand accent — Teal (the bright counterpart to Heritage Emerald).
+				// Remapped from the old blue "Trickly" palette so every `brand-*`
+				// usage across the app renders emerald/teal with no file changes.
 				'brand': {
-					50: '#eff6ff',
-					100: '#dbeafe',
-					200: '#bfdbfe',
-					300: '#93c5fd',
-					400: '#60a5fa',
-					500: '#3b82f6', // Primary Blue
-					600: '#2563eb',
-					700: '#1d4ed8',
-					800: '#1e40af',
-					900: '#1e3a8a',
-					950: '#020617', // Deep Indigo Dark
+					50: '#f0fdfa',
+					100: '#ccfbf1',
+					200: '#99f6e4',
+					300: '#5eead4',
+					400: '#2dd4bf',
+					500: '#14b8a6',
+					600: '#0d9488', // primary teal action
+					700: '#0f766e',
+					800: '#115e59',
+					900: '#134e4a',
+					950: '#042f2e',
 				},
 				'saas-bg': {
 					DEFAULT: '#ffffff',
@@ -53,6 +56,33 @@ export default {
 					DEFAULT: 'rgba(255, 255, 255, 0.8)',
 					dark: 'rgba(15, 23, 42, 0.8)',
 				},
+				// Islamic palette — emerald/teal/slate. Full shade ramps so every
+				// `islamic-*` name + numeric variant referenced across the app
+				// resolves on-brand. `gold` is the teal accent; `emerald`/`green`
+				// the greens; `blue` a cyan/teal; `primary` a nested green/teal/gold.
+				'islamic': {
+					gold: { DEFAULT: '#0f766e', light: '#5eead4', dark: '#115e59', 50: '#f0fdfa', 100: '#ccfbf1', 200: '#99f6e4', 300: '#5eead4', 400: '#2dd4bf', 500: '#14b8a6', 600: '#0d9488', 700: '#0f766e', 800: '#115e59', 900: '#134e4a' },
+					emerald: { DEFAULT: '#059669', 50: '#ecfdf5', 100: '#d1fae5', 200: '#a7f3d0', 300: '#6ee7b7', 400: '#34d399', 500: '#10b981', 600: '#059669', 700: '#047857', 800: '#065f46', 900: '#064e3b' },
+					green: { DEFAULT: '#16a34a', 50: '#f0fdf4', 100: '#dcfce7', 200: '#bbf7d0', 300: '#86efac', 400: '#4ade80', 500: '#22c55e', 600: '#16a34a', 700: '#15803d', 800: '#166534', 900: '#14532d' },
+					blue: { DEFAULT: '#0891b2', 50: '#ecfeff', 100: '#cffafe', 200: '#a5f3fc', 300: '#67e8f9', 400: '#22d3ee', 500: '#06b6d4', 600: '#0891b2', 700: '#0e7490', 800: '#155e75', 900: '#164e63' },
+					primary: { DEFAULT: '#065f46', green: '#059669', teal: '#0d9488', gold: '#0f766e' },
+					midnight: { DEFAULT: '#0b1220', dark: '#050608' },
+					dark: '#0f172a',
+					cream: '#f8fafc',
+				},
+				'cyan-glow': '#2dd4bf',
+				// "Warm / sacred" palette used by the core, community & knowledge
+				// pages — remapped to the soft-white / deep-emerald / teal identity
+				// so those surfaces match the rest of the app.
+				'deep-green': { DEFAULT: '#0b3d2e', light: '#0f766e' },
+				'deep-slate': '#0f172a',
+				'warm-gold': { DEFAULT: '#0d9488', light: '#5eead4', dark: '#0f766e' },
+				'sage-green': { DEFAULT: '#059669', dark: '#047857' },
+				'warm-base': '#f6faf8',
+				'warm-sand': '#e7efeb',
+				'warm-cream': '#f2f7f4',
+				'sand': '#dbe7e1',
+				'ink-soft': '#5b6b66',
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
 					foreground: 'hsl(var(--primary-foreground))'
@@ -133,13 +163,25 @@ export default {
 					'0%, 100%': {
 						opacity: '0.4',
 						transform: 'scale(1)',
-						boxShadow: '0 0 20px rgba(59, 130, 246, 0.2)'
+						boxShadow: '0 0 20px rgba(13, 148, 136, 0.2)'
 					},
 					'50%': {
 						opacity: '0.7',
 						transform: 'scale(1.02)',
-						boxShadow: '0 0 40px rgba(59, 130, 246, 0.4)'
+						boxShadow: '0 0 40px rgba(13, 148, 136, 0.4)'
 					}
+				},
+				'pulse-glow': {
+					'0%, 100%': { opacity: '0.45', transform: 'scale(1)' },
+					'50%': { opacity: '0.75', transform: 'scale(1.03)' }
+				},
+				'pulse-slow': {
+					'0%, 100%': { opacity: '0.5' },
+					'50%': { opacity: '1' }
+				},
+				'pattern-rotate': {
+					from: { transform: 'rotate(0deg)' },
+					to: { transform: 'rotate(360deg)' }
 				},
 				'rotate-slow': {
 					from: { transform: 'rotate(0deg)' },
@@ -183,10 +225,19 @@ export default {
 				'geometric-spin': 'geometric-spin 30s linear infinite',
 				'text-reveal': 'text-reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
 				'scale-up': 'scale-up 8s ease-in-out infinite',
+				'pulse-glow': 'pulse-glow 4s ease-in-out infinite',
+				'pulse-slow': 'pulse-slow 3s ease-in-out infinite',
+				'pattern-rotate': 'pattern-rotate 120s linear infinite',
+			},
+			boxShadow: {
+				'glow-cyan': '0 0 24px rgba(45, 212, 191, 0.45)',
 			},
 			backgroundImage: {
-				'mesh-gold': 'radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.12) 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(37, 99, 235, 0.08) 0px, transparent 50%)',
-				'geometric-pattern': "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%232563EB' fill-opacity='0.1'%3E%3Cpath d='M30 0L60 30L30 60L0 30z'/%3E%3Cpath d='M30 10L50 30L30 50L10 30z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")",
+				'mesh-gold': 'radial-gradient(at 0% 0%, rgba(6, 95, 70, 0.12) 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(13, 148, 136, 0.08) 0px, transparent 50%)',
+				'geometric-pattern': "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23065F46' fill-opacity='0.08'%3E%3Cpath d='M30 0L60 30L30 60L0 30z'/%3E%3Cpath d='M30 10L50 30L30 50L10 30z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")",
+				'islamic-pattern': "url(\"data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%230d9488' stroke-opacity='0.06' stroke-width='1'%3E%3Cpath d='M40 0L80 40L40 80L0 40z'/%3E%3Cpath d='M40 16L64 40L40 64L16 40z'/%3E%3Ccircle cx='40' cy='40' r='10'/%3E%3C/g%3E%3C/svg%3E\")",
+				'mesh-cyan': 'radial-gradient(at 20% 20%, rgba(13, 148, 136, 0.10) 0px, transparent 50%), radial-gradient(at 80% 80%, rgba(45, 212, 191, 0.08) 0px, transparent 50%)',
+				'hero-gradient': 'linear-gradient(135deg, #064e3b 0%, #0d9488 100%)',
 			}
 		}
 	},

@@ -1,26 +1,78 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
+import { DashboardTopbar } from './DashboardTopbar';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
 }
 
 export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
+  const location = useLocation();
+  const [collapsed, setCollapsed] = React.useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    return localStorage.getItem('sidebar-collapsed') === 'true';
+  });
+  const [mobileOpen, setMobileOpen] = React.useState(false);
+
+  const toggleCollapsed = React.useCallback(() => {
+    setCollapsed((prev) => {
+      const next = !prev;
+      localStorage.setItem('sidebar-collapsed', String(next));
+      return next;
+    });
+  }, []);
+
+  // Close the mobile drawer whenever the route changes.
+  React.useEffect(() => {
+    setMobileOpen(false);
+  }, [location.pathname]);
+
   return (
-    <div className="flex h-screen bg-background overflow-hidden relative">
-      {/* Global Ambient Background */}
-      <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-islamic-blue/5 rounded-full blur-[120px] animate-pulse-glow" />
-        <div className="absolute top-[40%] right-[-10%] w-[50%] h-[50%] bg-islamic-gold/5 rounded-full blur-[150px] animate-pulse-glow" style={{ animationDelay: '2s' }} />
-        <div className="absolute bottom-[-10%] left-[20%] w-[30%] h-[30%] bg-islamic-green/5 rounded-full blur-[100px] animate-pulse-glow" style={{ animationDelay: '4s' }} />
-        <div className="absolute inset-0 opacity-[0.015] mix-blend-overlay" style={{ backgroundImage: 'url("/noise.png")' }}></div>
+    <div className="relative isolate flex h-screen bg-background overflow-hidden">
+      {/* ---------------------------------------------------------------------
+          Layered ambient background. Sits at z-0 (above the base cream) while
+          the app chrome is lifted to z-10, so the shading actually shows
+          through the transparent gaps between cards.
+          --------------------------------------------------------------------- */}
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+        {/* Soft diagonal wash — gentle warm→mint shading for depth */}
+        <div className="absolute inset-0 bg-gradient-to-br from-white via-background to-[#e9f2ed]" />
+        {/* Faint geometric Islamic texture */}
+        <div className="absolute inset-0 bg-islamic-pattern opacity-60" />
+        {/* Emerald glow — top right */}
+        <div className="absolute -top-[15%] -right-[10%] w-[55%] h-[55%] rounded-full bg-islamic-emerald-400/15 blur-[150px]" />
+        {/* Teal glow — bottom left */}
+        <div className="absolute -bottom-[18%] -left-[8%] w-[50%] h-[55%] rounded-full bg-brand-400/15 blur-[160px]" />
+        {/* Center highlight — lifts the working area */}
+        <div className="absolute top-[28%] left-1/2 -translate-x-1/2 w-[60%] h-[45%] rounded-full bg-white/50 blur-[120px]" />
+        {/* Top sheen */}
+        <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-white/70 to-transparent" />
       </div>
 
-      <Sidebar />
-      <main className="flex-1 overflow-y-auto flex flex-col relative z-10 custom-scrollbar">
-        {children}
-      </main>
+      {/* Desktop sidebar */}
+      <div className="relative z-10 hidden md:flex flex-shrink-0">
+        <Sidebar collapsed={collapsed} onToggleCollapsed={toggleCollapsed} />
+      </div>
+
+      {/* Mobile drawer */}
+      {mobileOpen && (
+        <div className="md:hidden fixed inset-0 z-50">
+          <div
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm animate-in fade-in"
+            onClick={() => setMobileOpen(false)}
+          />
+          <div className="absolute inset-y-0 left-0 w-64 shadow-2xl animate-in slide-in-from-left duration-300">
+            <Sidebar collapsed={false} onToggleCollapsed={() => setMobileOpen(false)} onNavigate={() => setMobileOpen(false)} />
+          </div>
+        </div>
+      )}
+
+      {/* Main column */}
+      <div className="relative z-10 flex-1 flex flex-col min-w-0 overflow-hidden">
+        <DashboardTopbar onOpenMobileSidebar={() => setMobileOpen(true)} />
+        <main className="flex-1 overflow-y-auto custom-scrollbar">{children}</main>
+      </div>
     </div>
   );
 };
-

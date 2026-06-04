@@ -39,7 +39,7 @@ export const CouncilMembersDisplay: React.FC<CouncilMembersDisplayProps> = ({ me
         'member-logic': <Brain className="w-8 h-8 text-blue-500" />,
         'member-creativity': <Zap className="w-8 h-8 text-primary" />,
         'member-ethics': <Shield className="w-8 h-8 text-primary" />,
-        'member-critic': <Award className="w-8 h-8 text-orange-500" />
+        'member-critic': <Award className="w-8 h-8 text-emerald-700" />
     };
 
     return (

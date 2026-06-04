@@ -109,6 +109,8 @@ export interface DigitalBook {
     publication_year?: number;
     downloads: number;
     featured: boolean;
+    /** Part of the "full scholarly archives" — gated to Student+ (free = public library). */
+    premium?: boolean;
     created_at: string;
     updated_at: string;
 }
@@ -118,4 +120,26 @@ export interface BookDownload {
     user_id: string;
     book_id: string;
     downloaded_at: string;
+}
+
+export interface PodcastEpisode {
+    id: string;
+    title: string;
+    guest: string;
+    duration: string; // human-readable, e.g. "52 min"
+    category: string;
+    description: string;
+    audio_url?: string;
+    published_at: string;
+}
+
+export interface ClassModule {
+    id: string;
+    title: string;
+    category: 'Fiqh' | 'Hadith' | 'Tawhid' | 'Quran';
+    level: 'Beginner' | 'Intermediate' | 'Advanced';
+    duration: string;
+    lessons: number;
+    locked: boolean;
+    image?: string;
 }

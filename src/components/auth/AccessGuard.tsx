@@ -1,8 +1,10 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth, SubscriptionTier } from '@/auth/AuthContext';
-import { ShieldAlert, ArrowRight, Lock } from 'lucide-react';
+import { Lock, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useTr, type Loc } from '@/lib/i18n';
+import { tierRank } from '@/data/subscription';
 
 interface AccessGuardProps {
   children: React.ReactNode;
@@ -10,31 +12,30 @@ interface AccessGuardProps {
   fallback?: React.ReactNode;
 }
 
-const TIER_STRENGTH: Record<SubscriptionTier, number> = {
-  free: 0,
-  student: 1,
-  institution: 2,
+const TIER_LABEL: Record<SubscriptionTier, Loc> = {
+  free: { en: 'Seeker', fr: 'Chercheur' },
+  student: { en: 'Student', fr: 'Étudiant' },
+  institution: { en: 'Institution', fr: 'Institution' },
 };
 
-export const AccessGuard: React.FC<AccessGuardProps> = ({ 
-  children, 
-  requiredTier, 
-  fallback 
+export const AccessGuard: React.FC<AccessGuardProps> = ({
+  children,
+  requiredTier,
+  fallback,
 }) => {
   const { profile, loading } = useAuth();
+  const tr = useTr();
+  const navigate = useNavigate();
 
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-600" />
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-800" />
       </div>
     );
   }
 
-  const userTierStrength = TIER_STRENGTH[profile?.subscription_tier || 'free'];
-  const requiredTierStrength = TIER_STRENGTH[requiredTier];
-
-  const hasAccess = userTierStrength >= requiredTierStrength;
+  const hasAccess = tierRank(profile?.subscription_tier || 'free') >= tierRank(requiredTier);
 
   if (hasAccess) {
     return <>{children}</>;
@@ -44,40 +45,46 @@ export const AccessGuard: React.FC<AccessGuardProps> = ({
     return <>{fallback}</>;
   }
 
+  const tierName = tr(TIER_LABEL[requiredTier]);
+
   return (
-    <div className="min-h-[60vh] flex items-center justify-center px-4">
-      <motion.div 
-        initial={{ opacity: 0, scale: 0.95 }}
+    <div className="min-h-[60vh] flex items-center justify-center px-4 bg-[#FAF7F0]">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.97 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="max-w-md w-full p-8 rounded-[2rem] border border-slate-100 bg-white shadow-2xl shadow-slate-200/50 text-center"
+        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        className="max-w-md w-full p-10 rounded-2xl border border-stone-200 bg-white shadow-xl shadow-emerald-900/5 text-center"
       >
-        <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center mx-auto mb-6 text-slate-400">
-          <Lock className="w-8 h-8" />
+        <div className="w-14 h-14 bg-emerald-900/5 rounded-2xl flex items-center justify-center mx-auto mb-6 text-emerald-800">
+          <Lock className="w-7 h-7" />
         </div>
-        
-        <h2 className="text-2xl font-black text-slate-950 mb-3 tracking-tight">
-          Upgrade Required
+
+        <h2 className="text-3xl text-stone-900 mb-3">
+          {tr({ en: 'A paid plan unlocks this', fr: 'Une offre payante débloque ceci' })}
         </h2>
-        
-        <p className="text-slate-500 font-medium mb-8 leading-relaxed">
-          Access to this specialized feature requires a <span className="text-slate-950 font-bold capitalize">{requiredTier}</span> subscription. Expand your knowledge circle today.
+
+        <p className="text-stone-500 leading-relaxed mb-8">
+          {tr({
+            en: `This feature is part of the ${tierName} plan. Expand your circle of knowledge when you’re ready.`,
+            fr: `Cette fonctionnalité fait partie de l’offre ${tierName}. Élargissez votre cercle du savoir quand vous le souhaitez.`,
+          })}
         </p>
 
         <div className="space-y-4">
-          <Link
-            to="/#pricing"
-            className="w-full btn-saas-primary flex items-center justify-center gap-2"
+          <button
+            onClick={() => navigate('/pricing')}
+            className="btn-push w-full flex items-center justify-center gap-2"
           >
-            See Pricing Plans
+            {tr({ en: 'See pricing plans', fr: 'Voir les offres' })}
             <ArrowRight className="w-4 h-4" />
-          </Link>
-          
-          <Link
-            to="/dashboard"
-            className="block text-sm font-bold text-slate-400 hover:text-slate-950 transition-colors"
+          </button>
+
+          <button
+            onClick={() => navigate('/dashboard')}
+            className="block w-full text-sm font-semibold text-stone-400 hover:text-emerald-800 transition-colors"
           >
-            Return to Dashboard
-          </Link>
+            {tr({ en: 'Return to dashboard', fr: 'Retour au tableau de bord' })}
+          </button>
         </div>
       </motion.div>
     </div>

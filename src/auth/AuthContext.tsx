@@ -1,15 +1,9 @@
 import * as React from "react";
-import {
-  User,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  signOut as firebaseSignOut,
-  onAuthStateChanged,
-  updateProfile,
-  sendPasswordResetEmail
-} from "firebase/auth";
-import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
-import { auth, db } from "@/lib/firebase";
+import { useConvexAuth, useAuthActions } from "@convex-dev/auth/react";
+import { useQuery, useMutation } from "convex/react";
+import { api } from "../../convex/_generated/api";
+import type { Doc } from "../../convex/_generated/dataModel";
+import { UserRole } from "./rbac";
 
 export type SubscriptionTier = 'free' | 'student' | 'institution';
 
@@ -23,6 +17,13 @@ export type UserProfile = {
   created_at: any;
 };
 
+export type User = {
+  uid: string;
+  email: string | null;
+  displayName: string | null;
+  photoURL: string | null;
+};
+
 type AuthState = {
   user: User | null;
   profile: UserProfile | null;
@@ -33,157 +34,74 @@ type AuthState = {
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
   refreshProfile: () => Promise<void>;
+  setSubscriptionTier: (tier: SubscriptionTier) => void;
 };
 
 const AuthContext = React.createContext<AuthState | undefined>(undefined);
 
-// Function to get user role from profile
-const getUserRole = (profile: UserProfile | null): UserRole => {
-  if (!profile) return 'user';
-  return profile.role || 'user';
-};
+function toUserProfile(doc: Doc<"users"> | null): UserProfile | null {
+  if (!doc) return null;
+  return {
+    id: doc._id,
+    email: doc.email ?? "",
+    role: (doc.role ?? "user") as UserRole,
+    subscription_tier: (doc.subscriptionTier ?? "free") as SubscriptionTier,
+    full_name: doc.fullName ?? undefined,
+    avatar_url: doc.avatarUrl ?? undefined,
+    created_at: doc._creationTime,
+  };
+}
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = React.useState<User | null>(null);
-  const [profile, setProfile] = React.useState<UserProfile | null>(null);
-  const [loading, setLoading] = React.useState(true);
+  const { isLoading, isAuthenticated } = useConvexAuth();
+  const { signIn, signOut: convexSignOut } = useAuthActions();
+  const currentUser = useQuery(api.users.currentUser);
+  const updateTier = useMutation(api.users.updateSubscriptionTier);
 
-  // Fetch user profile from Firestore
-  const fetchUserProfile = React.useCallback(async (userId: string) => {
-    try {
-      const profileRef = doc(db, 'users', userId);
-      const profileSnap = await getDoc(profileRef);
+  const profile = React.useMemo(() => toUserProfile(currentUser ?? null), [currentUser]);
 
-      if (profileSnap.exists()) {
-        return profileSnap.data() as UserProfile;
-      }
-      return null;
-    } catch (error) {
-      if (import.meta.env.DEV) {
-        console.error('Error fetching user profile:', error);
-      }
-      return null;
-    }
-  }, []);
-
-  // Listen for auth state changes
-  React.useEffect(() => {
-    let mounted = true;
-
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      if (!mounted) return;
-
-      setUser(firebaseUser);
-
-      if (firebaseUser) {
-        // Fetch profile from Firestore
-        const userProfile = await fetchUserProfile(firebaseUser.uid);
-        if (mounted) {
-          setProfile(userProfile);
-        }
-      } else {
-        setProfile(null);
-      }
-
-      if (mounted) {
-        setLoading(false);
-      }
-    });
-
-    // Safety timeout
-    const timeout = setTimeout(() => {
-      if (mounted) {
-        console.warn('Auth loading timeout - setting loading to false');
-        setLoading(false);
-      }
-    }, 5000);
-
-    return () => {
-      mounted = false;
-      clearTimeout(timeout);
-      unsubscribe();
+  const user = React.useMemo((): User | null => {
+    if (!currentUser) return null;
+    return {
+      uid: currentUser._id,
+      email: currentUser.email ?? null,
+      displayName: currentUser.fullName ?? currentUser.name ?? null,
+      photoURL: currentUser.image ?? null,
     };
-  }, [fetchUserProfile]);
+  }, [currentUser]);
+
+  const isAdmin = React.useMemo(() => profile?.role === 'admin', [profile]);
 
   const signInWithPassword = React.useCallback(async ({ email, password }: { email: string; password: string }) => {
-    setLoading(true);
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+    await signIn("password", { email, password, flow: "signIn" });
+  }, [signIn]);
 
   const signUp = React.useCallback(async ({ email, password, fullName }: { email: string; password: string; fullName: string }) => {
-    setLoading(true);
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-
-      // Update display name
-      await updateProfile(user, {
-        displayName: fullName
-      });
-
-      // Create user profile in Firestore
-      const userProfile: UserProfile = {
-        id: user.uid,
-        email: email,
-        full_name: fullName,
-        role: 'user',
-        subscription_tier: 'free',
-        created_at: serverTimestamp()
-      };
-
-      await setDoc(doc(db, 'users', user.uid), userProfile);
-
+      await signIn("password", { email, password, name: fullName, flow: "signUp" });
       return { error: null };
-    } catch (error) {
-      if (import.meta.env.DEV) {
-        console.error('Signup error:', error);
-      }
-      return { error: error as Error };
-    } finally {
-      setLoading(false);
+    } catch (err: any) {
+      return { error: err };
     }
-  }, []);
+  }, [signIn]);
 
-  const signOut = React.useCallback(async () => {
-    // Clear state immediately
-    setProfile(null);
-    setUser(null);
-    setLoading(false);
+  const signOutFn = React.useCallback(async () => {
+    await convexSignOut();
+  }, [convexSignOut]);
 
-    // Sign out from Firebase
-    try {
-      await firebaseSignOut(auth);
-    } catch (error) {
-      if (import.meta.env.DEV) {
-        console.error('Sign out error:', error);
-      }
-    }
-  }, []);
-
-  const resetPassword = React.useCallback(async (email: string) => {
-    await sendPasswordResetEmail(auth, email);
+  const resetPassword = React.useCallback(async (_email: string) => {
+    console.warn("Password reset not yet implemented — needs email provider");
   }, []);
 
   const refreshProfile = React.useCallback(async () => {
-    if (user) {
-      try {
-        const userProfile = await fetchUserProfile(user.uid);
-        setProfile(userProfile);
-      } catch (error) {
-        if (import.meta.env.DEV) {
-          console.error('Error refreshing profile:', error);
-        }
-      }
-    }
-  }, [user, fetchUserProfile]);
+    // Profile is reactive via useQuery — nothing to do.
+  }, []);
 
-  const isAdmin = React.useMemo(() => {
-    return getUserRole(profile) === 'admin';
-  }, [profile]);
+  const setSubscriptionTier = React.useCallback((tier: SubscriptionTier) => {
+    updateTier({ tier });
+  }, [updateTier]);
+
+  const loading = isLoading || (isAuthenticated && currentUser === null);
 
   const value = React.useMemo(
     () => ({
@@ -193,10 +111,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       loading,
       signInWithPassword,
       signUp,
-      signOut,
+      signOut: signOutFn,
+      resetPassword,
       refreshProfile,
+      setSubscriptionTier,
     }),
-    [user, profile, isAdmin, loading, signInWithPassword, signUp, signOut, refreshProfile]
+    [user, profile, isAdmin, loading, signInWithPassword, signUp, signOutFn, resetPassword, refreshProfile, setSubscriptionTier]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

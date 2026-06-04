@@ -1,33 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useAuth } from '@/auth/AuthContext';
-import { BadgeList, BadgeType } from '@/components/gamification/BadgeList';
 import { RankDisplay } from '@/components/gamification/RankDisplay';
 import {
     Calendar,
     Trophy,
     Flame,
     Target,
-    BookOpen,
     Clock,
-    Medal,
-    Share2
+    Share2,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-
-// Mock Data for Profile
-const MOCK_PROFILE = {
-    joinDate: 'Ramadan 1445',
-    streak: 12,
-    totalXp: 2450,
-    quizzesTaken: 45,
-    perfectScores: 18,
-    timeSpent: '12h 30m',
-    consistency: Array.from({ length: 365 }, (_, i) => ({
-        date: new Date(Date.now() - (364 - i) * 24 * 60 * 60 * 1000),
-        level: Math.random() > 0.7 ? Math.floor(Math.random() * 4) : 0
-    }))
-};
+import { toast } from 'sonner';
+import { useProfileStats, ConsistencyDay } from '@/data/profile';
+import { useTr } from '@/lib/i18n';
 
 const StatCard = ({ icon: Icon, label, value, subtext, delay }: any) => (
     <div
@@ -45,10 +30,8 @@ const StatCard = ({ icon: Icon, label, value, subtext, delay }: any) => (
     </div>
 );
 
-const ConsistencyGraph = ({ data }: { data: any[] }) => {
-    // Render last 3 months ~ 90 days
+const ConsistencyGraph = ({ data }: { data: ConsistencyDay[] }) => {
     const recentData = data.slice(-91);
-
     return (
         <div className="flex gap-1 flex-wrap justify-center sm:justify-start">
             {recentData.map((day, i) => (
@@ -68,7 +51,8 @@ const ConsistencyGraph = ({ data }: { data: any[] }) => {
 
 const Profile = () => {
     const { user } = useAuth();
-    const [activeTab, setActiveTab] = useState<'overview' | 'history'>('overview');
+    const stats = useProfileStats();
+    const tr = useTr();
 
     return (
         <div className="min-h-screen bg-background pb-20">
@@ -96,41 +80,65 @@ const Profile = () => {
 
                             <div>
                                 <h1 className="text-2xl font-bold text-foreground">{user?.email?.split('@')[0]}</h1>
-                                <p className="text-muted-foreground">Joined {MOCK_PROFILE.joinDate}</p>
+                                <p className="text-muted-foreground">
+                                    {tr({ en: `Joined ${stats.joinDate}`, fr: `Membre depuis ${stats.joinDate}` })}
+                                </p>
                             </div>
 
-                            <RankDisplay currentRank="Talib" currentPoints={MOCK_PROFILE.totalXp} />
+                            <RankDisplay currentRank={stats.rank} currentPoints={stats.totalXp} />
 
-                            <Button className="w-full btn-islamic-outlined gap-2">
-                                <Share2 className="w-4 h-4" /> Share Profile
+                            <Button
+                                onClick={async () => {
+                                    const url = window.location.origin;
+                                    const shareData = {
+                                        title: 'GëstuSaDine',
+                                        text: tr({
+                                            en: 'Join me on GëstuSaDine: Islamic knowledge, guidance, and community.',
+                                            fr: 'Rejoignez-moi sur GëstuSaDine : savoir, guidance et communauté islamiques.',
+                                        }),
+                                        url,
+                                    };
+                                    try {
+                                        if (navigator.share) {
+                                            await navigator.share(shareData);
+                                        } else {
+                                            await navigator.clipboard.writeText(url);
+                                            toast(tr({ en: 'Link copied to clipboard.', fr: 'Lien copié dans le presse-papiers.' }));
+                                        }
+                                    } catch {
+                                        // user dismissed the share sheet — no-op
+                                    }
+                                }}
+                                className="w-full btn-islamic-outlined gap-2"
+                            >
+                                <Share2 className="w-4 h-4" /> {tr({ en: 'Share Profile', fr: 'Partager le profil' })}
                             </Button>
                         </div>
                     </div>
 
                     {/* Main Content */}
                     <div className="flex-1 space-y-8 w-full">
-
                         {/* Stats Grid */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                             <StatCard
                                 icon={Flame}
-                                label="Current Streak"
-                                value={`${MOCK_PROFILE.streak} Days`}
-                                subtext="Keep it up!"
+                                label={tr({ en: 'Current Streak', fr: 'Série actuelle' })}
+                                value={tr({ en: `${stats.streak} Days`, fr: `${stats.streak} jours` })}
+                                subtext={tr({ en: 'Keep it up!', fr: 'Continuez !' })}
                                 delay={100}
                             />
                             <StatCard
                                 icon={Target}
-                                label="Quizzes Taken"
-                                value={MOCK_PROFILE.quizzesTaken}
-                                subtext={`${MOCK_PROFILE.perfectScores} Perfect Scores`}
+                                label={tr({ en: 'Quizzes Taken', fr: 'Quiz réalisés' })}
+                                value={stats.quizzesTaken}
+                                subtext={tr({ en: `${stats.perfectScores} Perfect Scores`, fr: `${stats.perfectScores} sans faute` })}
                                 delay={200}
                             />
                             <StatCard
                                 icon={Clock}
-                                label="Learning Time"
-                                value={MOCK_PROFILE.timeSpent}
-                                subtext="This Month"
+                                label={tr({ en: 'Learning Time', fr: 'Temps d’apprentissage' })}
+                                value={stats.timeSpent}
+                                subtext={tr({ en: 'This Month', fr: 'Ce mois-ci' })}
                                 delay={300}
                             />
                         </div>
@@ -140,38 +148,21 @@ const Profile = () => {
                             <div className="flex items-center justify-between">
                                 <h3 className="font-semibold text-lg flex items-center gap-2">
                                     <Calendar className="w-5 h-5 text-primary" />
-                                    Knowledge Consistency
+                                    {tr({ en: 'Knowledge Consistency', fr: 'Régularité' })}
                                 </h3>
-                                <div className="text-xs text-muted-foreground">Last 3 Months</div>
+                                <div className="text-xs text-muted-foreground">{tr({ en: 'Last 3 Months', fr: '3 derniers mois' })}</div>
                             </div>
-                            <ConsistencyGraph data={MOCK_PROFILE.consistency} />
+                            <ConsistencyGraph data={stats.consistency} />
                             <div className="flex items-center gap-2 text-xs text-muted-foreground mt-2">
-                                <span>Less</span>
+                                <span>{tr({ en: 'Less', fr: 'Moins' })}</span>
                                 <div className="flex gap-1">
                                     <div className="w-3 h-3 rounded-sm bg-secondary/20" />
                                     <div className="w-3 h-3 rounded-sm bg-primary/40" />
                                     <div className="w-3 h-3 rounded-sm bg-primary/70" />
                                     <div className="w-3 h-3 rounded-sm bg-primary" />
                                 </div>
-                                <span>More</span>
+                                <span>{tr({ en: 'More', fr: 'Plus' })}</span>
                             </div>
-                        </div>
-
-                        {/* Trophy Room (Badges) */}
-                        <div className="islamic-card p-6">
-                            <h3 className="font-semibold text-lg flex items-center gap-2 mb-6">
-                                <Medal className="w-5 h-5 text-islamic-gold" />
-                                Trophy Case
-                            </h3>
-                            <BadgeList
-                                badges={[
-                                    'Founding Member',
-                                    'Explorer',
-                                    'Beta Tester',
-                                    'Library Builder',
-                                    'Top 1%'
-                                ]}
-                            />
                         </div>
 
                     </div>

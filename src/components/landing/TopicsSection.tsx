@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { BookOpen, Headphones, Shield, Globe, Sparkles } from 'lucide-react';
 
@@ -41,6 +42,7 @@ const FloatingIcon = ({ icon, delay = 0 }: { icon: React.ReactNode, delay?: numb
 };
 
 const TopicsSection = () => {
+  const navigate = useNavigate();
   return (
     <section className="py-32 bg-premium-gray relative overflow-hidden">
       {/* Parallax Background Accents */}
@@ -71,6 +73,7 @@ const TopicsSection = () => {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                onClick={() => navigate('/login')}
                 className="btn-saas-primary !px-10 !py-6"
               >
                 Join the Journey

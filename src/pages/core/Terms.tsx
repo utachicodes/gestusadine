@@ -1,50 +1,181 @@
-export default function Terms() {
-    return (
-        <div className="flex-1 relative overflow-hidden min-h-screen">
-            <div className="absolute inset-0 bg-warm-base -z-10" />
+import * as React from 'react';
+import { useState } from 'react';
+import { Scale, AlertTriangle, ChevronDown, Mail } from 'lucide-react';
+import { useTr } from '@/lib/i18n';
 
-            <div className="container relative z-10 py-20 px-4 max-w-3xl">
-                <div className="text-center mb-12">
-                    <h1 className="text-4xl md:text-5xl font-serif font-bold text-deep-green mb-4 tracking-tight">
-                        Terms of Service
-                    </h1>
-                    <p className="text-deep-green/45 text-sm">
-                        Last updated: January 16, 2026
-                    </p>
-                </div>
-
-                <div className="glass-card-warm p-8 md:p-10 rounded-2xl space-y-8 text-sm text-deep-green/60 leading-relaxed">
-                    <section>
-                        <h2 className="text-base font-bold text-deep-green mb-3">1. Agreement</h2>
-                        <p>
-                            By using GëstuSaDine, you agree to these terms. The platform provides AI-generated Islamic guidance and educational content. Use it respectfully and in good faith.
-                        </p>
-                    </section>
-
-                    <section>
-                        <h2 className="text-base font-bold text-deep-green mb-3">2. Intellectual property</h2>
-                        <p>
-                            The platform's code, design, and AI-generated content are owned by GëstuSaDine. You may not copy, redistribute, or scrape the platform's content without permission.
-                        </p>
-                    </section>
-
-                    <section>
-                        <h2 className="text-base font-bold text-deep-green mb-3">3. Important disclaimer</h2>
-                        <p className="italic">
-                            GëstuSaDine is an educational tool, not a replacement for a qualified scholar. For major life decisions (marriage, divorce, inheritance, etc.), please consult a local scholar directly. The AI can make mistakes.
-                        </p>
-                    </section>
-
-                    <section className="pt-6 border-t border-warm-sand/60">
-                        <p>
-                            Legal questions? Contact{' '}
-                            <a href="mailto:legal@gestusadine.com" className="text-warm-gold hover:underline">
-                                legal@gestusadine.com
-                            </a>
-                        </p>
-                    </section>
-                </div>
-            </div>
+function Section({
+  title,
+  subtitle,
+  defaultOpen,
+  children,
+}: {
+  title: string;
+  subtitle?: string;
+  defaultOpen?: boolean;
+  children: React.ReactNode;
+}) {
+  const [open, setOpen] = useState(defaultOpen ?? false);
+  return (
+    <div className="glass-card-warm rounded-2xl overflow-hidden">
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        aria-expanded={open}
+        className="w-full flex items-center justify-between gap-4 px-6 py-5 text-left"
+      >
+        <span>
+          <span className="block text-base font-bold text-deep-green">{title}</span>
+          {subtitle && <span className="block text-xs text-deep-green/45 mt-0.5">{subtitle}</span>}
+        </span>
+        <ChevronDown className={`w-5 h-5 flex-shrink-0 text-deep-green/50 transition-transform ${open ? 'rotate-180' : ''}`} />
+      </button>
+      {open && (
+        <div className="px-6 pb-6 text-sm text-deep-green/65 leading-relaxed border-t border-warm-sand/60 pt-4 space-y-3">
+          {children}
         </div>
-    );
+      )}
+    </div>
+  );
+}
+
+export default function Terms() {
+  const tr = useTr();
+
+  return (
+    <div className="flex-1 relative overflow-hidden min-h-screen">
+      <div className="absolute inset-0 bg-warm-base -z-10" />
+
+      <div className="container relative z-10 py-20 px-4 max-w-3xl">
+        {/* Hero */}
+        <div className="text-center mb-10">
+          <p className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-warm-gold mb-4">
+            <Scale className="w-4 h-4" /> {tr({ en: 'Legal', fr: 'Mentions légales' })}
+          </p>
+          <h1 className="text-4xl md:text-5xl font-bold text-deep-green mb-3 tracking-tight">
+            {tr({ en: 'DMCA & Content Liability', fr: 'DMCA et responsabilité du contenu' })}
+          </h1>
+          <p className="text-base text-deep-green/55 max-w-lg mx-auto">
+            {tr({
+              en: 'The Ironclad Shield — legal terms governing content, intellectual property, and platform liability.',
+              fr: 'Le Bouclier inébranlable — conditions régissant le contenu, la propriété intellectuelle et la responsabilité de la plateforme.',
+            })}
+          </p>
+          <p className="text-deep-green/40 text-xs mt-4">{tr({ en: 'Last updated: January 2026', fr: 'Dernière mise à jour : janvier 2026' })}</p>
+        </div>
+
+        {/* Critical disclaimer */}
+        <div className="rounded-2xl p-6 mb-8 bg-destructive/5 border border-destructive/30">
+          <p className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-destructive mb-3">
+            <AlertTriangle className="w-5 h-5" /> {tr({ en: 'Critical disclaimer', fr: 'Avertissement essentiel' })}
+          </p>
+          <p className="text-sm font-semibold text-deep-green mb-2">
+            {tr({
+              en: 'GëstuSaDine is an AI educational tool, NOT a certified Mufti or scholar.',
+              fr: "GëstuSaDine est un outil éducatif fondé sur l'IA, et NON un Mufti ou savant certifié.",
+            })}
+          </p>
+          <p className="text-sm text-deep-green/65 mb-3">
+            {tr({
+              en: 'Responses are generated by artificial-intelligence algorithms trained on Islamic texts and may contain errors, inaccuracies, or misinterpretations.',
+              fr: "Les réponses sont générées par des algorithmes d'intelligence artificielle entraînés sur des textes islamiques et peuvent contenir des erreurs, des inexactitudes ou des erreurs d'interprétation.",
+            })}
+          </p>
+          <p className="text-sm font-medium text-deep-green mb-1">
+            {tr({ en: 'Do NOT use this platform for:', fr: "N'utilisez PAS cette plateforme pour :" })}
+          </p>
+          <ul className="text-sm text-deep-green/65 space-y-1 list-disc list-inside mb-3">
+            <li>{tr({ en: 'Life-altering legal (Fiqh) decisions', fr: 'Des décisions juridiques (Fiqh) qui changent une vie' })}</li>
+            <li>{tr({ en: 'Medical or health-related rulings', fr: 'Des avis médicaux ou de santé' })}</li>
+            <li>{tr({ en: 'Marriage, divorce, or inheritance matters', fr: 'Les questions de mariage, de divorce ou d’héritage' })}</li>
+            <li>{tr({ en: 'Financial transactions requiring scholarly certification', fr: 'Des transactions financières nécessitant une certification savante' })}</li>
+          </ul>
+          <p className="text-sm font-medium text-deep-green">
+            {tr({
+              en: 'Always consult a qualified, certified Islamic scholar (Mufti) for personal legal rulings (Fatwa).',
+              fr: 'Consultez toujours un savant musulman qualifié et certifié (Mufti) pour les avis juridiques personnels (Fatwa).',
+            })}
+          </p>
+        </div>
+
+        {/* Sections */}
+        <div className="space-y-3">
+          <Section
+            title={tr({ en: 'Safe Harbor Provision', fr: 'Clause de sphère de sécurité' })}
+            subtitle={tr({ en: 'Intermediary service provider status', fr: "Statut d'hébergeur intermédiaire" })}
+            defaultOpen
+          >
+            <p>
+              {tr({
+                en: 'GëstuSaDine acts as a neutral intermediary and educational platform. We do not author the underlying scholarly texts and are not responsible for user-submitted content. To the extent permitted by law, we qualify for safe-harbor protections as an intermediary service provider and respond promptly to valid legal notices.',
+                fr: "GëstuSaDine agit comme un intermédiaire neutre et une plateforme éducative. Nous ne sommes pas les auteurs des textes savants sous-jacents et ne sommes pas responsables du contenu soumis par les utilisateurs. Dans la mesure permise par la loi, nous bénéficions des protections d'hébergeur intermédiaire et répondons rapidement aux notifications légales valides.",
+              })}
+            </p>
+          </Section>
+
+          <Section
+            title={tr({ en: 'DMCA Takedown Process', fr: 'Procédure de retrait DMCA' })}
+            subtitle={tr({ en: 'How to submit copyright claims', fr: "Comment soumettre une réclamation de droits d'auteur" })}
+          >
+            <p>
+              {tr({
+                en: 'If you believe content on the platform infringes your copyright, send a written notice to support@gestusadine.com including: (1) identification of the copyrighted work; (2) the location (URL) of the allegedly infringing material; (3) your contact information; (4) a statement of good-faith belief that the use is unauthorized; (5) a statement, under penalty of perjury, that the information is accurate and that you are authorized to act; and (6) your physical or electronic signature.',
+                fr: "Si vous estimez qu'un contenu de la plateforme enfreint vos droits d'auteur, envoyez une notification écrite à support@gestusadine.com comprenant : (1) l'identification de l'œuvre protégée ; (2) l'emplacement (URL) du contenu prétendument contrefaisant ; (3) vos coordonnées ; (4) une déclaration de bonne foi que l'usage n'est pas autorisé ; (5) une déclaration, sous peine de parjure, que les informations sont exactes et que vous êtes habilité à agir ; et (6) votre signature manuscrite ou électronique.",
+              })}
+            </p>
+          </Section>
+
+          <Section
+            title={tr({ en: 'Counter-Notice Procedure', fr: 'Procédure de contre-notification' })}
+            subtitle={tr({ en: 'Defending against false claims', fr: 'Se défendre contre les fausses réclamations' })}
+          >
+            <p>
+              {tr({
+                en: 'If your content was removed and you believe it was a mistake or misidentification, you may submit a counter-notice to support@gestusadine.com containing your contact details, identification of the removed material and its prior location, a statement under penalty of perjury of your good-faith belief that the removal was an error, and your consent to jurisdiction. We may restore the content unless the original claimant pursues legal action.',
+                fr: "Si votre contenu a été retiré et que vous pensez qu'il s'agit d'une erreur ou d'une mauvaise identification, vous pouvez envoyer une contre-notification à support@gestusadine.com indiquant vos coordonnées, l'identification du contenu retiré et son emplacement antérieur, une déclaration sous peine de parjure de votre conviction de bonne foi que le retrait était une erreur, et votre consentement à la juridiction. Nous pourrons restaurer le contenu sauf si le plaignant initial engage une action en justice.",
+              })}
+            </p>
+          </Section>
+
+          <Section
+            title={tr({ en: 'Indemnification & Liability', fr: 'Indemnisation et responsabilité' })}
+            subtitle={tr({ en: 'User responsibility agreement', fr: "Accord de responsabilité de l'utilisateur" })}
+          >
+            <p>
+              {tr({
+                en: 'You agree to use the platform lawfully and at your own risk. You agree to indemnify and hold harmless GëstuSaDine, its team, and its partners from any claims, damages, or liabilities arising from your use of the platform or your reliance on AI-generated content. The platform is provided “as is”, without warranties of any kind, and our liability is limited to the maximum extent permitted by law.',
+                fr: "Vous acceptez d'utiliser la plateforme de manière licite et à vos propres risques. Vous acceptez d'indemniser et de dégager de toute responsabilité GëstuSaDine, son équipe et ses partenaires de toute réclamation, dommage ou responsabilité découlant de votre utilisation de la plateforme ou de votre confiance dans le contenu généré par l'IA. La plateforme est fournie « telle quelle », sans garantie d'aucune sorte, et notre responsabilité est limitée dans toute la mesure permise par la loi.",
+              })}
+            </p>
+          </Section>
+
+          <Section
+            title={tr({ en: 'AI-Generated Content Policy', fr: 'Politique sur le contenu généré par IA' })}
+            subtitle={tr({ en: 'Nature and limitations of responses', fr: 'Nature et limites des réponses' })}
+          >
+            <p>
+              {tr({
+                en: 'Answers from the Council are produced by AI models retrieving from a library of Islamic texts. They are educational aids, not Fatawa. They may be incomplete or in error, may not reflect your local context or madhhab, and must not be treated as a substitute for a qualified scholar. Always verify important matters with a certified Mufti.',
+                fr: "Les réponses du Conseil sont produites par des modèles d'IA s'appuyant sur une bibliothèque de textes islamiques. Ce sont des aides éducatives, et non des Fatâwa. Elles peuvent être incomplètes ou erronées, ne pas refléter votre contexte local ou votre madhhab, et ne doivent pas se substituer à un savant qualifié. Vérifiez toujours les questions importantes auprès d'un Mufti certifié.",
+              })}
+            </p>
+          </Section>
+        </div>
+
+        {/* Contact */}
+        <div className="glass-card-warm rounded-2xl p-7 mt-8 text-center">
+          <Mail className="w-6 h-6 text-warm-gold mx-auto mb-3" />
+          <p className="text-sm font-semibold text-deep-green mb-1">{tr({ en: 'Questions or legal inquiries?', fr: 'Questions ou demandes juridiques ?' })}</p>
+          <p className="text-sm text-deep-green/55 mb-3">
+            {tr({
+              en: 'For all legal matters, copyright claims, or questions regarding these terms:',
+              fr: "Pour toute question juridique, réclamation de droits d'auteur ou question sur ces conditions :",
+            })}
+          </p>
+          <a href="mailto:support@gestusadine.com" className="text-warm-gold hover:underline font-medium">
+            support@gestusadine.com
+          </a>
+        </div>
+      </div>
+    </div>
+  );
 }

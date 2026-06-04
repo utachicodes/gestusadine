@@ -1,9 +1,8 @@
 import * as React from "react";
-import { Sparkles, Sun, MoonStar, HelpCircle, Star } from "lucide-react";
+import { Sparkles, Sun, MoonStar, HelpCircle, Star, Trophy, Flame, Target } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { CreditUsageWidget } from "@/components/subscription/CreditUsageWidget";
 import { RankDisplay } from "@/components/gamification/RankDisplay";
-import { BadgeList, BadgeType } from "@/components/gamification/BadgeList";
+import { useProfileStats } from "@/data/profile";
 
 type LanguageCode = "fr" | "en";
 type Difficulty = "easy" | "medium" | "advanced";
@@ -75,21 +74,6 @@ const MOCK_DAILY_BY_LANG: Record<LanguageCode, DailyData> = {
     },
     fact: "Les cinq prières obligatoires rythment la journée du musulman, de l’aube à la nuit.",
   },
-  wo: {
-    gregorianDate: getCurrentDateFormatted('EU'),
-    hijriDate: "25 Jumādā al-Thānī 1447",
-    ayah: {
-      reference: "Al-Baqara 2:286",
-      arabic: "لَا يُكَلِّفُ ٱللَّهُ نَفْسًا إِلَّا وُسْعَهَا",
-      translation:
-        "Yàlla du jël ci koro jigeen walla góor lu gën sàmm ndigalu moom.",
-    },
-    dua: {
-      arabic: "رَبِّ زIDNII CILMĀ",
-      translation: "Ya Rabb, yokkal ma xam-xam.",
-    },
-    fact: "Njulli juroom-ñaari waxtuñ bi lay setlu bésu musulmaan.",
-  },
 };
 
 // Prayer tracking component to avoid hooks in map
@@ -141,6 +125,7 @@ const PrayerItem: React.FC<{
 
 const Dashboard: React.FC = () => {
   const { language, t } = useLanguage();
+  const stats = useProfileStats();
   const [difficulty, setDifficulty] = React.useState<Difficulty>("easy");
   const [selectedOption, setSelectedOption] = React.useState<string | null>(
     null,
@@ -270,22 +255,43 @@ const Dashboard: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex-1 overflow-y-auto flex flex-col">
-      <section className="container py-3 md:py-4 space-y-3 flex-1 flex flex-col min-h-0">
-        <header className="mb-2">
+    <div className="lg:h-full">
+      <section className="container flex flex-col gap-3 py-4 md:py-6 lg:h-full lg:min-h-0">
+        <header className="flex-shrink-0">
           <div>
             <p className="inline-flex items-center text-xs uppercase tracking-[0.22em] text-muted-foreground mb-1">
               <span className="w-1.5 h-1.5 rounded-full bg-primary mr-2" />
               {t('dashboard.sectionLabel')}
             </p>
-            <h1 className="text-xl md:text-2xl font-bold text-foreground">
+            <h1 className="text-3xl md:text-4xl font-bold text-foreground">
               {t('dashboard.titlePrefix')}{" "}
               <span className="text-gradient">{t('dashboard.titleHighlight')}</span>
             </h1>
           </div>
         </header>
 
-        <div className="grid gap-3 md:grid-cols-4 flex-1 min-h-0">
+        {/* At-a-glance stats (reference-inspired) */}
+        <div className="grid gap-3 grid-cols-2 lg:grid-cols-3 flex-shrink-0">
+          {[
+            { icon: Trophy, label: language === 'fr' ? 'Rang' : 'Rank', value: stats.rank, sub: `${stats.totalXp.toLocaleString()} XP` },
+            { icon: Flame, label: language === 'fr' ? "Jours d'affilée" : 'Day streak', value: stats.streak, sub: language === 'fr' ? 'en cours' : 'in a row' },
+            { icon: Target, label: 'Quiz', value: stats.quizzesTaken, sub: `${stats.perfectScores} ${language === 'fr' ? 'parfaits' : 'perfect'}` },
+          ].map(({ icon: Icon, label, value, sub }) => (
+            <div key={label} className="islamic-card p-4 flex items-center justify-between gap-3">
+              <div className="min-w-0">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground mb-1 truncate">{label}</p>
+                <p className="text-2xl font-bold text-foreground leading-none truncate">{value}</p>
+                <p className="text-xs text-muted-foreground mt-1 truncate">{sub}</p>
+              </div>
+              <div className="flex-shrink-0 p-2.5 rounded-xl bg-accent/50 text-primary">
+                <Icon className="w-5 h-5" />
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Main content — fills remaining height on large screens (no scroll) */}
+        <div className="grid gap-3 md:grid-cols-4 lg:flex-1 lg:min-h-0 lg:grid-rows-1">
           {/* Ayah / reminder */}
           <div className="islamic-card md:col-span-2 relative overflow-hidden group">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-secondary/5 to-accent/10 opacity-80 group-hover:opacity-100 transition-opacity" />
@@ -362,18 +368,9 @@ const Dashboard: React.FC = () => {
             </div>
           </div>
 
-          {/* Credit Usage Widget */}
-          {/* Credit Usage Widget replaced by Rank Display */}
-          <CreditUsageWidget />
-          <div className="md:col-span-1 space-y-4">
-            <RankDisplay currentRank="Talib" currentPoints={45} />
-
-            <div className="islamic-card p-4">
-              <h3 className="font-semibold mb-4 text-sm uppercase tracking-wider text-muted-foreground flex items-center gap-2">
-                <Star className="w-4 h-4 text-islamic-gold" /> Your Badges
-              </h3>
-              <BadgeList badges={['Founding Member', 'Explorer', 'Beta Tester']} />
-            </div>
+          {/* Rank */}
+          <div className="md:col-span-1 space-y-3 lg:min-h-0 lg:overflow-y-auto custom-scrollbar">
+            <RankDisplay currentRank={stats.rank} currentPoints={stats.totalXp} />
           </div>
         </div>
 
@@ -444,7 +441,7 @@ const Dashboard: React.FC = () => {
         )}
 
         {/* Prayer Times, Duas, Facts, Quiz */}
-        <div className="grid gap-3 md:grid-cols-4 flex-1 min-h-0">
+        <div className="grid gap-3 md:grid-cols-4 lg:flex-1 lg:min-h-0 lg:grid-rows-1">
           {/* Today's Prayer Times */}
           <div className="islamic-card p-5 space-y-3 relative overflow-hidden group flex flex-col md:col-span-1">
             <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />

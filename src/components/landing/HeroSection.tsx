@@ -1,98 +1,123 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
-import { useLanguage } from '@/contexts/LanguageContext';
-import gsap from 'gsap';
-import { useGSAP } from '@gsap/react';
-import IslamicPattern from '@/components/effects/IslamicPattern';
+import { useTr } from '@/lib/i18n';
+
+const ease = [0.22, 1, 0.36, 1] as const;
 
 const HeroSection = () => {
   const navigate = useNavigate();
-  const { t } = useLanguage();
-  const containerRef = useRef(null);
-
-  useGSAP(() => {
-    const tl = gsap.timeline();
-    
-    tl.from(".hero-line", {
-      y: 100,
-      opacity: 0,
-      stagger: 0.2,
-      duration: 1.5,
-      ease: "power4.out"
-    })
-    .from(".hero-sub", {
-      opacity: 0,
-      y: 20,
-      duration: 1,
-      ease: "power2.out"
-    }, "-=0.5")
-    .from(".hero-cta", {
-      scale: 0.9,
-      opacity: 0,
-      duration: 1.2,
-      ease: "expo.out"
-    }, "-=0.2");
-  }, { scope: containerRef });
+  const tr = useTr();
 
   return (
-    <section 
-      ref={containerRef}
-      className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-sacred-dark pt-32 pb-40"
-    >
-      <IslamicPattern opacity={0.03} scale={2} className="rotate-12 translate-x-1/4" />
-      
-      {/* Editorial Decorative Elements */}
-      <div className="absolute top-1/4 left-10 w-px h-64 bg-white/5 hidden lg:block" />
-      <div className="absolute bottom-1/4 right-10 w-px h-64 bg-white/5 hidden lg:block" />
+    <section className="relative overflow-hidden bg-[#FAF7F0] pt-40 pb-28 lg:pt-48">
+      <div className="container mx-auto px-6">
+        <div className="mx-auto max-w-3xl text-center">
+          {/* Eyebrow */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8 }}
+            className="flex items-center justify-center gap-4 mb-10"
+          >
+            <span className="h-px w-10 bg-stone-300" />
+            <span className="text-[11px] font-semibold uppercase tracking-[0.3em] text-stone-500">
+              {tr({ en: 'The Council of Knowledge', fr: 'Le Conseil du Savoir' })}
+            </span>
+            <span className="h-px w-10 bg-stone-300" />
+          </motion.div>
 
-      <div className="container relative z-10 mx-auto px-4 text-center">
-        <motion.div
-          animate={{ opacity: [0.3, 0.6, 0.3] }}
-          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-          className="inline-flex items-center gap-4 mb-16"
+          {/* Arabic mark */}
+          <motion.p
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9, ease }}
+            className="font-arabic text-4xl text-emerald-800/80 mb-7"
+            dir="rtl"
+          >
+            اقْرَأْ
+          </motion.p>
+
+          {/* Headline */}
+          <motion.h1
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, ease, delay: 0.08 }}
+            className="text-5xl sm:text-6xl lg:text-[5.25rem] leading-[1.02] text-stone-900"
+          >
+            {tr({ en: 'Every question of faith,', fr: 'Chaque question de foi,' })}
+            <br />
+            <span className="italic text-emerald-800">
+              {tr({ en: 'answered with wisdom.', fr: 'éclairée par la sagesse.' })}
+            </span>
+          </motion.h1>
+
+          {/* Subhead */}
+          <motion.p
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, ease, delay: 0.18 }}
+            className="mx-auto mt-8 max-w-xl text-base sm:text-lg leading-relaxed text-stone-500"
+          >
+            {tr({
+              en: 'A council of specialized agents, grounded in authentic sources, guiding your deen in French and English.',
+              fr: 'Un conseil d’agents spécialisés, ancré dans des sources authentiques, pour guider votre dîn, en français comme en anglais.',
+            })}
+          </motion.p>
+
+          {/* CTAs */}
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, ease, delay: 0.28 }}
+            className="mt-11 flex items-center justify-center gap-7"
+          >
+            <motion.button
+              whileHover={{ y: -2 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={() => navigate('/login')}
+              className="rounded-full bg-emerald-900 px-9 py-3.5 text-sm font-semibold tracking-wide text-[#FAF7F0] shadow-lg shadow-emerald-900/15 hover:bg-emerald-800 transition-colors"
+            >
+              {tr({ en: 'Begin', fr: 'Commencer' })}
+            </motion.button>
+            <button
+              onClick={() => navigate('/chat')}
+              className="group inline-flex items-center gap-2 text-sm font-semibold text-stone-700 hover:text-emerald-800 transition-colors"
+            >
+              {tr({ en: 'Ask the council', fr: 'Consulter le conseil' })}
+              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+            </button>
+          </motion.div>
+        </div>
+
+        {/* A real example, treated editorially — no fake UI chrome */}
+        <motion.figure
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, ease, delay: 0.4 }}
+          className="mx-auto mt-24 max-w-2xl border-t border-stone-200 pt-12 text-center"
         >
-          <div className="w-12 h-px bg-accent/20" />
-          <span className="text-[10px] font-black uppercase tracking-widest-xl text-accent/60">
-             The Ascension begins
-          </span>
-          <div className="w-12 h-px bg-accent/20" />
-        </motion.div>
-
-        <div className="max-w-6xl mx-auto mb-20">
-          <h1 className="hero-line font-serif-premium text-7xl md:text-[10vw] lg:text-[12vw] leading-[0.85] tracking-tightest text-white italic mb-12">
-            Faith in a <br />
-            <span className="not-italic text-accent">New Light.</span>
-          </h1>
-          <p className="hero-sub text-lg md:text-xl font-medium text-white/40 max-w-2xl mx-auto leading-relaxed uppercase tracking-widest">
-            {t('hero.subtitle')}
+          <p className="text-2xl sm:text-3xl italic leading-snug text-stone-800">
+            {tr({
+              en: '“Is it permissible to combine prayers while travelling?”',
+              fr: '« Peut-on regrouper les prières en voyage ? »',
+            })}
           </p>
-        </div>
-
-        <div className="hero-cta">
-           <button
-             onClick={() => navigate('/login')}
-             className="btn-premium group flex items-center gap-6"
-           >
-             {t('hero.cta')}
-             <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
-           </button>
-           
-           <div className="mt-12 flex items-center justify-center gap-8">
-              {['Authentic', 'Secured', 'AI-Assisted'].map((item) => (
-                 <span key={item} className="text-[9px] font-black uppercase tracking-[0.4em] text-white/10">
-                    {item}
-                 </span>
-              ))}
-           </div>
-        </div>
-      </div>
-
-      {/* Floating Star Elements */}
-      <div className="absolute bottom-20 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4">
-          <div className="w-px h-12 bg-white/10" />
-          <span className="text-[8px] font-black uppercase tracking-[0.5em] text-white/20">Scroll to Explore</span>
+          <figcaption className="mt-5 text-sm leading-relaxed text-stone-500">
+            {tr({
+              en: 'Answered in seconds, with the ruling across all four Sunni schools and citations you can verify.',
+              fr: 'Une réponse en quelques secondes, avec l’avis des quatre écoles sunnites et des sources vérifiables.',
+            })}
+          </figcaption>
+          <div className="mt-8 flex items-center justify-center gap-4 text-stone-400">
+            <span className="h-px w-12 bg-stone-300" />
+            <span className="text-[11px] font-medium uppercase tracking-[0.25em]">
+              {tr({ en: 'Fiqh · ʿAqīdah · Context · Humility', fr: 'Fiqh · ʿAqīda · Contexte · Humilité' })}
+            </span>
+            <span className="h-px w-12 bg-stone-300" />
+          </div>
+        </motion.figure>
       </div>
     </section>
   );

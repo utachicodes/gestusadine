@@ -1,9 +1,10 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useAuth } from '@/auth/AuthContext';
-import { auth } from '@/lib/firebase';
-import { updateProfile } from 'firebase/auth';
 
-export type ThemeMode = 'light' | 'dark' | 'personalized';
+// Dark mode has been removed from the product. The only modes are the default
+// light palette and the premium `personalized` (custom-color) palette, which is
+// still a light-based surface.
+export type ThemeMode = 'light' | 'personalized';
 
 export interface ThemeColors {
   primary: string;
@@ -19,9 +20,9 @@ interface ThemeContextType {
 }
 
 const defaultColors: ThemeColors = {
-  primary: '#0F766E', // teal-700
-  secondary: '#1E40AF', // blue-800
-  accent: '#F59E0B', // amber-500
+  primary: '#064E3B', // Heritage Emerald
+  secondary: '#0D9488', // Teal
+  accent: '#0F766E', // Teal-700
 };
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -31,15 +32,17 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const [theme, setThemeState] = useState<ThemeMode>(() => {
     if (typeof window !== 'undefined') {
-      const savedTheme = localStorage.getItem('theme') as ThemeMode;
-      if (savedTheme) return savedTheme;
+      // Dark mode has been removed: only `personalized` is honored from storage;
+      // anything else (including a previously-saved 'dark') falls back to light.
+      const savedTheme = localStorage.getItem('theme-v2');
+      if (savedTheme === 'personalized') return 'personalized';
     }
-    return 'dark';
+    return 'light';
   });
 
   const [colors, setColors] = useState<ThemeColors>(() => {
     if (typeof window !== 'undefined') {
-      const savedColors = localStorage.getItem('theme-colors');
+      const savedColors = localStorage.getItem('theme-colors-v2');
       return savedColors ? JSON.parse(savedColors) : defaultColors;
     }
     return defaultColors;
@@ -48,20 +51,8 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    localStorage.setItem('theme', theme);
-    localStorage.setItem('theme-colors', JSON.stringify(colors));
-
-    // Optionally save to Firebase user metadata (non-blocking)
-    if (user && auth.currentUser) {
-      const metadata = {
-        ...auth.currentUser.metadata,
-        theme,
-        theme_colors: JSON.stringify(colors)
-      };
-      // Note: Firebase doesn't support custom metadata like Supabase
-      // You would need to store this in Firestore user document instead
-      // For now, we'll just use localStorage
-    }
+    localStorage.setItem('theme-v2', theme);
+    localStorage.setItem('theme-colors-v2', JSON.stringify(colors));
 
     const root = window.document.documentElement;
     root.classList.remove('light', 'dark', 'personalized');
@@ -83,13 +74,9 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       return { h: hsl.h, s: hsl.s, l };
     };
 
-    if (theme === 'dark') {
-      root.classList.add('dark');
-      ['--primary', '--secondary', '--accent', '--background', '--foreground', '--card', '--card-foreground', '--muted', '--muted-foreground', '--border', '--input', '--ring', '--popover', '--popover-foreground', '--secondary-foreground', '--accent-foreground', '--destructive', '--destructive-foreground']
-        .forEach((name) => root.style.removeProperty(name));
-    } else if (theme === 'light') {
+    if (theme !== 'personalized') {
       root.classList.add('light');
-      ['--primary', '--secondary', '--accent', '--background', '--foreground', '--card', '--card-foreground', '--muted', '--muted-foreground', '--border', '--input', '--ring', '--popover', '--popover-foreground', '--secondary-foreground', '--accent-foreground', '--destructive', '--destructive-foreground']
+      ['--primary', '--primary-foreground', '--secondary', '--accent', '--background', '--foreground', '--card', '--card-foreground', '--muted', '--muted-foreground', '--border', '--input', '--ring', '--popover', '--popover-foreground', '--secondary-foreground', '--accent-foreground', '--destructive', '--destructive-foreground']
         .forEach((name) => root.style.removeProperty(name));
     } else {
       root.classList.add('personalized');

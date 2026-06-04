@@ -5,42 +5,92 @@
 @tailwind utilities;
 
 @layer base {
+  /* ===========================================================================
+     LIGHT theme — default. Emerald/Teal brand on a clean slate-white surface.
+     The brand accent is routed through --primary (Heritage Emerald) and the
+     islamic-* colors (tailwind.config). --accent is a faint teal chip whose
+     foreground is emerald, so `bg-accent/10 + text-accent-foreground` renders
+     a neutral chip with an on-brand emerald/teal icon (reference-image look).
+     =========================================================================== */
   :root {
-    --background: 240 10% 3.5%; /* Midnight Coal #080809 */
-    --foreground: 0 0% 98%;
-    --card: 240 10% 4.5%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.5%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 161 80% 20%; /* Heritage Emerald #064E3B */
-    --primary-foreground: 210 20% 90%;
-    --secondary: 240 5% 10%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 5% 10%;
-    --muted-foreground: 240 5% 60%;
-    --accent: 210 20% 90%; /* Platinum/Silver */
-    --accent-foreground: 240 10% 3.9%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 5% 15%;
-    --input: 240 5% 15%;
-    --ring: 210 20% 90%;
-    --radius: 2rem;
+    --background: 40 44% 96%;         /* warm cream #FAF7F0 — matches the landing */
+    --foreground: 21 11% 10%;         /* stone-900 */
+    --card: 40 50% 99%;               /* warm white card */
+    --card-foreground: 21 11% 10%;
+    --popover: 40 50% 99%;
+    --popover-foreground: 21 11% 10%;
+    --primary: 161 84% 18%;           /* Heritage Emerald (emerald-900) */
+    --primary-foreground: 40 44% 96%; /* cream text on emerald — matches landing CTA */
+    --secondary: 40 38% 92%;          /* deeper cream #F3EDE1 */
+    --secondary-foreground: 21 11% 10%;
+    --muted: 40 38% 93%;
+    --muted-foreground: 25 7% 42%;    /* stone-500/600 */
+    --accent: 152 30% 90%;            /* faint emerald chip (like landing icon chips) */
+    --accent-foreground: 161 60% 22%; /* emerald icon/text */
+    --destructive: 0 72% 48%;
+    --destructive-foreground: 40 44% 97%;
+    --border: 30 16% 88%;             /* warm stone-200 */
+    --input: 30 16% 88%;
+    --ring: 173 70% 36%;              /* subtle teal focus ring (the "teal" accent) */
+    --radius: 0.9rem;
+
+    /* Sidebar tokens (consumed by tailwind.config sidebar.* colors) */
+    --sidebar-background: 40 47% 98%;
+    --sidebar-foreground: 21 11% 10%;
+    --sidebar-primary: 161 84% 18%;
+    --sidebar-primary-foreground: 40 44% 96%;
+    --sidebar-accent: 152 30% 90%;
+    --sidebar-accent-foreground: 161 60% 22%;
+    --sidebar-border: 30 16% 88%;
+    --sidebar-ring: 173 70% 36%;
   }
 
+  /* Dark theme removed — the product ships light-only. */
+
+  /* --- Agentic & Sacred: Cinematic Motion Background --- */
   .bg-sacred-dark {
-    @apply bg-[#080809];
+    @apply bg-[#080809] min-h-screen relative overflow-hidden;
     background-image: 
-      radial-gradient(circle at 10% 10%, rgba(6, 78, 59, 0.08) 0%, transparent 40%),
-      radial-gradient(circle at 90% 90%, rgba(229, 231, 235, 0.04) 0%, transparent 40%);
-    position: relative;
+      radial-gradient(circle at 50% 50%, rgba(6, 78, 59, 0.05) 0%, transparent 100%);
+  }
+
+  /* Vibrant Agentic Blobs */
+  .blob-vibrant {
+    @apply absolute rounded-full blur-[140px] opacity-[0.25] pointer-events-none mix-blend-screen animate-drift;
+  }
+
+  .blob-emerald {
+    @apply bg-[#94ff00] w-[600px] h-[600px];
+  }
+
+  .blob-platinum {
+    @apply bg-slate-100 w-[500px] h-[500px];
+  }
+
+  .bg-sacred-dark::before,
+  .bg-sacred-dark::after {
+    content: "";
+    @apply absolute inset-[-100%] pointer-events-none;
+    background-image: 
+      radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.05) 0%, transparent 40%),
+      radial-gradient(circle at 70% 70%, rgba(148, 255, 0, 0.1) 0%, transparent 40%),
+      radial-gradient(circle at 90% 10%, rgba(255, 255, 255, 0.03) 0%, transparent 30%);
+    animation: drift-slow 60s ease-in-out infinite alternate;
   }
 
   .bg-sacred-dark::after {
-    content: "";
-    @apply absolute inset-0 pointer-events-none opacity-[0.03];
-    background-image: url("https://grainy-gradients.vercel.app/noise.svg");
-    filter: brightness(120%) contrast(150%);
+    animation: drift-slow 90s ease-in-out infinite alternate-reverse;
+    opacity: 0.5;
+  }
+
+  @keyframes drift-slow {
+    from { transform: translate(-5%, -5%) rotate(0deg); }
+    to { transform: translate(5%, 5%) rotate(5deg); }
+  }
+
+  .noise-grain {
+    @apply absolute inset-0 pointer-events-none opacity-[0.03] z-[100];
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
   }
 
   * {
@@ -53,7 +103,7 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans selection:bg-white/10 selection:text-white;
+    @apply bg-background text-foreground font-sans selection:bg-primary/15 selection:text-primary;
     text-rendering: optimizeLegibility;
   }
 }
@@ -64,26 +114,183 @@
     font-family: 'Cormorant Garamond', serif;
   }
 
-  /* Stealth Glassmorphism (Less Neon, More Texture) */
-  .glass-premium {
-    @apply bg-white/[0.02] backdrop-blur-3xl border border-white/[0.05] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.7)];
+  /* SaaS Card Overhaul */
+  .card-premium {
+    @apply relative overflow-hidden bg-white/[0.02] backdrop-blur-3xl border border-white/[0.05] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.7)] rounded-[2.5rem];
   }
 
-  .glass-pill {
-    @apply bg-white/[0.03] backdrop-blur-2xl border border-white/[0.08] rounded-full;
+  .card-textured {
+    @apply relative overflow-hidden bg-[#0a0a0b] border border-white/5 rounded-[2.5rem];
+    background-image: 
+      radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.02) 0%, transparent 40%),
+      url("data:image/svg+xml,%3Csvg width='400' height='400' viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+  }
+
+  .card-vibrant {
+    @apply bg-[#94ff00] text-black border-none rounded-[2.5rem] shadow-[0_0_100px_rgba(148,255,0,0.2)];
+  }
+
+  .card-glass-light {
+    @apply bg-white/95 backdrop-blur-3xl text-black border border-white/20 rounded-[2.5rem];
   }
 
   /* Silent Luxury Buttons */
   .btn-premium {
-    @apply relative overflow-hidden px-10 py-5 bg-white text-black font-bold uppercase tracking-[0.2em] rounded-full transition-all duration-700 hover:scale-[1.02] active:scale-95 hover:shadow-[0_0_50px_rgba(255,255,255,0.1)];
+    @apply relative overflow-hidden px-10 py-5 bg-white text-black font-bold uppercase tracking-[0.2em] rounded-full transition-all duration-700 hover:scale-[1.05] active:scale-95 hover:shadow-[0_0_50px_rgba(255,255,255,0.2)];
   }
 
-  .btn-premium-outline {
-    @apply px-10 py-5 glass-pill text-accent font-bold uppercase tracking-[0.2em] transition-all duration-700 hover:bg-white/[0.05] active:scale-95 border-white/10 hover:border-white/20;
+  .btn-pill {
+    @apply inline-flex items-center gap-3 px-6 py-2 bg-white/[0.03] backdrop-blur-md border border-white/10 rounded-full text-[10px] font-black uppercase tracking-[0.3em] text-white/40 hover:text-white transition-all;
   }
+
+  /* Tactile "push" button — adapted from a Uiverse design to the brand emerald. */
+  .btn-push {
+    border: none;
+    outline: none;
+    background-color: #0d9488;
+    color: #fff;
+    padding: 10px 22px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.1s ease;
+    box-shadow: 0 5px 0 0 #0f766e;
+  }
+  .btn-push:hover { background-color: #0f766e; box-shadow: 0 5px 0 0 #115e59; }
+  .btn-push:active { transform: translateY(5px); box-shadow: 0 0 0 0 #115e59; }
+  .btn-push:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: 0 5px 0 0 #0f766e; }
+
+  /* Expanding circular logout button — adapted from a Uiverse design. */
+  .btn-logout {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 44px;
+    height: 44px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    color: #fff;
+    background-color: #e5484d;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.15);
+    transition-duration: 0.3s;
+  }
+  .btn-logout__sign {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition-duration: 0.3s;
+  }
+  .btn-logout__text {
+    position: absolute;
+    right: 0;
+    width: 0;
+    opacity: 0;
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 600;
+    white-space: nowrap;
+    transition-duration: 0.3s;
+  }
+  .btn-logout:hover { width: 125px; border-radius: 40px; }
+  .btn-logout:hover .btn-logout__sign { width: 30%; padding-left: 18px; }
+  .btn-logout:hover .btn-logout__text { opacity: 1; width: 70%; padding-right: 12px; }
+  .btn-logout:active { transform: translate(2px, 2px); }
 
   .text-gradient-platinum {
-    @apply bg-clip-text text-transparent bg-gradient-to-br from-white via-slate-200 to-slate-400;
+    @apply bg-clip-text text-transparent bg-gradient-to-br from-white via-white to-slate-400;
+  }
+
+  /* ===========================================================================
+     Authenticated-app surface system (light + emerald/teal). These classes are
+     referenced across ~33 files; defining them here re-skins the whole app.
+     =========================================================================== */
+
+  /* Standard card surface — white, hairline border, soft shadow. */
+  .islamic-card {
+    @apply relative bg-card text-card-foreground border border-border rounded-2xl
+           shadow-[0_1px_2px_rgba(16,24,40,0.04),0_4px_16px_-8px_rgba(16,24,40,0.08)];
+  }
+
+  /* Light glass variant for floating / overlay surfaces. */
+  .glass-card-premium {
+    @apply relative bg-white/75 backdrop-blur-xl border border-border rounded-2xl
+           shadow-[0_8px_30px_-12px_rgba(16,24,40,0.18)];
+  }
+
+  /* Primary filled button — Heritage Emerald. */
+  .btn-islamic {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-primary
+           text-primary-foreground font-semibold px-5 py-2.5 transition-all duration-200
+           hover:bg-primary/90 hover:shadow-md active:scale-[0.98]
+           disabled:opacity-50 disabled:pointer-events-none;
+  }
+
+  /* Outlined / secondary button. */
+  .btn-islamic-outlined {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-primary/30
+           text-primary bg-transparent font-semibold px-5 py-2.5 transition-all duration-200
+           hover:bg-primary/5 hover:border-primary/50 active:scale-[0.98]
+           disabled:opacity-50 disabled:pointer-events-none;
+  }
+
+  /* Emerald → teal clip-text gradient (replaces the dead `text-gradient`). */
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-emerald-700 via-emerald-600 to-teal-500;
+  }
+
+  /* ---------------------------------------------------------------------------
+     Legacy "SaaS"/"premium" theme classes still referenced by the landing,
+     chat and shop surfaces. Mapped onto the light + emerald/teal system.
+     Inline utility overrides on these elements still win (utilities layer).
+     --------------------------------------------------------------------------- */
+  .bg-premium-gray {
+    @apply bg-slate-50;
+  }
+
+  .glass-card-saas {
+    @apply relative bg-white/80 backdrop-blur-xl border border-border rounded-2xl shadow-sm;
+  }
+
+  .btn-saas-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-primary text-primary-foreground
+           font-semibold px-6 py-3 transition-all duration-200 hover:bg-primary/90 hover:shadow-md
+           active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none;
+  }
+
+  .btn-saas-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-border bg-card
+           text-foreground font-semibold px-6 py-3 transition-all duration-200 hover:bg-secondary
+           active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none;
+  }
+
+  .text-gradient-saas {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-emerald-700 to-teal-500;
+  }
+
+  /* ---------------------------------------------------------------------------
+     Legacy "warm / sacred" theme classes used by the core, community and
+     knowledge pages. Mapped onto the same light + emerald/teal system.
+     --------------------------------------------------------------------------- */
+  .glass-card-warm {
+    @apply relative bg-card text-card-foreground border border-border rounded-2xl
+           shadow-[0_1px_2px_rgba(16,24,40,0.04),0_4px_16px_-8px_rgba(16,24,40,0.08)];
+  }
+
+  .btn-spiritual {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-primary text-primary-foreground
+           font-semibold px-6 py-3 transition-all duration-200 hover:bg-primary/90 hover:shadow-md
+           active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none;
+  }
+
+  .btn-gold {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-brand-600 text-white
+           font-semibold px-6 py-3 transition-all duration-200 hover:bg-brand-700 hover:shadow-md
+           active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none;
   }
 }
 
@@ -99,6 +306,18 @@
   .mask-radial-faded {
     mask-image: radial-gradient(circle at center, black 0%, transparent 80%);
   }
+
+  /* ---------------------------------------------------------------------------
+     Landing elevation language — soft, warm "paper on a desk" shadows. Kept
+     restrained (no glow, no spread) so cards read as printed matter, not UI.
+     Used across all landing sections for a consistent sense of depth.
+     --------------------------------------------------------------------------- */
+  .shadow-paper {
+    box-shadow: 0 1px 2px rgba(28, 25, 23, 0.04), 0 12px 32px -18px rgba(28, 25, 23, 0.16);
+  }
+  .shadow-paper-lg {
+    box-shadow: 0 2px 6px rgba(28, 25, 23, 0.05), 0 30px 64px -28px rgba(28, 25, 23, 0.28);
+  }
 }
 
 /* Custom Scrollbar */
@@ -107,9 +326,9 @@
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-[#080809];
+  @apply bg-transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-white/5 rounded-full hover:bg-white/10 transition-all;
+  @apply bg-slate-300/70 rounded-full hover:bg-slate-400/80 transition-all;
 }

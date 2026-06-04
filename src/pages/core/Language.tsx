@@ -6,7 +6,6 @@ import { Globe, ArrowRight } from 'lucide-react';
 const languages = [
     { code: 'en', name: 'English', native: 'English', flag: '🇺🇸' },
     { code: 'fr', name: 'French', native: 'Français', flag: '🇫🇷' },
-    { code: 'ar', name: 'Arabic', native: 'العربية', flag: '🇸🇦' },
 ];
 
 export default function Language() {
@@ -36,7 +35,7 @@ export default function Language() {
                         {languages.map((lang) => (
                             <button
                                 key={lang.code}
-                                onClick={() => setLanguage(lang.code as any)}
+                                onClick={() => setLanguage(lang.code as 'en' | 'fr')}
                                 className={`glass-card-premium p-8 flex items-center justify-between group transition-all duration-500 border-white/5 ${language === lang.code ? 'border-cyan-glow/50 bg-cyan-glow/5 shadow-[0_0_40px_rgba(0,245,255,0.1)]' : 'hover:border-cyan-glow/20'}`}
                             >
                                 <div className="flex items-center gap-6">

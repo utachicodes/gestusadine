@@ -26,3 +26,11 @@ dist-ssr
 .env
 .env.local
 backend/.env.local
+
+# Generated build / lint logs (do not commit)
+*.tsbuildinfo
+build_log.txt
+eslint_report.json
+lint_*.txt
+tsc_errors.txt
+videos_lint.txt

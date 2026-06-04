@@ -1,66 +1,44 @@
-import admin from 'firebase-admin';
+/**
+ * ⚠️ Firebase has been removed from this project.
+ *
+ * This module is a TOMBSTONE. It used to initialize the Firebase Admin SDK and
+ * export `auth` / `db` / `storage`. The data + auth layer is migrating to Convex
+ * (see MIGRATION.md), so there is no Firebase here anymore.
+ *
+ * `auth`, `db`, and `storage` are proxies that throw on first use. The server
+ * still boots and routes that don't touch Firestore keep working; any endpoint
+ * that did read/write Firestore now fails loudly instead of silently returning
+ * stale/empty data.
+ */
 
-let initialized = false;
-
-export function initializeFirebaseAdmin() {
-    if (initialized) return;
-
-    const serviceAccountKey = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
-
-    if (!serviceAccountKey) {
-        console.warn('⚠️ FIREBASE_SERVICE_ACCOUNT_KEY environment variable is required but missing. Firebase Admin features will be disabled.');
-        return;
-    }
-
-    try {
-        const serviceAccount = JSON.parse(serviceAccountKey);
-
-        // Check for valid private key to avoid crash
-        if (!serviceAccount.private_key) {
-            console.warn('⚠️ FIREBASE_SERVICE_ACCOUNT_KEY is present but missing "private_key". Firebase Admin features will be disabled.');
-            return;
-        }
-
-        admin.initializeApp({
-            credential: admin.credential.cert(serviceAccount),
-            storageBucket: process.env.FIREBASE_STORAGE_BUCKET
-        });
-
-        initialized = true;
-    } catch (error) {
-        console.error('⚠️ Failed to parse FIREBASE_SERVICE_ACCOUNT_KEY or initialize Firebase Admin:', error);
-    }
+function tombstone(service: string): any {
+  const fail = (): never => {
+    throw new Error(
+      `Firebase ${service} has been removed from this project. ` +
+        `This endpoint is pending the Convex migration (see MIGRATION.md).`,
+    );
+  };
+  // Any property access returns another callable tombstone, so chained calls
+  // like db.collection('x').doc(id).get() throw at the first invocation.
+  return new Proxy(function () {} as any, {
+    get: () => tombstone(service),
+    apply: fail,
+    construct: fail,
+  });
 }
 
-// Initialize on import
-initializeFirebaseAdmin();
+// No-op: there is nothing to initialize anymore. Kept so existing callers compile.
+export function initializeFirebaseAdmin(): void {
+  /* Firebase removed — intentionally a no-op. */
+}
 
-// Safe export helper
-const getSafeService = <T>(serviceName: string, getter: () => T): T => {
-    try {
-        if (admin.apps.length === 0) {
-            // Return a proxy that logs a warning when accessed
-            return new Proxy({} as T, {
-                get: (_target, prop) => {
-                    console.warn(`Attempted to access ${serviceName}.${String(prop)} but Firebase Admin is not initialized.`);
-                    return () => { throw new Error(`Firebase Admin ${serviceName} not initialized`); };
-                }
-            });
-        }
-        return getter();
-    } catch (e) {
-        return {} as T;
-    }
-};
+export const adminAuth: any = tombstone('Auth');
+export const adminDb: any = tombstone('Firestore');
+export const adminStorage: any = tombstone('Storage');
 
-// Export Firebase Admin services safely
-export const adminAuth = getSafeService('auth', () => admin.auth());
-export const adminDb = getSafeService('firestore', () => admin.firestore());
-export const adminStorage = getSafeService('storage', () => admin.storage());
-
-// Convenient aliases
+// Convenient aliases (same names the rest of the backend imports).
 export const auth = adminAuth;
 export const db = adminDb;
 export const storage = adminStorage;
 
-export default admin;
+export default { auth, db, storage, initializeFirebaseAdmin };

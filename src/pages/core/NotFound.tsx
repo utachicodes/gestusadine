@@ -26,13 +26,13 @@ const NotFound = () => {
         transition={{ duration: 0.7 }}
         className="glass-card-warm p-14 max-w-md w-full text-center rounded-3xl shadow-xl relative z-10"
       >
-        <div className="text-8xl font-serif font-bold text-warm-sand/80 mb-2 select-none leading-none">
+        <div className="text-8xl font-bold text-warm-sand/80 mb-2 select-none leading-none">
           404
         </div>
 
         <p className="font-arabic text-3xl text-warm-gold/60 mb-6">ضل الطريق</p>
 
-        <h1 className="text-3xl font-serif font-bold text-deep-green mb-4">
+        <h1 className="text-3xl font-bold text-deep-green mb-4">
           Page Not Found
         </h1>
         <p className="text-deep-green/50 mb-8 leading-relaxed">

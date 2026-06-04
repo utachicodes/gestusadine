@@ -1,89 +1,135 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowUpRight, Mail, Twitter, Instagram } from "lucide-react";
-import IslamicPattern from "@/components/effects/IslamicPattern";
+import { ArrowRight, Mail, Twitter, Instagram } from "lucide-react";
+import { toast } from "sonner";
+import { useTr, type Loc } from "@/lib/i18n";
+
+const NAV: { label: Loc; path: string }[] = [
+  { label: { en: 'Home', fr: 'Accueil' }, path: '/' },
+  { label: { en: 'Methodology', fr: 'Méthodologie' }, path: '/about' },
+  { label: { en: 'Help Center', fr: 'Aide' }, path: '/faq' },
+  { label: { en: 'Contact', fr: 'Contact' }, path: '/contact' },
+];
+
+const ECOSYSTEM: { label: Loc; path: string }[] = [
+  { label: { en: 'Library', fr: 'Bibliothèque' }, path: '/library' },
+  { label: { en: 'Podcasts', fr: 'Podcasts' }, path: '/podcasts' },
+  { label: { en: 'Community', fr: 'Communauté' }, path: '/community' },
+  { label: { en: 'Council', fr: 'Conseil' }, path: '/chat' },
+];
+
+// TODO: swap in the real social handles when available.
+const SOCIALS = [
+  { Icon: Twitter, href: 'https://twitter.com', label: 'Twitter' },
+  { Icon: Instagram, href: 'https://instagram.com', label: 'Instagram' },
+  { Icon: Mail, href: 'mailto:contact@gestusadine.com', label: 'Email' },
+];
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const tr = useTr();
+  const [email, setEmail] = useState('');
+
+  const handleSubscribe = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim()) return;
+    toast.success(tr({ en: "You're on the list.", fr: 'Vous êtes inscrit.' }));
+    setEmail('');
+  };
 
   return (
-    <footer className="relative bg-sacred-dark pt-32 pb-16 overflow-hidden border-t border-white/5">
-      <IslamicPattern opacity={0.02} className="scale-125" />
-      
-      <div className="container relative z-10 mx-auto px-4 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-24">
-          
-          {/* Brand Column */}
-          <div className="flex flex-col gap-10">
-            <img src="/logofinal.png" alt="Logo" className="h-6 w-fit brightness-0 invert opacity-40" />
-            <p className="font-serif-premium text-xl text-white/50 italic leading-relaxed max-w-xs">
-              Knowledge is not merely information, it is a light that illuminates the soul.
+    <footer className="bg-[#FAF7F0] border-t border-stone-200">
+      <div className="container mx-auto px-6 py-16">
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4 mb-14">
+          {/* Brand */}
+          <div>
+            <img src="/logofinal.png" alt="GëstuSaDine" className="h-6 w-auto brightness-0 opacity-80 mb-5" />
+            <p className="text-lg leading-snug text-stone-600 max-w-xs">
+              {tr({
+                en: 'Authentic knowledge, considered guidance, and a community of seekers.',
+                fr: 'Un savoir authentique, une guidance réfléchie et une communauté de chercheurs.',
+              })}
             </p>
-            <div className="flex gap-6">
-               {[Twitter, Instagram, Mail].map((Icon, idx) => (
-                  <a key={idx} href="#" className="text-white/20 hover:text-accent transition-colors">
-                     <Icon className="w-5 h-5" />
+            <div className="flex gap-3 mt-6">
+              {SOCIALS.map(({ Icon, href, label }) => {
+                const external = href.startsWith('http');
+                return (
+                  <a
+                    key={label}
+                    href={href}
+                    aria-label={label}
+                    {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                    className="flex h-9 w-9 items-center justify-center rounded-full border border-stone-300 text-stone-500 hover:border-emerald-800 hover:text-emerald-800 transition-colors"
+                  >
+                    <Icon className="w-4 h-4" />
                   </a>
-               ))}
+                );
+              })}
             </div>
           </div>
 
-          {/* Navigation */}
+          {/* Company */}
           <div>
-            <h4 className="text-[10px] font-black uppercase tracking-[0.5em] text-accent mb-12 italic opacity-40">The Legacy</h4>
-            <div className="flex flex-col gap-6">
-              {['Home', 'Mission', 'Help Center', 'Contact'].map(item => (
-                <Link key={item} to={`/${item.toLowerCase().replace(' ', '-')}`} className="text-sm font-bold text-white/30 hover:text-white transition-colors w-fit tracking-widest uppercase">
-                  {item}
+            <h4 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-stone-400 mb-5">
+              {tr({ en: 'Company', fr: 'Société' })}
+            </h4>
+            <div className="flex flex-col gap-3">
+              {NAV.map((item) => (
+                <Link key={item.path} to={item.path} className="text-sm text-stone-600 hover:text-emerald-800 transition-colors w-fit">
+                  {tr(item.label)}
                 </Link>
               ))}
             </div>
           </div>
 
-          {/* Features */}
+          {/* Ecosystem */}
           <div>
-            <h4 className="text-[10px] font-black uppercase tracking-[0.5em] text-accent mb-12 italic opacity-40">Ecosystem</h4>
-            <div className="flex flex-col gap-6">
-              {['Library', 'Podcasts', 'Community', 'Council'].map(item => (
-                <Link key={item} to={`/${item.toLowerCase()}`} className="text-sm font-bold text-white/30 hover:text-white transition-colors w-fit tracking-widest uppercase">
-                  {item}
+            <h4 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-stone-400 mb-5">
+              {tr({ en: 'Ecosystem', fr: 'Écosystème' })}
+            </h4>
+            <div className="flex flex-col gap-3">
+              {ECOSYSTEM.map((item) => (
+                <Link key={item.path} to={item.path} className="text-sm text-stone-600 hover:text-emerald-800 transition-colors w-fit">
+                  {tr(item.label)}
                 </Link>
               ))}
             </div>
           </div>
 
-          {/* Journal Signup */}
-          <div className="flex flex-col gap-10">
-             <div className="p-10 border border-white/5 bg-white/[0.01]">
-                <p className="font-serif-premium text-lg text-white mb-6 italic">The Gëstu Journal</p>
-                <div className="flex flex-col gap-4">
-                   <input 
-                    type="email" 
-                    placeholder="Sacred Email" 
-                    className="bg-transparent border-b border-white/10 py-3 text-xs text-white focus:border-accent outline-none w-full transition-colors"
-                   />
-                   <button className="flex items-center gap-3 text-accent mt-4 group">
-                      <span className="text-[10px] font-black uppercase tracking-widest">Subscribe</span>
-                      <ArrowUpRight className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                   </button>
-                </div>
-             </div>
+          {/* Newsletter */}
+          <div>
+            <h4 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-stone-400 mb-5">
+              {tr({ en: 'Newsletter', fr: 'Infolettre' })}
+            </h4>
+            <p className="text-sm text-stone-500 mb-4">
+              {tr({ en: 'New lessons and reflections, now and then.', fr: 'De nouvelles leçons et réflexions, de temps à autre.' })}
+            </p>
+            <form onSubmit={handleSubscribe} className="flex flex-col gap-3">
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@example.com"
+                className="rounded-lg border border-stone-300 bg-white/60 px-3 py-2.5 text-sm text-stone-800 placeholder-stone-400 focus:border-emerald-700 focus:outline-none transition-colors"
+              />
+              <button
+                type="submit"
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-emerald-900 px-4 py-2.5 text-sm font-semibold text-[#FAF7F0] hover:bg-emerald-800 transition-colors"
+              >
+                {tr({ en: 'Subscribe', fr: "S'abonner" })} <ArrowRight className="w-4 h-4" />
+              </button>
+            </form>
           </div>
-
         </div>
 
-        {/* Bottom Bar */}
-        <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
-          <p className="text-[9px] font-medium text-white/10 uppercase tracking-widest-xl">
-            &copy; {currentYear} GëstuSaDine Platform. ALL RIGHTS RESERVED.
+        <div className="pt-8 border-t border-stone-200 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-xs text-stone-400">
+            © {currentYear} GëstuSaDine. {tr({ en: 'All rights reserved.', fr: 'Tous droits réservés.' })}
           </p>
-          
-          <div className="flex gap-12">
-            {['Privacy', 'Terms', 'Security'].map(item => (
-              <Link key={item} to={`/${item.toLowerCase()}`} className="text-[9px] font-black uppercase tracking-[0.3em] text-white/10 hover:text-white transition-colors">
-                {item}
-              </Link>
-            ))}
+          <div className="flex gap-6">
+            <Link to="/privacy" className="text-xs text-stone-400 hover:text-stone-700 transition-colors">{tr({ en: 'Privacy', fr: 'Confidentialité' })}</Link>
+            <Link to="/terms" className="text-xs text-stone-400 hover:text-stone-700 transition-colors">{tr({ en: 'Terms', fr: 'Conditions' })}</Link>
           </div>
         </div>
       </div>

@@ -52,7 +52,7 @@ export const LessonQuiz: React.FC<LessonQuizProps> = ({ questions, onComplete })
                 <div className="w-20 h-20 bg-islamic-gold/20 rounded-full flex items-center justify-center mx-auto text-islamic-gold mb-6">
                     <Trophy className="w-10 h-10" />
                 </div>
-                <h3 className="text-2xl font-bold font-serif text-foreground">Quiz Completed!</h3>
+                <h3 className="text-2xl font-bold text-foreground">Quiz Completed!</h3>
                 <p className="text-muted-foreground">
                     You scored <span className="text-islamic-gold font-bold text-xl">{score}</span> out of <span className="text-foreground font-bold">{questions.length}</span>
                 </p>

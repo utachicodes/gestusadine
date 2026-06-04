@@ -1,10 +1,17 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 import type { NextFunction, Request, Response } from "express";
-import { auth } from "./lib/firebase-admin.js";
 import { SubscriptionService } from "../../subscription-service/subscription.service.js";
 import { TierInfo, SubscriptionTier } from "../../../shared/subscription-types.js";
 
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "abdoullahaljersi@gmail.com";
+/**
+ * ⚠️ Firebase Auth has been removed. This is permissive DEV auth — there is no
+ * token verification. Every request is treated as an authenticated admin so the
+ * app is fully browsable locally. Real auth lands with Convex (see MIGRATION.md).
+ *
+ * Optionally pass an `x-dev-email` header to simulate a specific user's email.
+ */
+
+const DEV_USER_EMAIL = process.env.DEV_USER_EMAIL || "dev@example.com";
 
 export type AuthUser = {
   sub: string;
@@ -23,70 +30,30 @@ declare global {
   }
 }
 
-async function parseBearerToken(req: Request): Promise<string | null> {
-  const header = req.headers.authorization;
-  if (!header) return null;
-  const [scheme, token] = header.split(" ");
-  if (scheme?.toLowerCase() !== "bearer" || !token) return null;
-  return token;
+function devUser(req: Request): AuthUser {
+  const headerEmail = req.headers["x-dev-email"];
+  const email = (Array.isArray(headerEmail) ? headerEmail[0] : headerEmail) || DEV_USER_EMAIL;
+  // Stable per-email uid so the same dev email maps to the same "user".
+  const uid = `dev_${email.toLowerCase().replace(/[^a-z0-9]/g, "_")}`;
+  return { sub: uid, uid, email };
 }
 
-export async function requireAuth(req: Request, res: Response, next: NextFunction) {
-  try {
-    const token = await parseBearerToken(req);
-    if (!token) {
-      res.status(401).json({ error: "Unauthorized" });
-      return;
-    }
-
-    const decodedToken = await auth.verifyIdToken(token);
-
-    req.authUser = {
-      sub: decodedToken.uid,
-      email: decodedToken.email,
-      uid: decodedToken.uid,
-    };
-    req.isAdmin = (decodedToken.email ?? "").toLowerCase() === ADMIN_EMAIL.toLowerCase();
-
-    next();
-  } catch (error) {
-    console.error("Auth Error:", error);
-    res.status(401).json({ error: "Unauthorized" });
-  }
+export async function requireAuth(req: Request, _res: Response, next: NextFunction) {
+  req.authUser = devUser(req);
+  req.isAdmin = true;
+  next();
 }
 
-export async function optionalAuth(req: Request, res: Response, next: NextFunction) {
-  try {
-    const token = await parseBearerToken(req);
-    if (!token) {
-      next();
-      return;
-    }
-
-    const decodedToken = await auth.verifyIdToken(token);
-
-    req.authUser = {
-      sub: decodedToken.uid,
-      email: decodedToken.email,
-      uid: decodedToken.uid,
-    };
-    req.isAdmin = (decodedToken.email ?? "").toLowerCase() === ADMIN_EMAIL.toLowerCase();
-
-    next();
-  } catch (_err) {
-    // If token is invalid, just proceed as guest
-    next();
-  }
+export async function optionalAuth(req: Request, _res: Response, next: NextFunction) {
+  req.authUser = devUser(req);
+  req.isAdmin = true;
+  next();
 }
 
-export async function requireAdmin(req: Request, res: Response, next: NextFunction) {
-  await requireAuth(req, res, () => {
-    if (!req.isAdmin) {
-      res.status(403).json({ error: "Forbidden" });
-      return;
-    }
-    next();
-  });
+export async function requireAdmin(req: Request, _res: Response, next: NextFunction) {
+  req.authUser = devUser(req);
+  req.isAdmin = true;
+  next();
 }
 
 /**

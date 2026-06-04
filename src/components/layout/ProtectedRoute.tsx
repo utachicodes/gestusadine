@@ -1,17 +1,17 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { useAuth } from '@/auth/AuthContext';
+import { useAuthz } from '@/auth/useAuthz';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
   adminOnly?: boolean;
 }
 
-export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ 
-  children, 
-  adminOnly = false 
+export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
+  children,
+  adminOnly = false
 }) => {
-  const { user, isAdmin, loading } = useAuth();
+  const { isAuthenticated, can, loading } = useAuthz();
   const location = useLocation();
 
   if (loading) {
@@ -23,13 +23,13 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     );
   }
 
-  if (!user) {
+  if (!isAuthenticated) {
     // Redirect to login page if not authenticated
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  if (adminOnly && !isAdmin) {
-    // Redirect to home page if not admin but admin access is required
+  if (adminOnly && !can('admin.access')) {
+    // Redirect to home page if admin access is required but not granted
     return <Navigate to="/" replace />;
   }
 

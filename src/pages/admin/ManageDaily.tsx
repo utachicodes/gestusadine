@@ -1,303 +1,118 @@
-import React, { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { BookOpen, Plus, Edit, Trash2, Sparkles, HelpCircle } from 'lucide-react';
-import { useLanguage } from '@/contexts/LanguageContext';
-import { toast } from 'sonner';
-import { getDocuments, addDocument, updateDocument, deleteDocument, where, orderBy, limit, Timestamp } from '@/lib/firebase-helpers';
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { BookOpen, Plus, Edit, Trash2, Sparkles, HelpCircle } from "lucide-react";
+import { toast } from "sonner";
+import { useTr } from "@/lib/i18n";
+import { api } from "../../../convex/_generated/api";
+import { useQuery, useMutation } from "convex/react";
 
-interface DailyAyah {
-  id?: string;
-  reference: string;
-  arabic: string;
-  translation_en: string;
-  translation_fr: string;
-  translation_wo: string;
-}
-
-interface DailyDua {
-  id?: string;
-  arabic: string;
-  translation_en: string;
-  translation_fr: string;
-  translation_wo: string;
-}
-
-interface DailyFact {
-  id?: string;
-  fact_en: string;
-  fact_fr: string;
-  fact_wo: string;
-}
-
-interface QuizQuestion {
-  id?: string;
-  language: 'en' | 'fr' | 'wo';
-  difficulty: 'easy' | 'medium' | 'advanced';
-  question: string;
-  options: string[];
-  correct: string;
-  hint: string;
-}
+const EMPTY_AYAH = { content: "", source: "", translation: "" };
+const EMPTY_DUA = { content: "", source: "", translation: "" };
+const EMPTY_FACT = { content: "", source: "" };
 
 export default function ManageDaily() {
-  const { t, language } = useLanguage();
-  const [activeTab, setActiveTab] = useState<'ayah' | 'dua' | 'fact' | 'quiz'>('ayah');
-  const [ayahs, setAyahs] = useState<DailyAyah[]>([]);
-  const [duas, setDuas] = useState<DailyDua[]>([]);
-  const [facts, setFacts] = useState<DailyFact[]>([]);
-  const [quizzes, setQuizzes] = useState<QuizQuestion[]>([]);
-  const [loading, setLoading] = useState(true);
+  const tr = useTr();
+  const items = useQuery(api.daily.list) ?? [];
+  const createItem = useMutation(api.daily.create);
+  const updateItem = useMutation(api.daily.update);
+  const removeItem = useMutation(api.daily.remove);
+
+  const [activeTab, setActiveTab] = useState<"ayah" | "dua" | "fact">("ayah");
   const [isCreating, setIsCreating] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
 
-  const [ayahForm, setAyahForm] = useState<DailyAyah>({
-    reference: '',
-    arabic: '',
-    translation_en: '',
-    translation_fr: '',
-    translation_wo: '',
-  });
+  const [ayahForm, setAyahForm] = useState({ ...EMPTY_AYAH });
+  const [duaForm, setDuaForm] = useState({ ...EMPTY_DUA });
+  const [factForm, setFactForm] = useState({ ...EMPTY_FACT });
 
-  const [duaForm, setDuaForm] = useState<DailyDua>({
-    arabic: '',
-    translation_en: '',
-    translation_fr: '',
-    translation_wo: '',
-  });
+  const filtered = (items as any[]).filter((i: any) => i.contentType === activeTab);
 
-  const [factForm, setFactForm] = useState<DailyFact>({
-    fact_en: '',
-    fact_fr: '',
-    fact_wo: '',
-  });
-
-  const [quizForm, setQuizForm] = useState<QuizQuestion>({
-    language: 'en',
-    difficulty: 'easy',
-    question: '',
-    options: ['', '', ''],
-    correct: '',
-    hint: '',
-  });
-
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  const loadData = async () => {
-    setLoading(true);
-    try {
-      const content = await getDocuments('daily_content', [
-        orderBy('date', 'desc'),
-        limit(100)
-      ]);
-
-      const ayahsData = content
-        .filter((c: any) => c.contentType === 'ayah')
-        .map((c: any) => ({
-          id: c.id,
-          reference: c.reference || '',
-          arabic: c.arabic || '',
-          translation_en: c.translation_en || '',
-          translation_fr: c.translation_fr || '',
-          translation_wo: c.translation_wo || '',
-        }));
-
-      const duasData = content
-        .filter((c: any) => c.contentType === 'dua')
-        .map((c: any) => ({
-          id: c.id,
-          arabic: c.arabic || '',
-          translation_en: c.translation_en || '',
-          translation_fr: c.translation_fr || '',
-          translation_wo: c.translation_wo || '',
-        }));
-
-      const factsData = content
-        .filter((c: any) => c.contentType === 'fact')
-        .map((c: any) => ({
-          id: c.id,
-          fact_en: c.fact_en || '',
-          fact_fr: c.fact_fr || '',
-          fact_wo: c.fact_wo || '',
-        }));
-
-      const quizzesData = content
-        .filter((c: any) => c.contentType === 'quiz')
-        .map((c: any) => ({
-          id: c.id,
-          language: c.language || 'en',
-          difficulty: c.difficulty || 'easy',
-          question: c.question || '',
-          options: Array.isArray(c.options) ? c.options : [],
-          correct: c.correct || '',
-          hint: c.hint || '',
-        }));
-
-      setAyahs(ayahsData);
-      setDuas(duasData);
-      setFacts(factsData);
-      setQuizzes(quizzesData);
-    } catch (error: any) {
-      console.error('Failed to load daily content:', error);
-      toast.error('Failed to load daily content');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleAyahSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const today = new Date().toISOString().split('T')[0];
-      const contentData = {
-        contentType: 'ayah',
-        date: today,
-        reference: ayahForm.reference,
-        arabic: ayahForm.arabic,
-        translation_en: ayahForm.translation_en,
-        translation_fr: ayahForm.translation_fr,
-        translation_wo: ayahForm.translation_wo,
-      };
+      const contentType = activeTab;
+      let content = "";
+      let source = "";
+      let translation = "";
+
+      if (contentType === "ayah") {
+        content = ayahForm.content;
+        source = ayahForm.source;
+        translation = ayahForm.translation;
+      } else if (contentType === "dua") {
+        content = duaForm.content;
+        source = duaForm.source;
+        translation = duaForm.translation;
+      } else {
+        content = factForm.content;
+        source = factForm.source;
+      }
 
       if (editingId) {
-        await updateDocument('daily_content', editingId, contentData);
-        toast.success('Ayah updated successfully');
+        await updateItem({
+          id: editingId as any,
+          content,
+          source,
+          translation: translation || undefined,
+        });
+        toast.success(tr({ en: "Updated", fr: "Mis à jour" }));
+        setEditingId(null);
       } else {
-        await addDocument('daily_content', contentData);
-        toast.success('Ayah added successfully');
+        await createItem({
+          contentType,
+          content,
+          source,
+          translation: translation || undefined,
+          date: Date.now(),
+        });
+        toast.success(tr({ en: "Created", fr: "Créé" }));
+        setIsCreating(false);
       }
-      await loadData();
-      setIsCreating(false);
-      setEditingId(null);
-      setAyahForm({ reference: '', arabic: '', translation_en: '', translation_fr: '', translation_wo: '' });
+      resetForm();
     } catch (error: any) {
-      console.error('Failed to save ayah:', error);
-      toast.error(error.message || 'Failed to save ayah');
+      toast.error(error.message);
     }
   };
 
-  const handleDuaSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const today = new Date().toISOString().split('T')[0];
-      const contentData = {
-        contentType: 'dua',
-        date: today,
-        arabic: duaForm.arabic,
-        translation_en: duaForm.translation_en,
-        translation_fr: duaForm.translation_fr,
-        translation_wo: duaForm.translation_wo,
-      };
-
-      if (editingId) {
-        await updateDocument('daily_content', editingId, contentData);
-        toast.success('Dua updated successfully');
-      } else {
-        await addDocument('daily_content', contentData);
-        toast.success('Dua added successfully');
-      }
-      await loadData();
-      setIsCreating(false);
-      setEditingId(null);
-      setDuaForm({ arabic: '', translation_en: '', translation_fr: '', translation_wo: '' });
-    } catch (error: any) {
-      console.error('Failed to save dua:', error);
-      toast.error(error.message || 'Failed to save dua');
-    }
+  const resetForm = () => {
+    setAyahForm({ ...EMPTY_AYAH });
+    setDuaForm({ ...EMPTY_DUA });
+    setFactForm({ ...EMPTY_FACT });
   };
 
-  const handleFactSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const today = new Date().toISOString().split('T')[0];
-      const contentData = {
-        contentType: 'fact',
-        date: today,
-        fact_en: factForm.fact_en,
-        fact_fr: factForm.fact_fr,
-        fact_wo: factForm.fact_wo,
-      };
-
-      if (editingId) {
-        await updateDocument('daily_content', editingId, contentData);
-        toast.success('Fact updated successfully');
-      } else {
-        await addDocument('daily_content', contentData);
-        toast.success('Fact added successfully');
-      }
-      await loadData();
-      setIsCreating(false);
-      setEditingId(null);
-      setFactForm({ fact_en: '', fact_fr: '', fact_wo: '' });
-    } catch (error: any) {
-      console.error('Failed to save fact:', error);
-      toast.error(error.message || 'Failed to save fact');
-    }
-  };
-
-  const handleQuizSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const today = new Date().toISOString().split('T')[0];
-      const contentData = {
-        contentType: 'quiz',
-        date: today,
-        language: quizForm.language,
-        difficulty: quizForm.difficulty,
-        question: quizForm.question,
-        options: quizForm.options,
-        correct: quizForm.correct,
-        hint: quizForm.hint,
-      };
-
-      if (editingId) {
-        await updateDocument('daily_content', editingId, contentData);
-        toast.success('Quiz updated successfully');
-      } else {
-        await addDocument('daily_content', contentData);
-        toast.success('Quiz added successfully');
-      }
-      await loadData();
-      setIsCreating(false);
-      setEditingId(null);
-      setQuizForm({ language: 'en', difficulty: 'easy', question: '', options: ['', '', ''], correct: '', hint: '' });
-    } catch (error: any) {
-      console.error('Failed to save quiz:', error);
-      toast.error(error.message || 'Failed to save quiz');
-    }
-  };
-
-  const handleDelete = async (type: 'ayah' | 'dua' | 'fact' | 'quiz', id: string) => {
-    if (!confirm('Are you sure you want to delete this item?')) return;
-
-    try {
-      await deleteDocument('daily_content', id);
-      await loadData();
-      toast.success('Item deleted successfully');
-    } catch (error: any) {
-      console.error('Failed to delete item:', error);
-      toast.error('Failed to delete item');
-    }
-  };
-
-  const handleEdit = (type: 'ayah' | 'dua' | 'fact' | 'quiz', item: any) => {
-    setEditingId(item.id);
+  const handleEdit = (item: any) => {
+    setEditingId(item._id);
     setIsCreating(true);
-    if (type === 'ayah') setAyahForm(item);
-    if (type === 'dua') setDuaForm(item);
-    if (type === 'fact') setFactForm(item);
-    if (type === 'quiz') setQuizForm(item);
+    const f = { content: item.content || "", source: item.source || "", translation: item.translation || "" };
+    if (activeTab === "ayah") setAyahForm(f);
+    else if (activeTab === "dua") setDuaForm(f);
+    else setFactForm(f);
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm(tr({ en: "Delete this item?", fr: "Supprimer cet élément ?" }))) return;
+    try {
+      await removeItem({ id: id as any });
+      toast.success(tr({ en: "Deleted", fr: "Supprimé" }));
+    } catch (error: any) {
+      toast.error(error.message);
+    }
   };
 
   const tabs = [
-    { id: 'ayah' as const, label: 'Ayahs', icon: BookOpen },
-    { id: 'dua' as const, label: 'Duas', icon: Sparkles },
-    { id: 'fact' as const, label: 'Facts', icon: HelpCircle },
-    { id: 'quiz' as const, label: 'Quizzes', icon: HelpCircle },
+    { id: "ayah" as const, label: tr({ en: "Ayahs", fr: "Versets" }), icon: BookOpen },
+    { id: "dua" as const, label: tr({ en: "Duas", fr: "Invocations" }), icon: Sparkles },
+    { id: "fact" as const, label: tr({ en: "Facts", fr: "Faits" }), icon: HelpCircle },
   ];
+
+  const currentForm = activeTab === "ayah" ? ayahForm : activeTab === "dua" ? duaForm : factForm;
+  const setForm = (v: any) => {
+    if (activeTab === "ayah") setAyahForm(v);
+    else if (activeTab === "dua") setDuaForm(v);
+    else setFactForm(v);
+  };
 
   return (
     <div className="flex-1">
@@ -305,356 +120,77 @@ export default function ManageDaily() {
         <header className="flex justify-between items-center">
           <div>
             <p className="inline-flex items-center text-xs uppercase tracking-[0.22em] text-islamic-dark/60 mb-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-islamic-gold mr-2" />
-              Admin
+              <span className="w-1.5 h-1.5 rounded-full bg-islamic-gold mr-2" />Admin
             </p>
             <h1 className="text-3xl md:text-4xl font-bold text-islamic-dark">
-              Manage <span className="text-gradient">Daily Content</span>
+              {tr({ en: "Manage", fr: "Gérer le" })} <span className="text-gradient">{tr({ en: "Daily Content", fr: "contenu quotidien" })}</span>
             </h1>
           </div>
-          <Button
-            onClick={() => {
-              setIsCreating(true);
-              setEditingId(null);
-            }}
-            className="btn-islamic"
-          >
-            <Plus className="mr-2 h-4 w-4" />
-            Add New
+          <Button onClick={() => { setIsCreating(true); setEditingId(null); resetForm(); }} className="btn-islamic">
+            <Plus className="mr-2 h-4 w-4" />{tr({ en: "Add New", fr: "Ajouter" })}
           </Button>
         </header>
 
-        {/* Tabs */}
         <div className="flex gap-2 border-b border-islamic-cream/50">
-          {tabs.map(tab => {
+          {tabs.map((tab) => {
             const Icon = tab.icon;
             return (
               <button
                 key={tab.id}
-                onClick={() => {
-                  setActiveTab(tab.id);
-                  setIsCreating(false);
-                  setEditingId(null);
-                }}
+                onClick={() => { setActiveTab(tab.id); setIsCreating(false); setEditingId(null); }}
                 className={`flex items-center gap-2 px-6 py-3 border-b-2 transition-colors ${activeTab === tab.id
-                    ? 'border-islamic-green-600 text-islamic-green-600 font-semibold'
-                    : 'border-transparent text-islamic-dark/60 hover:text-islamic-dark'
-                  }`}
+                  ? "border-islamic-green-600 text-islamic-green-600 font-semibold"
+                  : "border-transparent text-islamic-dark/60 hover:text-islamic-dark"}`}
               >
-                <Icon className="w-4 h-4" />
-                {tab.label}
+                <Icon className="w-4 h-4" />{tab.label}
               </button>
             );
           })}
         </div>
 
-        {/* Form */}
         {isCreating && (
           <Card className="bg-[#efefec]/90 backdrop-blur-sm border border-islamic-gold/30">
             <CardHeader>
-              <CardTitle>
-                {editingId ? 'Edit' : 'Add New'} {tabs.find(t => t.id === activeTab)?.label}
-              </CardTitle>
+              <CardTitle>{editingId ? tr({ en: "Edit", fr: "Modifier" }) : tr({ en: "Add New", fr: "Ajouter" })} {tabs.find((t) => t.id === activeTab)?.label}</CardTitle>
             </CardHeader>
             <CardContent>
-              {activeTab === 'ayah' && (
-                <form onSubmit={handleAyahSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">{tr({ en: "Content", fr: "Contenu" })}</label>
+                  <textarea value={currentForm.content} onChange={(e) => setForm({ ...currentForm, content: e.target.value })} className="w-full px-4 py-2 border border-gray-300 rounded-lg" rows={3} required />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">{tr({ en: "Source", fr: "Source" })}</label>
+                  <Input value={currentForm.source} onChange={(e) => setForm({ ...currentForm, source: e.target.value })} required />
+                </div>
+                {activeTab !== "fact" && (
                   <div>
-                    <label className="block text-sm font-medium mb-2">Reference</label>
-                    <Input
-                      value={ayahForm.reference}
-                      onChange={(e) => setAyahForm({ ...ayahForm, reference: e.target.value })}
-                      required
-                    />
+                    <label className="block text-sm font-medium mb-2">{tr({ en: "Translation", fr: "Traduction" })}</label>
+                    <textarea value={currentForm.translation} onChange={(e) => setForm({ ...currentForm, translation: e.target.value })} className="w-full px-4 py-2 border border-gray-300 rounded-lg" rows={2} />
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Arabic Text</label>
-                    <Input
-                      value={ayahForm.arabic}
-                      onChange={(e) => setAyahForm({ ...ayahForm, arabic: e.target.value })}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">English Translation</label>
-                    <Input
-                      value={ayahForm.translation_en}
-                      onChange={(e) => setAyahForm({ ...ayahForm, translation_en: e.target.value })}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">French Translation</label>
-                    <Input
-                      value={ayahForm.translation_fr}
-                      onChange={(e) => setAyahForm({ ...ayahForm, translation_fr: e.target.value })}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Wolof Translation</label>
-                    <Input
-                      value={ayahForm.translation_wo}
-                      onChange={(e) => setAyahForm({ ...ayahForm, translation_wo: e.target.value })}
-                      required
-                    />
-                  </div>
-                  <div className="flex gap-2">
-                    <Button type="submit" className="btn-islamic">Save</Button>
-                    <Button type="button" variant="outline" onClick={() => {
-                      setIsCreating(false);
-                      setEditingId(null);
-                    }}>Cancel</Button>
-                  </div>
-                </form>
-              )}
-
-              {activeTab === 'dua' && (
-                <form onSubmit={handleDuaSubmit} className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Arabic Text</label>
-                    <Input
-                      value={duaForm.arabic}
-                      onChange={(e) => setDuaForm({ ...duaForm, arabic: e.target.value })}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">English Translation</label>
-                    <Input
-                      value={duaForm.translation_en}
-                      onChange={(e) => setDuaForm({ ...duaForm, translation_en: e.target.value })}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">French Translation</label>
-                    <Input
-                      value={duaForm.translation_fr}
-                      onChange={(e) => setDuaForm({ ...duaForm, translation_fr: e.target.value })}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Wolof Translation</label>
-                    <Input
-                      value={duaForm.translation_wo}
-                      onChange={(e) => setDuaForm({ ...duaForm, translation_wo: e.target.value })}
-                      required
-                    />
-                  </div>
-                  <div className="flex gap-2">
-                    <Button type="submit" className="btn-islamic">Save</Button>
-                    <Button type="button" variant="outline" onClick={() => {
-                      setIsCreating(false);
-                      setEditingId(null);
-                    }}>Cancel</Button>
-                  </div>
-                </form>
-              )}
-
-              {activeTab === 'fact' && (
-                <form onSubmit={handleFactSubmit} className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium mb-2">English Fact</label>
-                    <Input
-                      value={factForm.fact_en}
-                      onChange={(e) => setFactForm({ ...factForm, fact_en: e.target.value })}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">French Fact</label>
-                    <Input
-                      value={factForm.fact_fr}
-                      onChange={(e) => setFactForm({ ...factForm, fact_fr: e.target.value })}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Wolof Fact</label>
-                    <Input
-                      value={factForm.fact_wo}
-                      onChange={(e) => setFactForm({ ...factForm, fact_wo: e.target.value })}
-                      required
-                    />
-                  </div>
-                  <div className="flex gap-2">
-                    <Button type="submit" className="btn-islamic">Save</Button>
-                    <Button type="button" variant="outline" onClick={() => {
-                      setIsCreating(false);
-                      setEditingId(null);
-                    }}>Cancel</Button>
-                  </div>
-                </form>
-              )}
-
-              {activeTab === 'quiz' && (
-                <form onSubmit={handleQuizSubmit} className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Language</label>
-                    <select
-                      value={quizForm.language}
-                      onChange={(e) => setQuizForm({ ...quizForm, language: e.target.value as 'en' | 'fr' | 'wo' })}
-                      className="w-full px-3 py-2 border border-islamic-cream rounded-lg"
-                    >
-                      <option value="en">English</option>
-                      <option value="fr">French</option>
-                      <option value="wo">Wolof</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Difficulty</label>
-                    <select
-                      value={quizForm.difficulty}
-                      onChange={(e) => setQuizForm({ ...quizForm, difficulty: e.target.value as 'easy' | 'medium' | 'advanced' })}
-                      className="w-full px-3 py-2 border border-islamic-cream rounded-lg"
-                    >
-                      <option value="easy">Easy</option>
-                      <option value="medium">Medium</option>
-                      <option value="advanced">Advanced</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Question</label>
-                    <Input
-                      value={quizForm.question}
-                      onChange={(e) => setQuizForm({ ...quizForm, question: e.target.value })}
-                      required
-                    />
-                  </div>
-                  {quizForm.options.map((opt, idx) => (
-                    <div key={idx}>
-                      <label className="block text-sm font-medium mb-2">Option {idx + 1}</label>
-                      <Input
-                        value={opt}
-                        onChange={(e) => {
-                          const newOptions = [...quizForm.options];
-                          newOptions[idx] = e.target.value;
-                          setQuizForm({ ...quizForm, options: newOptions });
-                        }}
-                        required
-                      />
-                    </div>
-                  ))}
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Correct Answer</label>
-                    <Input
-                      value={quizForm.correct}
-                      onChange={(e) => setQuizForm({ ...quizForm, correct: e.target.value })}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Hint</label>
-                    <Input
-                      value={quizForm.hint}
-                      onChange={(e) => setQuizForm({ ...quizForm, hint: e.target.value })}
-                      required
-                    />
-                  </div>
-                  <div className="flex gap-2">
-                    <Button type="submit" className="btn-islamic">Save</Button>
-                    <Button type="button" variant="outline" onClick={() => {
-                      setIsCreating(false);
-                      setEditingId(null);
-                    }}>Cancel</Button>
-                  </div>
-                </form>
-              )}
+                )}
+                <div className="flex gap-2">
+                  <Button type="submit" className="btn-islamic">{tr({ en: "Save", fr: "Enregistrer" })}</Button>
+                  <Button type="button" variant="outline" onClick={() => { setIsCreating(false); setEditingId(null); }}>{tr({ en: "Cancel", fr: "Annuler" })}</Button>
+                </div>
+              </form>
             </CardContent>
           </Card>
         )}
 
-        {/* List */}
         <div className="space-y-4">
-          {activeTab === 'ayah' && ayahs.map(ayah => (
-            <Card key={ayah.id} className="bg-[#efefec]/90 backdrop-blur-sm">
+          {filtered.map((item: any) => (
+            <Card key={item._id} className="bg-[#efefec]/90 backdrop-blur-sm">
               <CardContent className="p-6">
                 <div className="flex justify-between items-start">
                   <div className="flex-1">
-                    <h3 className="font-semibold text-islamic-dark mb-2">{ayah.reference}</h3>
-                    <p className="font-arabic text-xl text-islamic-dark/90 mb-2 text-right">{ayah.arabic}</p>
-                    <p className="text-sm text-islamic-dark/70">{ayah[`translation_${language}` as keyof DailyAyah]}</p>
+                    <p className="font-medium text-islamic-dark mb-2">{item.source}</p>
+                    <p className="text-sm text-islamic-dark/70 mb-1">{item.content}</p>
+                    {item.translation && <p className="text-xs text-islamic-dark/60 italic">{item.translation}</p>}
                   </div>
                   <div className="flex gap-2 ml-4">
-                    <Button variant="outline" size="sm" onClick={() => handleEdit('ayah', ayah)}>
-                      <Edit className="w-4 h-4" />
-                    </Button>
-                    <Button variant="outline" size="sm" onClick={() => handleDelete('ayah', ayah.id!)}>
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-
-          {activeTab === 'dua' && duas.map(dua => (
-            <Card key={dua.id} className="bg-[#efefec]/90 backdrop-blur-sm">
-              <CardContent className="p-6">
-                <div className="flex justify-between items-start">
-                  <div className="flex-1">
-                    <p className="font-arabic text-xl text-islamic-dark/90 mb-2 text-right">{dua.arabic}</p>
-                    <p className="text-sm text-islamic-dark/70">{dua[`translation_${language}` as keyof DailyDua]}</p>
-                  </div>
-                  <div className="flex gap-2 ml-4">
-                    <Button variant="outline" size="sm" onClick={() => handleEdit('dua', dua)}>
-                      <Edit className="w-4 h-4" />
-                    </Button>
-                    <Button variant="outline" size="sm" onClick={() => handleDelete('dua', dua.id!)}>
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-
-          {activeTab === 'fact' && facts.map(fact => (
-            <Card key={fact.id} className="bg-[#efefec]/90 backdrop-blur-sm">
-              <CardContent className="p-6">
-                <div className="flex justify-between items-start">
-                  <div className="flex-1">
-                    <p className="text-sm text-islamic-dark/70">{fact[`fact_${language}` as keyof DailyFact]}</p>
-                  </div>
-                  <div className="flex gap-2 ml-4">
-                    <Button variant="outline" size="sm" onClick={() => handleEdit('fact', fact)}>
-                      <Edit className="w-4 h-4" />
-                    </Button>
-                    <Button variant="outline" size="sm" onClick={() => handleDelete('fact', fact.id!)}>
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-
-          {activeTab === 'quiz' && quizzes.map(quiz => (
-            <Card key={quiz.id} className="bg-[#efefec]/90 backdrop-blur-sm">
-              <CardContent className="p-6">
-                <div className="flex justify-between items-start">
-                  <div className="flex-1">
-                    <div className="flex gap-2 mb-2">
-                      <span className="text-xs px-2 py-1 bg-islamic-green/10 text-islamic-green-600 rounded">{quiz.language}</span>
-                      <span className="text-xs px-2 py-1 bg-islamic-gold/10 text-islamic-gold rounded">{quiz.difficulty}</span>
-                    </div>
-                    <h3 className="font-semibold text-islamic-dark mb-2">{quiz.question}</h3>
-                    <ul className="text-sm text-islamic-dark/70 space-y-1">
-                      {quiz.options.map((opt, idx) => (
-                        <li key={idx}>• {opt} {opt === quiz.correct && '(Correct)'}</li>
-                      ))}
-                    </ul>
-                    <p className="text-xs text-islamic-dark/60 mt-2">Hint: {quiz.hint}</p>
-                  </div>
-                  <div className="flex gap-2 ml-4">
-                    <Button variant="outline" size="sm" onClick={() => handleEdit('quiz', quiz)}>
-                      <Edit className="w-4 h-4" />
-                    </Button>
-                    <Button variant="outline" size="sm" onClick={() => handleDelete('quiz', quiz.id!)}>
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
+                    <Button variant="outline" size="sm" onClick={() => handleEdit(item)}><Edit className="w-4 h-4" /></Button>
+                    <Button variant="outline" size="sm" onClick={() => handleDelete(item._id)}><Trash2 className="w-4 h-4" /></Button>
                   </div>
                 </div>
               </CardContent>

@@ -1,137 +1,178 @@
-import React, { useRef } from 'react';
-import { motion } from 'framer-motion';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useLanguage } from '@/contexts/LanguageContext';
-import gsap from 'gsap';
-import { useGSAP } from '@gsap/react';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { 
-  MessageSquare, Play, Users, Shirt, Radio, 
-  ArrowUpRight, Sparkles
+import { motion } from 'framer-motion';
+import {
+  MessageSquare, BookOpen, GraduationCap, Users, Sunrise, Headphones, ArrowUpRight,
+  type LucideIcon,
 } from 'lucide-react';
+import { useTr, type Loc } from '@/lib/i18n';
 
-gsap.registerPlugin(ScrollTrigger);
+const ease = [0.22, 1, 0.36, 1] as const;
 
-const FeatureCard = ({ step, title, descr, image, index }: any) => {
-  const cardRef = useRef(null);
+const FEATURES: { icon: LucideIcon; title: Loc; desc: Loc; to: string }[] = [
+  {
+    icon: MessageSquare,
+    title: { en: 'The Council', fr: 'Le Conseil' },
+    desc: { en: 'Ask anything and receive a consensus answer from specialized agents, grounded in authentic sources.', fr: 'Posez n’importe quelle question et recevez une réponse de consensus, ancrée dans des sources authentiques.' },
+    to: '/chat',
+  },
+  {
+    icon: BookOpen,
+    title: { en: 'Living Library', fr: 'Bibliothèque vivante' },
+    desc: { en: 'Read and download works across Qur’an, hadith, fiqh, and aqeedah.', fr: 'Lisez et téléchargez des ouvrages sur le Coran, le hadith, le fiqh et l’aqida.' },
+    to: '/library',
+  },
+  {
+    icon: GraduationCap,
+    title: { en: 'Courses', fr: 'Cours' },
+    desc: { en: 'Structured lessons from the fundamentals to deeper study, at your own pace.', fr: 'Des leçons structurées, des fondements à l’étude approfondie, à votre rythme.' },
+    to: '/classes',
+  },
+  {
+    icon: Users,
+    title: { en: 'Circles', fr: 'Cercles' },
+    desc: { en: 'Moderated community circles on fiqh, Qur’an, family, and youth.', fr: 'Des cercles communautaires modérés sur le fiqh, le Coran, la famille et la jeunesse.' },
+    to: '/community',
+  },
+  {
+    icon: Sunrise,
+    title: { en: 'Daily Guidance', fr: 'Guidance quotidienne' },
+    desc: { en: 'A daily ayah, dua, and prayer times to anchor your day.', fr: 'Un verset, une invocation et les horaires de prière chaque jour.' },
+    to: '/dashboard',
+  },
+  {
+    icon: Headphones,
+    title: { en: 'Podcasts', fr: 'Podcasts' },
+    desc: { en: 'Long-form conversations with scholars from the region and beyond.', fr: 'Des conversations approfondies avec des savants de la région et d’ailleurs.' },
+    to: '/podcasts',
+  },
+];
 
-  return (
-    <div ref={cardRef} className="group relative h-full">
-      <div className="relative h-full flex flex-col justify-between overflow-hidden transition-all duration-700 p-8 lg:p-12 border-l border-white/5 hover:border-accent/20">
-        <div className="relative z-10 mb-20">
-          <div className="flex justify-between items-start mb-12">
-            <span className="text-[10px] font-black tracking-[0.6em] text-accent/30 uppercase italic font-serif-premium">Pillar {step}</span>
-             <Sparkles className="w-4 h-4 text-white/10 group-hover:text-accent transition-colors duration-700" />
-          </div>
-          
-          <h3 className="font-serif-premium text-4xl lg:text-5xl text-white mb-8 tracking-tightest leading-none group-hover:italic transition-all">
-            {title}
-          </h3>
-          <p className="text-sm font-medium text-white/30 leading-relaxed max-w-[280px] tracking-wide">
-            {descr}
-          </p>
-        </div>
-
-        {/* Artisanal Photography Mask */}
-        <div className="relative h-96 w-full mt-auto mask-radial-faded grayscale hover:grayscale-0 transition-all duration-1000 opacity-40 group-hover:opacity-100">
-           <img 
-            src={image} 
-            alt={title} 
-            className="w-full h-full object-cover rounded-[3rem] scale-110 group-hover:scale-100 transition-transform duration-1000" 
-           />
-           <div className="absolute inset-0 bg-gradient-to-t from-sacred-dark to-transparent opacity-60" />
-        </div>
-        
-        <div className="mt-8 flex justify-end">
-           <div className="flex items-center gap-4 text-white/20 group-hover:text-accent transition-colors">
-              <span className="text-[9px] font-black uppercase tracking-[0.4em]">Learn more</span>
-              <ArrowUpRight className="w-5 h-5" />
-           </div>
-        </div>
-      </div>
-    </div>
-  );
-};
+const BENEFITS: { title: Loc; desc: Loc }[] = [
+  {
+    title: { en: 'Grounded in sources', fr: 'Ancré dans les sources' },
+    desc: { en: 'Every answer is tied to authentic texts and scholarly consensus, with references you can verify.', fr: 'Chaque réponse s’appuie sur des textes authentiques et le consensus des savants, avec des références vérifiables.' },
+  },
+  {
+    title: { en: 'Made for the region', fr: 'Pensé pour la région' },
+    desc: { en: 'Français and English, priced for West Africa, ready for mobile-money payments.', fr: 'Français et anglais, des tarifs adaptés à l’Afrique de l’Ouest, prêt pour le mobile money.' },
+  },
+  {
+    title: { en: 'Quietly rigorous', fr: 'Rigoureux, sans bruit' },
+    desc: { en: 'The council reasons only over vetted, reviewed knowledge, never the open web.', fr: 'Le conseil ne raisonne que sur un savoir vérifié et relu, jamais sur le web ouvert.' },
+  },
+  {
+    title: { en: 'Open to all', fr: 'Ouvert à tous' },
+    desc: { en: 'Core knowledge stays free for everyone; you upgrade only when you want more.', fr: 'Le savoir essentiel reste gratuit ; vous évoluez seulement si vous le souhaitez.' },
+  },
+];
 
 const FeatureGrid = () => {
-  const { t } = useLanguage();
   const navigate = useNavigate();
-  const container = useRef(null);
+  const tr = useTr();
 
   return (
-    <section ref={container} className="py-24 bg-sacred-dark relative border-y border-white/5">
-      <div className="container mx-auto px-4 lg:px-8">
-        
-        <div className="mb-32 flex flex-col lg:flex-row items-end justify-between gap-12">
-           <div className="max-w-2xl">
-              <h2 className="font-serif-premium text-5xl md:text-8xl text-white tracking-tightest leading-[0.85] mb-8">
-                The Anatomy of <br />
-                <span className="text-gradient-platinum italic">Ascension.</span>
-              </h2>
-           </div>
-           <p className="text-white/30 font-medium max-w-sm mb-4 leading-relaxed tracking-wide">
-              We've crafted an ecosystem that speaks to the soul, merging traditional wisdom with modern elegance.
-           </p>
-        </div>
+    <>
+      {/* Features — editorial list with refined icons */}
+      <section className="bg-[#FAF7F0] py-28">
+        <div className="container mx-auto px-6 max-w-5xl">
+          <motion.header
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-80px' }}
+            transition={{ duration: 0.7, ease }}
+            className="max-w-2xl"
+          >
+            <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-emerald-800/70 mb-4">
+              {tr({ en: 'The ecosystem', fr: 'L’écosystème' })}
+            </p>
+            <h2 className="text-4xl sm:text-5xl leading-tight text-stone-900">
+              {tr({ en: 'One place for the whole of your seeking.', fr: 'Un seul lieu pour toute votre quête.' })}
+            </h2>
+          </motion.header>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-          
-          <FeatureCard 
-            step="01"
-            index={0}
-            title={t('pillar.education.title')}
-            descr={t('pillar.education.desc')}
-            image="https://images.unsplash.com/photo-1542810634-71277d95dcbb?auto=format&fit=crop&q=80&w=800"
-          />
-
-          <FeatureCard 
-            step="02"
-            index={1}
-            title={t('pillar.ai.title')}
-            descr={t('pillar.ai.desc')}
-            image="https://images.unsplash.com/photo-1614850523296-e811cf9ee16d?auto=format&fit=crop&q=80&w=800"
-          />
-
-          <FeatureCard 
-            step="03"
-            index={2}
-            title={t('pillar.community.title')}
-            descr={t('pillar.community.desc')}
-            image="https://images.unsplash.com/photo-1528605248644-14dd04cb11c1?auto=format&fit=crop&q=80&w=800"
-          />
-
-          <FeatureCard 
-            step="04"
-            index={3}
-            title={t('pillar.fashion.title')}
-            descr={t('pillar.fashion.desc')}
-            image="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=800"
-          />
-
-          <FeatureCard 
-            step="05"
-            index={4}
-            title={t('pillar.podcasts.title')}
-            descr={t('pillar.podcasts.desc')}
-            image="https://images.unsplash.com/photo-1478737270239-2fccd2c7fd94?auto=format&fit=crop&q=80&w=800"
-          />
-
-          {/* Editorial CTA */}
-          <div className="flex flex-col items-center justify-center p-12 text-center group">
-              <h4 className="font-serif-premium text-4xl text-white mb-10 opacity-40 group-hover:opacity-100 transition-opacity">
-                Your path is unique. <br /> Start it today.
-              </h4>
-              <button 
-                onClick={() => navigate('/login')}
-                className="btn-premium-outline px-12 group-hover:bg-accent group-hover:text-black transition-all"
-              >
-                Enter the Sacred
-              </button>
+          <div className="mt-14 border-t border-stone-200">
+            {FEATURES.map((f, i) => {
+              const Icon = f.icon;
+              return (
+                <motion.button
+                  key={f.to}
+                  onClick={() => navigate(f.to)}
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: '-40px' }}
+                  transition={{ duration: 0.5, ease, delay: i * 0.05 }}
+                  className="group grid w-full grid-cols-[auto_1fr_auto] items-center gap-5 sm:gap-7 border-b border-stone-200 px-2 py-6 text-left rounded-xl transition-colors hover:bg-white/60"
+                >
+                  <span className="flex h-12 w-12 items-center justify-center rounded-full border border-emerald-900/10 bg-emerald-900/[0.04] text-emerald-800 transition-colors group-hover:bg-emerald-900 group-hover:text-[#FAF7F0]">
+                    <Icon className="h-5 w-5" strokeWidth={1.6} />
+                  </span>
+                  <div>
+                    <div className="flex items-baseline gap-3">
+                      <span className="text-base text-emerald-800/40">{String(i + 1).padStart(2, '0')}</span>
+                      <h3 className="text-2xl sm:text-3xl text-stone-900 transition-colors group-hover:text-emerald-800">
+                        {tr(f.title)}
+                      </h3>
+                    </div>
+                    <p className="mt-1 max-w-xl text-sm leading-relaxed text-stone-500">{tr(f.desc)}</p>
+                  </div>
+                  <ArrowUpRight className="w-5 h-5 text-stone-300 transition-all group-hover:text-emerald-800 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                </motion.button>
+              );
+            })}
           </div>
-
         </div>
-      </div>
-    </section>
+      </section>
+
+      {/* Benefits — editorial */}
+      <section className="bg-[#F3EDE1] border-y border-stone-200 py-28">
+        <div className="container mx-auto px-6">
+          <div className="grid gap-14 lg:grid-cols-12">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-80px' }}
+              transition={{ duration: 0.7, ease }}
+              className="lg:col-span-5"
+            >
+              <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-emerald-800/70 mb-4">
+                {tr({ en: 'Why it’s different', fr: 'Ce qui change' })}
+              </p>
+              <h2 className="text-4xl sm:text-5xl leading-tight text-stone-900">
+                {tr({ en: 'Considered answers, not confident guesses.', fr: 'Des réponses réfléchies, pas des suppositions.' })}
+              </h2>
+              <p className="mt-6 max-w-md leading-relaxed text-stone-500">
+                {tr({
+                  en: 'Not another chatbot scraping the internet. A council that reasons over authenticated Islamic knowledge and tells you when it isn’t certain.',
+                  fr: 'Pas un énième robot qui aspire le web. Un conseil qui raisonne sur un savoir islamique authentifié et qui vous dit quand il n’est pas certain.',
+                })}
+              </p>
+            </motion.div>
+
+            <div className="lg:col-span-7 lg:pl-10">
+              <div className="border-t border-stone-300/70">
+                {BENEFITS.map((b, i) => (
+                  <motion.div
+                    key={b.title.en}
+                    initial={{ opacity: 0, y: 14 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: '-40px' }}
+                    transition={{ duration: 0.5, ease, delay: i * 0.07 }}
+                    className="flex gap-5 border-b border-stone-300/70 py-7"
+                  >
+                    <span className="text-xl text-emerald-800/50 pt-1">{String(i + 1).padStart(2, '0')}</span>
+                    <div>
+                      <h3 className="text-2xl text-stone-900">{tr(b.title)}</h3>
+                      <p className="mt-1.5 max-w-lg text-sm leading-relaxed text-stone-500">{tr(b.desc)}</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </>
   );
 };
 

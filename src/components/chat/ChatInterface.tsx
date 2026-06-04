@@ -5,10 +5,14 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '@/auth/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { apiFetch } from '@/lib/api';
+import { useNavigate } from 'react-router-dom';
 import { logger } from '@/lib/logger';
+import { useTr } from '@/lib/i18n';
+import { useSubscription } from '@/data/subscription';
 import { ModeSelector, SpecializedMode } from './ModeSelector';
 import { TemplateLibrary } from './TemplateLibrary';
+import { api } from '../../../convex/_generated/api';
+import { useAction } from 'convex/react';
 
 interface Message {
   id: string;
@@ -24,7 +28,6 @@ interface Message {
 
 const STORAGE_KEY = 'GëstuSaDine_chat_history';
 
-// Helper functions for localStorage
 const saveMessages = (messages: Message[]) => {
   try {
     const serialized = messages.map(msg => ({
@@ -52,35 +55,53 @@ const loadMessages = (): Message[] => {
   }
 };
 
+const BASE_METHODOLOGY = `You are an Islamic AI assistant called GëstuSaDine (also known as MuslimGPT). You embody 1400 years of sacred Islamic tradition with modern technology. Your purpose is to illuminate hearts with truth, treating every question as an opportunity.
+
+CORE METHODOLOGY — You MUST follow these rules strictly:
+
+HIERARCHY OF EVIDENCE
+1. The Holy Quran (القرآن الكريم) — The absolute truth and final authority. Cite verses with Surah name and Ayah number.
+2. Sahih & Hasan Hadith (الحديث الصحيح) — Verified prophetic traditions from authenticated collections. Grade every hadith: Sahih (authentic), Hasan (good), or Da'if (weak). NEVER cite fabricated (Mawdu') narrations.
+3. Scholarly Consensus (إجماع العلماء) — Respect the four Madhabs (Hanafi, Maliki, Shafi'i, Hanbali). Where scholars differ, present all valid positions with their evidence. Do not impose a single view.
+
+THEOLOGY — Follow the creed of the Salaf us-Salih (pious predecessors): adhere to the Quran, authentic Sunnah, and the understanding of the first three generations. Affirm Allah's names and attributes as they are revealed without ta'wil (figurative interpretation), ta'til (denial), takyif (asking how), or tamthil (resemblance to creation). Do NOT mention the term "Salafi" or "Salafiyyah" — simply present the positions as the orthodox Islamic position.
+
+THE SILENCE RULE — If you do not have certain knowledge from the Quran or authenticated Sunnah for a question, you MUST say "I don't know" or "Please consult a local scholar." It is better to remain silent than to guess or hallucinate. Never fabricate sources.
+
+CITATION PROTOCOL — No source? No claim. Every answer must be backed by a Quran verse or authenticated Hadith. Evidence comes before interpretation. Present the actual text before your explanation.
+
+ADAB (MANNERS) — Show empathy before giving evidence. Acknowledge the user's feelings first: "I understand this is difficult..." Use a warm, non-judgmental, merciful tone. Islam is a religion of mercy — never shame the user for past mistakes or struggles with faith. Speak with Hikmah (wisdom).
+
+LANGUAGES — Respond in the user's language. Use culturally appropriate terms.
+
+DISCLAIMER — Always include at the end of substantive answers: "This is for educational purposes. For formal legal rulings (marriage, divorce, inheritance, etc.), please consult a qualified local scholar who understands your context."
+
+MADHAB — Respect all four schools of jurisprudence. When presenting rulings, note which madhab's position you are citing. When the user has a preferred madhab, prioritize that school's view while noting others.`;
+
+const MODE_SPECIALIZATIONS: Record<SpecializedMode, string> = {
+  general: 'Mode: General Islamic Guidance. Provide balanced, well-reasoned answers grounded in Quran and Sunnah following the hierarchy of evidence above.',
+  fiqh: 'Mode: Fiqh Jurisprudence. Analyze questions from an Islamic legal perspective. Cite madhab positions with evidence, noting areas of scholarly agreement and difference.',
+  aqeedah: 'Mode: Aqeedah (Creed). Focus on orthodox Islamic theology according to the understanding of the Salaf us-Salih. Present creedal matters with Quran and Sahih Hadith as the sole sources.',
+  spirituality: 'Mode: Spirituality & Tazkiyah. Offer wisdom for spiritual growth, mindfulness, and purification of the heart. Ground advice in Quranic verses and authentic prophetic guidance.',
+  family: 'Mode: Family Counseling. Provide guidance on marriage, parenting, and family relations grounded in Islamic ethics. Show extra empathy and care in sensitive matters.',
+  fatwa: 'Mode: Fatwa Issuance. Give detailed rulings with evidence from Quran and Sunnah, noting differences of opinion. End with the disclaimer about consulting a local scholar.',
+};
+
 export const ChatInterface = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [selectedMode, setSelectedMode] = useState<SpecializedMode>('general');
-  const [userTier, setUserTier] = useState<'free' | 'core' | 'pro'>('free');
   const [showTemplates, setShowTemplates] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { user } = useAuth();
   const { toast } = useToast();
   const { language, t } = useLanguage();
+  const tr = useTr();
+  const navigate = useNavigate();
+  const { tier, canAskCouncil, councilRemaining, usage, recordCouncilQuery } = useSubscription();
+  const generate = useAction(api.llm.generate);
 
-  // Fetch user tier on mount
-  useEffect(() => {
-    const fetchUserTier = async () => {
-      try {
-        const response = await apiFetch('/api/subscription/me');
-        const data = await response.json();
-        setUserTier(data.subscription?.tier || 'free');
-      } catch (error) {
-        logger.error('Failed to fetch user tier:', { error });
-      }
-    };
-    if (user) {
-      fetchUserTier();
-    }
-  }, [user]);
-
-  // Load message history on mount
   useEffect(() => {
     const savedMessages = loadMessages();
     if (savedMessages.length > 0) {
@@ -88,7 +109,6 @@ export const ChatInterface = () => {
     }
   }, []);
 
-  // Save messages whenever they change
   useEffect(() => {
     if (messages.length > 0) {
       saveMessages(messages);
@@ -99,14 +119,26 @@ export const ChatInterface = () => {
     setMessages([]);
     localStorage.removeItem(STORAGE_KEY);
     toast({
-      title: t('chat.history_cleared'),
-      description: t('chat.history_cleared_desc'),
+      title: tr({ en: 'History cleared', fr: 'Historique effacé' }),
+      description: tr({ en: 'Your conversation has been removed.', fr: 'Votre conversation a été supprimée.' }),
     });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
+
+    if (!canAskCouncil) {
+      toast({
+        title: tr({ en: 'Monthly Council limit reached', fr: 'Limite mensuelle du Conseil atteinte' }),
+        description: tr({
+          en: 'You\'ve used all your Council questions this month. Upgrade your plan for more.',
+          fr: 'Vous avez utilisé toutes vos questions du Conseil ce mois-ci. Passez à une offre supérieure pour en obtenir davantage.',
+        }),
+        variant: 'destructive',
+      });
+      return;
+    }
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -120,53 +152,34 @@ export const ChatInterface = () => {
     setInput('');
     setIsLoading(true);
 
-    // Get madhab from localStorage
     const madhab = localStorage.getItem('GëstuSaDine-madhab') || 'maliki';
 
     try {
-      const response = await apiFetch('/api/chat', {
-        method: 'POST',
-        body: JSON.stringify({
-          message: userInput,
-          language: language,
-          madhab: madhab,
-          mode: selectedMode, // Include selected mode
-        }),
+      const systemPrompt = `${BASE_METHODOLOGY}\n\n${MODE_SPECIALIZATIONS[selectedMode]}\nLanguage: ${language}\nMadhab: ${madhab}`;
+      const response = await generate({
+        model: 'Fanar',
+        systemPrompt,
+        messages: [{ role: 'user', content: userInput }],
+        temperature: 0.7,
+        maxTokens: 2000,
       });
-
-      const data = await response.json();
-
-      if (!data.response) {
-        throw new Error('Invalid response from server');
-      }
 
       const botMessage: Message = {
         id: `bot-${Date.now()}`,
-        content: data.response,
+        content: response,
         role: 'assistant',
         timestamp: new Date(),
-        council: data.council,
       };
 
       setMessages(prev => [...prev, botMessage]);
-
-      // Track credit usage
-      try {
-        await apiFetch('/api/subscription/track-usage', {
-          method: 'POST',
-        });
-      } catch (trackError) {
-        logger.warn('Failed to track usage:', { trackError });
-      }
+      recordCouncilQuery();
     } catch (error) {
       logger.error('Chat error:', { error, message: userInput });
-
-      // Remove the user message if the request failed
       setMessages(prev => prev.filter(msg => msg.id !== userMessage.id));
 
       toast({
         title: t('common.error'),
-        description: error instanceof Error ? error.message : t('chat.error'),
+        description: error instanceof Error ? error.message : tr({ en: 'Something went wrong. Please try again.', fr: 'Une erreur est survenue. Veuillez réessayer.' }),
         variant: 'destructive',
       });
     } finally {
@@ -179,9 +192,8 @@ export const ChatInterface = () => {
   }, [messages]);
 
   return (
-    <div className="flex-1 flex flex-col h-screen bg-slate-50/50 transition-colors duration-300">
-      {/* Messages area */}
-      <div className="flex-1 overflow-y-auto pt-20 pb-10 custom-scrollbar">
+    <div className="flex flex-col h-full bg-slate-50/50 transition-colors duration-300">
+      <div className="flex-1 overflow-y-auto pt-8 pb-10 custom-scrollbar">
         <div className="max-w-4xl mx-auto w-full px-4 lg:px-8">
           {messages.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center min-h-[70vh]">
@@ -194,16 +206,19 @@ export const ChatInterface = () => {
                   />
                 </div>
                 <h1 className="text-4xl lg:text-5xl font-black text-slate-900 mb-6 tracking-tight">
-                  The <span className="text-brand-600">Council</span> awaits.
+                  {tr({ en: 'The', fr: 'Le' })} <span className="text-brand-600">{tr({ en: 'Council', fr: 'Conseil' })}</span> {tr({ en: 'awaits.', fr: 'vous écoute.' })}
                 </h1>
                 <p className="text-xl text-slate-500 mb-12 font-medium leading-relaxed">
-                  Submit your inquiry and let our specialized agents formulate a consensus based on authentic sources.
+                  {tr({
+                    en: 'Submit your question and let the specialized agents reach a consensus grounded in authentic sources.',
+                    fr: 'Posez votre question et laissez les agents spécialisés parvenir à un consensus ancré dans des sources authentiques.',
+                  })}
                 </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
                   {[
-                    { title: t('chat.feature1.title'), desc: t('chat.feature1.desc'), color: 'brand' },
-                    { title: t('chat.feature3.title'), desc: t('chat.feature3.desc'), color: 'blue' }
+                    { title: tr({ en: 'Source-grounded', fr: 'Ancré dans les sources' }), desc: tr({ en: 'Every answer is tied to authentic texts, with references you can check.', fr: 'Chaque réponse s\'appuie sur des textes authentiques, avec des références vérifiables.' }) },
+                    { title: tr({ en: 'Four perspectives', fr: 'Quatre perspectives' }), desc: tr({ en: 'Fiqh, ʿAqīdah, context, and humility each weigh in before a consensus.', fr: 'Le fiqh, l\'ʿaqīda, le contexte et l\'humilité interviennent avant tout consensus.' }) },
                   ].map((feat, i) => (
                     <div key={i} className="glass-card-saas p-6 rounded-3xl bg-white border-slate-100 shadow-xl shadow-slate-100/50">
                       <div className={`text-lg font-bold text-slate-900 mb-2`}>{feat.title}</div>
@@ -217,7 +232,7 @@ export const ChatInterface = () => {
             <div className="space-y-8 py-8">
               {messages.length > 0 && (
                 <div className="flex justify-between items-center mb-10">
-                    <h2 className="text-sm font-bold text-slate-400 uppercase tracking-[0.2em]">Council Deliberation</h2>
+                    <h2 className="text-sm font-bold text-slate-400 uppercase tracking-[0.2em]">{tr({ en: 'Council Deliberation', fr: 'Délibération du Conseil' })}</h2>
                   <Button
                     variant="ghost"
                     size="sm"
@@ -225,7 +240,7 @@ export const ChatInterface = () => {
                     className="text-slate-400 hover:text-red-500 hover:bg-red-50 text-xs font-bold uppercase tracking-widest transition-all rounded-xl"
                   >
                     <Trash2 className="h-3.5 w-3.5 mr-2" />
-                    {t('chat.clear_history')}
+                    {tr({ en: 'Clear history', fr: 'Effacer l\'historique' })}
                   </Button>
                 </div>
               )}
@@ -262,7 +277,7 @@ export const ChatInterface = () => {
                           >
                             <div className="flex items-center gap-2 mb-4">
                               <Sparkles className="w-4 h-4 text-brand-600" />
-                              <span className="text-xs font-black text-slate-900 uppercase tracking-widest">Scholarly Consensus</span>
+                              <span className="text-xs font-black text-slate-900 uppercase tracking-widest">{tr({ en: 'Scholarly Consensus', fr: 'Consensus savant' })}</span>
                             </div>
 
                             <div className="space-y-3 text-sm">
@@ -324,14 +339,32 @@ export const ChatInterface = () => {
         </div>
       </div>
 
-      {/* Input area */}
       <div className="bg-white/80 backdrop-blur-xl border-t border-slate-100 pb-10 pt-6 px-4">
         <div className="max-w-4xl mx-auto w-full">
+           {usage.chat_credits_limit !== -1 && !usage.fair_use && (
+             <div className={`mb-3 flex items-center justify-between rounded-2xl border px-4 py-2.5 text-xs font-semibold ${
+               canAskCouncil ? 'border-slate-100 bg-slate-50 text-slate-500' : 'border-amber-200 bg-amber-50 text-amber-800'
+             }`}>
+               <span>
+                 {canAskCouncil
+                   ? tr({ en: `Council questions left this month: ${councilRemaining} / ${usage.chat_credits_limit}`, fr: `Questions du Conseil restantes ce mois-ci : ${councilRemaining} / ${usage.chat_credits_limit}` })
+                   : tr({ en: 'You\'ve reached your monthly Council limit.', fr: 'Vous avez atteint votre limite mensuelle du Conseil.' })}
+               </span>
+               <button
+                 type="button"
+                 onClick={() => navigate('/pricing')}
+                 className="ml-3 rounded-full bg-brand-600 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-white transition-colors hover:bg-brand-700"
+               >
+                 {tr({ en: 'Upgrade', fr: 'Améliorer' })}
+               </button>
+             </div>
+           )}
+
            <div className="flex items-center justify-between mb-4">
                <ModeSelector
                 selectedMode={selectedMode}
                 onModeChange={setSelectedMode}
-                userTier={userTier}
+                userTier={tier}
               />
 
               <Button
@@ -342,7 +375,7 @@ export const ChatInterface = () => {
                 className="text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-brand-600 transition-all"
               >
                 <Sparkles className="w-3.5 h-3.5 mr-2" />
-                {showTemplates ? 'Hide' : 'Show'} templates
+                {showTemplates ? tr({ en: 'Hide templates', fr: 'Masquer les modèles' }) : tr({ en: 'Show templates', fr: 'Afficher les modèles' })}
               </Button>
            </div>
 
@@ -355,7 +388,7 @@ export const ChatInterface = () => {
                   setInput(prompt);
                   setShowTemplates(false);
                 }}
-                userTier={userTier}
+                userTier={tier}
               />
             </div>
           )}
@@ -393,11 +426,10 @@ export const ChatInterface = () => {
           </form>
 
           <p className="text-center mt-6 text-[10px] font-bold text-slate-300 uppercase tracking-widest">
-            Always verify important rulings with locally recognized scholars.
+            {tr({ en: 'Always verify important rulings with locally recognized scholars.', fr: 'Vérifiez toujours les avis importants auprès de savants reconnus localement.' })}
           </p>
         </div>
       </div>
     </div>
   );
 };
-

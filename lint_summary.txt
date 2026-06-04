@@ -1,6 +1,0 @@
-File: C:\Users\abdou\Desktop\XamSaDine_AI\xamsadine-ai-website-v2\backend\services\api-gateway\src\auth.ts
-  Line 15: ES2015 module syntax is preferred over namespaces. (@typescript-eslint/no-namespace)
-File: C:\Users\abdou\Desktop\XamSaDine_AI\xamsadine-ai-website-v2\src\components\ui\command.tsx
-  Line 24: An interface declaring no members is equivalent to its supertype. (@typescript-eslint/no-empty-object-type)
-File: C:\Users\abdou\Desktop\XamSaDine_AI\xamsadine-ai-website-v2\src\components\ui\textarea.tsx
-  Line 5: An interface declaring no members is equivalent to its supertype. (@typescript-eslint/no-empty-object-type)

@@ -1,66 +1,73 @@
 import { useState } from 'react';
-import { Card } from '../ui/card';
-import { Badge } from '../ui/badge';
-import { BookOpen, Scale, Heart, Users, Crown, Check } from 'lucide-react';
+import { BookOpen, Scale, Heart, Users, Crown } from 'lucide-react';
+import type { SubscriptionTier } from '@/auth/AuthContext';
+import { tierRank } from '@/data/subscription';
+import { useTr, type Loc } from '@/lib/i18n';
 
 export type SpecializedMode = 'general' | 'fiqh' | 'aqeedah' | 'spirituality' | 'family' | 'fatwa';
 
 interface Mode {
     id: SpecializedMode;
-    name: string;
-    description: string;
+    name: Loc;
+    description: Loc;
     icon: React.ReactNode;
-    tier: 'free' | 'core' | 'pro';
+    tier: SubscriptionTier;
     color: string;
 }
+
+const TIER_LABEL: Record<SubscriptionTier, Loc> = {
+    free: { en: 'Seeker', fr: 'Chercheur' },
+    student: { en: 'Student', fr: 'Étudiant' },
+    institution: { en: 'Institution', fr: 'Institution' },
+};
 
 const modes: Mode[] = [
     {
         id: 'general',
-        name: 'General Guidance',
-        description: 'General Islamic questions and guidance',
+        name: { en: 'General Guidance', fr: 'Guidance générale' },
+        description: { en: 'General Islamic questions and guidance', fr: 'Questions et conseils islamiques généraux' },
         icon: <BookOpen className="w-5 h-5" />,
         tier: 'free',
         color: 'text-blue-500',
     },
     {
         id: 'fiqh',
-        name: 'Fiqh & Jurisprudence',
-        description: 'Islamic law and rulings across madhabs',
+        name: { en: 'Fiqh & Jurisprudence', fr: 'Fiqh et jurisprudence' },
+        description: { en: 'Islamic law and rulings across madhabs', fr: 'Droit et avis islamiques selon les écoles' },
         icon: <Scale className="w-5 h-5" />,
-        tier: 'core',
+        tier: 'student',
         color: 'text-primary',
     },
     {
         id: 'aqeedah',
-        name: 'Aqeedah & Theology',
-        description: 'Islamic creed and theological matters',
+        name: { en: 'Aqeedah & Theology', fr: 'Aqida et théologie' },
+        description: { en: 'Islamic creed and theological matters', fr: 'Dogme islamique et questions théologiques' },
         icon: <Crown className="w-5 h-5" />,
-        tier: 'core',
+        tier: 'student',
         color: 'text-islamic-gold',
     },
     {
         id: 'spirituality',
-        name: 'Spiritual Growth',
-        description: 'Purification, dhikr, and spiritual development',
+        name: { en: 'Spiritual Growth', fr: 'Cheminement spirituel' },
+        description: { en: 'Purification, dhikr, and spiritual development', fr: 'Purification, dhikr et développement spirituel' },
         icon: <Heart className="w-5 h-5" />,
-        tier: 'core',
+        tier: 'student',
         color: 'text-rose-500',
     },
     {
         id: 'family',
-        name: 'Family & Society',
-        description: 'Marriage, parenting, and social matters',
+        name: { en: 'Family & Society', fr: 'Famille et société' },
+        description: { en: 'Marriage, parenting, and social matters', fr: 'Mariage, parentalité et questions sociales' },
         icon: <Users className="w-5 h-5" />,
-        tier: 'core',
+        tier: 'student',
         color: 'text-secondary',
     },
     {
         id: 'fatwa',
-        name: 'Detailed Fatwa',
-        description: 'Comprehensive multi-perspective analysis',
+        name: { en: 'Detailed Fatwa', fr: 'Fatwa détaillée' },
+        description: { en: 'Comprehensive multi-perspective analysis', fr: 'Analyse approfondie multi-perspectives' },
         icon: <Scale className="w-5 h-5" />,
-        tier: 'pro',
+        tier: 'institution',
         color: 'text-primary',
     },
 ];
@@ -68,18 +75,14 @@ const modes: Mode[] = [
 interface ModeSelectorProps {
     selectedMode: SpecializedMode;
     onModeChange: (mode: SpecializedMode) => void;
-    userTier: 'free' | 'core' | 'pro';
+    userTier: SubscriptionTier;
 }
 
 export function ModeSelector({ selectedMode, onModeChange, userTier }: ModeSelectorProps) {
+    const tr = useTr();
     const [hoveredMode, setHoveredMode] = useState<SpecializedMode | null>(null);
 
-    const canAccessMode = (modeTier: 'free' | 'core' | 'pro'): boolean => {
-        if (modeTier === 'free') return true;
-        if (modeTier === 'core') return userTier === 'core' || userTier === 'pro';
-        if (modeTier === 'pro') return userTier === 'pro';
-        return false;
-    };
+    const canAccessMode = (modeTier: SubscriptionTier): boolean => tierRank(userTier) >= tierRank(modeTier);
 
     return (
         <div className="flex flex-wrap gap-2">
@@ -91,6 +94,7 @@ export function ModeSelector({ selectedMode, onModeChange, userTier }: ModeSelec
                     <button
                         key={mode.id}
                         type="button"
+                        title={tr(mode.description)}
                         className={`relative px-4 py-2.5 rounded-2xl text-xs font-bold transition-all duration-300 flex items-center gap-2.5 border-2 ${
                             isSelected
                                 ? 'bg-brand-50 border-brand-500 text-brand-700 shadow-lg shadow-brand-100'
@@ -105,7 +109,7 @@ export function ModeSelector({ selectedMode, onModeChange, userTier }: ModeSelec
                         <span className={`transition-transform duration-300 ${isSelected ? 'scale-110' : 'opacity-70'}`}>
                             {mode.icon}
                         </span>
-                        <span className="uppercase tracking-widest">{mode.name}</span>
+                        <span className="uppercase tracking-widest">{tr(mode.name)}</span>
 
                         {!hasAccess && (
                             <div className="flex items-center justify-center ml-1">
@@ -119,7 +123,7 @@ export function ModeSelector({ selectedMode, onModeChange, userTier }: ModeSelec
 
                         {!hasAccess && hoveredMode === mode.id && (
                             <div className="absolute -top-10 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-slate-900 text-white rounded-xl text-[10px] whitespace-nowrap z-10 shadow-xl">
-                                Upgrade to {mode.tier.toUpperCase()}
+                                {tr({ en: 'Upgrade to', fr: 'Passer à' })} {tr(TIER_LABEL[mode.tier])}
                                 <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-slate-900" />
                             </div>
                         )}
