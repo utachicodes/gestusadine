@@ -10,8 +10,8 @@ export type Feature =
   | "courses.access"
   | "community.participate"
   | "theme.customize"
-  | "institution.console"
-  | "institution.privateKb"
+  | "pro.console"
+  | "pro.privateKb"
   | "support.priority";
 
 const STUDENT_FEATURES: Feature[] = [
@@ -26,10 +26,10 @@ const STUDENT_FEATURES: Feature[] = [
 const FEATURE_MATRIX: Record<SubscriptionTier, Feature[]> = {
   free: ["council.access"],
   student: STUDENT_FEATURES,
-  institution: [...STUDENT_FEATURES, "institution.console", "institution.privateKb", "support.priority"],
+  pro: [...STUDENT_FEATURES, "pro.console", "pro.privateKb", "support.priority"],
 };
 
-const TIER_RANK: Record<SubscriptionTier, number> = { free: 0, student: 1, institution: 2 };
+const TIER_RANK: Record<SubscriptionTier, number> = { free: 0, student: 1, pro: 2 };
 
 export function tierRank(tier: SubscriptionTier): number {
   return TIER_RANK[tier] ?? 0;
@@ -45,7 +45,7 @@ export function useSubscription() {
   const recordCouncilQueryMut = useMutation(api.subscription.recordCouncilQuery);
 
   const tier: SubscriptionTier = isAdmin
-    ? "institution"
+    ? "pro"
     : (profile?.subscription_tier ?? "free");
 
   return useMemo(() => {

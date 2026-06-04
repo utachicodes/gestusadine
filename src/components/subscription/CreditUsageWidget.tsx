@@ -12,10 +12,7 @@ export function CreditUsageWidget() {
     const tr = useTr();
 
     const isUnlimited = usage.chat_credits_limit === -1;
-    // Student is "Unlimited (fair use)": present as unlimited unless they get
-    // close to the soft cap, at which point we surface a gentle heads-up.
-    const fairUseApproaching = usage.fair_use && usage.percentage_used >= 80;
-    const showAsUnlimited = isUnlimited || (usage.fair_use && !fairUseApproaching);
+    const showAsUnlimited = isUnlimited;
 
     const isLow = usage.percentage_used >= 80 && !isUnlimited;
     const isCritical = usage.percentage_used >= 95 && !isUnlimited;
@@ -39,9 +36,7 @@ export function CreditUsageWidget() {
                     <TrendingUp className="w-12 h-12 text-primary mx-auto mb-2" />
                     <p className="text-lg font-semibold text-islamic-dark dark:text-white">{tr({ en: 'Unlimited questions', fr: 'Questions illimitées' })}</p>
                     <p className="text-sm text-islamic-dark/60 dark:text-gray-400">
-                        {usage.fair_use
-                            ? tr({ en: 'Fair-use policy applies', fr: 'Politique d’usage raisonnable' })
-                            : tr({ en: 'Institution benefit', fr: 'Avantage Institution' })}
+                        {tr({ en: 'Pro benefit', fr: 'Avantage Pro' })}
                     </p>
                 </div>
             ) : (

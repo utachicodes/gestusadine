@@ -6,12 +6,12 @@ const NABOOPAY_BASE = "https://api.naboopay.com";
 
 const TIER_PRICES: Record<string, { amount: number; label: string }> = {
   student: { amount: 10000, label: "GëstuSaDine Student - Monthly" },
-  institution: { amount: 0, label: "GëstuSaDine Institution" },
+  pro: { amount: 0, label: "GëstuSaDine Pro" },
 };
 
 export const createCheckoutSession = action({
   args: {
-    tier: v.union(v.literal("student"), v.literal("institution")),
+    tier: v.union(v.literal("student"), v.literal("pro")),
     successUrl: v.string(),
     errorUrl: v.string(),
   },
@@ -26,8 +26,8 @@ export const createCheckoutSession = action({
     const tierInfo = TIER_PRICES[args.tier];
     if (!tierInfo) throw new Error(`Unknown tier: ${args.tier}`);
 
-    if (args.tier === "institution") {
-      return { requiresContact: true, message: "Contact us for institution pricing" };
+    if (args.tier === "pro") {
+      return { requiresContact: true, message: "Contact us for Pro pricing" };
     }
 
     const body = {

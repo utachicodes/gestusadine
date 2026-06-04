@@ -217,9 +217,9 @@ const Dashboard: React.FC = () => {
         </div>
 
         {/* Main content — fills remaining height on large screens (no scroll) */}
-        <div className="grid gap-3 md:grid-cols-4 lg:flex-1 lg:min-h-0 lg:grid-rows-1">
+        <div className="grid gap-3 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 lg:flex-1 lg:min-h-0 lg:grid-rows-1">
           {/* Ayah / reminder */}
-          <div className="islamic-card md:col-span-2 relative overflow-hidden group">
+          <div className="islamic-card md:col-span-1 lg:col-span-2 relative overflow-hidden group">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-secondary/5 to-accent/10 opacity-80 group-hover:opacity-100 transition-opacity" />
             <div className="absolute top-0 right-0 w-32 h-32 bg-accent/5 rounded-full blur-3xl -translate-y-16 translate-x-16" />
             <div className="relative p-6 h-full flex flex-col justify-between space-y-4">

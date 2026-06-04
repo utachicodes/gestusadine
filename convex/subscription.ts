@@ -2,14 +2,14 @@ import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 import { getCurrentUser, getCurrentUserOrThrow } from "./authz";
 
-type Tier = "free" | "student" | "institution";
+type Tier = "free" | "student" | "pro";
 
-const TIER_RANK: Record<Tier, number> = { free: 0, student: 1, institution: 2 };
+const TIER_RANK: Record<Tier, number> = { free: 0, student: 1, pro: 2 };
 
 const TIER_CREDITS: Record<Tier, number> = {
   free: 5,
-  student: 300,
-  institution: -1,
+  student: 500,
+  pro: -1,
 };
 
 export function currentPeriod(): string {
@@ -18,7 +18,7 @@ export function currentPeriod(): string {
 }
 
 export function effectiveTier(tier: Tier | undefined, role: string | undefined): Tier {
-  if (role === "admin" || role === "system") return "institution";
+  if (role === "admin" || role === "system") return "pro";
   return tier ?? "free";
 }
 
@@ -47,7 +47,7 @@ export const getMySubscription = query({
       unlimited,
       remaining: unlimited ? Infinity : Math.max(0, limit - used),
       period,
-      fairUse: tier === "student",
+      fairUse: tier === "student" || tier === "pro",
       canAskCouncil: unlimited || used < limit,
     };
   },

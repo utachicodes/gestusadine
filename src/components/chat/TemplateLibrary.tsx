@@ -22,7 +22,7 @@ interface Template {
 const TIER_LABEL: Record<SubscriptionTier, Loc> = {
     free: { en: 'Seeker', fr: 'Chercheur' },
     student: { en: 'Student', fr: 'Étudiant' },
-    institution: { en: 'Institution', fr: 'Institution' },
+    pro: { en: 'Pro', fr: 'Pro' },
 };
 
 const CATEGORY_LABEL: Record<TemplateCategory, Loc> = {
@@ -63,7 +63,7 @@ const templates: Template[] = [
         name: { en: 'Zakat Calculation Guide', fr: 'Guide de calcul de la Zakat' },
         description: { en: 'Detailed guide on calculating and distributing Zakat', fr: 'Guide détaillé pour calculer et distribuer la Zakat' },
         category: 'general',
-        tier: 'institution',
+        tier: 'pro',
         prompt: 'Provide a detailed explanation of Zakat calculation, nisab, types of wealth subject to Zakat, and proper distribution.',
     },
     {
@@ -71,7 +71,7 @@ const templates: Template[] = [
         name: { en: 'Islamic Inheritance Laws', fr: 'Lois successorales islamiques' },
         description: { en: 'Understanding Islamic inheritance distribution', fr: 'Comprendre la répartition de l’héritage en islam' },
         category: 'family',
-        tier: 'institution',
+        tier: 'pro',
         prompt: 'Explain Islamic inheritance laws (Faraid) with examples of how wealth is distributed among heirs.',
     },
 ];

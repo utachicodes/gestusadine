@@ -9,7 +9,7 @@ const HARDCODED_ADMIN_EMAIL = "admin@gestusadine.org";
 const HARDCODED_ADMIN_PASSWORD = "gestus@dine";
 const LS_KEY = "gestu_hardcoded_admin";
 
-export type SubscriptionTier = 'free' | 'student' | 'institution';
+export type SubscriptionTier = 'free' | 'student' | 'pro';
 
 export type UserProfile = {
   id: string;
@@ -100,7 +100,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         id: "hardcoded-admin",
         email: HARDCODED_ADMIN_EMAIL,
         role: "admin" as UserRole,
-        subscription_tier: "institution" as SubscriptionTier,
+        subscription_tier: "pro" as SubscriptionTier,
         full_name: "Admin",
         created_at: Date.now(),
       };

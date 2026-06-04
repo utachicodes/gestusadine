@@ -5,7 +5,7 @@
  *  - UserRole: the role stored on a user profile (maps to the `users.role`
  *    field today, and the future Convex `users.role`).
  *  - Role: the capability role used for access checks across the app.
- *  - Subscription tier (free/student/institution) is a SEPARATE axis handled
+ *  - Subscription tier (free/student/pro) is a SEPARATE axis handled
  *    by AccessGuard — roles gate *capabilities*, tiers gate *features*.
  *
  * This replaces the four previously-conflicting "admin" definitions

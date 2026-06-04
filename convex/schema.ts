@@ -14,7 +14,7 @@ const schema = defineSchema({
     phoneVerificationTime: v.optional(v.number()),
     isAnonymous: v.optional(v.boolean()),
     role: v.optional(v.union(v.literal("user"), v.literal("moderator"), v.literal("admin"), v.literal("system"))),
-    subscriptionTier: v.optional(v.union(v.literal("free"), v.literal("student"), v.literal("institution"))),
+    subscriptionTier: v.optional(v.union(v.literal("free"), v.literal("student"), v.literal("pro"))),
     fullName: v.optional(v.string()),
     avatarUrl: v.optional(v.string()),
     xp: v.optional(v.number()),

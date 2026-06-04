@@ -15,7 +15,7 @@ interface AccessGuardProps {
 const TIER_LABEL: Record<SubscriptionTier, Loc> = {
   free: { en: 'Seeker', fr: 'Chercheur' },
   student: { en: 'Student', fr: 'Étudiant' },
-  institution: { en: 'Institution', fr: 'Institution' },
+  pro: { en: 'Pro', fr: 'Pro' },
 };
 
 export const AccessGuard: React.FC<AccessGuardProps> = ({

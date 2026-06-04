@@ -18,7 +18,7 @@ interface Mode {
 const TIER_LABEL: Record<SubscriptionTier, Loc> = {
     free: { en: 'Seeker', fr: 'Chercheur' },
     student: { en: 'Student', fr: 'Étudiant' },
-    institution: { en: 'Institution', fr: 'Institution' },
+    pro: { en: 'Pro', fr: 'Pro' },
 };
 
 const modes: Mode[] = [
@@ -63,11 +63,11 @@ const modes: Mode[] = [
         color: 'text-secondary',
     },
     {
-        id: 'fatwa',
-        name: { en: 'Detailed Fatwa', fr: 'Fatwa détaillée' },
-        description: { en: 'Comprehensive multi-perspective analysis', fr: 'Analyse approfondie multi-perspectives' },
-        icon: <Scale className="w-5 h-5" />,
-        tier: 'institution',
+    id: 'fatwa',
+        name: { en: 'Fatwa', fr: 'Fatwa' },
+        description: { en: 'Advanced rulings for scholars', fr: 'Règles avancées pour les savants' },
+        icon: <Crown className="w-5 h-5" />,
+        tier: 'pro',
         color: 'text-primary',
     },
 ];

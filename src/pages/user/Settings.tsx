@@ -15,7 +15,7 @@ import { Globe, Palette, Bell, CreditCard, Crown, FlaskConical } from "lucide-re
 const DEV_TIERS: { value: SubscriptionTier; label: Loc }[] = [
   { value: 'free', label: { en: 'Seeker (Free)', fr: 'Chercheur (Gratuit)' } },
   { value: 'student', label: { en: 'Student', fr: 'Étudiant' } },
-  { value: 'institution', label: { en: 'Institution', fr: 'Institution' } },
+  { value: 'pro', label: { en: 'Pro', fr: 'Pro' } },
 ];
 
 const Settings: React.FC = () => {

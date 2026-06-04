@@ -33,7 +33,7 @@ export const updateProfile = mutation({
 
 export const updateSubscriptionTier = mutation({
   args: {
-    tier: v.union(v.literal("free"), v.literal("student"), v.literal("institution")),
+    tier: v.union(v.literal("free"), v.literal("student"), v.literal("pro")),
   },
   handler: async (ctx, args) => {
     const user = await getCurrentUserOrThrow(ctx);

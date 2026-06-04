@@ -42,7 +42,7 @@ const tiers: Tier[] = [
     unit: { en: 'FCFA / mo', fr: 'FCFA / mois' },
     description: { en: 'For those who want to go deeper.', fr: 'Pour aller plus loin.' },
     features: [
-      { en: 'Unlimited Council access', fr: 'Accès illimité au Conseil' },
+      { en: '500 Council questions / month', fr: '500 questions au Conseil / mois' },
       { en: 'Full scholarly archives', fr: 'Archives savantes complètes' },
       { en: 'Courses & classes', fr: 'Cours et leçons' },
       { en: 'Full community access', fr: 'Accès complet à la communauté' },
@@ -52,7 +52,7 @@ const tiers: Tier[] = [
     popular: true,
   },
   {
-    name: { en: 'Institution', fr: 'Institution' },
+    name: { en: 'Pro', fr: 'Pro' },
     price: { en: 'Custom', fr: 'Sur mesure' },
     description: { en: 'For mosques, schools, and organisations.', fr: 'Pour mosquées, écoles et organisations.' },
     features: [
@@ -79,7 +79,7 @@ const PricingComparison = () => {
       navigate('/login');
       return;
     }
-    if (profile?.subscription_tier === 'institution') {
+    if (profile?.subscription_tier === 'pro') {
       navigate('/dashboard');
       return;
     }

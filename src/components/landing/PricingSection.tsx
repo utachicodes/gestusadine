@@ -43,7 +43,7 @@ const TIERS: Tier[] = [
     unit: { en: 'FCFA / month', fr: 'FCFA / mois' },
     description: { en: 'For those who want to go deeper.', fr: 'Pour aller plus loin.' },
     features: [
-      { en: 'Unlimited Council access', fr: 'Accès illimité au Conseil' },
+      { en: '500 Council questions / month', fr: '500 questions au Conseil / mois' },
       { en: 'Full scholarly archives', fr: 'Archives savantes complètes' },
       { en: 'Courses & classes', fr: 'Cours et leçons' },
       { en: 'Full community access', fr: 'Accès complet à la communauté' },
@@ -53,7 +53,7 @@ const TIERS: Tier[] = [
     note: { en: 'Recommended for serious students', fr: 'Recommandé pour les étudiants assidus' },
   },
   {
-    name: { en: 'Institution', fr: 'Institution' },
+    name: { en: 'Pro', fr: 'Pro' },
     price: { en: 'Custom', fr: 'Sur mesure' },
     description: { en: 'For mosques, schools, and organisations.', fr: 'Pour mosquées, écoles et organisations.' },
     features: [
