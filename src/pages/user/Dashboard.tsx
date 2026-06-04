@@ -1,5 +1,6 @@
 import * as React from "react";
-import { Sparkles, Sun, MoonStar, HelpCircle, Star, Trophy, Flame, Target } from "lucide-react";
+import { Sparkles, Sun, MoonStar, HelpCircle, Star, Trophy, Flame, Target, X, FlaskConical } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { RankDisplay } from "@/components/gamification/RankDisplay";
 import { useProfileStats } from "@/data/profile";
@@ -142,14 +143,50 @@ const Dashboard: React.FC = () => {
   }, [language]);
 
   const [showReminder, setShowReminder] = React.useState(false);
+  const [showBetaBanner, setShowBetaBanner] = React.useState(() => {
+    return localStorage.getItem('gestu_beta_banner_dismissed') !== 'true';
+  });
+
+  const dismissBeta = () => {
+    setShowBetaBanner(false);
+    localStorage.setItem('gestu_beta_banner_dismissed', 'true');
+  };
 
   return (
     <div className="lg:h-full">
       <section className="container flex flex-col gap-3 py-4 md:py-6 lg:h-full lg:min-h-0">
+        <AnimatePresence>
+          {showBetaBanner && (
+            <motion.div
+              initial={{ opacity: 0, y: -12, height: 0 }}
+              animate={{ opacity: 1, y: 0, height: 'auto' }}
+              exit={{ opacity: 0, y: -12, height: 0 }}
+              transition={{ duration: 0.25, ease: 'easeOut' }}
+              className="flex items-center justify-between gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-2.5 text-sm text-amber-800 flex-shrink-0 overflow-hidden"
+            >
+              <div className="flex items-center gap-2.5">
+                <FlaskConical className="w-4 h-4 flex-shrink-0" />
+                <span>
+                  {language === 'fr'
+                    ? 'GëstuSaDine est en version bêta — certains bugs peuvent survenir.'
+                    : 'GëstuSaDine is in beta — some bugs may occur.'}
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={dismissBeta}
+                className="flex-shrink-0 rounded-lg p-1 hover:bg-amber-100 transition-colors"
+                aria-label="Dismiss"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         <header className="flex-shrink-0">
           <div>
-            <p className="inline-flex items-center text-xs uppercase tracking-[0.22em] text-muted-foreground mb-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-primary mr-2" />
+            <p className="text-xs uppercase tracking-[0.22em] text-muted-foreground mb-1">
               {t('dashboard.sectionLabel')}
             </p>
             <h1 className="text-3xl md:text-4xl font-bold text-foreground">
@@ -204,8 +241,6 @@ const Dashboard: React.FC = () => {
                 <p className="font-arabic text-2xl md:text-3xl lg:text-4xl leading-[2] text-foreground text-center break-words max-w-full">
                   {daily?.ayah.arabic ?? (loadingDaily ? "…" : "")}
                 </p>
-
-                <div className="h-px w-full bg-gradient-to-r from-transparent via-accent/30 to-transparent" />
 
                 <p className="text-base md:text-lg text-muted-foreground leading-relaxed italic text-center max-w-2xl">
                   {daily?.ayah.translation ??
@@ -312,7 +347,6 @@ const Dashboard: React.FC = () => {
                 <p className="font-arabic text-2xl md:text-3xl text-foreground mb-3 text-right leading-relaxed min-h-[3rem]">
                   {daily?.dua.arabic ?? (loadingDaily ? "…" : "")}
                 </p>
-                <div className="h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent mb-2" />
                 <p className="text-sm text-muted-foreground leading-relaxed">
                   {daily?.dua.translation ??
                     (loadingDaily ? t('dashboard.dailyDuaLoading') : t('dashboard.dailyDuaError'))}
