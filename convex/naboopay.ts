@@ -5,7 +5,7 @@ import { getCurrentUserOrThrow } from "./authz";
 const NABOOPAY_BASE = "https://api.naboopay.com";
 
 const TIER_PRICES: Record<string, { amount: number; label: string }> = {
-  student: { amount: 25, label: "GëstuSaDine Student - Monthly" },
+  student: { amount: 10000, label: "GëstuSaDine Student - Monthly" },
   institution: { amount: 0, label: "GëstuSaDine Institution" },
 };
 
