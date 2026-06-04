@@ -20,8 +20,7 @@ const Classes = () => {
         <div className="flex-1">
             <section className="container py-10 md:py-16 space-y-8">
                 <header>
-                    <p className="inline-flex items-center text-xs uppercase tracking-[0.22em] text-primary mb-2 font-semibold">
-                        <span className="w-1.5 h-1.5 rounded-full bg-primary mr-2" />
+                    <p className="text-xs uppercase tracking-[0.22em] text-primary mb-2 font-semibold">
                         {tr({ en: 'Structured Learning', fr: 'Apprentissage structuré' })}
                     </p>
                     <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
