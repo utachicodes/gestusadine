@@ -4,6 +4,10 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 
 export default defineConfig(({ mode }) => ({
+  build: {
+    sourcemap: mode !== "production",
+  },
+
   server: {
     host: "::",
     port: 3000,
