@@ -3,7 +3,7 @@ import { Password } from "@convex-dev/auth/providers/Password";
 import { MutationCtx } from "./_generated/server";
 
 const SESSION_TOTAL_DURATION_MS = 1000 * 60 * 60 * 24 * 7;
-const SESSION_INACTIVE_DURATION_MS = 1000 * 60 * 60 * 24;
+const SESSION_INACTIVE_DURATION_MS = 1000 * 60 * 60 * 24 * 7;
 
 export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
   providers: [Password],
