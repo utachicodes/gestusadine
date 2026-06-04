@@ -106,8 +106,7 @@ const IconChip: React.FC<{ icon: React.ReactNode }> = ({ icon }) => (
 );
 
 const SectionLabel: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <p className="inline-flex items-center text-xs uppercase tracking-[0.22em] text-muted-foreground mb-2">
-    <span className="w-1.5 h-1.5 rounded-full bg-primary mr-2" />
+  <p className="text-xs uppercase tracking-[0.22em] text-muted-foreground mb-2">
     {children}
   </p>
 );
