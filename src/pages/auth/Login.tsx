@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams, useLocation, Link } from 'react-router-do
 import { useAuth } from '@/auth/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { motion } from 'framer-motion';
-import { ArrowRight, ChevronLeft, UserPlus, LogIn } from 'lucide-react';
+import { ArrowRight, ChevronLeft, UserPlus, LogIn, Eye, EyeOff } from 'lucide-react';
 
 const inputClass =
   'w-full rounded-lg border border-stone-300 bg-white/70 px-4 py-2.5 text-sm text-stone-900 placeholder-stone-400 focus:border-emerald-700 focus:ring-2 focus:ring-emerald-700/10 outline-none transition';
@@ -22,6 +22,14 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [pendingRedirect, setPendingRedirect] = useState<string | null>(null);
   const [verificationEmail, setVerificationEmail] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const passwordChecks = React.useMemo(() => [
+    { label: language === 'fr' ? 'Min. 8 caractères' : 'Min. 8 characters', check: password.length >= 8 },
+    { label: language === 'fr' ? '1 majuscule' : '1 uppercase letter', check: /[A-Z]/.test(password) },
+    { label: language === 'fr' ? '1 chiffre' : '1 number', check: /[0-9]/.test(password) },
+    { label: language === 'fr' ? '1 caractère spécial' : '1 special character', check: /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password) },
+  ], [password, language]);
 
   const { signInWithPassword, signUp, user, loading } = useAuth();
   const navigate = useNavigate();
@@ -222,21 +230,33 @@ const Login = () => {
             <label htmlFor="password" className={labelClass}>
               {language === 'fr' ? 'Mot de passe' : 'Password'}
             </label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => { setPassword(e.target.value); setError(''); }}
-              placeholder="••••••••"
-              className={inputClass}
-              required
-            />
+            <div className="relative">
+              <input
+                id="password"
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={(e) => { setPassword(e.target.value); setError(''); }}
+                placeholder="••••••••"
+                className={inputClass + ' pr-10'}
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600 transition-colors"
+                tabIndex={-1}
+              >
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            </div>
             {mode === 'signup' && (
-              <ul className="text-[11px] text-stone-400 mt-1 space-y-0.5 list-disc list-inside">
-                <li>{language === 'fr' ? 'Min. 8 caractères' : 'Min. 8 characters'}</li>
-                <li>{language === 'fr' ? '1 majuscule' : '1 uppercase letter'}</li>
-                <li>{language === 'fr' ? '1 chiffre' : '1 number'}</li>
-                <li>{language === 'fr' ? '1 caractère spécial' : '1 special character'}</li>
+              <ul className="text-[11px] mt-1.5 space-y-1">
+                {passwordChecks.map((item, i) => (
+                  <li key={i} className={`flex items-center gap-1.5 ${item.check ? 'text-emerald-600' : 'text-stone-400'}`}>
+                    <span className="text-xs">{item.check ? '✓' : '•'}</span>
+                    {item.label}
+                  </li>
+                ))}
               </ul>
             )}
           </div>
