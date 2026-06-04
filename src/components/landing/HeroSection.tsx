@@ -99,38 +99,6 @@ const HeroSection = () => {
             </motion.button>
           </motion.div>
         </div>
-
-        {/* Elegant Floating Paper-like Quote Card */}
-        <motion.figure
-          initial={{ opacity: 0, y: 32 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.1, ease, delay: 0.4 }}
-          className="mx-auto mt-24 max-w-2xl rounded-2xl border border-stone-200/60 bg-white/50 backdrop-blur-md p-8 md:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.015)] text-center relative overflow-hidden"
-        >
-          {/* Subtle gradient glow inside card */}
-          <div className="absolute -top-12 -right-12 w-32 h-32 bg-[radial-gradient(circle,rgba(16,185,129,0.04)_0%,transparent_70%)] pointer-events-none" />
-
-          <p className="text-xl sm:text-2xl font-serif italic leading-relaxed text-stone-800">
-            {tr({
-              en: '“Is it permissible to combine prayers while travelling?”',
-              fr: '« Peut-on regrouper les prières en voyage ? »',
-            })}
-          </p>
-          <figcaption className="mt-4 text-sm leading-relaxed text-stone-500 font-sans max-w-lg mx-auto">
-            {tr({
-              en: 'Answered in seconds, with the ruling across all four Sunni schools and citations you can verify.',
-              fr: 'Une réponse en quelques secondes, avec l’avis des quatre écoles sunnites et des sources vérifiables.',
-            })}
-          </figcaption>
-          
-          <div className="mt-8 flex items-center justify-center gap-4 text-stone-400">
-            <span className="h-px w-8 bg-stone-300/80" />
-            <span className="text-[10px] font-semibold uppercase tracking-[0.25em] text-emerald-800/60 font-sans">
-              {tr({ en: 'Fiqh · ʿAqīdah · Context · Humility', fr: 'Fiqh · ʿAqīda · Contexte · Humilité' })}
-            </span>
-            <span className="h-px w-8 bg-stone-300/80" />
-          </div>
-        </motion.figure>
       </div>
     </section>
   );

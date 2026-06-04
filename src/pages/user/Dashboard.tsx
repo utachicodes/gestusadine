@@ -76,53 +76,6 @@ const MOCK_DAILY_BY_LANG: Record<LanguageCode, DailyData> = {
   },
 };
 
-// Prayer tracking component to avoid hooks in map
-const PrayerItem: React.FC<{
-  prayer: 'fajr' | 'dhuhr' | 'asr' | 'maghrib' | 'isha';
-  time: string;
-  prayerKey: string;
-  tGlobal: (key: string) => string;
-}> = ({ prayer, time, prayerKey, tGlobal }) => {
-  const storageKey = `prayer_${prayer}_${new Date().toDateString()}`;
-  const [completed, setCompleted] = React.useState(() => {
-    return localStorage.getItem(storageKey) === 'true';
-  });
-
-  const handleToggle = () => {
-    const newState = !completed;
-    setCompleted(newState);
-    localStorage.setItem(storageKey, newState.toString());
-  };
-
-  return (
-    <div className="flex justify-between items-center py-1 group">
-      <div className="flex items-center gap-2 flex-1 min-w-0">
-        <button
-          type="button"
-          onClick={handleToggle}
-          className={`flex-shrink-0 w-4 h-4 rounded border-2 transition-all ${completed
-            ? 'bg-primary border-primary'
-            : 'border-muted-foreground/30 hover:border-primary'
-            }`}
-          aria-label={`Mark ${prayer} as ${completed ? 'not completed' : 'completed'}`}
-        >
-          {completed && (
-            <svg className="w-full h-full text-primary-foreground" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-            </svg>
-          )}
-        </button>
-        <span className={`text-xs flex-1 min-w-0 ${completed ? 'text-muted-foreground line-through' : 'text-muted-foreground'}`}>
-          {tGlobal(prayerKey)}
-        </span>
-      </div>
-      <span className={`text-sm font-semibold flex-shrink-0 ${completed ? 'text-muted-foreground' : 'text-foreground'}`}>
-        {time}
-      </span>
-    </div>
-  );
-};
-
 const Dashboard: React.FC = () => {
   const { language, t } = useLanguage();
   const stats = useProfileStats();
@@ -189,70 +142,6 @@ const Dashboard: React.FC = () => {
   }, [language]);
 
   const [showReminder, setShowReminder] = React.useState(false);
-  const [prayerTimes, setPrayerTimes] = React.useState<{
-    fajr: string;
-    dhuhr: string;
-    asr: string;
-    maghrib: string;
-    isha: string;
-  } | null>(null);
-  const [loadingPrayers, setLoadingPrayers] = React.useState(false);
-
-  // Get user location and fetch today's prayer times
-  React.useEffect(() => {
-    const fetchTodayPrayerTimes = async () => {
-      setLoadingPrayers(true);
-      try {
-        const fetchForLocation = async (lat: number, lng: number) => {
-          const today = new Date();
-          const day = String(today.getDate()).padStart(2, '0');
-          const month = String(today.getMonth() + 1).padStart(2, '0');
-          const year = today.getFullYear();
-
-          try {
-            const response = await fetch(
-              `http://api.aladhan.com/v1/calendar/${year}/${month}?latitude=${lat}&longitude=${lng}&method=2`
-            );
-            const data = await response.json();
-            const dayData = data.data?.find((d: any) => d.date.gregorian.day === day);
-            if (dayData) {
-              setPrayerTimes({
-                fajr: dayData.timings.Fajr?.substring(0, 5) || '--:--',
-                dhuhr: dayData.timings.Dhuhr?.substring(0, 5) || '--:--',
-                asr: dayData.timings.Asr?.substring(0, 5) || '--:--',
-                maghrib: dayData.timings.Maghrib?.substring(0, 5) || '--:--',
-                isha: dayData.timings.Isha?.substring(0, 5) || '--:--',
-              });
-            }
-          } catch (err) {
-            console.error('Error fetching prayer times:', err);
-          }
-        };
-
-        // Try to get user location
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(
-            async (position) => {
-              await fetchForLocation(position.coords.latitude, position.coords.longitude);
-            },
-            () => {
-              // Default to Dakar, Senegal if location access denied
-              fetchForLocation(14.7167, -17.4677);
-            }
-          );
-        } else {
-          // Default to Dakar, Senegal if geolocation not available
-          fetchForLocation(14.7167, -17.4677);
-        }
-      } catch (error) {
-        console.error('Error fetching prayer times:', error);
-      } finally {
-        setLoadingPrayers(false);
-      }
-    };
-
-    fetchTodayPrayerTimes();
-  }, []);
 
   return (
     <div className="lg:h-full">
@@ -312,7 +201,7 @@ const Dashboard: React.FC = () => {
               </div>
 
               <div className="space-y-4 flex flex-col items-center justify-center">
-                <p className="font-arabic text-3xl md:text-4xl lg:text-5xl leading-relaxed text-foreground min-h-[4rem] text-center">
+                <p className="font-arabic text-2xl md:text-3xl lg:text-4xl leading-[2] text-foreground text-center break-words max-w-full">
                   {daily?.ayah.arabic ?? (loadingDaily ? "…" : "")}
                 </p>
 
@@ -390,35 +279,6 @@ const Dashboard: React.FC = () => {
                 </button>
               </div>
               <div className="space-y-6">
-                {/* Prayer Times Summary */}
-                {prayerTimes && (
-                  <div className="p-4 bg-primary/5 rounded-lg border border-primary/20">
-                    <p className="text-sm font-semibold text-muted-foreground mb-3">{t('dashboard.todays_prayer_times')}</p>
-                    <div className="grid grid-cols-5 gap-2">
-                      <div className="text-center">
-                        <p className="text-xs text-muted-foreground mb-1">{t('dashboard.prayer.fajr')}</p>
-                        <p className="text-sm font-semibold text-foreground">{prayerTimes.fajr}</p>
-                      </div>
-                      <div className="text-center">
-                        <p className="text-xs text-muted-foreground mb-1">{t('dashboard.prayer.dhuhr')}</p>
-                        <p className="text-sm font-semibold text-foreground">{prayerTimes.dhuhr}</p>
-                      </div>
-                      <div className="text-center">
-                        <p className="text-xs text-muted-foreground mb-1">{t('dashboard.prayer.asr')}</p>
-                        <p className="text-sm font-semibold text-foreground">{prayerTimes.asr}</p>
-                      </div>
-                      <div className="text-center">
-                        <p className="text-xs text-muted-foreground mb-1">{t('dashboard.prayer.maghrib')}</p>
-                        <p className="text-sm font-semibold text-foreground">{prayerTimes.maghrib}</p>
-                      </div>
-                      <div className="text-center">
-                        <p className="text-xs text-muted-foreground mb-1">{t('dashboard.prayer.isha')}</p>
-                        <p className="text-sm font-semibold text-foreground">{prayerTimes.isha}</p>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
                 {/* Daily Action */}
                 <div className="p-4 bg-accent/5 rounded-lg border border-accent/20">
                   <p className="text-sm font-semibold text-muted-foreground mb-2">{t('dashboard.todays_action')}</p>
@@ -440,39 +300,8 @@ const Dashboard: React.FC = () => {
           </div>
         )}
 
-        {/* Prayer Times, Duas, Facts, Quiz */}
-        <div className="grid gap-3 md:grid-cols-4 lg:flex-1 lg:min-h-0 lg:grid-rows-1">
-          {/* Today's Prayer Times */}
-          <div className="islamic-card p-5 space-y-3 relative overflow-hidden group flex flex-col md:col-span-1">
-            <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-            <div className="relative z-10 flex flex-col flex-1">
-              <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground mb-2 font-semibold">
-                {t('dashboard.prayer_times')}
-              </p>
-              {loadingPrayers ? (
-                <div className="flex-1 flex items-center justify-center">
-                  <p className="text-xs text-muted-foreground">{t('dashboard.loading')}</p>
-                </div>
-              ) : prayerTimes ? (
-                <div className="flex-1 flex flex-col justify-center space-y-1.5">
-                  {(['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'] as const).map((prayer) => (
-                    <PrayerItem
-                      key={prayer}
-                      prayer={prayer}
-                      time={prayerTimes[prayer]}
-                      prayerKey={`dashboard.prayer.${prayer}`}
-                      tGlobal={t}
-                    />
-                  ))}
-                </div>
-              ) : (
-                <div className="flex-1 flex items-center justify-center">
-                  <p className="text-xs text-muted-foreground text-center">{t('dashboard.enable_location')}</p>
-                </div>
-              )}
-            </div>
-          </div>
-
+        {/* Duas, Facts, Quiz */}
+        <div className="grid gap-3 md:grid-cols-3 lg:flex-1 lg:min-h-0 lg:grid-rows-1">
           <div className="islamic-card p-5 space-y-3 relative overflow-hidden group flex flex-col md:col-span-1">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             <div className="relative z-10 flex flex-col flex-1">

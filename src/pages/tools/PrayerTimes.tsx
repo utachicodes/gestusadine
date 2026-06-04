@@ -1,4 +1,4 @@
-import * as React from "react";
+﻿import * as React from "react";
 import { useTr, type Loc } from "@/lib/i18n";
 import {
   Clock,
@@ -42,15 +42,15 @@ interface AladhanResponse {
 const DEFAULT_LAT = 14.4228;
 const DEFAULT_LNG = -16.9646;
 const DEFAULT_LOCATION_EN = "Mbour, Senegal";
-const DEFAULT_LOCATION_FR = "Mbour, Sénégal";
+const DEFAULT_LOCATION_FR = "Mbour, S├⌐n├⌐gal";
 
 const LS_METHOD_KEY = "prayerTimes_method";
 const LS_SCHOOL_KEY = "prayerTimes_school";
 
 const CALC_METHODS: { value: number; label: Loc }[] = [
   { value: 3, label: { en: "Muslim World League", fr: "Ligue mondiale islamique" } },
-  { value: 2, label: { en: "ISNA (North America)", fr: "ISNA (Amérique du Nord)" } },
-  { value: 5, label: { en: "Egyptian General Authority", fr: "Autorité générale d'Égypte" } },
+  { value: 2, label: { en: "ISNA (North America)", fr: "ISNA (Am├⌐rique du Nord)" } },
+  { value: 5, label: { en: "Egyptian General Authority", fr: "Autorit├⌐ g├⌐n├⌐rale d'├ëgypte" } },
   { value: 1, label: { en: "Karachi (HanafiUO)", fr: "Karachi (HanafiUO)" } },
   { value: 4, label: { en: "Umm al-Qura (Mecca)", fr: "Umm al-Qura (La Mecque)" } },
   { value: 12, label: { en: "UOIF (France)", fr: "UOIF (France)" } },
@@ -65,7 +65,7 @@ const SCHOOLS: { value: number; label: Loc }[] = [
 // Time helpers
 // ---------------------------------------------------------------------------
 
-/** Strip anything after/including a space in an API time string ("05:19 (GMT)" → "05:19") */
+/** Strip anything after/including a space in an API time string ("05:19 (GMT)" ΓåÆ "05:19") */
 function stripTimeSuffix(raw: string): string {
   return raw.slice(0, 5);
 }
@@ -84,7 +84,7 @@ function addMinutes(hhmm: string, delta: number): string {
   return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
 }
 
-/** Format "HH:MM" (24h) → "h:mm AM/PM" */
+/** Format "HH:MM" (24h) ΓåÆ "h:mm AM/PM" */
 function to12h(hhmm: string): string {
   const [hStr, mStr] = hhmm.split(":");
   let h = parseInt(hStr, 10);
@@ -210,7 +210,7 @@ const PrayerTimes: React.FC = () => {
         setError(
           tr({
             en: "Could not load prayer times. Please check your connection and try again.",
-            fr: "Impossible de charger les heures de prière. Vérifiez votre connexion et réessayez.",
+            fr: "Impossible de charger les heures de pri├¿re. V├⌐rifiez votre connexion et r├⌐essayez.",
           })
         );
       } finally {
@@ -220,7 +220,7 @@ const PrayerTimes: React.FC = () => {
 
     fetchTimes();
     // `tr` is intentionally excluded: it gets a new identity every render, and the
-    // 1s countdown ticker re-renders this component each second — including it here
+    // 1s countdown ticker re-renders this component each second ΓÇö including it here
     // would refetch the API every second and flicker the page. Language changes
     // don't need a refetch (only the error string would differ).
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -253,7 +253,7 @@ const PrayerTimes: React.FC = () => {
         };
       }
     }
-    // All passed → Fajr tomorrow
+    // All passed ΓåÆ Fajr tomorrow
     const fajrMins = toMinutes(timings.Fajr);
     const minutesUntilMidnight = 1440 - nowMins;
     const secsUntilFajrTomorrow =
@@ -265,7 +265,7 @@ const PrayerTimes: React.FC = () => {
     };
   }, [timings, now]);
 
-  // Format countdown seconds → HH:MM:SS
+  // Format countdown seconds ΓåÆ HH:MM:SS
   const countdownStr = React.useMemo(() => {
     if (!nextPrayer) return "--:--:--";
     const s = Math.max(0, nextPrayer.secondsLeft);
@@ -382,12 +382,12 @@ const PrayerTimes: React.FC = () => {
         <header>
           <SectionLabel>{tr({ en: "Daily Worship", fr: "Culte quotidien" })}</SectionLabel>
           <h1 className="text-3xl md:text-4xl font-bold text-foreground">
-            {tr({ en: "Prayer Times", fr: "Horaires de prière" })}
+            {tr({ en: "Prayer Times", fr: "Horaires de pri├¿re" })}
           </h1>
           <p className="mt-2 text-muted-foreground text-base max-w-xl">
             {tr({
               en: "Accurate daily prayer times for your location, with countdown to the next prayer.",
-              fr: "Horaires de prière quotidiens précis pour votre position, avec compte à rebours.",
+              fr: "Horaires de pri├¿re quotidiens pr├⌐cis pour votre position, avec compte ├á rebours.",
             })}
           </p>
         </header>
@@ -423,7 +423,7 @@ const PrayerTimes: React.FC = () => {
                 htmlFor="school-select"
                 className="text-xs uppercase tracking-[0.16em] text-muted-foreground mb-1 font-semibold block"
               >
-                {tr({ en: "Madhab / School", fr: "Madhab / École" })}
+                {tr({ en: "Madhab / School", fr: "Madhab / ├ëcole" })}
               </label>
               <select
                 id="school-select"
@@ -445,7 +445,7 @@ const PrayerTimes: React.FC = () => {
                 htmlFor="method-select"
                 className="text-xs uppercase tracking-[0.16em] text-muted-foreground mb-1 font-semibold block"
               >
-                {tr({ en: "Calculation Method", fr: "Méthode de calcul" })}
+                {tr({ en: "Calculation Method", fr: "M├⌐thode de calcul" })}
               </label>
               <select
                 id="method-select"
@@ -468,7 +468,7 @@ const PrayerTimes: React.FC = () => {
           <div className="islamic-card p-10 flex flex-col items-center justify-center gap-3 text-muted-foreground">
             <Loader2 className="w-8 h-8 animate-spin text-primary" />
             <p className="text-sm">
-              {tr({ en: "Fetching prayer times…", fr: "Chargement des horaires…" })}
+              {tr({ en: "Fetching prayer timesΓÇª", fr: "Chargement des horairesΓÇª" })}
             </p>
           </div>
         )}
@@ -491,12 +491,12 @@ const PrayerTimes: React.FC = () => {
               className="btn-islamic gap-2"
             >
               <RefreshCw className="w-4 h-4" />
-              {tr({ en: "Retry", fr: "Réessayer" })}
+              {tr({ en: "Retry", fr: "R├⌐essayer" })}
             </button>
           </div>
         )}
 
-        {/* Main content — only when data is ready */}
+        {/* Main content ΓÇö only when data is ready */}
         {!loading && !error && timings && (
           <>
             {/* Next Prayer Hero */}
@@ -505,17 +505,17 @@ const PrayerTimes: React.FC = () => {
                 <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -translate-y-20 translate-x-20 pointer-events-none" />
                 <div className="text-center md:text-left">
                   <SectionLabel>
-                    {tr({ en: "Next Prayer", fr: "Prochaine prière" })}
+                    {tr({ en: "Next Prayer", fr: "Prochaine pri├¿re" })}
                   </SectionLabel>
                   <p className="text-4xl md:text-5xl font-bold text-foreground mb-1">
                     {nextPrayer
                       ? tr(prayerNameMap[nextPrayer.name])
-                      : "—"}
+                      : "ΓÇö"}
                   </p>
                   <p className="text-muted-foreground text-sm">
-                    {tr({ en: "at", fr: "à" })}{" "}
+                    {tr({ en: "at", fr: "├á" })}{" "}
                     <span className="font-semibold text-foreground">
-                      {nextPrayer ? to12h(nextPrayer.hhmm) : "—"}
+                      {nextPrayer ? to12h(nextPrayer.hhmm) : "ΓÇö"}
                     </span>
                   </p>
                 </div>
@@ -547,7 +547,7 @@ const PrayerTimes: React.FC = () => {
                   <IconChip icon={<Clock className="w-4 h-4" />} />
                   <div>
                     <SectionLabel>
-                      {tr({ en: "Obligatory Prayers", fr: "Prières obligatoires" })}
+                      {tr({ en: "Obligatory Prayers", fr: "Pri├¿res obligatoires" })}
                     </SectionLabel>
                     <h2 className="text-lg font-bold text-foreground -mt-1">
                       {tr({ en: "Fardh Prayer Times", fr: "Horaires Fardh" })}
@@ -563,7 +563,7 @@ const PrayerTimes: React.FC = () => {
                   <IconChip icon={<Moon className="w-4 h-4" />} />
                   <div>
                     <SectionLabel>
-                      {tr({ en: "Fasting & Optional Prayers", fr: "Jeûne & prières surérogatoires" })}
+                      {tr({ en: "Fasting & Optional Prayers", fr: "Je├╗ne & pri├¿res sur├⌐rogatoires" })}
                     </SectionLabel>
                     <h2 className="text-lg font-bold text-foreground -mt-1">
                       {tr({ en: "Suhur, Iftar & Nafl", fr: "Suhur, Iftar & Nafl" })}
@@ -576,10 +576,10 @@ const PrayerTimes: React.FC = () => {
                   <NaflRow
                     icon={<Moon className="w-4 h-4" />}
                     title={tr({ en: "Suhur", fr: "Suhur" })}
-                    subtitle={tr({ en: "End of eating for fasting", fr: "Fin du repas avant le jeûne" })}
+                    subtitle={tr({ en: "End of eating for fasting", fr: "Fin du repas avant le je├╗ne" })}
                     time={tr({
                       en: `Until ${to12h(timings.Fajr)}`,
-                      fr: `Jusqu'à ${to12h(timings.Fajr)}`,
+                      fr: `Jusqu'├á ${to12h(timings.Fajr)}`,
                     })}
                   />
 
@@ -587,7 +587,7 @@ const PrayerTimes: React.FC = () => {
                   <NaflRow
                     icon={<Clock className="w-4 h-4" />}
                     title={tr({ en: "Imsak", fr: "Imsak" })}
-                    subtitle={tr({ en: "Precautionary end of suhoor", fr: "Fin préventive du suhoor" })}
+                    subtitle={tr({ en: "Precautionary end of suhoor", fr: "Fin pr├⌐ventive du suhoor" })}
                     time={to12h(timings.Imsak)}
                   />
 
@@ -595,7 +595,7 @@ const PrayerTimes: React.FC = () => {
                   <NaflRow
                     icon={<Sunset className="w-4 h-4" />}
                     title={tr({ en: "Iftar", fr: "Iftar" })}
-                    subtitle={tr({ en: "Break your fast", fr: "Rompez votre jeûne" })}
+                    subtitle={tr({ en: "Break your fast", fr: "Rompez votre je├╗ne" })}
                     time={to12h(timings.Maghrib)}
                   />
 
@@ -603,8 +603,8 @@ const PrayerTimes: React.FC = () => {
                   <NaflRow
                     icon={<Moon className="w-4 h-4" />}
                     title={tr({ en: "Tahajjud", fr: "Tahajjud" })}
-                    subtitle={tr({ en: "Last third of night — most blessed", fr: "Dernier tiers de la nuit — le plus béni" })}
-                    time={`${to12h(timings.Lastthird)} – ${to12h(timings.Fajr)}`}
+                    subtitle={tr({ en: "Last third of night ΓÇö most blessed", fr: "Dernier tiers de la nuit ΓÇö le plus b├⌐ni" })}
+                    time={`${to12h(timings.Lastthird)} ΓÇô ${to12h(timings.Fajr)}`}
                   />
 
                   {/* Ishraq */}
@@ -612,7 +612,7 @@ const PrayerTimes: React.FC = () => {
                     <NaflRow
                       icon={<Sunrise className="w-4 h-4" />}
                       title={tr({ en: "Ishraq", fr: "Ishraq" })}
-                      subtitle={tr({ en: "15–20 min after sunrise", fr: "15–20 min après le lever du soleil" })}
+                      subtitle={tr({ en: "15ΓÇô20 min after sunrise", fr: "15ΓÇô20 min apr├¿s le lever du soleil" })}
                       time={to12h(naflTimings.ishraq)}
                     />
                   )}
@@ -622,7 +622,7 @@ const PrayerTimes: React.FC = () => {
                     <NaflRow
                       icon={<Sunrise className="w-4 h-4" />}
                       title={tr({ en: "Chasht (Duha)", fr: "Chasht (Duha)" })}
-                      subtitle={tr({ en: "Mid-morning prayer", fr: "Prière du milieu de matinée" })}
+                      subtitle={tr({ en: "Mid-morning prayer", fr: "Pri├¿re du milieu de matin├⌐e" })}
                       time={to12h(naflTimings.chasht)}
                     />
                   )}
@@ -632,8 +632,8 @@ const PrayerTimes: React.FC = () => {
                     <NaflRow
                       icon={<Clock className="w-4 h-4" />}
                       title={tr({ en: "Zawal (Forbidden)", fr: "Zawal (Interdit)" })}
-                      subtitle={tr({ en: "Avoid prayer during this time", fr: "Évitez de prier pendant cette période" })}
-                      time={`${to12h(naflTimings.zawalStart)} – ${to12h(timings.Dhuhr)}`}
+                      subtitle={tr({ en: "Avoid prayer during this time", fr: "├ëvitez de prier pendant cette p├⌐riode" })}
+                      time={`${to12h(naflTimings.zawalStart)} ΓÇô ${to12h(timings.Dhuhr)}`}
                       highlight="destructive"
                     />
                   )}
@@ -653,7 +653,7 @@ const PrayerTimes: React.FC = () => {
             <p className="text-center text-xs text-muted-foreground">
               {tr({ en: "Times for", fr: "Horaires pour" })}{" "}
               <span className="font-semibold text-foreground">{effectiveLabel}</span>
-              {" · "}
+              {" ┬╖ "}
               {new Date().toLocaleDateString(undefined, {
                 weekday: "long",
                 year: "numeric",
@@ -721,3 +721,4 @@ const NaflRow: React.FC<NaflRowProps> = ({ icon, title, subtitle, time, highligh
 };
 
 export default PrayerTimes;
+

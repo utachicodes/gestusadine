@@ -11,10 +11,7 @@ import {
   LogOut,
   BookOpen,
   Users,
-  FileText,
-  CircleDot,
   Globe,
-  TestTube,
   GraduationCap,
   PanelLeftClose,
   PanelLeftOpen,
@@ -69,9 +66,6 @@ const SECTIONS: NavSection[] = [
     label: { en: 'Administration', fr: 'Administration' },
     items: [
       { icon: Users, label: { en: 'Admin', fr: 'Admin' }, path: '/admin', permission: 'admin.access' },
-      { icon: CircleDot, label: { en: 'Circle', fr: 'Cercle' }, path: '/circle', permission: 'content.manage' },
-      { icon: FileText, label: { en: 'Documents', fr: 'Documents' }, path: '/documents', permission: 'documents.manage' },
-      { icon: TestTube, label: { en: 'RAG Test', fr: 'Test RAG' }, path: '/admin/rag-test', permission: 'rag.test' },
     ],
   },
 ];

@@ -32,7 +32,6 @@ export const AdminDashboard = () => {
     { label: { en: "Manage Videos", fr: "Gérer les vidéos" }, icon: Video, onClick: () => navigate("/admin/videos") },
     { label: { en: "Manage Library", fr: "Gérer la bibliothèque" }, icon: BookOpen, onClick: () => navigate("/admin/library") },
     { label: { en: "Daily Content", fr: "Contenu quotidien" }, icon: FileText, onClick: () => navigate("/admin/daily") },
-    { label: { en: "Test RAG System", fr: "Tester le système RAG" }, icon: Activity, onClick: () => navigate("/admin/rag-test") },
     { label: { en: "Manage Quizzes", fr: "Gérer les quiz" }, icon: FileText, onClick: () => navigate("/admin/quizzes") },
     { label: { en: "Manage Podcasts", fr: "Gérer les podcasts" }, icon: Headphones, onClick: () => navigate("/admin/podcasts") },
   ];

@@ -15,14 +15,10 @@ import Help from "./pages/core/Help";
 import NotFound from "./pages/core/NotFound";
 import Dashboard from "./pages/user/Dashboard";
 import Profile from "./pages/user/Profile";
-import Fatwa from "./pages/islamic/Fatwa";
 import Fiqh from "./pages/islamic/Fiqh";
 import Language from "./pages/core/Language";
-import Circle from "./pages/community/Circle";
-import { CircleKnowledge } from "./pages/admin/CircleKnowledge";
 import AdminConfig from "./pages/admin/AdminConfig";
 import { AccessGuard } from "./components/auth/AccessGuard";
-import DocumentUpload from "./pages/user/DocumentUpload";
 import Login from "./pages/auth/Login";
 import AppShell from "./components/layout/AppShell";
 import { ChatInterface } from "@/components/chat/ChatInterface";
@@ -33,7 +29,6 @@ import ManageVideos from "./pages/admin/ManageVideos";
 import ManageDaily from "./pages/admin/ManageDaily";
 import Library from "./pages/knowledge/Library";
 import ManageLibrary from "./pages/admin/ManageLibrary";
-import RAGTest from "./pages/admin/RAGTest";
 import ManageQuizzes from "./pages/admin/ManageQuizzes";
 import ManagePodcasts from "./pages/admin/ManagePodcasts";
 
@@ -120,14 +115,6 @@ const App = () => {
                           }
                         />
                         <Route
-                          path="/fatwa"
-                          element={
-                            <AppShell>
-                              <Fatwa />
-                            </AppShell>
-                          }
-                        />
-                        <Route
                           path="/fiqh"
                           element={
                             <AppShell>
@@ -186,16 +173,6 @@ const App = () => {
                           }
                         />
                         <Route
-                          path="/prayer-times"
-                          element={
-                            <ProtectedRoute>
-                              <DashboardLayout>
-                                <PrayerTimes />
-                              </DashboardLayout>
-                            </ProtectedRoute>
-                          }
-                        />
-                        <Route
                           path="/calendar"
                           element={
                             <ProtectedRoute>
@@ -216,11 +193,11 @@ const App = () => {
                           }
                         />
                         <Route
-                          path="/circle"
+                          path="/prayer-times"
                           element={
-                            <ProtectedRoute adminOnly>
+                            <ProtectedRoute>
                               <DashboardLayout>
-                                <CircleKnowledge />
+                                <PrayerTimes />
                               </DashboardLayout>
                             </ProtectedRoute>
                           }
@@ -290,16 +267,6 @@ const App = () => {
                             </ProtectedRoute>
                           }
                         />
-                        <Route
-                          path="/documents"
-                          element={
-                            <ProtectedRoute adminOnly>
-                              <DashboardLayout>
-                                <DocumentUpload />
-                              </DashboardLayout>
-                            </ProtectedRoute>
-                          }
-                        />
                         {/* Media merged into Library — keep old links working. */}
                         <Route path="/media" element={<Navigate to="/library" replace />} />
                         <Route
@@ -330,16 +297,6 @@ const App = () => {
                             <ProtectedRoute adminOnly>
                               <DashboardLayout>
                                 <ManageLibrary />
-                              </DashboardLayout>
-                            </ProtectedRoute>
-                          }
-                        />
-                        <Route
-                          path="/admin/rag-test"
-                          element={
-                            <ProtectedRoute adminOnly>
-                              <DashboardLayout>
-                                <RAGTest />
                               </DashboardLayout>
                             </ProtectedRoute>
                           }

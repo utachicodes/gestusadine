@@ -35,14 +35,6 @@ const CATEGORY_LABEL: Record<TemplateCategory, Loc> = {
 
 const templates: Template[] = [
     {
-        id: 'prayer-times',
-        name: { en: 'Prayer Time Guidance', fr: 'Guidance sur les heures de prière' },
-        description: { en: 'Learn about the importance and timing of the five daily prayers', fr: 'Découvrez l’importance et les horaires des cinq prières quotidiennes' },
-        category: 'prayer',
-        tier: 'free',
-        prompt: 'Can you explain the five daily prayers, their times, and importance in Islam?',
-    },
-    {
         id: 'ramadan-guide',
         name: { en: 'Ramadan Fasting Guide', fr: 'Guide du jeûne du Ramadan' },
         description: { en: 'Complete guidance on fasting during Ramadan', fr: 'Guide complet sur le jeûne pendant le Ramadan' },

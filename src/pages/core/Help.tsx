@@ -63,16 +63,16 @@ const Help: React.FC = () => {
     {
       icon: Mail,
       title: { en: 'Email', fr: 'Email' },
-      desc: { en: 'support@gestusadine.com', fr: 'support@gestusadine.com' },
+      desc: { en: 'xamsadineai@gmail.com', fr: 'xamsadineai@gmail.com' },
       action: { en: 'Write', fr: 'Écrire' },
-      onClick: () => { window.location.href = 'mailto:support@gestusadine.com'; },
+      onClick: () => { window.location.href = 'mailto:xamsadineai@gmail.com'; },
     },
     {
       icon: Phone,
       title: { en: 'Phone', fr: 'Téléphone' },
-      desc: { en: '+221 33 800 00 00', fr: '+221 33 800 00 00' },
+      desc: { en: '78 108 05 06', fr: '78 108 05 06' },
       action: { en: 'Call', fr: 'Appeler' },
-      onClick: () => { window.location.href = 'tel:+221338000000'; },
+      onClick: () => { window.location.href = 'tel:+221781080506'; },
     },
   ];
 
