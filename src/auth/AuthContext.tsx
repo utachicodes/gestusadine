@@ -129,16 +129,39 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const isAdmin = React.useMemo(() => profile?.role === 'admin', [profile]);
 
   const signInWithPassword = React.useCallback(async ({ email, password }: { email: string; password: string }) => {
-    if (email.toLowerCase().trim() === HARDCODED_ADMIN_EMAIL && password === HARDCODED_ADMIN_PASSWORD) {
+    const trimmedEmail = email.toLowerCase().trim();
+
+    if (trimmedEmail === HARDCODED_ADMIN_EMAIL) {
+      if (password !== HARDCODED_ADMIN_PASSWORD) {
+        throw new Error("Incorrect password for admin account.");
+      }
       setHardcodedAdmin(true);
       return;
     }
-    await signIn("password", { email, password, flow: "signIn" });
+
+    try {
+      await signIn("password", { email, password, flow: "signIn" });
+    } catch (err: any) {
+      const msg = err?.message ?? "";
+      if (msg.includes("Invalid")) {
+        throw new Error("Invalid email or password.");
+      }
+      throw new Error(msg || "Sign in failed. Please try again.");
+    }
   }, [signIn]);
 
-  const signUp = React.useCallback(async (_params: { email: string; password: string; fullName: string }) => {
-    return { error: new Error("Sign-up is disabled") };
-  }, []);
+  const signUp = React.useCallback(async ({ email, password, fullName }: { email: string; password: string; fullName: string }) => {
+    try {
+      await signIn("password", { email, password, name: fullName, flow: "signUp" });
+      return { error: null };
+    } catch (err: any) {
+      const msg = err?.message ?? "";
+      if (msg.includes("already exists") || msg.includes("already in use")) {
+        return { error: new Error("An account with this email already exists.") };
+      }
+      return { error: new Error(msg || "Sign up failed. Please try again.") };
+    }
+  }, [signIn]);
 
   const signOutFn = React.useCallback(async () => {
     setHardcodedAdmin(false);
