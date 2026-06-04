@@ -13,7 +13,7 @@ http.route({
   method: "POST",
   handler: httpAction(async (ctx, request) => {
     const signature = request.headers.get("X-Signature");
-    const payload = await request.json();
+    const payload: any = await request.json();
 
     const secret = process.env.NABOOPAY_WEBHOOK_SECRET;
     if (secret) {
@@ -39,17 +39,14 @@ http.route({
       }
     }
 
-    const eventType = payload.event ?? "payment_status";
     const orderId = payload.order_id;
     const status = payload.transaction_status;
-    const products = payload.products ?? [];
-    const tier = products[0]?.name?.includes("Student") ? "student" : null;
 
-    if (eventType === "payment_status" && status === "completed" && orderId && tier) {
+    if (status === "completed" && orderId) {
       await ctx.runMutation(internal.naboopay.confirmPayment, {
         orderId,
         transactionStatus: status,
-        tier,
+        tier: "student",
         customerEmail: payload.customer?.email,
       });
     }

@@ -89,6 +89,8 @@ const PricingComparison = () => {
         tier: 'student',
         successUrl: window.location.origin + '/dashboard',
         errorUrl: window.location.origin + '/pricing',
+        firstName: profile?.full_name?.split(' ')[0] ?? user?.displayName?.split(' ')[0] ?? '',
+        lastName: profile?.full_name?.split(' ').slice(1).join(' ') ?? '',
       });
       if (result.checkoutUrl) {
         window.location.href = result.checkoutUrl;

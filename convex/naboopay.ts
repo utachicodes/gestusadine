@@ -14,6 +14,9 @@ export const createCheckoutSession = action({
     tier: v.union(v.literal("student"), v.literal("pro")),
     successUrl: v.string(),
     errorUrl: v.string(),
+    firstName: v.optional(v.string()),
+    lastName: v.optional(v.string()),
+    phone: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -30,22 +33,27 @@ export const createCheckoutSession = action({
       return { requiresContact: true, message: "Contact us for Pro pricing" };
     }
 
-    const body = {
-      method_of_payment: ["wave", "orange_money", "bank", "visa"],
+    const body: Record<string, unknown> = {
+      method_of_payment: ["wave", "orange_money"],
       products: [
         {
           name: tierInfo.label,
-          category: "subscription",
           price: tierInfo.amount,
           quantity: 1,
+          description: `${args.tier} subscription`,
         },
       ],
+      customer: {
+        first_name: args.firstName ?? identity.name ?? "Customer",
+        last_name: args.lastName ?? "",
+        phone: args.phone ?? "",
+        email: identity.email ?? "",
+      },
       success_url: args.successUrl,
       error_url: args.errorUrl,
-      metadata: {
-        userId,
-        tier: args.tier,
-      },
+      fees_customer_side: false,
+      is_escrow: false,
+      is_merchant: false,
     };
 
     const res = await fetch(`${NABOOPAY_BASE}/api/v2/transactions`, {
