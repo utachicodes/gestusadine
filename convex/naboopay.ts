@@ -33,22 +33,24 @@ export const createCheckoutSession = action({
       return { requiresContact: true, message: "Contact us for Pro pricing" };
     }
 
-    const body: Record<string, unknown> = {
-      method_of_payment: ["wave", "orange_money"],
-      products: [
-        {
-          name: tierInfo.label,
-          price: tierInfo.amount,
-          quantity: 1,
-          description: `${args.tier} subscription`,
-        },
-      ],
-      customer: {
-        first_name: args.firstName ?? identity.name ?? "Customer",
-        last_name: args.lastName ?? "",
-        phone: args.phone ?? "",
-        email: identity.email ?? "",
-      },
+    const customer: Record<string, string> = {
+        first_name: args.firstName || identity.name || "Customer",
+        last_name: args.lastName || "",
+        email: identity.email || "",
+      };
+      if (args.phone) customer.phone = args.phone;
+
+      const body: Record<string, unknown> = {
+        method_of_payment: ["wave", "orange_money"],
+        products: [
+          {
+            name: tierInfo.label,
+            price: tierInfo.amount,
+            quantity: 1,
+            description: `${args.tier} subscription`,
+          },
+        ],
+        customer,
       success_url: args.successUrl,
       error_url: args.errorUrl,
       fees_customer_side: false,

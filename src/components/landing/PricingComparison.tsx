@@ -85,12 +85,15 @@ const PricingComparison = () => {
     }
     setLoading(true);
     try {
+      const fullName = profile?.full_name || user?.displayName || '';
+      const firstName = fullName.split(' ')[0];
+      const lastName = fullName.split(' ').slice(1).join(' ');
       const result = await createCheckout({
         tier: 'student',
         successUrl: window.location.origin + '/dashboard',
         errorUrl: window.location.origin + '/pricing',
-        firstName: profile?.full_name?.split(' ')[0] ?? user?.displayName?.split(' ')[0] ?? '',
-        lastName: profile?.full_name?.split(' ').slice(1).join(' ') ?? '',
+        ...(firstName && { firstName }),
+        ...(lastName && { lastName }),
       });
       if (result.checkoutUrl) {
         window.location.href = result.checkoutUrl;
