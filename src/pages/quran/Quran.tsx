@@ -139,8 +139,7 @@ export default function Quran() {
       <section className="container py-8 md:py-10 space-y-6">
         {/* Header */}
         <header>
-          <p className="inline-flex items-center text-xs uppercase tracking-[0.22em] text-muted-foreground mb-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-primary mr-2" />
+          <p className="text-xs uppercase tracking-[0.22em] text-muted-foreground mb-2">
             {tr({ en: 'Recitation & Study', fr: 'Récitation et étude' })}
           </p>
           <h1 className="text-3xl md:text-4xl font-bold text-foreground">{tr(header)}</h1>
