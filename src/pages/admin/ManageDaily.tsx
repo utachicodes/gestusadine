@@ -119,8 +119,7 @@ export default function ManageDaily() {
       <section className="container py-10 md:py-16 space-y-10">
         <header className="flex justify-between items-center">
           <div>
-            <p className="inline-flex items-center text-xs uppercase tracking-[0.22em] text-islamic-dark/60 mb-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-islamic-gold mr-2" />Admin
+            <p className="text-xs uppercase tracking-[0.22em] text-islamic-dark/60 mb-2">Admin
             </p>
             <h1 className="text-3xl md:text-4xl font-bold text-islamic-dark">
               {tr({ en: "Manage", fr: "Gérer le" })} <span className="text-gradient">{tr({ en: "Daily Content", fr: "contenu quotidien" })}</span>
