@@ -274,8 +274,7 @@ const ZakatCalculator: React.FC = () => {
       <section className="container py-8 md:py-10 space-y-8">
         {/* Page header */}
         <header>
-          <p className="inline-flex items-center text-xs uppercase tracking-[0.22em] text-muted-foreground mb-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-primary mr-2" />
+          <p className="text-xs uppercase tracking-[0.22em] text-muted-foreground mb-2">
             {tr({ en: "Tools", fr: "Outils" })}
           </p>
           <h1 className="text-3xl md:text-4xl font-bold text-foreground">
@@ -597,12 +596,7 @@ const ZakatCalculator: React.FC = () => {
                 خُذْ مِنْ أَمْوَالِهِمْ صَدَقَةً تُطَهِّرُهُمْ وَتُزَكِّيهِم بِهَا
               </p>
 
-              {/* Divider line */}
-              <div className="flex items-center gap-3">
-                <div className="flex-1 h-px bg-border" />
-                <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-                <div className="flex-1 h-px bg-border" />
-              </div>
+              <div className="flex-1 h-px bg-border" />
 
               {/* Translation */}
               <p className="text-sm text-muted-foreground italic leading-relaxed">
