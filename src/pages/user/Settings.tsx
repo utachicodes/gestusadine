@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
@@ -18,6 +19,7 @@ const DEV_TIERS: { value: SubscriptionTier; label: Loc }[] = [
 ];
 
 const Settings: React.FC = () => {
+  const navigate = useNavigate();
   const { language, setLanguage } = useLanguage();
   const { tier: userTier, canCustomizeTheme } = useSubscription();
   const { setSubscriptionTier } = useAuth();
@@ -59,7 +61,7 @@ const Settings: React.FC = () => {
               ) : (
                 <div className="p-4 bg-gradient-to-r from-islamic-gold/10 to-islamic-green/10 rounded-lg border border-islamic-gold/20">
                   <p className="text-sm text-muted-foreground mb-2">{tr({ en: 'Custom themes are available on a paid plan.', fr: 'Les couleurs personnalisées sont disponibles avec une offre payante.' })}</p>
-                  <Button size="sm" className="btn-islamic" onClick={() => window.location.href = '/pricing'}>{tr({ en: 'Upgrade to unlock', fr: 'Débloquer' })}</Button>
+                  <Button size="sm" className="btn-islamic" onClick={() => navigate('/pricing')}>{tr({ en: 'Upgrade to unlock', fr: 'Débloquer' })}</Button>
                 </div>
               )}
             </div>
@@ -124,7 +126,7 @@ const Settings: React.FC = () => {
                   ? tr({ en: 'Upgrade to unlock premium features!', fr: 'Passez à une offre supérieure pour débloquer plus !' })
                   : tr({ en: 'Thank you for being a premium member!', fr: 'Merci d’être membre premium !' })}
               </p>
-              <Button className="w-full btn-islamic" onClick={() => window.location.href = '/pricing'}>
+              <Button className="w-full btn-islamic" onClick={() => navigate('/pricing')}>
                 {userTier === 'free'
                   ? tr({ en: 'Upgrade Plan', fr: 'Améliorer l’offre' })
                   : tr({ en: 'Manage Subscription', fr: 'Gérer l’abonnement' })}
