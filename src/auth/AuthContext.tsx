@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useConvexAuth, useAuthActions } from "@convex-dev/auth/react";
-import { useQuery, useMutation } from "convex/react";
+import { useQuery, useMutation, useConvex } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import type { Doc } from "../../convex/_generated/dataModel";
 import { UserRole } from "./rbac";
@@ -61,6 +61,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { signIn, signOut: convexSignOut } = useAuthActions();
   const currentUser = useQuery(api.users.currentUser);
   const updateTier = useMutation(api.users.updateSubscriptionTier);
+  const convex = useConvex();
 
   const [hardcodedAdmin, setHardcodedAdmin] = React.useState<boolean>(() => {
     try {
@@ -139,19 +140,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
+    // Pre-check if email exists to avoid triggering a server exception from the auth provider
+    const exists = await convex.query(api.users.checkEmailExists, { email: trimmedEmail });
+    if (!exists) {
+      throw new Error("Invalid email or password.");
+    }
+
     try {
       await signIn("password", { email, password, flow: "signIn" });
     } catch (err: any) {
       const msg = err?.message ?? "";
-      if (msg.includes("Invalid")) {
+      if (msg.includes("Invalid") || msg.includes("incorrect")) {
         throw new Error("Invalid email or password.");
       }
       throw new Error(msg || "Sign in failed. Please try again.");
     }
-  }, [signIn]);
+  }, [signIn, convex]);
 
   const signUp = React.useCallback(async ({ email, password, fullName }: { email: string; password: string; fullName: string }) => {
     try {
+      const trimmedEmail = email.toLowerCase().trim();
+      // Pre-check if email exists to avoid triggering a server exception from the auth provider
+      const exists = await convex.query(api.users.checkEmailExists, { email: trimmedEmail });
+      if (exists) {
+        return { error: new Error("An account with this email already exists.") };
+      }
       await signIn("password", { email, password, name: fullName, flow: "signUp" });
       return { error: null };
     } catch (err: any) {
@@ -161,7 +174,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
       return { error: new Error(msg || "Sign up failed. Please try again.") };
     }
-  }, [signIn]);
+  }, [signIn, convex]);
 
   const signOutFn = React.useCallback(async () => {
     setHardcodedAdmin(false);

@@ -54,3 +54,16 @@ export const setRole = mutation({
     await ctx.db.patch(args.userId, { role: args.role });
   },
 });
+
+export const checkEmailExists = query({
+  args: { email: v.string() },
+  handler: async (ctx, args) => {
+    const email = args.email.toLowerCase().trim();
+    if (!email) return false;
+    const user = await ctx.db
+      .query("users")
+      .withIndex("email", (q) => q.eq("email", email))
+      .first();
+    return user !== null;
+  },
+});

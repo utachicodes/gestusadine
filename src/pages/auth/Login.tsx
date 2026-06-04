@@ -52,7 +52,7 @@ const Login = () => {
         ? 'Le mot de passe doit contenir un chiffre.'
         : 'Password must contain a number.';
     }
-    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(pw)) {
+    if (!/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(pw)) {
       return language === 'fr'
         ? 'Le mot de passe doit contenir un caractère spécial.'
         : 'Password must contain a special character.';

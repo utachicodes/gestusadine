@@ -4,6 +4,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { RankDisplay } from "@/components/gamification/RankDisplay";
 import { useProfileStats } from "@/data/profile";
+import { useConvex } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 
 type LanguageCode = "fr" | "en";
 type Difficulty = "easy" | "medium" | "advanced";
@@ -79,6 +81,7 @@ const MOCK_DAILY_BY_LANG: Record<LanguageCode, DailyData> = {
 
 const Dashboard: React.FC = () => {
   const { language, t } = useLanguage();
+  const convex = useConvex();
   const stats = useProfileStats();
   const [difficulty, setDifficulty] = React.useState<Difficulty>("easy");
   const [selectedOption, setSelectedOption] = React.useState<string | null>(
@@ -108,24 +111,35 @@ const Dashboard: React.FC = () => {
       setLoadingDaily(true);
       setError(null);
       try {
-        const apiUrl = import.meta.env.VITE_API_URL || '';
-        const response = await fetch(`${apiUrl}/api/daily`);
-        if (!response.ok) throw new Error('Failed to fetch daily content');
-        const data = await response.json();
+        const data = await convex.query(api.daily.getDaily);
+
+        // Fetch Hijri date client-side via AlAdhan API
+        let hijriDate = "Hijri date unavailable";
+        try {
+          const now = new Date(data.gregorianDate);
+          const day = String(now.getDate()).padStart(2, "0");
+          const month = String(now.getMonth() + 1).padStart(2, "0");
+          const year = now.getFullYear();
+
+          const url = `https://api.aladhan.com/v1/gToH/${day}-${month}-${year}`;
+          const res = await fetch(url);
+          if (res.ok) {
+            const payload = (await res.json()) as any;
+            const hijri = payload?.data?.hijri;
+            if (hijri) {
+              hijriDate = `${hijri.day} ${hijri.month?.en} ${hijri.year}`;
+            }
+          }
+        } catch (err) {
+          console.error("Error fetching Hijri date:", err);
+        }
 
         // Map API response to DailyData format
         const mappedData: DailyData = {
           gregorianDate: data.gregorianDate,
-          hijriDate: data.hijriDate,
-          ayah: {
-            reference: data.ayah.reference,
-            arabic: data.ayah.arabic,
-            translation: data.ayah.translation,
-          },
-          dua: {
-            arabic: data.dua.arabic,
-            translation: data.dua.translation,
-          },
+          hijriDate,
+          ayah: data.ayah,
+          dua: data.dua,
           fact: data.fact,
         };
         setDaily(mappedData);
@@ -140,7 +154,7 @@ const Dashboard: React.FC = () => {
     };
 
     fetchDaily();
-  }, [language]);
+  }, [language, convex]);
 
   const [showReminder, setShowReminder] = React.useState(false);
   const [showBetaBanner, setShowBetaBanner] = React.useState(() => {
