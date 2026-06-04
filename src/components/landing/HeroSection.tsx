@@ -34,17 +34,15 @@ const HeroSection = () => {
             <span className="h-px w-8 bg-stone-300/80" />
           </motion.div>
 
-          {/* Arabic mark - Styled calligraphic seal */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.9, ease }}
-            className="inline-flex items-center justify-center w-16 h-16 rounded-full border border-emerald-800/10 bg-emerald-800/5 shadow-[0_0_20px_rgba(6,95,70,0.03)] mb-8 select-none"
+          {/* Arabic mark - Calligraphic text only */}
+          <motion.p
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease }}
+            className="font-arabic text-4xl text-emerald-800/60 mb-8 select-none"
           >
-            <p className="font-arabic text-3xl text-emerald-800/90 leading-none">
-              اقْرَأْ
-            </p>
-          </motion.div>
+            اقْرَأْ
+          </motion.p>
 
           {/* Headline */}
           <motion.h1
