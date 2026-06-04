@@ -263,8 +263,7 @@ export default function ManageLibrary() {
       <section className="container py-10 md:py-16 space-y-10">
         <header className="flex justify-between items-start md:items-center flex-col md:flex-row gap-4">
           <div>
-            <p className="inline-flex items-center text-xs uppercase tracking-[0.22em] text-muted-foreground mb-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-primary mr-2" />Admin
+            <p className="text-xs uppercase tracking-[0.22em] text-muted-foreground mb-2">Admin
             </p>
             <h1 className="text-3xl md:text-4xl font-bold text-foreground">
               {tr({ en: "Manage", fr: "Gérer la" })} <span className="text-primary">{tr({ en: "Library", fr: "bibliothèque" })}</span>
