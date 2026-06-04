@@ -81,8 +81,7 @@ const Help: React.FC = () => {
       <section className="container py-8 md:py-10 space-y-8 max-w-5xl">
         {/* Header */}
         <header>
-          <p className="inline-flex items-center text-xs uppercase tracking-[0.22em] text-muted-foreground mb-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-primary mr-2" />
+          <p className="text-xs uppercase tracking-[0.22em] text-muted-foreground mb-2">
             {tr({ en: 'Help', fr: 'Aide' })}
           </p>
           <h1 className="text-3xl md:text-4xl font-bold text-foreground">
@@ -149,8 +148,7 @@ const Help: React.FC = () => {
 
         {/* FAQ */}
         <div>
-          <p className="inline-flex items-center text-xs uppercase tracking-[0.22em] text-muted-foreground mb-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-primary mr-2" />
+          <p className="text-xs uppercase tracking-[0.22em] text-muted-foreground mb-2">
             {tr({ en: 'FAQ', fr: 'FAQ' })}
           </p>
           <h2 className="text-2xl md:text-3xl font-bold text-foreground">
