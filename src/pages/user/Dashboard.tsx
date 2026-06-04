@@ -203,8 +203,8 @@ const Dashboard: React.FC = () => {
             { icon: Flame, label: language === 'fr' ? "Jours d'affilée" : 'Day streak', value: stats.streak, sub: language === 'fr' ? 'en cours' : 'in a row' },
             { icon: Target, label: 'Quiz', value: stats.quizzesTaken, sub: `${stats.perfectScores} ${language === 'fr' ? 'parfaits' : 'perfect'}` },
           ].map(({ icon: Icon, label, value, sub }) => (
-            <div key={label} className="islamic-card p-3 sm:p-4 flex items-center justify-between gap-2 sm:gap-3">
-              <div className="min-w-0 overflow-hidden">
+            <div key={label} className="islamic-card p-3 sm:p-4 flex flex-row items-center justify-between gap-2 sm:gap-3">
+              <div className="flex-1 min-w-0 overflow-hidden">
                 <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground mb-1 truncate">{label}</p>
                 <p className="text-xl sm:text-2xl font-bold text-foreground leading-none truncate">{value}</p>
                 <p className="text-xs text-muted-foreground mt-1 truncate">{sub}</p>
