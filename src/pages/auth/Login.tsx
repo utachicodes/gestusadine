@@ -11,6 +11,8 @@ const labelClass = 'block text-sm font-medium text-stone-600 mb-1.5';
 
 type Mode = 'signin' | 'signup';
 
+const MIN_PASSWORD = 8;
+
 const Login = () => {
   const [mode, setMode] = useState<Mode>('signin');
   const [email, setEmail] = useState('');
@@ -18,8 +20,9 @@ const Login = () => {
   const [fullName, setFullName] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [pendingRedirect, setPendingRedirect] = useState<string | null>(null);
 
-  const { signInWithPassword, signUp } = useAuth();
+  const { signInWithPassword, signUp, user, loading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const { language } = useLanguage();
@@ -27,9 +30,41 @@ const Login = () => {
   const upgradeTier = searchParams.get('upgrade');
   const from = (location.state as { from?: { pathname: string } } | null)?.from?.pathname ?? '/dashboard';
 
+  React.useEffect(() => {
+    if (pendingRedirect && !loading && user) {
+      navigate(pendingRedirect, { replace: true });
+    }
+  }, [pendingRedirect, loading, user, navigate]);
+
+  const validatePassword = (pw: string): string | null => {
+    if (pw.length < MIN_PASSWORD) {
+      return language === 'fr'
+        ? `Le mot de passe doit contenir au moins ${MIN_PASSWORD} caractères.`
+        : `Password must be at least ${MIN_PASSWORD} characters.`;
+    }
+    if (!/[A-Z]/.test(pw)) {
+      return language === 'fr'
+        ? 'Le mot de passe doit contenir une majuscule.'
+        : 'Password must contain an uppercase letter.';
+    }
+    if (!/[0-9]/.test(pw)) {
+      return language === 'fr'
+        ? 'Le mot de passe doit contenir un chiffre.'
+        : 'Password must contain a number.';
+    }
+    return null;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    if (mode === 'signup') {
+      const pwError = validatePassword(password);
+      if (pwError) {
+        setError(pwError);
+        return;
+      }
+    }
     setIsLoading(true);
     try {
       if (mode === 'signin') {
@@ -42,7 +77,7 @@ const Login = () => {
           return;
         }
       }
-      navigate(upgradeTier ? `/dashboard?upgrade=${upgradeTier}` : from, { replace: true });
+      setPendingRedirect(upgradeTier ? `/dashboard?upgrade=${upgradeTier}` : from);
     } catch (err: any) {
       setError(err?.message || 'Something went wrong.');
     } finally {
@@ -158,6 +193,13 @@ const Login = () => {
               className={inputClass}
               required
             />
+            {mode === 'signup' && (
+              <p className="text-[11px] text-stone-400 mt-1">
+                {language === 'fr'
+                  ? 'Min. 8 car., 1 majuscule, 1 chiffre'
+                  : 'Min. 8 chars, 1 uppercase, 1 number'}
+              </p>
+            )}
           </div>
 
           {error && (
