@@ -70,13 +70,17 @@ const tiers: Tier[] = [
 const PricingComparison = () => {
   const navigate = useNavigate();
   const tr = useTr();
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const createCheckout = useAction(api.naboopay.createCheckoutSession);
   const [loading, setLoading] = useState(false);
 
   const handleSubscribe = async () => {
     if (!user) {
       navigate('/login');
+      return;
+    }
+    if (profile?.subscription_tier === 'institution') {
+      navigate('/dashboard');
       return;
     }
     setLoading(true);

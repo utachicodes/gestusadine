@@ -1,6 +1,6 @@
 import { action, mutation } from "./_generated/server";
+import { internal } from "./_generated/api";
 import { v } from "convex/values";
-import { getCurrentUserOrThrow } from "./authz";
 
 const NABOOPAY_BASE = "https://api.naboopay.com";
 
@@ -16,7 +16,10 @@ export const createCheckoutSession = action({
     errorUrl: v.string(),
   },
   handler: async (ctx, args) => {
-    const user = await getCurrentUserOrThrow(ctx as any);
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Authentication required. Please sign in.");
+    const userId = identity.subject;
+
     const apiKey = process.env.NABOOPAY_API_KEY;
     if (!apiKey) throw new Error("NABOOPAY_API_KEY not configured");
 
@@ -40,7 +43,7 @@ export const createCheckoutSession = action({
       success_url: args.successUrl,
       error_url: args.errorUrl,
       metadata: {
-        userId: user._id,
+        userId,
         tier: args.tier,
       },
     };
@@ -62,7 +65,7 @@ export const createCheckoutSession = action({
     const orderId = data.order_id ?? data.id;
     if (orderId) {
       await ctx.runMutation(internal.naboopay.recordPaymentInit, {
-        userId: user._id,
+        userId: userId as any,
         orderId: String(orderId),
         tier: args.tier,
         amount: tierInfo.amount,
