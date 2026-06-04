@@ -52,6 +52,11 @@ const Login = () => {
         ? 'Le mot de passe doit contenir un chiffre.'
         : 'Password must contain a number.';
     }
+    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(pw)) {
+      return language === 'fr'
+        ? 'Le mot de passe doit contenir un caractère spécial.'
+        : 'Password must contain a special character.';
+    }
     return null;
   };
 
@@ -194,11 +199,12 @@ const Login = () => {
               required
             />
             {mode === 'signup' && (
-              <p className="text-[11px] text-stone-400 mt-1">
-                {language === 'fr'
-                  ? 'Min. 8 car., 1 majuscule, 1 chiffre'
-                  : 'Min. 8 chars, 1 uppercase, 1 number'}
-              </p>
+              <ul className="text-[11px] text-stone-400 mt-1 space-y-0.5 list-disc list-inside">
+                <li>{language === 'fr' ? 'Min. 8 caractères' : 'Min. 8 characters'}</li>
+                <li>{language === 'fr' ? '1 majuscule' : '1 uppercase letter'}</li>
+                <li>{language === 'fr' ? '1 chiffre' : '1 number'}</li>
+                <li>{language === 'fr' ? '1 caractère spécial' : '1 special character'}</li>
+              </ul>
             )}
           </div>
 
