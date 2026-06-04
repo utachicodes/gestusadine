@@ -58,6 +58,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const currentUser = useQuery(api.users.currentUser);
   const updateTier = useMutation(api.users.updateSubscriptionTier);
 
+  // Detect stale JWT tokens (e.g., after key rotation) and auto-sign-out
+  // to break the infinite WebSocket reconnect loop
+  const wasAuthenticatedRef = React.useRef(false);
+
+  React.useEffect(() => {
+    if (isLoading) return;
+
+    if (wasAuthenticatedRef.current && !isAuthenticated) {
+      convexSignOut();
+    }
+
+    wasAuthenticatedRef.current = isAuthenticated;
+  }, [isLoading, isAuthenticated, convexSignOut]);
+
   const profile = React.useMemo(() => toUserProfile(currentUser ?? null), [currentUser]);
 
   const user = React.useMemo((): User | null => {

@@ -1,4 +1,5 @@
 import { Doc, Id } from "../_generated/dataModel";
+import { getAuthUserId } from "@convex-dev/auth/server";
 
 export type Role = "user" | "moderator" | "admin" | "system";
 
@@ -6,12 +7,9 @@ export async function getCurrentUserOrThrow(ctx: {
   auth: { getUserIdentity: () => Promise<any> };
   db: { query: any; get: any };
 }): Promise<Doc<"users">> {
-  const identity = await ctx.auth.getUserIdentity();
-  if (!identity) throw new Error("Authentication required");
-  const user = await ctx.db
-    .query("users")
-    .withIndex("email", (q: any) => q.eq("email", identity.email))
-    .unique();
+  const userId = await getAuthUserId(ctx);
+  if (!userId) throw new Error("Authentication required");
+  const user = await ctx.db.get(userId);
   if (!user) throw new Error("User not found");
   return user as Doc<"users">;
 }
@@ -20,12 +18,9 @@ export async function getCurrentUser(ctx: {
   auth: { getUserIdentity: () => Promise<any> };
   db: { query: any; get: any };
 }): Promise<Doc<"users"> | null> {
-  const identity = await ctx.auth.getUserIdentity();
-  if (!identity) return null;
-  const user = await ctx.db
-    .query("users")
-    .withIndex("email", (q: any) => q.eq("email", identity.email))
-    .unique();
+  const userId = await getAuthUserId(ctx);
+  if (!userId) return null;
+  const user = await ctx.db.get(userId);
   return user as Doc<"users"> | null;
 }
 
