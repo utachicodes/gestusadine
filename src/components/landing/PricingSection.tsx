@@ -39,7 +39,7 @@ const TIERS: Tier[] = [
   },
   {
     name: { en: 'Student', fr: 'Étudiant' },
-    price: { en: '10,000', fr: '10 000' },
+    price: { en: '5,000', fr: '5 000' },
     unit: { en: 'FCFA / month', fr: 'FCFA / mois' },
     description: { en: 'For those who want to go deeper.', fr: 'Pour aller plus loin.' },
     features: [

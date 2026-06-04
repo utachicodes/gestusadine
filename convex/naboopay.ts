@@ -5,7 +5,7 @@ import { v, ConvexError } from "convex/values";
 const NABOOPAY_BASE = "https://api.naboopay.com";
 
 const TIER_PRICES: Record<string, { amount: number; label: string }> = {
-  student: { amount: 10000, label: "GëstuSaDine Student - Monthly" },
+  student: { amount: 5000, label: "GëstuSaDine Student - Monthly" },
   pro: { amount: 0, label: "GëstuSaDine Pro" },
 };
 
