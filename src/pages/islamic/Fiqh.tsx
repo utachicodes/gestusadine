@@ -20,8 +20,7 @@ const Fiqh: React.FC = () => {
       <section className="container py-10 md:py-16 space-y-8">
         <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <p className="inline-flex items-center text-xs uppercase tracking-[0.22em] text-islamic-dark/60 mb-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-islamic-gold mr-2" />
+            <p className="text-xs uppercase tracking-[0.22em] text-islamic-dark/60 mb-2">
               {tr({ en: 'Fiqh essentials', fr: 'L’essentiel du fiqh' })}
             </p>
             <h1 className="text-3xl md:text-4xl font-bold text-islamic-dark">
