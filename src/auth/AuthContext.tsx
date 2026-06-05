@@ -143,32 +143,41 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         throw new Error("Incorrect password for admin account.");
       }
       // Try to establish a real Convex Auth session so server queries work
-      const exists = await convex.query(api.users.checkEmailExists, { email: trimmedEmail });
-      if (exists) {
-        try {
-          await signIn("password", { email, password, flow: "signIn" });
-          setHardcodedAdmin(false);
-          return;
-        } catch {
-          // Real sign-in failed, use hardcoded fallback
+      try {
+        const exists = await convex.query(api.users.checkEmailExists, { email: trimmedEmail });
+        if (exists) {
+          try {
+            await signIn("password", { email, password, flow: "signIn" });
+            setHardcodedAdmin(false);
+            return;
+          } catch {
+            // Real sign-in failed, use hardcoded fallback
+          }
+        } else {
+          // Admin user doesn't exist yet — create them silently
+          try {
+            await signIn("password", { email, password, name: "Admin", flow: "signUp" });
+            await convexSignOut();
+          } catch {
+            // Creation failed, hardcoded still works
+          }
         }
-      } else {
-        // Admin user doesn't exist yet — create them silently
-        try {
-          await signIn("password", { email, password, name: "Admin", flow: "signUp" });
-          await convexSignOut();
-        } catch {
-          // Creation failed, hardcoded still works
-        }
+      } catch {
+        // Server unreachable — fall back to hardcoded admin
       }
       setHardcodedAdmin(true);
       return;
     }
 
     // Pre-check if email exists to avoid triggering a server exception from the auth provider
-    const exists = await convex.query(api.users.checkEmailExists, { email: trimmedEmail });
-    if (!exists) {
-      throw new Error("Invalid email or password.");
+    try {
+      const exists = await convex.query(api.users.checkEmailExists, { email: trimmedEmail });
+      if (!exists) {
+        throw new Error("Invalid email or password.");
+      }
+    } catch (e: any) {
+      if (e?.message?.includes("Invalid email")) throw e;
+      throw new Error("Connection error. Please check the server is running.");
     }
 
     try {
@@ -178,10 +187,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     // Check if email is verified; if not, sign out and show error
-    const verificationStatus = await convex.query(api.users.getEmailVerificationStatus, { email: trimmedEmail });
-    if (verificationStatus && !verificationStatus.verified) {
-      await convexSignOut();
-      throw new Error("Please verify your email before signing in. Check your inbox.");
+    try {
+      const verificationStatus = await convex.query(api.users.getEmailVerificationStatus, { email: trimmedEmail });
+      if (verificationStatus && !verificationStatus.verified) {
+        await convexSignOut();
+        throw new Error("Please verify your email before signing in. Check your inbox.");
+      }
+    } catch (e: any) {
+      if (e?.message?.includes("Please verify")) throw e;
+      // Silently skip verification check if server is unreachable
     }
   }, [signIn, convexSignOut, convex]);
 
