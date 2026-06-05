@@ -56,8 +56,8 @@ export default function Privacy() {
           </h1>
           <p className="text-base text-deep-green/55 max-w-lg mx-auto">
             {tr({
-              en: 'Your data is an Amanah — a sacred trust placed in our care. We honor this responsibility with the highest standards of protection and transparency.',
-              fr: 'Vos données sont une Amâna — un dépôt sacré confié à notre garde. Nous honorons cette responsabilité avec les plus hauts standards de protection et de transparence.',
+              en: 'Your data is an Amanah  a sacred trust placed in our care. We honor this responsibility with the highest standards of protection and transparency.',
+              fr: 'Vos données sont une Amâna  un dépôt sacré confié à notre garde. Nous honorons cette responsabilité avec les plus hauts standards de protection et de transparence.',
             })}
           </p>
           <p className="text-deep-green/40 text-xs mt-4">{tr({ en: 'Last updated: January 2026', fr: 'Dernière mise à jour : janvier 2026' })}</p>
@@ -92,8 +92,8 @@ export default function Privacy() {
             </p>
             <p>
               {tr({
-                en: 'We collect only what is needed to provide and improve the service — nothing more.',
-                fr: 'Nous ne collectons que ce qui est nécessaire pour fournir et améliorer le service — rien de plus.',
+                en: 'We collect only what is needed to provide and improve the service  nothing more.',
+                fr: 'Nous ne collectons que ce qui est nécessaire pour fournir et améliorer le service  rien de plus.',
               })}
             </p>
           </Section>

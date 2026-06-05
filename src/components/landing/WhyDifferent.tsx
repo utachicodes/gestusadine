@@ -5,7 +5,7 @@ import { useTr, type Loc } from '@/lib/i18n';
 const ease = [0.22, 1, 0.36, 1] as const;
 
 /**
- * Section 4 — Why it's different.
+ * Section 4  Why it's different.
  * A split, scroll-driven editorial section. On desktop the left column is
  * sticky and shows the active number + topic; the right column scrolls through
  * four tall blocks, each of which promotes itself to "active" as it crosses the
@@ -35,16 +35,16 @@ const TOPICS: Topic[] = [
     n: '03',
     title: { en: 'Quietly Rigorous', fr: 'Rigoureux, sans bruit' },
     body: {
-      en: 'The Council reasons only over vetted, reviewed knowledge — never the open web. And it tells you plainly when a matter is contested or not certain.',
-      fr: 'Le Conseil ne raisonne que sur un savoir vérifié et relu — jamais sur le web ouvert. Et il vous dit clairement lorsqu’une question est débattue ou incertaine.',
+      en: 'The Council reasons only over vetted, reviewed knowledge  never the open web. And it tells you plainly when a matter is contested or not certain.',
+      fr: 'Le Conseil ne raisonne que sur un savoir vérifié et relu  jamais sur le web ouvert. Et il vous dit clairement lorsqu’une question est débattue ou incertaine.',
     },
   },
   {
     n: '04',
     title: { en: 'Open to All', fr: 'Ouvert à tous' },
     body: {
-      en: 'Core knowledge stays accessible to everyone, free of charge. You go deeper only when you choose to — never because a paywall demands it.',
-      fr: 'Le savoir essentiel reste accessible à tous, gratuitement. Vous allez plus loin seulement si vous le choisissez — jamais sous la contrainte d’un péage.',
+      en: 'Core knowledge stays accessible to everyone, free of charge. You go deeper only when you choose to  never because a paywall demands it.',
+      fr: 'Le savoir essentiel reste accessible à tous, gratuitement. Vous allez plus loin seulement si vous le choisissez  jamais sous la contrainte d’un péage.',
     },
   },
 ];
@@ -58,7 +58,7 @@ const WhyDifferent = () => {
     <section className="border-y border-stone-200 bg-[#FAF7F0]">
       <div className="container mx-auto px-6">
         <div className="grid lg:grid-cols-2 lg:gap-16">
-          {/* Left — sticky on desktop */}
+          {/* Left  sticky on desktop */}
           <div className="hidden lg:block">
             <div className="sticky top-0 flex h-screen flex-col justify-center">
               <p className="mb-8 text-[11px] font-semibold uppercase tracking-[0.3em] text-emerald-800/70">
@@ -90,7 +90,7 @@ const WhyDifferent = () => {
             </div>
           </div>
 
-          {/* Right — scrolling blocks */}
+          {/* Right  scrolling blocks */}
           <div className="py-20 lg:border-l lg:border-stone-300/50 lg:py-0 lg:pl-16">
             {TOPICS.map((t, i) => (
               <motion.div

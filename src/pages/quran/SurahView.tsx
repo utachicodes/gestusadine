@@ -186,7 +186,7 @@ export default function SurahView() {
     return () => controller.abort();
   }, [surahNumber, isValid, reloadKey, translation]);
 
-  // Invalid surah number — friendly not-found.
+  // Invalid surah number  friendly not-found.
   if (!isValid) {
     return (
       <div>

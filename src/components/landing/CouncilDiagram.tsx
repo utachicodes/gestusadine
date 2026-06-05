@@ -5,7 +5,7 @@ import { useTr, type Loc } from '@/lib/i18n';
 const ease = [0.22, 1, 0.36, 1] as const;
 
 /**
- * Section 2 — The Council.
+ * Section 2  The Council.
  * A scholarly map (closer to an observatory than a UI): a central node with six
  * sources around it, connected by thin lines that draw in like ink on paper.
  * Hovering or tapping a node traces its path and reveals what it contributes.
@@ -25,8 +25,8 @@ const NODES: Node[] = [
     label: { en: 'Qur’an', fr: 'Coran' },
     count: { en: '114 sūrah · 6,236 āyāt', fr: '114 sourates · 6 236 āyāt' },
     desc: {
-      en: 'The revealed word — the first and final reference for every ruling.',
-      fr: 'La parole révélée — la première et la dernière référence de tout avis.',
+      en: 'The revealed word  the first and final reference for every ruling.',
+      fr: 'La parole révélée  la première et la dernière référence de tout avis.',
     },
     x: 500, y: 100,
   },
@@ -55,8 +55,8 @@ const NODES: Node[] = [
     label: { en: 'Aqeedah', fr: 'Aqīda' },
     count: { en: 'Sunni consensus', fr: 'Consensus sunnite' },
     desc: {
-      en: 'Creed — the boundaries of belief, and the Council’s guard against error.',
-      fr: 'Le credo — les limites de la croyance, et le garde-fou du Conseil contre l’erreur.',
+      en: 'Creed  the boundaries of belief, and the Council’s guard against error.',
+      fr: 'Le credo  les limites de la croyance, et le garde-fou du Conseil contre l’erreur.',
     },
     x: 500, y: 700,
   },
@@ -226,7 +226,7 @@ const CouncilDiagram = () => {
           })}
         </motion.div>
 
-        {/* Detail panel — synthesis copy by default, node detail on hover/tap */}
+        {/* Detail panel  synthesis copy by default, node detail on hover/tap */}
         <div className="mx-auto mt-14 min-h-[7.5rem] max-w-2xl text-center">
           <AnimatePresence mode="wait">
             {active === null ? (
@@ -239,8 +239,8 @@ const CouncilDiagram = () => {
                 className="text-xl leading-relaxed text-stone-600 sm:text-2xl"
               >
                 {tr({
-                  en: 'Every answer is synthesized from authenticated sources, scholarly opinions, and established methodology — never generated from the open web.',
-                  fr: 'Chaque réponse est synthétisée à partir de sources authentifiées, d’avis savants et d’une méthodologie établie — jamais générée depuis le web ouvert.',
+                  en: 'Every answer is synthesized from authenticated sources, scholarly opinions, and established methodology  never generated from the open web.',
+                  fr: 'Chaque réponse est synthétisée à partir de sources authentifiées, d’avis savants et d’une méthodologie établie  jamais générée depuis le web ouvert.',
                 })}
               </motion.p>
             ) : (

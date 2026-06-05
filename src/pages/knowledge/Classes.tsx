@@ -104,7 +104,7 @@ const Classes = () => {
 
                             <div className="p-4 border-t border-border/50 bg-gradient-to-b from-transparent to-muted/20 backdrop-blur-sm">
                                 <button
-                                    onClick={() => toast(tr({ en: `“${item.title}” — course content is coming soon, inshā’Allāh.`, fr: `« ${item.title} » : le contenu du cours arrive bientôt, inshā’Allāh.` }))}
+                                    onClick={() => toast(tr({ en: `“${item.title}”  course content is coming soon, inshā’Allāh.`, fr: `« ${item.title} » : le contenu du cours arrive bientôt, inshā’Allāh.` }))}
                                     className={`w-full py-3 rounded-full font-semibold text-sm transition-all duration-300 ${item.locked
                                         ? "bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200"
                                         : "btn-islamic text-white shadow-lg hover:shadow-islamic-gold/25"

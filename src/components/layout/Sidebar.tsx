@@ -73,7 +73,7 @@ const SECTIONS: NavSection[] = [
 interface SidebarProps {
   collapsed: boolean;
   onToggleCollapsed: () => void;
-  /** Called after a nav item is clicked — used to close the mobile drawer. */
+  /** Called after a nav item is clicked  used to close the mobile drawer. */
   onNavigate?: () => void;
 }
 

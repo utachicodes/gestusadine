@@ -79,7 +79,7 @@ export default function HijriCalendar() {
   // Localized weekday short names, Sunday-first.
   const weekdayNames = useMemo(() => {
     const fmt = new Intl.DateTimeFormat(locale, { weekday: 'short' });
-    // 2024-01-07 is a Sunday — anchor for stable Sun→Sat ordering.
+    // 2024-01-07 is a Sunday  anchor for stable Sun→Sat ordering.
     return Array.from({ length: 7 }, (_, i) =>
       fmt.format(new Date(2024, 0, 7 + i)),
     );
@@ -328,8 +328,8 @@ export default function HijriCalendar() {
               {monthEvents.length === 0 ? (
                 <p className="text-sm text-muted-foreground">
                   {tr({
-                    en: 'No notable observances this month — a calm month for steady worship.',
-                    fr: 'Aucune célébration notable ce mois-ci — un mois paisible pour une adoration constante.',
+                    en: 'No notable observances this month  a calm month for steady worship.',
+                    fr: 'Aucune célébration notable ce mois-ci  un mois paisible pour une adoration constante.',
                   })}
                 </p>
               ) : (

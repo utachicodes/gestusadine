@@ -18,20 +18,20 @@ export const TRANSLATION_EDITIONS: {
   id: string;
   label: string;
 }[] = [
-  { id: 'en.sahih', label: '🇬🇧 English — Saheeh International' },
-  { id: 'en.pickthall', label: '🇬🇧 English — Pickthall' },
-  { id: 'en.yusufali', label: '🇬🇧 English — Yusuf Ali' },
-  { id: 'en.hilali', label: '🇬🇧 English — Hilali & Khan' },
-  { id: 'en.asad', label: '🇬🇧 English — Muhammad Asad' },
-  { id: 'fr.hamidullah', label: '🇫🇷 Français — Hamidullah' },
-  { id: 'es.cortes', label: '🇪🇸 Español — Cortés' },
-  { id: 'de.bubenheim', label: '🇩🇪 Deutsch — Bubenheim & Elyas' },
-  { id: 'it.piccardo', label: '🇮🇹 Italiano — Piccardo' },
-  { id: 'tr.diyanet', label: '🇹🇷 Türkçe — Diyanet İşleri' },
-  { id: 'ru.kuliev', label: '🇷🇺 Русский — Kuliev' },
-  { id: 'id.indonesian', label: '🇮🇩 Indonesia — Kemenag' },
-  { id: 'ur.jalandhry', label: '🇵🇰 اردو — Jalandhry' },
-  { id: 'bn.bengali', label: '🇧🇩 বাংলা — Muhiuddin Khan' },
+  { id: 'en.sahih', label: '🇬🇧 English  Saheeh International' },
+  { id: 'en.pickthall', label: '🇬🇧 English  Pickthall' },
+  { id: 'en.yusufali', label: '🇬🇧 English  Yusuf Ali' },
+  { id: 'en.hilali', label: '🇬🇧 English  Hilali & Khan' },
+  { id: 'en.asad', label: '🇬🇧 English  Muhammad Asad' },
+  { id: 'fr.hamidullah', label: '🇫🇷 Français  Hamidullah' },
+  { id: 'es.cortes', label: '🇪🇸 Español  Cortés' },
+  { id: 'de.bubenheim', label: '🇩🇪 Deutsch  Bubenheim & Elyas' },
+  { id: 'it.piccardo', label: '🇮🇹 Italiano  Piccardo' },
+  { id: 'tr.diyanet', label: '🇹🇷 Türkçe  Diyanet İşleri' },
+  { id: 'ru.kuliev', label: '🇷🇺 Русский  Kuliev' },
+  { id: 'id.indonesian', label: '🇮🇩 Indonesia  Kemenag' },
+  { id: 'ur.jalandhry', label: '🇵🇰 اردو  Jalandhry' },
+  { id: 'bn.bengali', label: '🇧🇩 বাংলা  Muhiuddin Khan' },
 ];
 
 const TRANSLATION_STORAGE_KEY = 'quran-translation';

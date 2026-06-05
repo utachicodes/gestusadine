@@ -6,7 +6,7 @@ import { useTr } from '@/lib/i18n';
 const ease = [0.22, 1, 0.36, 1] as const;
 
 /**
- * Section 8 — Final call to action.
+ * Section 8  Final call to action.
  * Full viewport height, centred, typography-led. A geometric pattern sits at
  * extremely low opacity and warms slightly when the section is hovered.
  */
@@ -18,7 +18,7 @@ const FinalCTA = () => {
 
   return (
     <section className="group relative flex min-h-screen items-center justify-center overflow-hidden border-t border-stone-200 bg-[#FAF7F0]">
-      {/* Geometric pattern — barely there, intensifies on hover */}
+      {/* Geometric pattern  barely there, intensifies on hover */}
       <div
         className="pointer-events-none absolute inset-0 bg-islamic-pattern opacity-[0.025] transition-opacity duration-700 ease-out group-hover:opacity-[0.07]"
         aria-hidden="true"
@@ -48,8 +48,8 @@ const FinalCTA = () => {
         </h2>
         <p className="mx-auto mt-8 max-w-md text-base leading-relaxed text-stone-500 sm:text-lg">
           {tr({
-            en: 'Ask your first question. No card, no clutter — just guidance.',
-            fr: 'Posez votre première question. Sans carte, sans superflu — juste de la guidance.',
+            en: 'Ask your first question. No card, no clutter  just guidance.',
+            fr: 'Posez votre première question. Sans carte, sans superflu  juste de la guidance.',
           })}
         </p>
         <div className="mt-12 flex flex-col items-center gap-6">

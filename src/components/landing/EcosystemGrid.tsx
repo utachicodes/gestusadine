@@ -7,7 +7,7 @@ import { useTr, type Loc } from '@/lib/i18n';
 const ease = [0.22, 1, 0.36, 1] as const;
 
 /**
- * Section 3 — The Ecosystem.
+ * Section 3  The Ecosystem.
  * An asymmetrical editorial grid (not equal feature cards): one large featured
  * space for the Council, then secondary spaces. Typography-driven, no icons.
  * Hover: border darkens, card lifts 2px, background warms slightly.
@@ -19,8 +19,8 @@ const FEATURED: Space = {
   n: '01',
   title: { en: 'The Council', fr: 'Le Conseil' },
   desc: {
-    en: 'Ask anything and receive a consensus answer drawn from authenticated sources, scholarly opinion, and established methodology — with references you can open and read.',
-    fr: 'Posez n’importe quelle question et recevez une réponse de consensus, issue de sources authentifiées, d’avis savants et d’une méthodologie établie — avec des références consultables.',
+    en: 'Ask anything and receive a consensus answer drawn from authenticated sources, scholarly opinion, and established methodology  with references you can open and read.',
+    fr: 'Posez n’importe quelle question et recevez une réponse de consensus, issue de sources authentifiées, d’avis savants et d’une méthodologie établie  avec des références consultables.',
   },
   to: '/chat',
 };

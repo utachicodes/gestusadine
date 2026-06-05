@@ -21,7 +21,7 @@ const BRAND_DEFAULTS: ThemeColors = {
 
 /**
  * Routes through ThemeContext's `personalized` mode, which converts hex → HSL
- * and derives the full surface palette — so custom colors apply correctly to
+ * and derives the full surface palette  so custom colors apply correctly to
  * the `hsl(var(--token))` system (a raw hex would break it) and persist via the
  * single source of truth.
  */

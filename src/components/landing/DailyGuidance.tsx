@@ -5,10 +5,10 @@ import { useTr, type Loc } from '@/lib/i18n';
 const ease = [0.22, 1, 0.36, 1] as const;
 
 /**
- * Section 5 — Daily Guidance.
+ * Section 5  Daily Guidance.
  * Emotional, not explanatory: a dark, manuscript-like surface. The ayah is
  * revealed with a right-to-left clip mask (matching the Arabic reading order),
- * followed by three quiet entries — today's ayah, dua, and prayer times.
+ * followed by three quiet entries  today's ayah, dua, and prayer times.
  *
  * NOTE: ayah, dua and prayer times below are static, illustrative content
  * (prayer times shown for Dakar). To be reviewed before launch.

@@ -130,8 +130,8 @@ const Help: React.FC = () => {
               </h3>
               <p className="mt-2 text-muted-foreground leading-relaxed max-w-3xl">
                 {tr({
-                  en: 'The Council brings together specialized AI agents — Fiqh, Aqeedah, contemporary context, and humility — grounded in authentic sources. Ask naturally, in French or English, and you get one referenced answer with a confidence score.',
-                  fr: "Le Conseil réunit des agents IA spécialisés — Fiqh, Aqida, contexte contemporain et humilité — ancrés dans des sources authentiques. Posez vos questions naturellement, en français ou en anglais, et obtenez une réponse référencée avec un score de confiance.",
+                  en: 'The Council brings together specialized AI agents  Fiqh, Aqeedah, contemporary context, and humility  grounded in authentic sources. Ask naturally, in French or English, and you get one referenced answer with a confidence score.',
+                  fr: "Le Conseil réunit des agents IA spécialisés  Fiqh, Aqida, contexte contemporain et humilité  ancrés dans des sources authentiques. Posez vos questions naturellement, en français ou en anglais, et obtenez une réponse référencée avec un score de confiance.",
                 })}
               </p>
               <button

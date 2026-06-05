@@ -204,7 +204,7 @@ export default function ManageRag() {
                       </TableCell>
                       <TableCell className="font-medium"><div className="max-w-xs truncate">{doc.title}</div></TableCell>
                       <TableCell><Badge variant="secondary">{catLabel(doc.category)}</Badge></TableCell>
-                      <TableCell className="text-xs text-muted-foreground max-w-[200px] truncate">{doc.source || "—"}</TableCell>
+                      <TableCell className="text-xs text-muted-foreground max-w-[200px] truncate">{doc.source || ""}</TableCell>
                       <TableCell className="text-right text-xs text-muted-foreground">{(doc.content || "").length.toLocaleString()} {tr({ en: "chars", fr: "car." })}</TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-2">

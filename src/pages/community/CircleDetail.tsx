@@ -132,7 +132,7 @@ const CircleDetail = () => {
           </div>
         </div>
 
-        {/* Composer — posting is a participating-tier feature; others see a notice */}
+        {/* Composer  posting is a participating-tier feature; others see a notice */}
         {canParticipate ? (
           <form onSubmit={handlePost} className="glass-card-warm p-5 rounded-2xl mb-8">
             <textarea

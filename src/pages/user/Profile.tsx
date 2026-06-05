@@ -106,7 +106,7 @@ const Profile = () => {
                                             toast(tr({ en: 'Link copied to clipboard.', fr: 'Lien copié dans le presse-papiers.' }));
                                         }
                                     } catch {
-                                        // user dismissed the share sheet — no-op
+                                        // user dismissed the share sheet  no-op
                                     }
                                 }}
                                 className="w-full btn-islamic-outlined gap-2"

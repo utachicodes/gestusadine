@@ -29,16 +29,16 @@ interface CurrencyDef {
 // Default Nisab values are rough silver-based estimates (~US$560 equivalent),
 // shown as a starting point. The UI tells the user to verify against live prices.
 const CURRENCIES: CurrencyDef[] = [
-  { code: "XOF", defaultNisab: 350000, label: { en: "West African CFA — XOF", fr: "Franc CFA — XOF" } },
-  { code: "USD", defaultNisab: 560, label: { en: "US Dollar — USD", fr: "Dollar US — USD" } },
-  { code: "EUR", defaultNisab: 520, label: { en: "Euro — EUR", fr: "Euro — EUR" } },
-  { code: "GBP", defaultNisab: 450, label: { en: "British Pound — GBP", fr: "Livre sterling — GBP" } },
-  { code: "NGN", defaultNisab: 900000, label: { en: "Nigerian Naira — NGN", fr: "Naira nigérian — NGN" } },
-  { code: "GHS", defaultNisab: 8500, label: { en: "Ghanaian Cedi — GHS", fr: "Cedi ghanéen — GHS" } },
-  { code: "GMD", defaultNisab: 40000, label: { en: "Gambian Dalasi — GMD", fr: "Dalasi gambien — GMD" } },
-  { code: "MAD", defaultNisab: 5600, label: { en: "Moroccan Dirham — MAD", fr: "Dirham marocain — MAD" } },
-  { code: "SAR", defaultNisab: 2100, label: { en: "Saudi Riyal — SAR", fr: "Riyal saoudien — SAR" } },
-  { code: "AED", defaultNisab: 2050, label: { en: "UAE Dirham — AED", fr: "Dirham des EAU — AED" } },
+  { code: "XOF", defaultNisab: 350000, label: { en: "West African CFA  XOF", fr: "Franc CFA  XOF" } },
+  { code: "USD", defaultNisab: 560, label: { en: "US Dollar  USD", fr: "Dollar US  USD" } },
+  { code: "EUR", defaultNisab: 520, label: { en: "Euro  EUR", fr: "Euro  EUR" } },
+  { code: "GBP", defaultNisab: 450, label: { en: "British Pound  GBP", fr: "Livre sterling  GBP" } },
+  { code: "NGN", defaultNisab: 900000, label: { en: "Nigerian Naira  NGN", fr: "Naira nigérian  NGN" } },
+  { code: "GHS", defaultNisab: 8500, label: { en: "Ghanaian Cedi  GHS", fr: "Cedi ghanéen  GHS" } },
+  { code: "GMD", defaultNisab: 40000, label: { en: "Gambian Dalasi  GMD", fr: "Dalasi gambien  GMD" } },
+  { code: "MAD", defaultNisab: 5600, label: { en: "Moroccan Dirham  MAD", fr: "Dirham marocain  MAD" } },
+  { code: "SAR", defaultNisab: 2100, label: { en: "Saudi Riyal  SAR", fr: "Riyal saoudien  SAR" } },
+  { code: "AED", defaultNisab: 2050, label: { en: "UAE Dirham  AED", fr: "Dirham des EAU  AED" } },
 ];
 
 const currencyDefFor = (code: string): CurrencyDef =>
@@ -59,7 +59,7 @@ function detectCurrency(): string {
       return map[region];
     }
   } catch {
-    /* ignore — fall back below */
+    /* ignore  fall back below */
   }
   return "XOF";
 }
@@ -415,7 +415,7 @@ const ZakatCalculator: React.FC = () => {
               </button>
             </div>
 
-            {/* Result card — always rendered but visually revealed */}
+            {/* Result card  always rendered but visually revealed */}
             <div
               ref={resultRef}
               className={`transition-all duration-500 ${
@@ -531,7 +531,7 @@ const ZakatCalculator: React.FC = () => {
           </div>
 
           {/* ----------------------------------------------------------------
-              RIGHT COLUMN — About Zakat panel
+              RIGHT COLUMN  About Zakat panel
           ---------------------------------------------------------------- */}
           <div className="lg:col-span-1 space-y-5">
             {/* About card */}
@@ -625,8 +625,8 @@ const ZakatCalculator: React.FC = () => {
               </div>
               <p className="text-xs text-muted-foreground leading-relaxed">
                 {tr({
-                  en: "The default Nisab shown is an approximate silver-based estimate for your selected currency. Nisab fluctuates daily with gold and silver prices — always verify with a trusted source before paying Zakat.",
-                  fr: "Le Nisab par défaut affiché est une estimation approximative basée sur l'argent pour la devise choisie. Il fluctue quotidiennement avec les cours de l'or et de l'argent — vérifiez toujours auprès d'une source fiable avant de payer la Zakât.",
+                  en: "The default Nisab shown is an approximate silver-based estimate for your selected currency. Nisab fluctuates daily with gold and silver prices  always verify with a trusted source before paying Zakat.",
+                  fr: "Le Nisab par défaut affiché est une estimation approximative basée sur l'argent pour la devise choisie. Il fluctue quotidiennement avec les cours de l'or et de l'argent  vérifiez toujours auprès d'une source fiable avant de payer la Zakât.",
                 })}
               </p>
             </div>

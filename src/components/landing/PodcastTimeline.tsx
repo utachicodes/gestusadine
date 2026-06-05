@@ -6,7 +6,7 @@ import { useTr, type Loc } from '@/lib/i18n';
 const ease = [0.22, 1, 0.36, 1] as const;
 
 /**
- * Section 6 — Podcasts.
+ * Section 6  Podcasts.
  * An archive, not a carousel: episodes are milestones along a single horizontal
  * line. Each one expands on hover to reveal its scholar, duration and subject.
  * Typography leads; the line and nodes are kept to a hairline.
@@ -122,7 +122,7 @@ const PodcastTimeline = () => {
                   <span className="absolute -top-[5px] left-0 h-2.5 w-2.5 rounded-full border border-stone-300 bg-[#FAF7F0] transition-colors duration-300 group-hover:border-emerald-800 group-hover:bg-emerald-800" />
                 </div>
 
-                {/* Below the line — expands on hover */}
+                {/* Below the line  expands on hover */}
                 <div className="pt-6">
                   <p className="text-lg italic text-stone-700">{ep.scholar}</p>
                   <div className="grid grid-rows-[0fr] transition-all duration-500 ease-out group-hover:grid-rows-[1fr] group-focus-within:grid-rows-[1fr]">

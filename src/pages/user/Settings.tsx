@@ -161,7 +161,7 @@ const Settings: React.FC = () => {
                   ))}
                 </div>
                 <p className="text-[11px] text-amber-700/70 mt-2">
-                  {tr({ en: 'Changes apply instantly — watch the paywalls engage.', fr: 'Les changements s’appliquent immédiatement — observez les paywalls.' })}
+                  {tr({ en: 'Changes apply instantly  watch the paywalls engage.', fr: 'Les changements s’appliquent immédiatement  observez les paywalls.' })}
                 </p>
               </div>
             )}

@@ -73,7 +73,7 @@ const FeatureGrid = () => {
 
   return (
     <>
-      {/* Features — editorial list with refined icons */}
+      {/* Features  editorial list with refined icons */}
       <section className="bg-[#FAF7F0] py-28">
         <div className="container mx-auto px-6 max-w-5xl">
           <motion.header
@@ -124,7 +124,7 @@ const FeatureGrid = () => {
         </div>
       </section>
 
-      {/* Benefits — editorial */}
+      {/* Benefits  editorial */}
       <section className="bg-[#F3EDE1] border-y border-stone-200 py-28">
         <div className="container mx-auto px-6">
           <div className="grid gap-14 lg:grid-cols-12">

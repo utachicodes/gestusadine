@@ -8,7 +8,7 @@ import { useTr } from '@/lib/i18n';
  *  - YouTube watch / youtu.be / embed URLs (real 11-char IDs)
  *  - Direct video files (.mp4/.webm/.ogg)
  *  - Direct audio files (podcasts)
- * Placeholder/unpublished entries fall back to a clean "coming soon" panel —
+ * Placeholder/unpublished entries fall back to a clean "coming soon" panel 
  * we intentionally do NOT guess external content URLs. Drop real URLs into the
  * data seam (or Convex) and playback lights up automatically.
  */

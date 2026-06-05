@@ -56,8 +56,8 @@ export default function Terms() {
           </h1>
           <p className="text-base text-deep-green/55 max-w-lg mx-auto">
             {tr({
-              en: 'The Ironclad Shield — legal terms governing content, intellectual property, and platform liability.',
-              fr: 'Le Bouclier inébranlable — conditions régissant le contenu, la propriété intellectuelle et la responsabilité de la plateforme.',
+              en: 'The Ironclad Shield  legal terms governing content, intellectual property, and platform liability.',
+              fr: 'Le Bouclier inébranlable  conditions régissant le contenu, la propriété intellectuelle et la responsabilité de la plateforme.',
             })}
           </p>
           <p className="text-deep-green/40 text-xs mt-4">{tr({ en: 'Last updated: January 2026', fr: 'Dernière mise à jour : janvier 2026' })}</p>

@@ -36,15 +36,15 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
           through the transparent gaps between cards.
           --------------------------------------------------------------------- */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-        {/* Soft diagonal wash — gentle warm→mint shading for depth */}
+        {/* Soft diagonal wash  gentle warm→mint shading for depth */}
         <div className="absolute inset-0 bg-gradient-to-br from-white via-background to-[#e9f2ed]" />
         {/* Faint geometric Islamic texture */}
         <div className="absolute inset-0 bg-islamic-pattern opacity-60" />
-        {/* Emerald glow — top right */}
+        {/* Emerald glow  top right */}
         <div className="absolute -top-[15%] -right-[10%] w-[55%] h-[55%] rounded-full bg-islamic-emerald-400/15 blur-[150px]" />
-        {/* Teal glow — bottom left */}
+        {/* Teal glow  bottom left */}
         <div className="absolute -bottom-[18%] -left-[8%] w-[50%] h-[55%] rounded-full bg-brand-400/15 blur-[160px]" />
-        {/* Center highlight — lifts the working area */}
+        {/* Center highlight  lifts the working area */}
         <div className="absolute top-[28%] left-1/2 -translate-x-1/2 w-[60%] h-[45%] rounded-full bg-white/50 blur-[120px]" />
         {/* Top sheen */}
         <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-white/70 to-transparent" />

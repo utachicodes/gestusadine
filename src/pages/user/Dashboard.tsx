@@ -182,8 +182,8 @@ const Dashboard: React.FC = () => {
                 <FlaskConical className="w-4 h-4 flex-shrink-0" />
                 <span>
                   {language === 'fr'
-                    ? 'GëstuSaDine est en version bêta — certains bugs peuvent survenir.'
-                    : 'GëstuSaDine is in beta — some bugs may occur.'}
+                    ? 'GëstuSaDine est en version bêta  certains bugs peuvent survenir.'
+                    : 'GëstuSaDine is in beta  some bugs may occur.'}
                 </span>
               </div>
               <button
@@ -230,7 +230,7 @@ const Dashboard: React.FC = () => {
           ))}
         </div>
 
-        {/* Main content — fills remaining height on large screens (no scroll) */}
+        {/* Main content  fills remaining height on large screens (no scroll) */}
         <div className="grid gap-3 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 lg:flex-1 lg:min-h-0 lg:grid-rows-1">
           {/* Ayah / reminder */}
           <div className="islamic-card md:col-span-1 lg:col-span-2 relative overflow-hidden group">

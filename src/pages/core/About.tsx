@@ -54,7 +54,7 @@ const PROBLEMS: Loc[] = [
 
 const SOLUTIONS: Loc[] = [
   { en: 'Every answer cites Quran verses & authentic Hadith', fr: 'Chaque réponse cite des versets du Coran et des hadiths authentiques' },
-  { en: 'Empathy first — we acknowledge before we advise', fr: 'L’empathie d’abord — on reconnaît avant de conseiller' },
+  { en: 'Empathy first  we acknowledge before we advise', fr: 'L’empathie d’abord  on reconnaît avant de conseiller' },
   { en: 'Hadith graded: Sahih, Hasan, Daʿif clearly marked', fr: 'Hadiths gradés : Sahih, Hasan, Daʿif clairement indiqués' },
   { en: 'Respect for all four Madhhabs presented fairly', fr: 'Respect des quatre Madhhabs, présentés équitablement' },
   { en: 'French & English with culturally appropriate responses', fr: 'Français et anglais, avec des réponses culturellement adaptées' },
@@ -77,8 +77,8 @@ const EVIDENCE: { step: string; icon: LucideIcon; title: Loc; arabic: string; bo
     title: { en: 'Sahih & Hasan Hadith', fr: 'Hadith Sahih & Hasan' },
     arabic: 'الحديث الصحيح',
     body: {
-      en: 'Verified prophetic traditions from authenticated collections. Every hadith is graded — Sahih (authentic), Hasan (good), or Daʿif (weak). Fabricated (Mawduʿ) narrations are rejected entirely.',
-      fr: 'Des traditions prophétiques vérifiées issues de recueils authentifiés. Chaque hadith est gradé — Sahih (authentique), Hasan (bon) ou Daʿif (faible). Les récits fabriqués (Mawduʿ) sont entièrement rejetés.',
+      en: 'Verified prophetic traditions from authenticated collections. Every hadith is graded  Sahih (authentic), Hasan (good), or Daʿif (weak). Fabricated (Mawduʿ) narrations are rejected entirely.',
+      fr: 'Des traditions prophétiques vérifiées issues de recueils authentifiés. Chaque hadith est gradé  Sahih (authentique), Hasan (bon) ou Daʿif (faible). Les récits fabriqués (Mawduʿ) sont entièrement rejetés.',
     },
   },
   {
@@ -87,8 +87,8 @@ const EVIDENCE: { step: string; icon: LucideIcon; title: Loc; arabic: string; bo
     title: { en: 'Scholarly Consensus', fr: 'Consensus des savants' },
     arabic: 'إجماع العلماء',
     body: {
-      en: 'Respecting the wisdom of the four Madhhabs (Hanafi, Maliki, Shafiʿi, Hanbali). Where scholars differ, we present every valid position with its evidence — never imposing a single view.',
-      fr: 'Dans le respect de la sagesse des quatre Madhhabs (Hanafite, Malikite, Shafiʿite, Hanbalite). Là où les savants divergent, nous présentons chaque position valide avec ses preuves — sans jamais imposer un seul avis.',
+      en: 'Respecting the wisdom of the four Madhhabs (Hanafi, Maliki, Shafiʿi, Hanbali). Where scholars differ, we present every valid position with its evidence  never imposing a single view.',
+      fr: 'Dans le respect de la sagesse des quatre Madhhabs (Hanafite, Malikite, Shafiʿite, Hanbalite). Là où les savants divergent, nous présentons chaque position valide avec ses preuves  sans jamais imposer un seul avis.',
     },
   },
 ];
@@ -106,8 +106,8 @@ const ADAB: { icon: LucideIcon; title: Loc; body: Loc }[] = [
     icon: Languages,
     title: { en: 'Speaks Your Language', fr: 'Parle votre langue' },
     body: {
-      en: 'Ask in French or English and we answer in kind, using culturally appropriate terms — “Akhi”, “Ukhti” — so guidance feels close, not foreign.',
-      fr: 'Posez votre question en français ou en anglais : nous répondons de même, avec des termes culturellement adaptés — « Akhi », « Ukhti » — pour que le conseil reste proche, jamais étranger.',
+      en: 'Ask in French or English and we answer in kind, using culturally appropriate terms  “Akhi”, “Ukhti”  so guidance feels close, not foreign.',
+      fr: 'Posez votre question en français ou en anglais : nous répondons de même, avec des termes culturellement adaptés  « Akhi », « Ukhti »  pour que le conseil reste proche, jamais étranger.',
     },
   },
   {
@@ -133,8 +133,8 @@ const PROTOCOL: { icon: LucideIcon; title: Loc; body: Loc }[] = [
     icon: FileCheck,
     title: { en: 'Strict Citation Protocols', fr: 'Protocoles de citation stricts' },
     body: {
-      en: 'The AI is built to provide only answers it can cite with a Quran verse or Hadith. No source, no claim — this is enforced at the prompt level.',
-      fr: 'L’IA est conçue pour ne fournir que des réponses qu’elle peut citer avec un verset coranique ou un hadith. Pas de source, pas d’affirmation — c’est imposé au niveau de l’invite.',
+      en: 'The AI is built to provide only answers it can cite with a Quran verse or Hadith. No source, no claim  this is enforced at the prompt level.',
+      fr: 'L’IA est conçue pour ne fournir que des réponses qu’elle peut citer avec un verset coranique ou un hadith. Pas de source, pas d’affirmation  c’est imposé au niveau de l’invite.',
     },
   },
   {
@@ -149,8 +149,8 @@ const PROTOCOL: { icon: LucideIcon; title: Loc; body: Loc }[] = [
     icon: Quote,
     title: { en: 'Citation-First Architecture', fr: 'Une architecture centrée sur la citation' },
     body: {
-      en: 'Evidence comes before interpretation. The AI prioritizes the actual text — Quran or Hadith — over its own paraphrasing.',
-      fr: 'La preuve précède l’interprétation. L’IA privilégie le texte lui-même — Coran ou hadith — plutôt que sa propre paraphrase.',
+      en: 'Evidence comes before interpretation. The AI prioritizes the actual text  Quran or Hadith  over its own paraphrasing.',
+      fr: 'La preuve précède l’interprétation. L’IA privilégie le texte lui-même  Coran ou hadith  plutôt que sa propre paraphrase.',
     },
   },
 ];
@@ -172,8 +172,8 @@ export default function About() {
             </h1>
             <p className="mt-6 text-lg leading-relaxed text-stone-500">
               {tr({
-                en: 'Where authentic Islamic scholarship meets modern technology. GëstuSaDine bridges 1400 years of sacred tradition with the digital age — treating every question as an opportunity to illuminate hearts with truth.',
-                fr: 'Là où la science islamique authentique rencontre la technologie moderne. GëstuSaDine relie 1400 ans de tradition sacrée à l’ère numérique — en faisant de chaque question une occasion d’éclairer les cœurs par la vérité.',
+                en: 'Where authentic Islamic scholarship meets modern technology. GëstuSaDine bridges 1400 years of sacred tradition with the digital age  treating every question as an opportunity to illuminate hearts with truth.',
+                fr: 'Là où la science islamique authentique rencontre la technologie moderne. GëstuSaDine relie 1400 ans de tradition sacrée à l’ère numérique  en faisant de chaque question une occasion d’éclairer les cœurs par la vérité.',
               })}
             </p>
             <div className="mt-8 flex items-center justify-center gap-4">
@@ -204,8 +204,8 @@ export default function About() {
             </h2>
             <p className="mt-4 text-stone-500 leading-relaxed">
               {tr({
-                en: 'The internet is full of noise — conflicting opinions, unverified sources, and robotic answers that lack the warmth of human understanding.',
-                fr: 'Internet est saturé de bruit — opinions contradictoires, sources non vérifiées et réponses robotiques dénuées de la chaleur d’une compréhension humaine.',
+                en: 'The internet is full of noise  conflicting opinions, unverified sources, and robotic answers that lack the warmth of human understanding.',
+                fr: 'Internet est saturé de bruit  opinions contradictoires, sources non vérifiées et réponses robotiques dénuées de la chaleur d’une compréhension humaine.',
               })}
             </p>
           </div>
@@ -236,12 +236,12 @@ export default function About() {
           <blockquote className="mx-auto mt-10 max-w-2xl text-center">
             <p className="text-lg italic leading-relaxed text-stone-700">
               {tr({
-                en: '“We built GëstuSaDine to be a companion, not just a search engine — a tool that speaks with Adab (manners) and Hikmah (wisdom), prioritizing the Quran and Sunnah above all.”',
-                fr: '« Nous avons conçu GëstuSaDine comme un compagnon, et non un simple moteur de recherche — un outil qui parle avec Adab (les bonnes manières) et Hikmah (la sagesse), en plaçant le Coran et la Sunna au-dessus de tout. »',
+                en: '“We built GëstuSaDine to be a companion, not just a search engine  a tool that speaks with Adab (manners) and Hikmah (wisdom), prioritizing the Quran and Sunnah above all.”',
+                fr: '« Nous avons conçu GëstuSaDine comme un compagnon, et non un simple moteur de recherche  un outil qui parle avec Adab (les bonnes manières) et Hikmah (la sagesse), en plaçant le Coran et la Sunna au-dessus de tout. »',
               })}
             </p>
             <footer className="mt-3 text-sm font-semibold uppercase tracking-[0.18em] text-emerald-800/70">
-              {tr({ en: '— The GëstuSaDine Team', fr: '— L’équipe GëstuSaDine' })}
+              {tr({ en: ' The GëstuSaDine Team', fr: ' L’équipe GëstuSaDine' })}
             </footer>
           </blockquote>
         </div>
@@ -292,8 +292,8 @@ export default function About() {
             </h2>
             <p className="mt-4 text-stone-500 leading-relaxed">
               {tr({
-                en: 'Every response follows a strict hierarchy — so authenticity is never compromised.',
-                fr: 'Chaque réponse suit une hiérarchie stricte — afin que l’authenticité ne soit jamais compromise.',
+                en: 'Every response follows a strict hierarchy  so authenticity is never compromised.',
+                fr: 'Chaque réponse suit une hiérarchie stricte  afin que l’authenticité ne soit jamais compromise.',
               })}
             </p>
           </div>
@@ -328,8 +328,8 @@ export default function About() {
             </h2>
             <p className="mt-4 text-stone-500 leading-relaxed">
               {tr({
-                en: 'Our AI doesn’t just list rules — it understands the human heart, responding with the gentleness and wisdom of a caring elder.',
-                fr: 'Notre IA ne se contente pas d’énumérer des règles — elle comprend le cœur humain et répond avec la douceur et la sagesse d’un aîné bienveillant.',
+                en: 'Our AI doesn’t just list rules  it understands the human heart, responding with the gentleness and wisdom of a caring elder.',
+                fr: 'Notre IA ne se contente pas d’énumérer des règles  elle comprend le cœur humain et répond avec la douceur et la sagesse d’un aîné bienveillant.',
               })}
             </p>
           </div>
@@ -362,8 +362,8 @@ export default function About() {
             </h2>
             <p className="mt-4 text-stone-500 leading-relaxed">
               {tr({
-                en: 'AI is not infallible — and we don’t pretend otherwise. Here’s exactly how we keep answers accurate.',
-                fr: 'L’IA n’est pas infaillible — et nous ne prétendons pas le contraire. Voici précisément comment nous préservons l’exactitude des réponses.',
+                en: 'AI is not infallible  and we don’t pretend otherwise. Here’s exactly how we keep answers accurate.',
+                fr: 'L’IA n’est pas infaillible  et nous ne prétendons pas le contraire. Voici précisément comment nous préservons l’exactitude des réponses.',
               })}
             </p>
           </div>
@@ -390,8 +390,8 @@ export default function About() {
                 <h3 className="text-lg font-bold text-stone-900">{tr({ en: 'The honest disclaimer', fr: 'L’avertissement en toute honnêteté' })}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-stone-600">
                   {tr({
-                    en: 'GëstuSaDine is a tool for learning and exploration — not a replacement for qualified human scholars or imams. For formal legal rulings (marriage, divorce, inheritance, and the like), always consult a local scholar who understands your context.',
-                    fr: 'GëstuSaDine est un outil d’apprentissage et d’exploration — non un substitut aux savants ou imams qualifiés. Pour les avis juridiques formels (mariage, divorce, héritage, etc.), consultez toujours un savant local qui comprend votre contexte.',
+                    en: 'GëstuSaDine is a tool for learning and exploration  not a replacement for qualified human scholars or imams. For formal legal rulings (marriage, divorce, inheritance, and the like), always consult a local scholar who understands your context.',
+                    fr: 'GëstuSaDine est un outil d’apprentissage et d’exploration  non un substitut aux savants ou imams qualifiés. Pour les avis juridiques formels (mariage, divorce, héritage, etc.), consultez toujours un savant local qui comprend votre contexte.',
                   })}
                 </p>
               </div>

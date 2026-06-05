@@ -5,13 +5,13 @@ import { useTr, type Loc } from '@/lib/i18n';
 const ease = [0.22, 1, 0.36, 1] as const;
 
 /**
- * Section 1 — Product Demonstration.
+ * Section 1  Product Demonstration.
  * Proves the Council rather than describing it: a real question on the left,
  * a scholarly reference document on the right. The answer card is deliberately
  * shaped like a citation page, not a chat bubble.
  *
  * NOTE: The ruling and citations below are the exact example provided in the
- * brief (travel-prayer / jamʿ). Treat as illustrative — to be reviewed by a
+ * brief (travel-prayer / jamʿ). Treat as illustrative  to be reviewed by a
  * qualified scholar before launch.
  */
 
@@ -36,7 +36,7 @@ const ProductDemo = () => {
     <section className="border-t border-stone-200 bg-[#F3EDE1] py-28">
       <div className="container mx-auto px-6">
         <div className="grid items-center gap-14 lg:grid-cols-2 lg:gap-20">
-          {/* Left — the question, treated editorially */}
+          {/* Left  the question, treated editorially */}
           <motion.div {...rise(0)}>
             <p className="mb-6 text-[11px] font-semibold uppercase tracking-[0.3em] text-emerald-800/70">
               {tr({ en: 'A question, answered', fr: 'Une question, une réponse' })}
@@ -49,13 +49,13 @@ const ProductDemo = () => {
             </blockquote>
             <p className="mt-8 max-w-md text-base leading-relaxed text-stone-500">
               {tr({
-                en: 'Every answer returns the way a scholar would write it — the ruling, the reasoning, and the sources you can open and read yourself.',
-                fr: 'Chaque réponse vous parvient comme l’écrirait un savant — l’avis, le raisonnement, et les sources que vous pouvez ouvrir et lire vous-même.',
+                en: 'Every answer returns the way a scholar would write it  the ruling, the reasoning, and the sources you can open and read yourself.',
+                fr: 'Chaque réponse vous parvient comme l’écrirait un savant  l’avis, le raisonnement, et les sources que vous pouvez ouvrir et lire vous-même.',
               })}
             </p>
           </motion.div>
 
-          {/* Right — the scholarly reference card */}
+          {/* Right  the scholarly reference card */}
           <motion.figure
             {...rise(0.15)}
             className="relative rounded-2xl border border-stone-300/80 bg-[#FDFBF6] p-8 shadow-paper-lg sm:p-10"
@@ -83,7 +83,7 @@ const ProductDemo = () => {
               </p>
             </motion.div>
 
-            {/* Sources — revealed last */}
+            {/* Sources  revealed last */}
             <motion.div
               {...rise(0.5)}
               className="mt-7 border-t border-stone-200 pt-5"

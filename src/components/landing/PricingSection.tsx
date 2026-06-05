@@ -6,8 +6,8 @@ import { useTr, type Loc } from '@/lib/i18n';
 const ease = [0.22, 1, 0.36, 1] as const;
 
 /**
- * Section 7 — Pricing.
- * Three equal cards with the restraint of an archival document — no bright
+ * Section 7  Pricing.
+ * Three equal cards with the restraint of an archival document  no bright
  * highlights, no badges, no urgency. The Student plan carries only a quiet
  * one-line recommendation.
  */
