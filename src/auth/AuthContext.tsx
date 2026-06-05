@@ -175,21 +175,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return { error: new Error("An account with this email already exists.") };
       }
       await signIn("password", { email, password, name: fullName, flow: "signUp" });
-    } catch (err: any) {
-      const msg = err?.message ?? "";
-      if (msg.includes("already exists") || msg.includes("already in use")) {
-        return { error: new Error("An account with this email already exists.") };
-      }
+    } catch {
       return { error: new Error("Sign up failed. Please try again.") };
     }
 
-    // Send verification email and sign out (account was created)
     try {
       await sendVerificationEmail({ email: email.toLowerCase().trim() });
     } catch {
-      // Account created but verification failed — still sign out, surface the issue
-      await convexSignOut();
-      return { error: new Error("Account created but failed to send verification email. Please contact support.") };
+      // Ignore verification failures — account is created, user can still sign in
     }
 
     await convexSignOut();
