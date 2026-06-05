@@ -190,18 +190,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch {
       throw new Error("Invalid email or password.");
     }
-
-    // Check if email is verified; if not, sign out and show error
-    try {
-      const verificationStatus = await convex.query(api.users.getEmailVerificationStatus, { email: trimmedEmail });
-      if (verificationStatus && !verificationStatus.verified) {
-        await convexSignOut();
-        throw new Error("Please verify your email before signing in. Check your inbox.");
-      }
-    } catch (e: any) {
-      if (e?.message?.includes("Please verify")) throw e;
-      // Silently skip verification check if server is unreachable
-    }
   }, [signIn, convexSignOut, convex]);
 
   const signUp = React.useCallback(async ({ email, password, fullName }: { email: string; password: string; fullName: string }) => {

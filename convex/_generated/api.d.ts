@@ -15,6 +15,7 @@ import type * as community from "../community.js";
 import type * as config from "../config.js";
 import type * as daily from "../daily.js";
 import type * as events from "../events.js";
+import type * as fixAdminRole from "../fixAdminRole.js";
 import type * as gamification from "../gamification.js";
 import type * as http from "../http.js";
 import type * as library from "../library.js";
@@ -49,6 +50,7 @@ declare const fullApi: ApiFromModules<{
   config: typeof config;
   daily: typeof daily;
   events: typeof events;
+  fixAdminRole: typeof fixAdminRole;
   gamification: typeof gamification;
   http: typeof http;
   library: typeof library;
