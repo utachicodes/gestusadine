@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Sparkles, Sun, MoonStar, Trophy, Flame, Target, X, FlaskConical } from "lucide-react";
+import { Sun, MoonStar, Trophy, Flame, Target, X, FlaskConical } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { RankDisplay } from "@/components/gamification/RankDisplay";
@@ -226,9 +226,6 @@ const Dashboard: React.FC = () => {
                     {daily?.ayah.reference ?? (loadingDaily ? t('dashboard.loading') : "")}
                   </p>
                 </div>
-                <div className="p-2 bg-accent/10 rounded-lg">
-                  <Sparkles className="w-5 h-5 text-accent-foreground" />
-                </div>
               </div>
 
               <div className="space-y-4 flex flex-col items-center justify-center">
@@ -245,9 +242,9 @@ const Dashboard: React.FC = () => {
           </div>
 
           {/* Today summary */}
-          <div className="islamic-card p-5 flex flex-col justify-between relative overflow-hidden group">
+          <div className="islamic-card p-5 relative overflow-hidden group flex flex-col">
             <div className="absolute inset-0 bg-gradient-to-br from-secondary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-            <div className="relative z-10">
+            <div className="relative z-10 flex flex-col flex-1">
               <div className="flex items-center justify-between mb-4">
                 <div>
                   <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground mb-1 font-semibold">
@@ -274,7 +271,7 @@ const Dashboard: React.FC = () => {
                   </div>
                 </div>
               </div>
-              <p className="text-xs text-muted-foreground mb-3 leading-relaxed">
+              <p className="text-xs text-muted-foreground mb-3 leading-relaxed flex-1">
                 {t('dashboard.todaySummary')}
               </p>
               <button
