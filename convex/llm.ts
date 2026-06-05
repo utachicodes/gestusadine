@@ -59,7 +59,7 @@ export const generate = action({
             results.map((r, i) =>
               `[${i + 1}] ${r.category ? `(${r.category}) ` : ""}${r.content}`
             ).join("\n\n") +
-            "\n\nYou MUST answer based ONLY on the above reference material. Cite sources using [1], [2], etc. If the references do not contain enough information to answer, say: 'The available sources do not cover this question. Please consult a qualified scholar.'";
+            "\n\nUse the above reference material to support your answer where relevant. Cite sources using [1], [2], etc. You may also draw on your general Islamic knowledge for well-known facts (Quran surah names and order, well-known ayat, basic fiqh, seerah, etc.). Only say 'The available sources do not cover this question' if the question is obscure or speculative — not for basic Islamic knowledge.";
         }
       } catch {
         // RAG search failed — proceed without context

@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from 'sonner';
 import { useClasses } from '@/data/classes';
 import { useTr, type Loc } from '@/lib/i18n';
+import { PageHeader } from '@/components/layout/PageHeader';
 
 const LEVEL_LABELS: Record<string, Loc> = {
     Beginner: { en: 'Beginner', fr: 'Débutant' },
@@ -19,20 +20,14 @@ const Classes = () => {
     return (
         <div className="flex-1">
             <section className="container py-10 md:py-16 space-y-8">
-                <header>
-                    <p className="text-xs uppercase tracking-[0.22em] text-primary mb-2 font-semibold">
-                        {tr({ en: 'Structured Learning', fr: 'Apprentissage structuré' })}
-                    </p>
-                    <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-                        GëstuSaDine <span className="bg-clip-text text-transparent bg-gradient-to-r from-islamic-gold-600 to-islamic-gold-400">{tr({ en: 'Classes', fr: 'Cours' })}</span>
-                    </h1>
-                    <p className="text-muted-foreground max-w-2xl">
-                        {tr({
-                            en: 'Structured courses designed to take you from a student of knowledge (Talib) to higher levels of understanding. Complete quizzes and assignments to earn Ilm Points.',
-                            fr: 'Des parcours structurés pour vous mener de l’étudiant en quête de savoir (Talib) vers des niveaux de compréhension plus élevés. Terminez les quiz et les exercices pour gagner des points de savoir.',
-                        })}
-                    </p>
-                </header>
+                <PageHeader
+                    eyebrow={tr({ en: 'Structured Learning', fr: 'Apprentissage structuré' })}
+                    title={tr({ en: 'Classes', fr: 'Cours' })}
+                    subtitle={tr({
+                        en: 'Structured courses designed to take you from a student of knowledge (Talib) to higher levels of understanding. Complete quizzes and assignments to earn Ilm Points.',
+                        fr: 'Des parcours structurés pour vous mener de l’étudiant en quête de savoir (Talib) vers des niveaux de compréhension plus élevés. Terminez les quiz et les exercices pour gagner des points de savoir.',
+                    })}
+                />
 
                 {/* Filter Tabs */}
                 <div className="flex gap-2 pb-4 overflow-x-auto">
