@@ -89,17 +89,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Detect stale JWT tokens (e.g., after key rotation) and auto-sign-out
   // to break the infinite WebSocket reconnect loop
+  // Skip for hardcoded admin who has no real Convex Auth session
   const wasAuthenticatedRef = React.useRef(false);
 
   React.useEffect(() => {
-    if (isLoading) return;
+    if (isLoading || hardcodedAdmin) return;
 
     if (wasAuthenticatedRef.current && !isAuthenticated) {
       convexSignOut();
     }
 
     wasAuthenticatedRef.current = isAuthenticated;
-  }, [isLoading, isAuthenticated, convexSignOut]);
+  }, [isLoading, isAuthenticated, convexSignOut, hardcodedAdmin]);
 
   const profile = React.useMemo(() => {
     if (hardcodedAdmin) {
@@ -143,6 +144,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         throw new Error("Incorrect password for admin account.");
       }
       setHardcodedAdmin(true);
+      // Clear any stored Convex Auth session to prevent WebSocket auth errors
+      try { await convexSignOut(); } catch { /* ignore */ }
       return;
     }
 
