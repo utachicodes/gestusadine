@@ -21,7 +21,7 @@ const Login = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [pendingRedirect, setPendingRedirect] = useState<string | null>(null);
-  const [verificationEmail, setVerificationEmail] = useState<string | null>(null);
+
   const [showPassword, setShowPassword] = useState(false);
   const { language } = useLanguage();
 
@@ -85,15 +85,13 @@ const Login = () => {
         await signInWithPassword({ email, password });
         setPendingRedirect(upgradeTier ? `/dashboard?upgrade=${upgradeTier}` : from);
       } else {
-        const { error: signUpError, verificationSent } = await signUp({ email, password, fullName });
+        const { error: signUpError } = await signUp({ email, password, fullName });
         if (signUpError) {
           setError(signUpError.message);
           setIsLoading(false);
           return;
         }
-        if (verificationSent) {
-          setVerificationEmail(email);
-        }
+        switchMode();
       }
     } catch (err: any) {
       setError(err?.message || 'Something went wrong.');
@@ -111,34 +109,6 @@ const Login = () => {
     <div className="relative min-h-screen w-full bg-[#FAF7F0] flex items-center justify-center px-4 py-16">
       <div className="relative w-full max-w-sm">
 
-        {verificationEmail ? (
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center"
-          >
-            <div className="w-16 h-16 rounded-full bg-emerald-100 mx-auto mb-6 flex items-center justify-center">
-              <svg className="w-8 h-8 text-emerald-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
-            </div>
-            <h1 className="text-3xl font-bold text-stone-900 mb-3">
-              {language === 'fr' ? 'Vérifiez votre email' : 'Check your email'}
-            </h1>
-            <p className="text-sm text-stone-500 mb-6 leading-relaxed">
-              {language === 'fr'
-                ? `Nous avons envoyé un lien de vérification à ${verificationEmail}. Cliquez sur le lien pour activer votre compte.`
-                : `We sent a verification link to ${verificationEmail}. Click the link to activate your account.`}
-            </p>
-            <button
-              onClick={() => setVerificationEmail(null)}
-              className="text-sm font-medium text-emerald-700 hover:text-emerald-800 underline underline-offset-2"
-            >
-              {language === 'fr' ? 'Retour à la connexion' : 'Back to sign in'}
-            </button>
-          </motion.div>
-        ) : (
-        <>
         <Link
           to="/"
           className="inline-flex items-center gap-1.5 text-sm font-medium text-stone-400 hover:text-stone-700 transition-colors mb-10"
@@ -300,8 +270,6 @@ const Login = () => {
             {language === 'fr' ? 'Politique de confidentialité' : 'Privacy Policy'}
           </Link>.
         </p>
-      </>
-      )}
     </div>
   </div>
   );

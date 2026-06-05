@@ -66,7 +66,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { signIn, signOut: convexSignOut } = useAuthActions();
   const currentUser = useQuery(api.users.currentUser);
   const updateTier = useMutation(api.users.updateSubscriptionTier);
-  const sendVerificationEmail = useAction(api.workos.sendVerificationEmail);
   const convex = useConvex();
 
   const [hardcodedAdmin, setHardcodedAdmin] = React.useState<boolean>(() => {
@@ -205,19 +204,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     try {
-      await sendVerificationEmail({ email: trimmedEmail });
-    } catch {
-      // Ignore verification failures — account is created, user can still sign in
-    }
-
-    try {
       await convexSignOut();
     } catch {
       // Ignore sign-out failures
     }
 
-    return { error: null, verificationSent: true };
-  }, [signIn, sendVerificationEmail, convexSignOut, convex]);
+    return { error: null };
+  }, [signIn, convexSignOut, convex]);
 
   const signOutFn = React.useCallback(async () => {
     setHardcodedAdmin(false);

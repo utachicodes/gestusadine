@@ -72,7 +72,7 @@ const App = () => {
               <LanguageProvider>
                 <CookieConsent />
                 <CartProvider>
-                  <BrowserRouter>
+                  <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
                     <PostHogProvider>
                     <Routes>
                         <Route
