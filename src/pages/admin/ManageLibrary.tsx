@@ -1,6 +1,6 @@
 import * as React from "react";
-import { useState } from "react";
-import { BookOpen, Plus, Search, Edit, Trash2, Upload } from "lucide-react";
+import { useState, useRef } from "react";
+import { BookOpen, Plus, Search, Edit, Trash2, Upload, Link2, FileText, CheckCircle, XCircle, Loader2, Image as ImageIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -44,6 +44,16 @@ export default function ManageLibrary() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedBook, setSelectedBook] = useState<any>(null);
   const [formData, setFormData] = useState<any>({ ...EMPTY });
+  const [uploadingFile, setUploadingFile] = useState(false);
+  const [uploadingCover, setUploadingCover] = useState(false);
+  const [showFileUrlInput, setShowFileUrlInput] = useState(false);
+  const [showCoverUrlInput, setShowCoverUrlInput] = useState(false);
+  const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
+  const [uploadedCoverName, setUploadedCoverName] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const coverInputRef = useRef<HTMLInputElement>(null);
+  const generateUploadUrl = useMutation(api.library.generateUploadUrl);
+  const saveUploadedFile = useMutation(api.library.saveUploadedFile);
 
   const filteredBooks = (books as any[]).filter((book: any) =>
     book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -165,6 +175,54 @@ export default function ManageLibrary() {
     }
   };
 
+  const handleFileUpload = async (file: File) => {
+    if (!file) return;
+    setUploadingFile(true);
+    setUploadedFileName(null);
+    try {
+      const uploadUrl = await generateUploadUrl();
+      const result = await fetch(uploadUrl, {
+        method: "POST",
+        headers: { "Content-Type": file.type },
+        body: file,
+      });
+      if (!result.ok) throw new Error("Upload failed");
+      const { storageId } = await result.json();
+      const { url } = await saveUploadedFile({ storageId });
+      setFormData({ ...formData, fileUrl: url });
+      setUploadedFileName(file.name);
+      toast.success(tr({ en: "File uploaded", fr: "Fichier téléchargé" }));
+    } catch (error: any) {
+      toast.error(error.message || tr({ en: "Upload failed", fr: "Échec du téléchargement" }));
+    } finally {
+      setUploadingFile(false);
+    }
+  };
+
+  const handleCoverUpload = async (file: File) => {
+    if (!file) return;
+    setUploadingCover(true);
+    setUploadedCoverName(null);
+    try {
+      const uploadUrl = await generateUploadUrl();
+      const result = await fetch(uploadUrl, {
+        method: "POST",
+        headers: { "Content-Type": file.type },
+        body: file,
+      });
+      if (!result.ok) throw new Error("Upload failed");
+      const { storageId } = await result.json();
+      const { url } = await saveUploadedFile({ storageId });
+      setFormData({ ...formData, coverUrl: url });
+      setUploadedCoverName(file.name);
+      toast.success(tr({ en: "Cover uploaded", fr: "Couverture téléchargée" }));
+    } catch (error: any) {
+      toast.error(error.message || tr({ en: "Upload failed", fr: "Échec du téléchargement" }));
+    } finally {
+      setUploadingCover(false);
+    }
+  };
+
   const toggleFeatured = async (bookId: string) => {
     const book = (books as any[]).find((b: any) => b._id === bookId);
     if (!book) return;
@@ -227,15 +285,129 @@ export default function ManageLibrary() {
         </div>
       </div>
       <div className="space-y-2">
-        <Label>{tr({ en: "File URL", fr: "URL du fichier" })}</Label>
-        <Input value={formData.fileUrl || ""} onChange={(e) => setFormData({ ...formData, fileUrl: e.target.value })} />
+        <Label>{tr({ en: "Book File", fr: "Fichier du livre" })}</Label>
+        <div className="flex flex-col gap-2">
+          <input
+            type="file"
+            ref={fileInputRef}
+            className="hidden"
+            accept=".pdf,.epub,.mobi,.mp3,.m4a,.mp4"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) handleFileUpload(file);
+            }}
+          />
+          <div className="flex gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              disabled={uploadingFile}
+              onClick={() => fileInputRef.current?.click()}
+            >
+              {uploadingFile ? (
+                <><Loader2 className="h-4 w-4 mr-2 animate-spin" />{tr({ en: "Uploading...", fr: "Téléchargement..." })}</>
+              ) : (
+                <><Upload className="h-4 w-4 mr-2" />{tr({ en: "Upload File", fr: "Télécharger" })}</>
+              )}
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={() => setShowFileUrlInput(!showFileUrlInput)}
+              title={tr({ en: "Or paste URL", fr: "Ou coller une URL" })}
+            >
+              <Link2 className="h-4 w-4" />
+            </Button>
+          </div>
+          {uploadedFileName && (
+            <div className="flex items-center gap-2 text-sm text-green-600">
+              <FileText className="h-4 w-4" />
+              <span className="truncate flex-1">{uploadedFileName}</span>
+              <CheckCircle className="h-4 w-4 shrink-0" />
+            </div>
+          )}
+          {formData.fileUrl && !uploadedFileName && (
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <FileText className="h-4 w-4" />
+              <span className="truncate flex-1">{formData.fileUrl}</span>
+              <CheckCircle className="h-4 w-4 shrink-0 text-green-600" />
+            </div>
+          )}
+          {showFileUrlInput && (
+            <Input
+              placeholder={tr({ en: "Or paste file URL...", fr: "Ou collez l'URL du fichier..." })}
+              value={formData.fileUrl || ""}
+              onChange={(e) => setFormData({ ...formData, fileUrl: e.target.value })}
+            />
+          )}
+        </div>
       </div>
       <div className="space-y-2">
-        <Label>{tr({ en: "Cover URL", fr: "URL de la couverture" })}</Label>
-        <Input value={formData.coverUrl || ""} onChange={(e) => setFormData({ ...formData, coverUrl: e.target.value })} />
-        {formData.coverUrl && (
-          <img src={formData.coverUrl} alt="preview" className="mt-2 h-32 w-24 object-cover rounded" />
-        )}
+        <Label>{tr({ en: "Cover Image", fr: "Image de couverture" })}</Label>
+        <div className="flex flex-col gap-2">
+          <input
+            type="file"
+            ref={coverInputRef}
+            className="hidden"
+            accept="image/*"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) handleCoverUpload(file);
+            }}
+          />
+          <div className="flex gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              disabled={uploadingCover}
+              onClick={() => coverInputRef.current?.click()}
+            >
+              {uploadingCover ? (
+                <><Loader2 className="h-4 w-4 mr-2 animate-spin" />{tr({ en: "Uploading...", fr: "Téléchargement..." })}</>
+              ) : (
+                <><ImageIcon className="h-4 w-4 mr-2" />{tr({ en: "Upload Cover", fr: "Télécharger la couverture" })}</>
+              )}
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={() => setShowCoverUrlInput(!showCoverUrlInput)}
+              title={tr({ en: "Or paste URL", fr: "Ou coller une URL" })}
+            >
+              <Link2 className="h-4 w-4" />
+            </Button>
+            {(formData.coverUrl || uploadedCoverName) && (
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                onClick={() => {
+                  setFormData({ ...formData, coverUrl: "" });
+                  setUploadedCoverName(null);
+                }}
+              >
+                <XCircle className="h-4 w-4 text-destructive" />
+              </Button>
+            )}
+          </div>
+          {formData.coverUrl && (
+            <div className="relative">
+              <img src={formData.coverUrl} alt="preview" className="mt-2 h-32 w-24 object-cover rounded border" />
+              {uploadedCoverName && (
+                <span className="text-xs text-muted-foreground mt-1 block">{uploadedCoverName}</span>
+              )}
+            </div>
+          )}
+          {showCoverUrlInput && (
+            <Input
+              placeholder={tr({ en: "Or paste cover URL...", fr: "Ou collez l'URL de la couverture..." })}
+              value={formData.coverUrl || ""}
+              onChange={(e) => setFormData({ ...formData, coverUrl: e.target.value })}
+            />
+          )}
+        </div>
       </div>
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">

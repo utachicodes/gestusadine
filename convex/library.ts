@@ -79,3 +79,18 @@ export const remove = mutation({
     await ctx.db.delete(args.id);
   },
 });
+
+export const generateUploadUrl = mutation({
+  handler: async (ctx) => {
+    return ctx.storage.generateUploadUrl();
+  },
+});
+
+export const saveUploadedFile = mutation({
+  args: { storageId: v.id("_storage") },
+  handler: async (ctx, args) => {
+    const url = await ctx.storage.getUrl(args.storageId);
+    if (!url) throw new Error("File not found in storage");
+    return { url, storageId: args.storageId };
+  },
+});
