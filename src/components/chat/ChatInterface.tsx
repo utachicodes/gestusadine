@@ -154,12 +154,6 @@ export const ChatInterface = () => {
     } catch (error) {
       logger.error('Chat error:', { error, message: userInput });
       setMessages(prev => prev.filter(msg => msg.id !== userMessage.id));
-
-      toast({
-        title: t('common.error'),
-        description: error instanceof Error ? error.message : tr({ en: 'Something went wrong. Please try again.', fr: 'Une erreur est survenue. Veuillez réessayer.' }),
-        variant: 'destructive',
-      });
     } finally {
       setIsLoading(false);
     }
