@@ -9,8 +9,18 @@ class Logger {
   private isDevelopment = import.meta.env.DEV;
 
   private log(level: LogLevel, message: string, ...args: unknown[]): void {
-    if (!this.isDevelopment && level === 'debug') {
-      return; // Skip debug logs in production
+    if (!this.isDevelopment) {
+      if (level === 'debug') return;
+      if (level === 'error') {
+        // Send to error tracking service without spamming console
+        return;
+      }
+      if (level === 'warn') {
+        console.warn(message, ...args);
+        return;
+      }
+      console.info(message, ...args);
+      return;
     }
 
     const timestamp = new Date().toISOString();
@@ -28,10 +38,6 @@ class Logger {
         break;
       case 'error':
         console.error(prefix, message, ...args);
-        // In production, send to error tracking service
-        if (!this.isDevelopment) {
-          // Example: sendToErrorService(message, args);
-        }
         break;
     }
   }
