@@ -21,6 +21,10 @@ export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
         return args.existingUserId;
       }
 
+      if (!args.profile?.name) {
+        throw new Error("Full name is required.");
+      }
+
       const status = await rateLimiter.check(ctx, "signUp", { key: email });
       if (!status.ok) {
         throw new Error("Too many sign-up attempts. Please try again later.");
@@ -28,11 +32,11 @@ export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
 
       return ctx.db.insert("users", {
         email,
-        name: args.profile?.name,
+        name: args.profile.name,
         image: args.profile?.image,
         role,
         subscriptionTier: "free",
-        fullName: args.profile?.name,
+        fullName: args.profile.name,
         isAnonymous: false,
       });
     },

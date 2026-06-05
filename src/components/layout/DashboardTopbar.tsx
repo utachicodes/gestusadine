@@ -17,7 +17,7 @@ import {
   GraduationCap,
   Settings,
   Users,
-
+  FileText,
 } from 'lucide-react';
 import { useAuth } from '@/auth/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -56,6 +56,7 @@ const ROUTE_META: Record<string, RouteMeta> = {
   '/admin/videos': { icon: Video, title: { en: 'Manage Videos', fr: 'Gérer les vidéos' }, section: { en: 'Administration', fr: 'Administration' } },
   '/admin/daily': { icon: Sparkles, title: { en: 'Manage Daily', fr: 'Gérer le quotidien' }, section: { en: 'Administration', fr: 'Administration' } },
   '/admin/library': { icon: BookOpen, title: { en: 'Manage Library', fr: 'Gérer la bibliothèque' }, section: { en: 'Administration', fr: 'Administration' } },
+  '/admin/rag': { icon: FileText, title: { en: 'Islamic References', fr: 'Références islamiques' }, section: { en: 'Administration', fr: 'Administration' } },
 
   '/language': { icon: Settings, title: { en: 'Language', fr: 'Langue' }, section: { en: 'Account', fr: 'Compte' } },
 };

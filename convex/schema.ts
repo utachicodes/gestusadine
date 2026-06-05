@@ -142,7 +142,7 @@ const schema = defineSchema({
     content: v.string(),
     source: v.string(),
     category: v.string(),
-    uploadedBy: v.id("users"),
+    uploadedBy: v.optional(v.id("users")),
     uploadedAt: v.number(),
     fileId: v.optional(v.id("_storage")),
   }).index("category", ["category"]),

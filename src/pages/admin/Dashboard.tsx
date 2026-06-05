@@ -1,4 +1,4 @@
-import { Users, MessageSquare, FileText, Settings, Activity, Calendar, Video, BookOpen, Headphones } from "lucide-react";
+import { Users, MessageSquare, FileText, Settings, Activity, Calendar, Video, BookOpen, Headphones, Database } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/auth/AuthContext";
@@ -34,6 +34,7 @@ export const AdminDashboard = () => {
     { label: { en: "Daily Content", fr: "Contenu quotidien" }, icon: FileText, onClick: () => navigate("/admin/daily") },
     { label: { en: "Manage Quizzes", fr: "Gérer les quiz" }, icon: FileText, onClick: () => navigate("/admin/quizzes") },
     { label: { en: "Manage Podcasts", fr: "Gérer les podcasts" }, icon: Headphones, onClick: () => navigate("/admin/podcasts") },
+    { label: { en: "Islamic References (RAG)", fr: "Références islamiques (RAG)" }, icon: Database, onClick: () => navigate("/admin/rag") },
   ];
 
   return (

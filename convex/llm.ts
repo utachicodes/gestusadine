@@ -1,5 +1,6 @@
 import { action } from "./_generated/server";
 import { v } from "convex/values";
+import { api } from "./_generated/api";
 
 const FANAR_BASE = "https://api.fanar.qa/v1";
 
@@ -43,10 +44,36 @@ export const generate = action({
     const apiKey = process.env.FANAR_API_KEY;
     if (!apiKey) throw new Error("FANAR_API_KEY not configured");
 
+    // Get the last user message for RAG search
+    const lastUserMsg = [...args.messages].reverse().find(m => m.role === "user");
+    let ragContext = "";
+
+    if (lastUserMsg) {
+      try {
+        const results = await ctx.runAction(api.rag.search, {
+          query: lastUserMsg.content,
+          topK: 8,
+        }) as any[];
+        if (results.length > 0) {
+          ragContext = "\n\nREFERENCE MATERIAL FROM ISLAMIC SOURCES:\n" +
+            results.map((r, i) =>
+              `[${i + 1}] ${r.category ? `(${r.category}) ` : ""}${r.content}`
+            ).join("\n\n") +
+            "\n\nYou MUST answer based ONLY on the above reference material. Cite sources using [1], [2], etc. If the references do not contain enough information to answer, say: 'The available sources do not cover this question. Please consult a qualified scholar.'";
+        }
+      } catch {
+        // RAG search failed — proceed without context
+      }
+    }
+
+    const systemPrompt = ragContext
+      ? args.systemPrompt + ragContext
+      : args.systemPrompt;
+
     const data = await fanarFetch("/chat/completions", apiKey, {
       model: args.model,
       messages: [
-        { role: "system", content: args.systemPrompt },
+        { role: "system", content: systemPrompt },
         ...args.messages,
       ],
       temperature: args.temperature ?? 0.7,

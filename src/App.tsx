@@ -31,6 +31,7 @@ import Library from "./pages/knowledge/Library";
 import ManageLibrary from "./pages/admin/ManageLibrary";
 import ManageQuizzes from "./pages/admin/ManageQuizzes";
 import ManagePodcasts from "./pages/admin/ManagePodcasts";
+import ManageRag from "./pages/admin/ManageRag";
 
 import About from "./pages/core/About";
 import Contact from "./pages/core/Contact";
@@ -310,6 +311,16 @@ const App = () => {
                             <ProtectedRoute adminOnly>
                               <DashboardLayout>
                                 <ManagePodcasts />
+                              </DashboardLayout>
+                            </ProtectedRoute>
+                          }
+                        />
+                        <Route
+                          path="/admin/rag"
+                          element={
+                            <ProtectedRoute adminOnly>
+                              <DashboardLayout>
+                                <ManageRag />
                               </DashboardLayout>
                             </ProtectedRoute>
                           }
