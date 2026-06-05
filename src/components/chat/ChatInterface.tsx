@@ -1,4 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { Send, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/auth/AuthContext';
@@ -257,7 +259,15 @@ export const ChatInterface = () => {
                           : 'bg-secondary text-secondary-foreground rounded-2xl rounded-tl-sm'
                       }`}
                     >
-                      <div className="whitespace-pre-wrap">{message.content}</div>
+                      {message.role === 'assistant' ? (
+                        <div className="prose prose-sm max-w-none prose-p:leading-relaxed prose-strong:font-semibold prose-em:italic">
+                          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                            {message.content}
+                          </ReactMarkdown>
+                        </div>
+                      ) : (
+                        <div className="whitespace-pre-wrap">{message.content}</div>
+                      )}
                     </div>
 
                     {message.role === 'user' && (

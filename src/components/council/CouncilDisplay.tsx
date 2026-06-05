@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactMarkdown from 'react-markdown';
 import { Brain, Users, Zap, Award, TrendingUp, Shield } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -141,7 +142,9 @@ export const MemberResponseDisplay: React.FC<MemberResponseDisplayProps> = ({
                     {Math.round(confidence * 100)}% {t('council.confidence')}
                 </Badge>
             </div>
-            <p className="text-islamic-dark/80 text-sm leading-relaxed">{response}</p>
+            <div className="text-islamic-dark/80 text-sm leading-relaxed prose prose-sm max-w-none prose-p:leading-relaxed prose-strong:font-semibold">
+              <ReactMarkdown>{response}</ReactMarkdown>
+            </div>
         </div>
     );
 };

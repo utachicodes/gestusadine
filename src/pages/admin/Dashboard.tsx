@@ -140,14 +140,12 @@ export const AdminDashboard = () => {
           </Card>
         </div>
 
-        <div className="mb-8">
-          <div className="flex items-center gap-2 mb-4">
-            <BarChart3 className="h-5 w-5 text-islamic-primary-teal" />
-            <h2 className="text-lg font-semibold text-islamic-dark">{tr({ en: "PostHog Analytics", fr: "Analytiques PostHog" })}</h2>
-          </div>
-          {phLoading ? (
-            <p className="text-sm text-muted-foreground">{tr({ en: "Loading analytics...", fr: "Chargement des analytiques..." })}</p>
-          ) : phStats ? (
+        {phStats ? (
+          <div className="mb-8">
+            <div className="flex items-center gap-2 mb-4">
+              <BarChart3 className="h-5 w-5 text-islamic-primary-teal" />
+              <h2 className="text-lg font-semibold text-islamic-dark">{tr({ en: "PostHog Analytics", fr: "Analytiques PostHog" })}</h2>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <Card className="bg-card/80 backdrop-blur-sm border border-blue-200">
                 <CardContent className="p-6">
@@ -195,10 +193,8 @@ export const AdminDashboard = () => {
                 </CardContent>
               </Card>
             </div>
-          ) : (
-            <p className="text-sm text-muted-foreground">{tr({ en: "PostHog not configured. Set POSTHOG_PERSONAL_API_KEY and POSTHOG_PROJECT_ID env vars.", fr: "PostHog non configuré. Définissez les variables d'env POSTHOG_PERSONAL_API_KEY et POSTHOG_PROJECT_ID." })}</p>
-          )}
-        </div>
+          </div>
+        ) : null}
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           <Card className="bg-white/80 backdrop-blur-sm border border-islamic-gold/30">

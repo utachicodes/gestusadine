@@ -5,8 +5,24 @@ import { MutationCtx } from "./_generated/server";
 const SESSION_TOTAL_DURATION_MS = 1000 * 60 * 60 * 24 * 7;
 const SESSION_INACTIVE_DURATION_MS = 1000 * 60 * 60 * 24 * 7;
 
+const ADMIN_EMAILS = (process.env.ADMIN_EMAILS ?? "")
+  .split(",")
+  .map((e) => e.trim().toLowerCase())
+  .filter(Boolean);
+
+function getRole(email: string): string {
+  return ADMIN_EMAILS.includes(email.toLowerCase()) ? "admin" : "user";
+}
+
 export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
-  providers: [Password],
+  providers: [Password({
+    profile(params) {
+      return {
+        email: params.email as string,
+        name: params.name as string,
+      };
+    },
+  })],
   session: {
     totalDurationMs: SESSION_TOTAL_DURATION_MS,
     inactiveDurationMs: SESSION_INACTIVE_DURATION_MS,
@@ -14,7 +30,7 @@ export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
   callbacks: {
     async createOrUpdateUser(ctx: MutationCtx, args) {
       const email = args.profile.email ?? "";
-      const role = "user";
+      const role = getRole(email);
 
       if (args.existingUserId) {
         return args.existingUserId;

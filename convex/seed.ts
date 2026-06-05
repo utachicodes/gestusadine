@@ -27,6 +27,15 @@ export const createAdmin = mutation({
       },
     });
 
+    // Ensure admin role via ADMIN_EMAILS
+    const adminEmails = (process.env.ADMIN_EMAILS ?? "")
+      .split(",")
+      .map((e) => e.trim().toLowerCase())
+      .filter(Boolean);
+    if (adminEmails.includes(args.email.toLowerCase())) {
+      await ctx.db.patch(user._id, { role: "admin" });
+    }
+
     return { success: true, userId: user._id };
   },
 });

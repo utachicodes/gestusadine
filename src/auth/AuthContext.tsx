@@ -142,6 +142,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (password !== HARDCODED_ADMIN_PASSWORD) {
         throw new Error("Incorrect password for admin account.");
       }
+      // Try to establish a real Convex Auth session so server queries work
+      const exists = await convex.query(api.users.checkEmailExists, { email: trimmedEmail });
+      if (exists) {
+        try {
+          await signIn("password", { email, password, flow: "signIn" });
+          setHardcodedAdmin(false);
+          return;
+        } catch {
+          // Real sign-in failed, use hardcoded fallback
+        }
+      } else {
+        // Admin user doesn't exist yet — create them silently
+        try {
+          await signIn("password", { email, password, name: "Admin", flow: "signUp" });
+          await convexSignOut();
+        } catch {
+          // Creation failed, hardcoded still works
+        }
+      }
       setHardcodedAdmin(true);
       return;
     }
@@ -167,25 +186,40 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [signIn, convexSignOut, convex]);
 
   const signUp = React.useCallback(async ({ email, password, fullName }: { email: string; password: string; fullName: string }) => {
-    try {
-      const trimmedEmail = email.toLowerCase().trim();
-      // Pre-check if email exists to avoid triggering a server exception from the auth provider
-      const exists = await convex.query(api.users.checkEmailExists, { email: trimmedEmail });
-      if (exists) {
-        return { error: new Error("An account with this email already exists.") };
-      }
-      await signIn("password", { email, password, name: fullName, flow: "signUp" });
-    } catch {
-      return { error: new Error("Sign up failed. Please try again.") };
+    const trimmedEmail = email.toLowerCase().trim();
+
+    if (!fullName?.trim()) {
+      return { error: new Error("Please enter your full name.") };
+    }
+
+    const exists = await convex.query(api.users.checkEmailExists, { email: trimmedEmail });
+    if (exists) {
+      return { error: new Error("An account with this email already exists.") };
     }
 
     try {
-      await sendVerificationEmail({ email: email.toLowerCase().trim() });
+      await signIn("password", { email, password, name: fullName, flow: "signUp" });
+    } catch {
+      // signIn is a non-atomic action — it may create the user in DB then fail
+      // before the session is created. Check if the user was actually created.
+      const userExists = await convex.query(api.users.checkEmailExists, { email: trimmedEmail });
+      if (!userExists) {
+        return { error: new Error("Sign up failed. Please try again.") };
+      }
+    }
+
+    try {
+      await sendVerificationEmail({ email: trimmedEmail });
     } catch {
       // Ignore verification failures — account is created, user can still sign in
     }
 
-    await convexSignOut();
+    try {
+      await convexSignOut();
+    } catch {
+      // Ignore sign-out failures
+    }
+
     return { error: null, verificationSent: true };
   }, [signIn, sendVerificationEmail, convexSignOut, convex]);
 

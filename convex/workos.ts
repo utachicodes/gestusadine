@@ -14,6 +14,9 @@ export const sendVerificationEmail = action({
     email: v.string(),
   },
   handler: async (ctx, args) => {
+    if (!process.env.WORKOS_API_KEY) {
+      return null;
+    }
     const workos = getWorkOS();
     const email = args.email.toLowerCase().trim();
 

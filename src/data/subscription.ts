@@ -20,13 +20,12 @@ const STUDENT_FEATURES: Feature[] = [
   "library.premium",
   "courses.access",
   "community.participate",
-  "theme.customize",
 ];
 
 const FEATURE_MATRIX: Record<SubscriptionTier, Feature[]> = {
   free: ["council.access"],
   student: STUDENT_FEATURES,
-  pro: [...STUDENT_FEATURES, "pro.console", "pro.privateKb", "support.priority"],
+  pro: [...STUDENT_FEATURES, "theme.customize", "pro.console", "pro.privateKb", "support.priority"],
 };
 
 const TIER_RANK: Record<SubscriptionTier, number> = { free: 0, student: 1, pro: 2 };

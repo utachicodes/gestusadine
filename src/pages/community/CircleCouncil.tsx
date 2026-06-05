@@ -1,4 +1,5 @@
 import * as React from 'react';
+import ReactMarkdown from 'react-markdown';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -453,9 +454,9 @@ const CirclePage: React.FC = () => {
                                                 <CardDescription>{tr({ en: 'Synthesized response from all members', fr: 'Réponse synthétisée de tous les membres' })}</CardDescription>
                                             </CardHeader>
                                             <CardContent className="space-y-4">
-                                                <p className="text-islamic-dark/80 leading-relaxed whitespace-pre-wrap">
-                                                    {activeResult.synthesisResult}
-                                                </p>
+                                                <div className="text-islamic-dark/80 leading-relaxed prose prose-sm max-w-none prose-p:leading-relaxed prose-strong:font-semibold">
+                                                    <ReactMarkdown>{activeResult.synthesisResult}</ReactMarkdown>
+                                                </div>
                                                 <Separator className="my-4" />
                                                 <ConsensusScoreDisplay
                                                     score={activeResult.consensusScore}
