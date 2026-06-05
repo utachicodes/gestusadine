@@ -163,10 +163,11 @@ export const ChatInterface = () => {
 
     try {
       const systemPrompt = `${SYSTEM_PROMPT}\nLanguage: ${language}\nMadhab: ${madhab}`;
+      const history = messages.map(m => ({ role: m.role, content: m.content }));
       const response = await generate({
         model: 'Fanar',
         systemPrompt,
-        messages: [{ role: 'user', content: userInput }],
+        messages: [...history, { role: 'user', content: userInput }],
         temperature: 0.7,
         maxTokens: 2000,
       });
