@@ -59,7 +59,7 @@ export const generate = action({
             results.map((r, i) =>
               `[${i + 1}] ${r.category ? `(${r.category}) ` : ""}${r.content}`
             ).join("\n\n") +
-            "\n\nREFERENCE MATERIAL is optional supporting context — it can help you cite sources more precisely. Answer from your knowledge first, then use [1], [2], etc. from the references to align or justify your answer with the Salafi methodology. If the references don't match what you know, trust your training. Only say 'I don't know' if you genuinely cannot answer.";
+            "\n\nREFERENCE MATERIAL is provided to help you verify and cite accurately. When you're unsure about surah ayat counts, hadith wording, or exact numbers — check the references first. If the references contradict what you think you know, the references are more reliable than your training. Never fabricate verses, hadith, or numbers.";
         }
       } catch {
         // RAG search failed — proceed without context
