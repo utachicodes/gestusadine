@@ -13,43 +13,9 @@ export const sendVerificationEmail = action({
   args: {
     email: v.string(),
   },
-  handler: async (ctx, args) => {
-    if (!process.env.WORKOS_API_KEY) {
-      return null;
-    }
-    const workos = getWorkOS();
-    const email = args.email.toLowerCase().trim();
-
-    // Check if Convex user already has a WorkOS ID stored
-    const convexUser = await ctx.runQuery(internal.workos.lookupUserByEmail, {
-      email,
-    });
-
-    let workosUserId = convexUser?.workosId;
-
-    if (!workosUserId) {
-      // No WorkOS user yet — create one
-      const { user: workosUser } = await workos.userManagement.createUser({
-        email,
-        emailVerified: false,
-      });
-      workosUserId = workosUser.id;
-
-      // Store the WorkOS ID on the Convex user
-      if (convexUser) {
-        await ctx.runMutation(internal.workos.storeWorkosId, {
-          convexUserId: convexUser._id,
-          workosId: workosUserId,
-        });
-      }
-    }
-
-    // Send the verification email
-    await workos.userManagement.sendVerificationEmail({
-      userId: workosUserId,
-    });
-
-    return workosUserId;
+  handler: async () => {
+    // Disabled temporarily — no verification email sent
+    return null;
   },
 });
 

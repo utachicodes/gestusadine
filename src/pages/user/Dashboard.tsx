@@ -228,12 +228,12 @@ const Dashboard: React.FC = () => {
                 </div>
               </div>
 
-              <div className="space-y-4 flex flex-col items-center justify-center">
-                <p className="font-arabic text-2xl md:text-3xl lg:text-4xl leading-[2] text-foreground text-center break-words max-w-full">
+              <div className="space-y-4 flex flex-col items-center justify-center flex-1 min-h-0 overflow-y-auto w-full">
+                <p className="font-arabic text-2xl md:text-3xl lg:text-4xl leading-[2] text-foreground text-center break-words w-full">
                   {daily?.ayah.arabic ?? (loadingDaily ? "…" : "")}
                 </p>
 
-                <p className="text-base md:text-lg text-muted-foreground leading-relaxed italic text-center max-w-2xl">
+                <p className="text-base md:text-lg text-muted-foreground leading-relaxed italic text-center w-full">
                   {daily?.ayah.translation ??
                     (loadingDaily ? t('dashboard.ayahLoading') : t('dashboard.ayahError'))}
                 </p>
