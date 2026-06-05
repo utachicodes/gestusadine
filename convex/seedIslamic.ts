@@ -251,6 +251,219 @@ The pillars of prayer (arkan) include: standing (if able), takbirat al-ihram (sa
     source: "Aqeedah - Quran 58:22, 5:51, 60:8, Ibn Baz, Ibn Uthaymeen, Al-Fawzan",
     category: "aqeedah"
   },
+
+  // ===== FOUR MADHABS - OVERVIEW =====
+  {
+    title: "The Four Madhabs - Overview of Sunni Islamic Schools of Law",
+    content: `The four established Sunni madhabs (schools of jurisprudence) are Hanafi, Maliki, Shafi'i, and Hanbali. All four follow the same foundational sources (Quran, Sunnah, Ijma, Qiyas) but differ in methodology and emphasis. The Prophet (ﷺ) said: "The best people are my generation, then those who follow them, then those who follow them" (Bukhari #3650). The Salafi methodology follows the strongest evidence from Quran and Sunnah while respecting all four madhabs as valid paths within Ahl al-Sunnah wal-Jama'ah. The differences between madhabs are a mercy (based on the hadith: "The difference of opinion among my ummah is a mercy" - though its chain is weak, the meaning is accepted by scholars).`,
+    source: "Comparative Fiqh - Based on Quran, Sunnah, and the Four Schools",
+    category: "fiqh"
+  },
+  {
+    title: "Hanafi Madhab - Founded by Imam Abu Hanifah",
+    content: `Founded by Imam Abu Hanifah al-Nu'man ibn Thabit (80-150 AH / 699-767 CE). The Hanafi school is the largest in terms of followers, predominant in Turkey, Central Asia, the Indian subcontinent, and the Balkans. Key methodology: extensive use of ra'y (reasoned opinion) and qiyas (analogical deduction), preference for istihsan (juristic preference), and heavy reliance on established custom (urf). The school gives significant weight to the hadith but applies rigorous criteria for acceptance. Key texts: al-Hidayah, Radd al-Muhtar (al-Durr al-Mukhtar), Fatawa Hindiyya. Famous Hanafi scholars: Abu Yusuf, Muhammad al-Shaybani, al-Tahawi, al-Sarakhsi, Ibn Abidin. The school is known for its detailed treatment of transactions (mu'amalat) and flexible approach to changing circumstances.`,
+    source: "Comparative Fiqh - Hanafi School (Imam Abu Hanifah)",
+    category: "fiqh"
+  },
+  {
+    title: "Maliki Madhab - Founded by Imam Malik ibn Anas",
+    content: `Founded by Imam Malik ibn Anas (93-179 AH / 711-795 CE) in Medina. The Maliki school is predominant in North and West Africa (including Senegal, Mali, Mauritania, Morocco, Algeria, Tunisia, Libya, Sudan) and parts of the Gulf. Key methodology: prioritization of amal ahl al-Madinah (the practice of the people of Medina) as a source of law, emphasis on masalih mursalah (public interest), and consideration of sadd al-dhara'i (blocking pretexts). Imam Malik compiled al-Muwatta, one of the earliest hadith collections. Key texts: al-Mudawwanah, al-Mukhtasar (Khalil), al-Risalah (Ibn Abi Zayd al-Qayrawani). Famous Maliki scholars: Ibn al-Qasim, Ashhab, Sahnun, al-Qarafi, al-Shatibi, Ibn Rushd (Averroes). The school is known for its emphasis on the practice of the people of Medina as a living transmission of the Sunnah.`,
+    source: "Comparative Fiqh - Maliki School (Imam Malik ibn Anas)",
+    category: "fiqh"
+  },
+  {
+    title: "Shafi'i Madhab - Founded by Imam al-Shafi'i",
+    content: `Founded by Imam Muhammad ibn Idris al-Shafi'i (150-204 AH / 767-820 CE). The Shafi'i school is predominant in Egypt, Yemen, East Africa (Somalia, Ethiopia), Southeast Asia (Indonesia, Malaysia, Philippines), and parts of the Levant and Hijaz. Key methodology: systematic hierarchy of evidence (Quran → Sunnah → Ijma → Qiyas), rejection of istihsan (juristic preference), emphasis on the literal meaning of texts, and strict requirement for hadith authenticity. Imam al-Shafi'i established usul al-fiqh as a discipline through his work al-Risalah. Key texts: al-Umm, Minhaj al-Talibin (al-Nawawi), al-Majmu', Fath al-Muin. Famous Shafi'i scholars: al-Muzani, al-Nawawi, al-Suyuti, Ibn Hajar al-Asqalani, al-Ghazali. The school is known for its systematic methodology and balanced approach.`,
+    source: "Comparative Fiqh - Shafi'i School (Imam al-Shafi'i)",
+    category: "fiqh"
+  },
+  {
+    title: "Hanbali Madhab - Founded by Imam Ahmad ibn Hanbal",
+    content: `Founded by Imam Ahmad ibn Hanbal (164-241 AH / 780-855 CE). The Hanbali school is predominant in Saudi Arabia, Qatar, and parts of the Levant and Iraq. Key methodology: strict adherence to the literal texts of Quran and hadith, minimal use of qiyas (only when absolutely necessary), rejection of ra'y and istihsan, and reliance on fatwa of the Companions (fatwa al-sahabi). Imam Ahmad compiled al-Musnad, one of the largest hadith collections (over 27,000 hadith). Key texts: al-Mughni (Ibn Qudamah), al-Muharrar, Kashshaf al-Qina', al-Insaf. Famous Hanbali scholars: Ibn Qudamah, Ibn Taymiyyah, Ibn al-Qayyim, al-Buhuti, al-Mardawi. In modern times, the Hanbali school is often associated with the Salafi methodology due to its strict textual approach, though Salafism is not limited to any single madhab.`,
+    source: "Comparative Fiqh - Hanbali School (Imam Ahmad ibn Hanbal)",
+    category: "fiqh"
+  },
+
+  // ===== MADHAB COMPARISONS - PRAYER (SALAH) =====
+  {
+    title: "Raising Hands in Prayer (Raf al-Yadayn) - Madhab Positions",
+    content: `Raising the hands during prayer (raf al-yadayn) at the takbirat al-ihram, before and after ruku, is a well-known point of difference:
+- Hanbali and Shafi'i: Raise hands at takbirat al-ihram, before ruku (when going into it), and after rising from ruku. Based on authentic hadith: "I saw the Prophet (ﷺ) raise his hands when he began the prayer, when he bowed, and when he raised his head from bowing" (Bukhari #735, Muslim #390).
+- Hanafi: Only raise hands at the opening takbir (takbirat al-ihram). Do not raise at any other point. Based on the practice of Abdullah ibn Mas'ud who reported: "The Prophet (ﷺ) used to raise his hands at the opening takbir, then not thereafter" (Abu Dawud #748, although its authenticity is debated; graded hasan by some, da'if by others).
+- Maliki: Raise hands at the opening takbir only. The well-known Maliki position is similar to Hanafi on this point.
+The majority of hadith support raising, making it the stronger evidenced position, but all positions are valid within their respective methodological frameworks.`,
+    source: "Comparative Fiqh - Sahih Bukhari #735, Sahih Muslim #390, Abu Dawud #748",
+    category: "fiqh"
+  },
+  {
+    title: "Saying Ameen in Prayer - Aloud or Silently - Madhab Positions",
+    content: `Whether the congregation says Ameen aloud after the imam's Fatiha differs:
+- Shafi'i and Hanbali: The congregation says Ameen aloud. Based on the Prophet (ﷺ) saying: "When the imam says Ameen, say Ameen, for whoever's Ameen coincides with the angels' Ameen, their previous sins will be forgiven" (Bukhari #780, Muslim #410). This hadith is interpreted by these schools as commanding audible Ameen.
+- Hanafi: The congregation says Ameen silently. Based on Quran 17:110: "And do not recite loudly in your prayer, nor silently, but seek a way in between." Hanafis interpret the raising of voices in prayer as undesirable.
+- Maliki: The imam says Ameen silently, and the congregation also says it silently. Based on the practice of the people of Medina transmitted through Imam Malik.
+All views are valid and based on evidence. The Shafi'i and Hanbali position is supported by more explicit textual evidence, while Hanafi and Maliki rely on general principles of lowering the voice in prayer.`,
+    source: "Comparative Fiqh - Sahih Bukhari #780, Sahih Muslim #410, Quran 17:110",
+    category: "fiqh"
+  },
+  {
+    title: "Reciting Al-Fatihah Behind the Imam - Madhab Positions",
+    content: `Whether one must recite Al-Fatihah when praying behind an imam:
+- Shafi'i: Reciting Al-Fatihah behind the imam is obligatory (fard) in all prayers, whether the imam recites aloud or silently. Based on "There is no prayer for the one who did not recite Al-Fatihah" (Bukhari #756, Muslim #394). This is applied generally to all prayer situations.
+- Hanbali: Must recite Al-Fatihah in silent prayers, but should remain silent during aloud prayers and listen. Based on Quran 7:204: "When the Quran is recited, listen to it and be silent." Combines both evidences.
+- Hanafi: Do not recite anything behind the imam. The imam's recitation suffices for the follower. Based on: "When he (the imam) recites, then listen attentively" (Muslim #404). And: "Whoever has an imam, the imam's recitation is his recitation" (Ibn Majah, hadith with varying authenticity).
+- Maliki: Recite Fatiha behind the imam in silent prayers but not in aloud prayers. Similar to the Hanbali position in effect.
+The strongest evidence supports reciting Fatiha (Bukhari #756 is explicit), but listening during aloud recitation also has strong Quranic evidence (7:204).`,
+    source: "Comparative Fiqh - Sahih Bukhari #756, Sahih Muslim #394, #404, Quran 7:204",
+    category: "fiqh"
+  },
+  {
+    title: "Hand Placement in Prayer (Qabd vs Sadl) - Madhab Positions",
+    content: `Where to place the hands during standing (qiyam) in prayer:
+- Hanafi: Men place hands below the navel, right hand grasping the left wrist. Women place hands on the chest. Based on the practice of Ali (may Allah be pleased with him): "It is from the Sunnah to place one hand over the other below the navel" (Abu Dawud #756, though its chain is debated).
+- Shafi'i: Place hands on the chest, between the navel and the chest, with right hand on the back of the left hand. Based on "We used to be commanded to place the right hand over the left in prayer" (Muslim #401) and the practice of the Prophet as observed by Sahih narrators.
+- Hanbali: Place hands on the chest. The preferred Hanbali position is on the upper chest. Evidence: "The Prophet (ﷺ) used to place his right hand over his left and place them on his chest" (Abu Dawud #759, reported by Qays ibn Rami).
+- Maliki: Let the hands hang at the sides (sadl) during the standing position. This is the distinctive Maliki position. Based on the practice of the people of Medina transmitted through Imam Malik.
+All positions are valid. The hadith evidence is strongest for placing hands on the chest, but the Maliki position preserves a practice some scholars trace to early Islam.`,
+    source: "Comparative Fiqh - Abu Dawud #756, #759, Sahih Muslim #401",
+    category: "fiqh"
+  },
+  {
+    title: "Qunut in Fajr Prayer - Madhab Positions",
+    content: `The qunut (supplication) in the Fajr prayer differs significantly across madhabs:
+- Shafi'i: Qunut in Fajr is a confirmed Sunnah (sunnah mu'akkadah), recited after rising from ruku in the second rakah. Based on: "The Prophet (ﷺ) used to recite qunut in Fajr" (Muslim #678). They interpret the Prophet's consistency as establishing it as a regular practice.
+- Hanafi: No qunut in Fajr except during calamities (qunut al-nazilah). Based on the hadith that the Prophet (ﷺ) recited qunut for one month then stopped (Bukhari #1003). They view the regular qunut as abrogated.
+- Hanbali: Qunut in Fajr is recommended but not emphasized. They consider it optional. Based on the narration that the Prophet (ﷺ) sometimes did it and sometimes did not, making it non-obligatory.
+- Maliki: No qunut in Fajr as a regular practice. They confine qunut to times of calamity (qunut al-nazilah), similar to Hanafi but with different evidence weighting.
+The Shafi'i and Hanbali positions have stronger specific textual evidence, while the Hanafi and Maliki rely on the principle that the Prophet abandoned a regular qunut.`,
+    source: "Comparative Fiqh - Sahih Muslim #678, Sahih Bukhari #1003",
+    category: "fiqh"
+  },
+
+  // ===== MADHAB COMPARISONS - PURIFICATION (TAHARAH) =====
+  {
+    title: "Wiping Over Socks (Mash ala al-Khuffayn) - Madhab Conditions",
+    content: `Wiping over socks during wudu is permitted by all four madhabs, but with different conditions:
+- Hanbali: Permitted on any socks that cover the ankles (including thin cotton socks), as long as they can be walked in. The primary condition is coverage of the foot and ankle. Time limit: 24 hours for resident, 72 hours for traveler.
+- Hanafi: Must be thick, durable footwear known as khuff (leather or thick material), not thin cotton socks. Must be able to walk in them without another shoe. Time limit: 24 hours resident, 72 hours traveler.
+- Shafi'i: Must be leather or leather-like material that covers the entire foot and ankle, and must be worn in a state of wudu. Thin cotton socks are not sufficient. Time limit: 24 hours resident, 72 hours traveler.
+- Maliki: Similar to Hanbali — any covering of the feet suffices, including socks, as long as they are not transparent. Time limit: 24 hours for resident, 72 hours for traveler.
+All agree that wiping is on the top of the sock only, not the bottom, based on the Prophet's practice. The Hanbali and Maliki views are more practical for contemporary Muslims. The evidence is the hadith: "The Prophet (ﷺ) wiped over his socks and sandals" (Abu Dawud #159, Tirmidhi #99, authenticated by Al-Albani).`,
+    source: "Comparative Fiqh - Abu Dawud #159, Tirmidhi #99, Al-Albani authentication",
+    category: "fiqh"
+  },
+  {
+    title: "Touching a Woman Breaks Wudu - Madhab Positions",
+    content: `Does touching a woman (non-mahram) invalidate wudu?
+- Shafi'i: Yes, any skin-to-skin contact between a man and non-mahram woman breaks wudu. Based on: "Or you have touched women" (Quran 5:6), interpreted literally as physical touch. Also: "The Prophet (ﷺ) kissed one of his wives and prayed without performing wudu" is explained as him having been in a state of wudu already.
+- Hanafi: No, touching a woman does not break wudu. Based on the same Quran 5:6, which they interpret as meaning sexual intercourse (metaphorical touch). Supported by the hadith: "The Prophet (ﷺ) kissed one of his wives and prayed without performing wudu" (Abu Dawud #179, Tirmidhi #86).
+- Maliki: No, touching does not break wudu unless accompanied by sexual desire (shahwah). If there is desire, wudu is broken. This is a middle position.
+- Hanbali: No, touching a woman does not break wudu under any circumstances. Based on the same hadith evidence and the principle that acts remain valid unless clear evidence proves otherwise.
+The strongest textual evidence supports the view that touching does not break wudu (the hadith is explicit), which is why the majority (Hanafi, Maliki with condition, Hanbali) take this position.`,
+    source: "Comparative Fiqh - Quran 5:6, Abu Dawud #179, Tirmidhi #86",
+    category: "fiqh"
+  },
+  {
+    title: "Bleeding Breaks Wudu - Madhab Positions",
+    content: `Does bleeding (e.g., from a wound, cupping, nosebleed) break wudu?
+- Hanafi: No, bleeding does NOT break wudu unless blood flows beyond the wound area. Even then, it is makruh (disliked) but does not invalidate wudu. Based on the practice of the Companions: "Ibn Umar squeezed a pimple and blood came out, and he prayed without renewing wudu" (Muwatta Malik #62).
+- Shafi'i: Yes, bleeding breaks wudu. Based on "If any of you experiences a flow of blood while in prayer, let him leave and make wudu" (Darqutni). They interpret the general command as including all significant bleeding.
+- Maliki: Yes, bleeding breaks wudu if the blood flows (moves beyond the wound). Minor spots do not break wudu. The criterion is flow, not mere occurrence.
+- Hanbali: No, bleeding does NOT break wudu. The Hanbali position is the same as Hanafi — bleeding does not invalidate wudu. Based on explicit reports from the Companions.
+The Hanafi and Hanbali positions have stronger evidence from the practice of the Companions. The hadith about renewing wudu for blood is not considered authentic (da'if) by many muhaddithin.`,
+    source: "Comparative Fiqh - Muwatta Malik, Darqutni, Companion practices",
+    category: "fiqh"
+  },
+  {
+    title: "Eating Camel Meat Breaks Wudu - Madhab Positions",
+    content: `Does eating camel meat invalidate wudu?
+- Hanbali: Yes, eating camel meat breaks wudu. The Prophet (ﷺ) said: "Perform wudu from eating camel meat" (Muslim #360, Abu Dawud #184). This is considered an explicit, un-abrogated command by the Hanbali school.
+- Hanafi: No, eating camel meat does not break wudu. They interpret the command as relating to hygiene or recommendatory, not obligatory. They also note that the Prophet (ﷺ) ate camel meat and prayed without wudu in some narrations, suggesting the command was specific to certain contexts.
+- Shafi'i: No, eating camel meat does not break wudu. They view the hadith as abrogated or as applying only to the specific context of the conquest of Khaybar. The general principle is that eating cooked food does not break wudu.
+- Maliki: No, eating camel meat does not break wudu. They consider that only what exits from the private parts (urine, stool, wind) breaks wudu.
+The Hanbali position follows the literal wording of an authentic hadith (Muslim #360). The majority position (Hanafi, Maliki, Shafi'i) relies on the general principle that food does not break wudu, treating the camel meat hadith as either context-specific or non-obligatory.`,
+    source: "Comparative Fiqh - Sahih Muslim #360, Abu Dawud #184",
+    category: "fiqh"
+  },
+
+  // ===== MADHAB COMPARISONS - FASTING, ZAKAT, HAJJ =====
+  {
+    title: "Tarawih Prayer - Number of Rakats - Madhab Positions",
+    content: `The number of rakats for Tarawih prayer during Ramadan varies:
+- Hanafi: 20 rakats (10 salams of 2 rakats each). Based on the practice of Umar ibn al-Khattab (may Allah be pleased with him) who established 20 rakats during his caliphate (Muwatta Malik, authenticated transmission). The Hanafis also add 3 rakats of Witr.
+- Shafi'i: 20 rakats, same as Hanafi. Based on the same practice of Umar and the consensus of the Companions on this number. Also add 3 rakats Witr.
+- Hanbali: 20 rakats is the preferred number, based on the established practice of the Companions. Ibn Qudamah in al-Mughni confirmed 20 rakats as the sunnah.
+- Maliki: 20 rakats (some older sources mention 36). The well-known Maliki position is 20 rakats plus 3 Witr. Some Maliki sources mention 36 rakats based on the practice of the people of Medina after the Companions.
+Evidence both ways: Aisha (may Allah be pleased with her) said the Prophet (ﷺ) never prayed more than 11 rakats (including Witr) in Ramadan (Bukhari #1147, Muslim #738). Some scholars follow this as the sunnah (8 Tarawih + 3 Witr = 11). Others consider the 20-rakat practice established by Umar as a legitimate expansion approved by the Companions. Both positions have strong evidence.`,
+    source: "Comparative Fiqh - Bukhari #1147, Muslim #738, Muwatta Malik, al-Mughni",
+    category: "fiqh"
+  },
+  {
+    title: "Triple Talaq (Divorce) - Madhab Positions",
+    content: `If a husband pronounces three divorces at once (triple talaq), does it count as three or one?
+- Hanafi, Maliki, Hanbali: All three count as three, making the divorce irrevocable (talaq ba'in). The wife cannot remarry the husband unless she marries another man and that marriage ends legitimately (halalah). Based on the hadith that the Prophet (ﷺ) approved three divorces as three (Muslim #1472).
+- Shafi'i: All three count as three — same position as the majority. This is the established Shafi'i view.
+- Contemporary Salafi view (following Ibn Taymiyyah and Ibn al-Qayyim): Triple talaq pronounced at once counts as ONE divorce (talaq raj'i). Based on the hadith: "Three divorces during the time of the Prophet (ﷺ), Abu Bakr, and the first two years of Umar's caliphate were counted as one" (Muslim #1472, in a different narration). Umar later changed this practice for public interest (to prevent men from trifling with divorce).
+The majority position (counts as three) follows the later practice endorsed by Umar and the Companions. The minority position (counts as one) follows the earlier practice of the Prophet himself. Both positions have textual evidence.`,
+    source: "Comparative Fiqh - Sahih Muslim #1472, Ibn Taymiyyah, Ibn al-Qayyim",
+    category: "fiqh"
+  },
+
+  // ===== MADHAB COMPARISONS - FOOD, DRINK, DAILY LIFE =====
+  {
+    title: "Dog Saliva and Impurity - Madhab Positions",
+    content: `The ruling on dog saliva and whether dogs are impure (najis):
+- Hanafi: Dog saliva and all parts of the dog are impure (najis). Something touched by dog saliva must be washed 3 times (no specific requirement for soil). Based on the general principle of impurity.
+- Shafi'i: Dog saliva is severely impure (najis mughallazh). A vessel licked by a dog must be washed 7 times, one of which with soil. Based on: "If a dog drinks from your vessel, wash it seven times, and the eighth with soil" (Muslim #279). The entire dog is considered impure in the Shafi'i school.
+- Hanbali: Same as Shafi'i — dog saliva is severely impure, requiring 7 washes including one with soil. Based on the same hadith (Muslim #279). The dog's body is not impure, only its saliva, sweat, and other fluids.
+- Maliki: Dogs are not impure (tahir). Based on the principle that the original ruling of things is purity (taharah). No special washing is required — normal washing suffices. Supported by the hadith that dogs were present around the Prophet's mosque in Medina (Bukhari #3329).
+The Shafi'i, Hanafi, and Hanbali positions have explicit textual evidence (Muslim #279). The Maliki position relies on general principles and the absence of evidence for impurity beyond the vessel-washing command.`,
+    source: "Comparative Fiqh - Sahih Muslim #279, Sahih Bukhari #3329",
+    category: "fiqh"
+  },
+  {
+    title: "Ruling on Music and Musical Instruments - Madhab Positions",
+    content: `The permissibility of music and musical instruments differs significantly:
+- Hanbali: Most musical instruments are haram (unlawful), with the exception of the duff (tambourine) at weddings and Eid. Based on: "There will be people from my ummah who will make lawful fornication, silk, alcohol, and musical instruments" (Bukhari #5590). This hadith lists musical instruments alongside clearly forbidden things.
+- Hanafi: Similar to Hanbali — musical instruments other than the duff at weddings are considered haram or severely disliked. The voice and hands of women singing are considered awrah (must be concealed).
+- Shafi'i: Some musical instruments are permitted (duff, certain percussion). String and wind instruments are discouraged or prohibited depending on context. The Shafi'i school generally distinguishes between lawful entertainment (at weddings, Eid) and excessive indulgence.
+- Maliki: Most musical instruments are prohibited, except the duff at weddings. The Maliki position is one of the strictest regarding music, prohibiting string instruments and wind instruments entirely.
+All four madhabs agree that the duff (tambourine) at weddings and Eid is permitted based on authentic sunnah. They differ on other instruments. The majority (Hanbali, Maliki, Hanafi) hold that musical instruments beyond the duff are prohibited based on Bukhari #5590. A minority view permits some instruments based on other evidence.`,
+    source: "Comparative Fiqh - Sahih Bukhari #5590, traditions on duff at weddings",
+    category: "fiqh"
+  },
+  {
+    title: "Smoking (Tobacco) - Madhab Rulings",
+    content: `Smoking tobacco is a modern issue (introduced after the classical madhab period), so rulings are derived by analogy (qiyas):
+- Hanafi: Smoking is makruh tahrimi (severely disliked, close to haram) due to evidence that it harms the body and wastes wealth. Based on: "Do not kill yourselves" (Quran 4:29) and "Spend not wastefully" (Quran 17:26-27).
+- Maliki: Haram (unlawful) — Malikis generally rule smoking as haram due to the harm it causes, applying the principle of darar (harm), which must be avoided. "There should be neither harming nor reciprocating harm" (hadith, Ibn Majah #2340).
+- Shafi'i: Haram — based on the same principles of avoiding self-harm and wasting wealth. The Shafi'i position has strengthened over time as medical evidence of harm has become clear.
+- Hanbali: Haram — Ibn Taymiyyah and later Hanbali scholars ruled smoking as haram due to intoxication-like effects and proven health risks. Contemporary Hanbali scholars (Ibn Baz, Ibn Uthaymeen) ruled it haram.
+The consensus of contemporary scholars from all four madhabs is that smoking is haram or at least severely prohibited due to proven health risks. The earlier permissive rulings were based on lack of evidence about harm.`,
+    source: "Comparative Fiqh - Quran 4:29, 17:26-27, Ibn Majah #2340, Ibn Baz, Ibn Uthaymeen",
+    category: "fiqh"
+  },
+  {
+    title: "Beard in Islam - Madhab Positions",
+    content: `The ruling on growing the beard and its length:
+- Hanbali: Growing the beard is wajib (obligatory). It is haram to shave the beard entirely. Based on the explicit command: "Trim your mustaches and let your beards grow" (Bukhari #5892, Muslim #259). The command is interpreted as obligatory. The beard must be at least a fistful in length.
+- Hanafi: Growing the beard is wajib (obligatory). Based on the same hadith. The Hanafi school considers shaving the beard to be major sin (kabirah). Length: at least a fistful; trimming beyond that is permitted.
+- Maliki: Growing the beard is recommended (mandub) but not obligatory. Shaving the beard is makruh (disliked) but not haram. Based on a different interpretation of the command — they view it as recommended rather than obligatory.
+- Shafi'i: Growing the beard is a confirmed Sunnah (sunnah mu'akkadah) but not obligatory. Shaving the beard is makruh (disliked). Based on interpreting the command as recommendatory rather than obligatory.
+All four schools agree that the beard is emphasized in Islam. The difference is whether it is obligatory or recommended. The Hanbali and Hanafi positions of obligation are supported by the imperative verb form in the authentic hadith. The Maliki and Shafi'i positions take into account that some Companions may have trimmed their beards.`,
+    source: "Comparative Fiqh - Sahih Bukhari #5892, Sahih Muslim #259",
+    category: "fiqh"
+  },
+  {
+    title: "Joining Prayers Without Travel - Madhab Positions",
+    content: `Can a person combine (jam') Dhuhr and Asr, or Maghrib and Isha, without being on a journey (e.g., due to illness, rain, work)?
+- Hanbali: Permitted to combine prayers due to illness, rain, extreme need, or any valid hardship (mashaqqah). Based on the Prophet (ﷺ) combining prayers in Medina without fear or travel (Muslim #705). The Hanbali interpretation is the broadest.
+- Shafi'i: Combining prayers for reasons other than travel or the Hajj at Arafah/Muzdalifah is not permitted. Rain is an exception for Maghrib and Isha at the mosque. Based on the principle that prayer times are fixed (Quran 4:103).
+- Maliki: Similar to Shafi'i — combining is generally limited to travel and emergencies. Rain at the mosque is accepted for Maghrib and Isha. The Maliki school is relatively strict on this.
+- Hanafi: Combining prayers outside of Arafah and Muzdalifah (during Hajj) is not permitted at all, even for travel. Instead, Hanafis perform qasr (shortening) for travel. They interpret the hadith of combining in Medina as being due to rain or a medical reason, not general permission.
+The Hanbali position is the most accommodating, permitting combination for any genuine hardship. The other schools restrict it to specific circumstances.`,
+    source: "Comparative Fiqh - Sahih Muslim #705, Quran 4:103",
+    category: "fiqh"
+  },
 ];
 
 export const seed = action({
