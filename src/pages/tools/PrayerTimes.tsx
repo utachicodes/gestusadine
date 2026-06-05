@@ -652,7 +652,7 @@ const PrayerTimes: React.FC = () => {
             <p className="text-center text-xs text-muted-foreground">
               {tr({ en: "Times for", fr: "Horaires pour" })}{" "}
               <span className="font-semibold text-foreground">{effectiveLabel}</span>
-              {" ┬╖ "}
+              {" · "}
               {new Date().toLocaleDateString(undefined, {
                 weekday: "long",
                 year: "numeric",

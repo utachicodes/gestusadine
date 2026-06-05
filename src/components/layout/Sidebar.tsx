@@ -21,6 +21,7 @@ import { useAuth } from '@/auth/AuthContext';
 import { useAuthz } from '@/auth/useAuthz';
 import { Permission } from '@/auth/rbac';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useTheme } from '@/contexts/ThemeContext';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 type Label = { en: string; fr: string };
@@ -83,6 +84,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggleCollapsed, 
   const { signOut, refreshProfile } = useAuth();
   const { can } = useAuthz();
   const { language, setLanguage } = useLanguage();
+  const { theme } = useTheme();
 
   // Refresh profile on mount so admin-gated sections appear once role loads.
   React.useEffect(() => {
@@ -140,6 +142,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggleCollapsed, 
     <aside
       className={`h-full flex flex-col bg-sidebar border-r border-sidebar-border transition-[width] duration-300 ease-in-out
         ${collapsed ? 'w-[76px]' : 'w-64'}`}
+      style={{ backgroundColor: theme.colors.sidebar, borderColor: theme.colors.border }}
     >
       {/* Logo + collapse toggle */}
       <div className={`flex items-center h-16 border-b border-sidebar-border ${collapsed ? 'justify-center px-2' : 'justify-between px-4'}`}>

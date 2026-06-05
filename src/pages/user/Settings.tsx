@@ -53,11 +53,18 @@ const Settings: React.FC = () => {
                 {!canCustomizeTheme && <Crown className="w-5 h-5 text-islamic-gold" />}
               </div>
               {canCustomizeTheme ? (
-                <Button onClick={() => setShowCustomizer(!showCustomizer)} className="w-full btn-islamic">
-                  {showCustomizer
-                    ? tr({ en: 'Hide Theme Customizer', fr: 'Masquer le personnalisateur' })
-                    : tr({ en: 'Show Theme Customizer', fr: 'Afficher le personnalisateur' })}
-                </Button>
+                <>
+                  <Button onClick={() => setShowCustomizer(!showCustomizer)} className="w-full btn-islamic">
+                    {showCustomizer
+                      ? tr({ en: 'Hide Theme Customizer', fr: 'Masquer le personnalisateur' })
+                      : tr({ en: 'Show Theme Customizer', fr: 'Afficher le personnalisateur' })}
+                  </Button>
+                  {showCustomizer && (
+                    <div className="mt-4">
+                      <ThemeCustomizer />
+                    </div>
+                  )}
+                </>
               ) : (
                 <div className="p-4 bg-gradient-to-r from-islamic-gold/10 to-islamic-green/10 rounded-lg border border-islamic-gold/20">
                   <p className="text-sm text-muted-foreground mb-2">{tr({ en: 'Custom themes are available on a paid plan.', fr: 'Les couleurs personnalisées sont disponibles avec une offre payante.' })}</p>
@@ -167,10 +174,6 @@ const Settings: React.FC = () => {
             )}
           </Card>
         </div>
-
-        {showCustomizer && canCustomizeTheme && (
-          <Card className="p-6"><ThemeCustomizer /></Card>
-        )}
       </section>
     </div>
   );

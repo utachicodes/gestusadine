@@ -37,17 +37,17 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
           --------------------------------------------------------------------- */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
         {/* Soft diagonal wash  gentle warm→mint shading for depth */}
-        <div className="absolute inset-0 bg-gradient-to-br from-white via-background to-[#e9f2ed]" />
+        <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-accent/5" />
         {/* Faint geometric Islamic texture */}
         <div className="absolute inset-0 bg-islamic-pattern opacity-60" />
         {/* Emerald glow  top right */}
-        <div className="absolute -top-[15%] -right-[10%] w-[55%] h-[55%] rounded-full bg-islamic-emerald-400/15 blur-[150px]" />
+        <div className="absolute -top-[15%] -right-[10%] w-[55%] h-[55%] rounded-full bg-primary/10 blur-[150px]" />
         {/* Teal glow  bottom left */}
-        <div className="absolute -bottom-[18%] -left-[8%] w-[50%] h-[55%] rounded-full bg-brand-400/15 blur-[160px]" />
+        <div className="absolute -bottom-[18%] -left-[8%] w-[50%] h-[55%] rounded-full bg-accent/10 blur-[160px]" />
         {/* Center highlight  lifts the working area */}
-        <div className="absolute top-[28%] left-1/2 -translate-x-1/2 w-[60%] h-[45%] rounded-full bg-white/50 blur-[120px]" />
+        <div className="absolute top-[28%] left-1/2 -translate-x-1/2 w-[60%] h-[45%] rounded-full bg-background/80 blur-[120px]" />
         {/* Top sheen */}
-        <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-white/70 to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-background/50 to-transparent" />
       </div>
 
       {/* Desktop sidebar */}
@@ -59,7 +59,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
       {mobileOpen && (
         <div className="md:hidden fixed inset-0 z-50">
           <div
-            className="absolute inset-0 bg-black/40 backdrop-blur-sm animate-in fade-in"
+            className="absolute inset-0 bg-foreground/20 backdrop-blur-sm animate-in fade-in"
             onClick={() => setMobileOpen(false)}
           />
           <div className="absolute inset-y-0 left-0 w-64 shadow-2xl animate-in slide-in-from-left duration-300">
