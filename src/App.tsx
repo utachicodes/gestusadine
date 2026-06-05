@@ -69,8 +69,8 @@ const App = () => {
             <TooltipProvider>
               <Toaster />
               <Sonner />
-              <CookieConsent />
               <LanguageProvider>
+                <CookieConsent />
                 <CartProvider>
                   <BrowserRouter>
                     <PostHogProvider>
