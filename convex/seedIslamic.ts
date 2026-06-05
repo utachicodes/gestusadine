@@ -3,125 +3,125 @@ import { internal } from "./_generated/api";
 import { v } from "convex/values";
 
 const ALL_SURAHS = [
-  {num:1,name:"Al-Fatihah",arabic:"الفاتحة",ayahs:7,type:"Makki"},
-  {num:2,name:"Al-Baqarah",arabic:"البقرة",ayahs:286,type:"Madani"},
-  {num:3,name:"Aali Imran",arabic:"آل عمران",ayahs:200,type:"Madani"},
-  {num:4,name:"An-Nisa'",arabic:"النساء",ayahs:176,type:"Madani"},
-  {num:5,name:"Al-Ma'idah",arabic:"المائدة",ayahs:120,type:"Madani"},
-  {num:6,name:"Al-An'am",arabic:"الأنعام",ayahs:165,type:"Makki"},
-  {num:7,name:"Al-A'raf",arabic:"الأعراف",ayahs:206,type:"Makki"},
-  {num:8,name:"Al-Anfal",arabic:"الأنفال",ayahs:75,type:"Madani"},
-  {num:9,name:"At-Tawbah",arabic:"التوبة",ayahs:129,type:"Madani"},
-  {num:10,name:"Yunus",arabic:"يونس",ayahs:109,type:"Makki"},
-  {num:11,name:"Hud",arabic:"هود",ayahs:123,type:"Makki"},
-  {num:12,name:"Yusuf",arabic:"يوسف",ayahs:111,type:"Makki"},
-  {num:13,name:"Ar-Ra'd",arabic:"الرعد",ayahs:43,type:"Madani"},
-  {num:14,name:"Ibrahim",arabic:"إبراهيم",ayahs:52,type:"Makki"},
-  {num:15,name:"Al-Hijr",arabic:"الحجر",ayahs:99,type:"Makki"},
-  {num:16,name:"An-Nahl",arabic:"النحل",ayahs:128,type:"Makki"},
-  {num:17,name:"Al-Isra'",arabic:"الإسراء",ayahs:111,type:"Makki"},
-  {num:18,name:"Al-Kahf",arabic:"الكهف",ayahs:110,type:"Makki"},
-  {num:19,name:"Maryam",arabic:"مريم",ayahs:98,type:"Makki"},
-  {num:20,name:"Ta-Ha",arabic:"طه",ayahs:135,type:"Makki"},
-  {num:21,name:"Al-Anbiya'",arabic:"الأنبياء",ayahs:112,type:"Makki"},
-  {num:22,name:"Al-Hajj",arabic:"الحج",ayahs:78,type:"Madani"},
-  {num:23,name:"Al-Mu'minun",arabic:"المؤمنون",ayahs:118,type:"Makki"},
-  {num:24,name:"An-Nur",arabic:"النور",ayahs:64,type:"Madani"},
-  {num:25,name:"Al-Furqan",arabic:"الفرقان",ayahs:77,type:"Makki"},
-  {num:26,name:"Ash-Shu'ara'",arabic:"الشعراء",ayahs:227,type:"Makki"},
-  {num:27,name:"An-Naml",arabic:"النمل",ayahs:93,type:"Makki"},
-  {num:28,name:"Al-Qasas",arabic:"القصص",ayahs:88,type:"Makki"},
-  {num:29,name:"Al-Ankabut",arabic:"العنكبوت",ayahs:69,type:"Makki"},
-  {num:30,name:"Ar-Rum",arabic:"الروم",ayahs:60,type:"Makki"},
-  {num:31,name:"Luqman",arabic:"لقمان",ayahs:34,type:"Makki"},
-  {num:32,name:"As-Sajdah",arabic:"السجدة",ayahs:30,type:"Makki"},
-  {num:33,name:"Al-Ahzab",arabic:"الأحزاب",ayahs:73,type:"Madani"},
-  {num:34,name:"Saba'",arabic:"سبأ",ayahs:54,type:"Makki"},
-  {num:35,name:"Fatir",arabic:"فاطر",ayahs:45,type:"Makki"},
-  {num:36,name:"Ya-Sin",arabic:"يس",ayahs:83,type:"Makki"},
-  {num:37,name:"As-Saffat",arabic:"الصافات",ayahs:182,type:"Makki"},
-  {num:38,name:"Sad",arabic:"ص",ayahs:88,type:"Makki"},
-  {num:39,name:"Az-Zumar",arabic:"الزمر",ayahs:75,type:"Makki"},
-  {num:40,name:"Ghafir",arabic:"غافر",ayahs:85,type:"Makki"},
-  {num:41,name:"Fussilat",arabic:"فصلت",ayahs:54,type:"Makki"},
-  {num:42,name:"Ash-Shura",arabic:"الشورى",ayahs:53,type:"Makki"},
-  {num:43,name:"Az-Zukhruf",arabic:"الزخرف",ayahs:89,type:"Makki"},
-  {num:44,name:"Ad-Dukhan",arabic:"الدخان",ayahs:59,type:"Makki"},
-  {num:45,name:"Al-Jathiyah",arabic:"الجاثية",ayahs:37,type:"Makki"},
-  {num:46,name:"Al-Ahqaf",arabic:"الأحقاف",ayahs:35,type:"Makki"},
-  {num:47,name:"Muhammad",arabic:"محمد",ayahs:38,type:"Madani"},
-  {num:48,name:"Al-Fath",arabic:"الفتح",ayahs:29,type:"Madani"},
-  {num:49,name:"Al-Hujurat",arabic:"الحجرات",ayahs:18,type:"Madani"},
-  {num:50,name:"Qaf",arabic:"ق",ayahs:45,type:"Makki"},
-  {num:51,name:"Adh-Dhariyat",arabic:"الذاريات",ayahs:60,type:"Makki"},
-  {num:52,name:"At-Tur",arabic:"الطور",ayahs:49,type:"Makki"},
-  {num:53,name:"An-Najm",arabic:"النجم",ayahs:62,type:"Makki"},
-  {num:54,name:"Al-Qamar",arabic:"القمر",ayahs:55,type:"Makki"},
-  {num:55,name:"Ar-Rahman",arabic:"الرحمن",ayahs:78,type:"Madani"},
-  {num:56,name:"Al-Waqi'ah",arabic:"الواقعة",ayahs:96,type:"Makki"},
-  {num:57,name:"Al-Hadid",arabic:"الحديد",ayahs:29,type:"Madani"},
-  {num:58,name:"Al-Mujadilah",arabic:"المجادلة",ayahs:22,type:"Madani"},
-  {num:59,name:"Al-Hashr",arabic:"الحشر",ayahs:24,type:"Madani"},
-  {num:60,name:"Al-Mumtahanah",arabic:"الممتحنة",ayahs:13,type:"Madani"},
-  {num:61,name:"As-Saff",arabic:"الصف",ayahs:14,type:"Madani"},
-  {num:62,name:"Al-Jumu'ah",arabic:"الجمعة",ayahs:11,type:"Madani"},
-  {num:63,name:"Al-Munafiqun",arabic:"المنافقون",ayahs:11,type:"Madani"},
-  {num:64,name:"At-Taghabun",arabic:"التغابن",ayahs:18,type:"Madani"},
-  {num:65,name:"At-Talaq",arabic:"الطلاق",ayahs:12,type:"Madani"},
-  {num:66,name:"At-Tahrim",arabic:"التحريم",ayahs:12,type:"Madani"},
-  {num:67,name:"Al-Mulk",arabic:"الملك",ayahs:30,type:"Makki"},
-  {num:68,name:"Al-Qalam",arabic:"القلم",ayahs:52,type:"Makki"},
-  {num:69,name:"Al-Haqqah",arabic:"الحاقة",ayahs:52,type:"Makki"},
-  {num:70,name:"Al-Ma'arij",arabic:"المعارج",ayahs:44,type:"Makki"},
-  {num:71,name:"Nuh",arabic:"نوح",ayahs:28,type:"Makki"},
-  {num:72,name:"Al-Jinn",arabic:"الجن",ayahs:28,type:"Makki"},
-  {num:73,name:"Al-Muzzammil",arabic:"المزمل",ayahs:20,type:"Makki"},
-  {num:74,name:"Al-Muddaththir",arabic:"المدثر",ayahs:56,type:"Makki"},
-  {num:75,name:"Al-Qiyamah",arabic:"القيامة",ayahs:40,type:"Makki"},
-  {num:76,name:"Al-Insan",arabic:"الإنسان",ayahs:31,type:"Madani"},
-  {num:77,name:"Al-Mursalat",arabic:"المرسلات",ayahs:50,type:"Makki"},
-  {num:78,name:"An-Naba'",arabic:"النبأ",ayahs:40,type:"Makki"},
-  {num:79,name:"An-Nazi'at",arabic:"النازعات",ayahs:46,type:"Makki"},
-  {num:80,name:"Abasa",arabic:"عبس",ayahs:42,type:"Makki"},
-  {num:81,name:"At-Takwir",arabic:"التكوير",ayahs:29,type:"Makki"},
-  {num:82,name:"Al-Infitar",arabic:"الانفطار",ayahs:19,type:"Makki"},
-  {num:83,name:"Al-Mutaffifin",arabic:"المطففين",ayahs:36,type:"Makki"},
-  {num:84,name:"Al-Inshiqaq",arabic:"الانشقاق",ayahs:25,type:"Makki"},
-  {num:85,name:"Al-Buruj",arabic:"البروج",ayahs:22,type:"Makki"},
-  {num:86,name:"At-Tariq",arabic:"الطارق",ayahs:17,type:"Makki"},
-  {num:87,name:"Al-A'la",arabic:"الأعلى",ayahs:19,type:"Makki"},
-  {num:88,name:"Al-Ghashiyah",arabic:"الغاشية",ayahs:26,type:"Makki"},
-  {num:89,name:"Al-Fajr",arabic:"الفجر",ayahs:30,type:"Makki"},
-  {num:90,name:"Al-Balad",arabic:"البلد",ayahs:20,type:"Makki"},
-  {num:91,name:"Ash-Shams",arabic:"الشمس",ayahs:15,type:"Makki"},
-  {num:92,name:"Al-Layl",arabic:"الليل",ayahs:21,type:"Makki"},
-  {num:93,name:"Ad-Duha",arabic:"الضحى",ayahs:11,type:"Makki"},
-  {num:94,name:"Ash-Sharh",arabic:"الشرح",ayahs:8,type:"Makki"},
-  {num:95,name:"At-Tin",arabic:"التين",ayahs:8,type:"Makki"},
-  {num:96,name:"Al-Alaq",arabic:"العلق",ayahs:19,type:"Makki"},
-  {num:97,name:"Al-Qadr",arabic:"القدر",ayahs:5,type:"Makki"},
-  {num:98,name:"Al-Bayyinah",arabic:"البينة",ayahs:8,type:"Madani"},
-  {num:99,name:"Az-Zalzalah",arabic:"الزلزلة",ayahs:8,type:"Madani"},
-  {num:100,name:"Al-Adiyat",arabic:"العاديات",ayahs:11,type:"Makki"},
-  {num:101,name:"Al-Qari'ah",arabic:"القارعة",ayahs:11,type:"Makki"},
-  {num:102,name:"At-Takathur",arabic:"التكاثر",ayahs:8,type:"Makki"},
-  {num:103,name:"Al-Asr",arabic:"العصر",ayahs:3,type:"Makki"},
-  {num:104,name:"Al-Humazah",arabic:"الهمزة",ayahs:9,type:"Makki"},
-  {num:105,name:"Al-Fil",arabic:"الفيل",ayahs:5,type:"Makki"},
-  {num:106,name:"Quraysh",arabic:"قريش",ayahs:4,type:"Makki"},
-  {num:107,name:"Al-Ma'un",arabic:"الماعون",ayahs:7,type:"Makki"},
-  {num:108,name:"Al-Kawthar",arabic:"الكوثر",ayahs:3,type:"Makki"},
-  {num:109,name:"Al-Kafirun",arabic:"الكافرون",ayahs:6,type:"Makki"},
-  {num:110,name:"An-Nasr",arabic:"النصر",ayahs:3,type:"Madani"},
-  {num:111,name:"Al-Masad",arabic:"المسد",ayahs:5,type:"Makki"},
-  {num:112,name:"Al-Ikhlas",arabic:"الإخلاص",ayahs:4,type:"Makki"},
-  {num:113,name:"Al-Falaq",arabic:"الفلق",ayahs:5,type:"Makki"},
-  {num:114,name:"An-Nas",arabic:"الناس",ayahs:6,type:"Makki"},
+  {num:1,name:"Al-Fatihah",arabic:"الفاتحة",ayahs:7,type:"Makki",theme:"The Opening — prayer for guidance, praise of Allah, the straight path. Essence of the Quran."},
+  {num:2,name:"Al-Baqarah",arabic:"البقرة",ayahs:286,type:"Madani",theme:"The Cow — longest surah. Laws, stories of Bani Israel, Ayat-ul-Kursi, last 2 ayahs, fasting, Hajj, marriage, riba."},
+  {num:3,name:"Aali Imran",arabic:"آل عمران",ayahs:200,type:"Madani",theme:"Family of Imran — Tawheed, story of Maryam and Isa, Battle of Uhud, patience, reliance on Allah."},
+  {num:4,name:"An-Nisa'",arabic:"النساء",ayahs:176,type:"Madani",theme:"The Women — family law, marriage, divorce, inheritance, women's rights, justice, orphans."},
+  {num:5,name:"Al-Ma'idah",arabic:"المائدة",ayahs:120,type:"Madani",theme:"The Table Spread — completion of religion, halal food, prohibition of alcohol/gambling, covenants."},
+  {num:6,name:"Al-An'am",arabic:"الأنعام",ayahs:165,type:"Makki",theme:"The Cattle — Tawheed, refutation of shirk, stories of prophets, Allah's signs in creation."},
+  {num:7,name:"Al-A'raf",arabic:"الأعراف",ayahs:206,type:"Makki",theme:"The Heights — stories of Adam, Nuh, Hud, Salih, Lut, Shu'ayb, Musa; A'raf (the heights between Paradise and Hell)."},
+  {num:8,name:"Al-Anfal",arabic:"الأنفال",ayahs:75,type:"Madani",theme:"Spoils of War — Badr battle, rules of war, obedience to Allah and the Messenger."},
+  {num:9,name:"At-Tawbah",arabic:"التوبة",ayahs:129,type:"Madani",theme:"The Repentance — only surah without Bismillah. Treaties, Tabuk expedition, hypocrites, zakah."},
+  {num:10,name:"Yunus",arabic:"يونس",ayahs:109,type:"Makki",theme:"Jonah — signs of Allah in creation, story of Prophet Yunus, revelation of the Quran."},
+  {num:11,name:"Hud",arabic:"هود",ayahs:123,type:"Makki",theme:"Prophet Hud — destruction of 'Ad, stories of Nuh, Salih, Ibrahim, Lut, Shu'ayb; patience of prophets."},
+  {num:12,name:"Yusuf",arabic:"يوسف",ayahs:111,type:"Makki",theme:"Joseph — the most beautiful story (ahsan al-qasas). Prophet Yusuf's life, patience, forgiveness, trust in Allah."},
+  {num:13,name:"Ar-Ra'd",arabic:"الرعد",ayahs:43,type:"Madani",theme:"The Thunder — Allah's power in nature, truth of revelation, patience of believers, punishment of disbelievers."},
+  {num:14,name:"Ibrahim",arabic:"إبراهيم",ayahs:52,type:"Makki",theme:"Abraham — Prophet Ibrahim's du'a for Makkah, gratitude to Allah, the straight path."},
+  {num:15,name:"Al-Hijr",arabic:"الحجر",ayahs:99,type:"Makki",theme:"The Rocky Tract — Allah's protection of the Quran, story of Lut, punishment of the people of Al-Hijr."},
+  {num:16,name:"An-Nahl",arabic:"النحل",ayahs:128,type:"Makki",theme:"The Bee — Allah's blessings in creation, the bee as a sign, justice, patience, prohibition of shirk."},
+  {num:17,name:"Al-Isra'",arabic:"الإسراء",ayahs:111,type:"Makki",theme:"The Night Journey — Isra and Mi'raj, Children of Israel, commandments, the Quran as guidance."},
+  {num:18,name:"Al-Kahf",arabic:"الكهف",ayahs:110,type:"Makki",theme:"The Cave — the people of the cave, the man with two gardens, Musa and Khidr, Dhul-Qarnayn. Protection from Dajjal."},
+  {num:19,name:"Maryam",arabic:"مريم",ayahs:98,type:"Makki",theme:"Mary — story of Zakariyya, Yahya, Maryam, and the birth of Isa (Jesus). Tawheed, resurrection."},
+  {num:20,name:"Ta-Ha",arabic:"طه",ayahs:135,type:"Makki",theme:"Ta-Ha — story of Musa and Harun with Pharaoh, the golden calf, the Quran as a reminder."},
+  {num:21,name:"Al-Anbiya'",arabic:"الأنبياء",ayahs:112,type:"Makki",theme:"The Prophets — stories of many prophets, their struggles, Allah's victory for the righteous."},
+  {num:22,name:"Al-Hajj",arabic:"الحج",ayahs:78,type:"Madani",theme:"The Pilgrimage — Hajj rites, permission to fight, Allah's power, the day of judgement."},
+  {num:23,name:"Al-Mu'minun",arabic:"المؤمنون",ayahs:118,type:"Makki",theme:"The Believers — characteristics of successful believers, creation of man, the Hereafter."},
+  {num:24,name:"An-Nur",arabic:"النور",ayahs:64,type:"Madani",theme:"The Light — the light of Allah, modesty (hijab), slander punishment (Ifk incident), privacy rules."},
+  {num:25,name:"Al-Furqan",arabic:"الفرقان",ayahs:77,type:"Makki",theme:"The Criterion — the Quran as the criterion between truth and falsehood, qualities of the slaves of Ar-Rahman."},
+  {num:26,name:"Ash-Shu'ara'",arabic:"الشعراء",ayahs:227,type:"Makki",theme:"The Poets — stories of Musa, Ibrahim, Nuh, Hud, Salih, Lut, Shu'ayb; warning to the Quraysh."},
+  {num:27,name:"An-Naml",arabic:"النمل",ayahs:93,type:"Makki",theme:"The Ant — story of Sulayman (Solomon) with the ant and the hoopoe, Queen of Sheba (Bilqis), Tawheed."},
+  {num:28,name:"Al-Qasas",arabic:"القصص",ayahs:88,type:"Makki",theme:"The Stories — full story of Musa from birth to prophethood, Qarun, the Hereafter."},
+  {num:29,name:"Al-Ankabut",arabic:"العنكبوت",ayahs:69,type:"Makki",theme:"The Spider — the spider's web as a metaphor for weak protectors, tests of believers, stories of prophets."},
+  {num:30,name:"Ar-Rum",arabic:"الروم",ayahs:60,type:"Makki",theme:"The Romans — prophecy of Roman victory, signs of Allah, corruption on land and sea, Tawheed."},
+  {num:31,name:"Luqman",arabic:"لقمان",ayahs:34,type:"Makki",theme:"Luqman — wisdom of Luqman to his son, Tawheed, patience, humility, gratitude to Allah."},
+  {num:32,name:"As-Sajdah",arabic:"السجدة",ayahs:30,type:"Makki",theme:"The Prostration — creation of man, the Hereafter, prostration, the believers and the disobedient."},
+  {num:33,name:"Al-Ahzab",arabic:"الأحزاب",ayahs:73,type:"Madani",theme:"The Confederates — Battle of the Trench, rules for the Prophet's wives, hijab, divorce, trust."},
+  {num:34,name:"Saba'",arabic:"سبأ",ayahs:54,type:"Makki",theme:"Sheba — story of the people of Saba' (Sheba), Prophet Dawud and Sulayman, warning of judgement."},
+  {num:35,name:"Fatir",arabic:"فاطر",ayahs:45,type:"Makki",theme:"The Originator — creation, the Quran as truth, the Hereafter, believers and disbelievers."},
+  {num:36,name:"Ya-Sin",arabic:"يس",ayahs:83,type:"Makki",theme:"Ya-Sin — the heart of the Quran. Three messengers, Allah's power, resurrection, paradise."},
+  {num:37,name:"As-Saffat",arabic:"الصافات",ayahs:182,type:"Makki",theme:"Those Ranged in Ranks — angels ranked, stories of prophets (Nuh, Ibrahim, Musa, Harun, Ilyas, Lut, Yunus), Tawheed."},
+  {num:38,name:"Sad",arabic:"ص",ayahs:88,type:"Makki",theme:"Saad — story of Dawud, Sulayman, Ayyub, Adam and Iblis, the Quran as a reminder."},
+  {num:39,name:"Az-Zumar",arabic:"الزمر",ayahs:75,type:"Makki",theme:"The Groups — Tawheed, sincerity in worship, the Day of Judgement, the groups entering Paradise and Hell."},
+  {num:40,name:"Ghafir",arabic:"غافر",ayahs:85,type:"Makki",theme:"The Forgiver — forgiveness of Allah, story of the believing man from Pharaoh's family, the Hereafter."},
+  {num:41,name:"Fussilat",arabic:"فصلت",ayahs:54,type:"Makki",theme:"Explained in Detail — the Quran as detailed revelation, Allah's signs in creation, warning."},
+  {num:42,name:"Ash-Shura",arabic:"الشورى",ayahs:53,type:"Makki",theme:"Consultation — mutual consultation, revelation to Prophet, Tawheed, reward and punishment."},
+  {num:43,name:"Az-Zukhruf",arabic:"الزخرف",ayahs:89,type:"Makki",theme:"Gold Ornaments — worldly decoration vs. the Hereafter, story of Ibrahim, the Message."},
+  {num:44,name:"Ad-Dukhan",arabic:"الدخان",ayahs:59,type:"Makki",theme:"The Smoke — the smoke as a sign, night of Qadr, punishment and deliverance, the Hereafter."},
+  {num:45,name:"Al-Jathiyah",arabic:"الجاثية",ayahs:37,type:"Makki",theme:"The Kneeling — the kneeling of nations on judgement day, Allah's signs, warning."},
+  {num:46,name:"Al-Ahqaf",arabic:"الأحقاف",ayahs:35,type:"Makki",theme:"The Sandhills — story of Prophet Hud and the people of 'Ad, jinn listening to the Quran."},
+  {num:47,name:"Muhammad",arabic:"محمد",ayahs:38,type:"Madani",theme:"Prophet Muhammad — fighting in Allah's path, the Prophet's guidance, hypocrisy, Paradise."},
+  {num:48,name:"Al-Fath",arabic:"الفتح",ayahs:29,type:"Madani",theme:"The Victory — Treaty of Hudaybiyyah, future victories, the Companions described."},
+  {num:49,name:"Al-Hujurat",arabic:"الحجرات",ayahs:18,type:"Madani",theme:"The Dwellings — etiquette with the Prophet, manners between believers, verifying news, brotherhood."},
+  {num:50,name:"Qaf",arabic:"ق",ayahs:45,type:"Makki",theme:"Qaf — creation, resurrection, Allah's power, the Hereafter, the Quran as reminder."},
+  {num:51,name:"Adh-Dhariyat",arabic:"الذاريات",ayahs:60,type:"Makki",theme:"The Scattering Winds — Allah's power, the Hour is coming, the righteous and their reward."},
+  {num:52,name:"At-Tur",arabic:"الطور",ayahs:49,type:"Makki",theme:"The Mount — Mount Tur (Sinai), the Quran's truth, the Hereafter, warning to disbelievers."},
+  {num:53,name:"An-Najm",arabic:"النجم",ayahs:62,type:"Makki",theme:"The Star — the Prophet's ascent (Mi'raj), refutation of idol worship, intercession belongs to Allah."},
+  {num:54,name:"Al-Qamar",arabic:"القمر",ayahs:55,type:"Makki",theme:"The Moon — the moon split as a sign, stories of the destroyed nations, the Quran is easy to remember."},
+  {num:55,name:"Ar-Rahman",arabic:"الرحمن",ayahs:78,type:"Madani",theme:"The Most Merciful — the greatest of Allah's blessings, 'Which of your Lord's favors do you deny?', Paradise described."},
+  {num:56,name:"Al-Waqi'ah",arabic:"الواقعة",ayahs:96,type:"Makki",theme:"The Event — the inevitable Day of Judgement, three groups (foremost, people of the right, people of the left)."},
+  {num:57,name:"Al-Hadid",arabic:"الحديد",ayahs:29,type:"Madani",theme:"The Iron — Allah's power and knowledge, spending in charity, humility, the Hereafter."},
+  {num:58,name:"Al-Mujadilah",arabic:"المجادلة",ayahs:22,type:"Madani",theme:"The Pleading Woman — the woman who complained to the Prophet, zihar, secret counsel, etiquette."},
+  {num:59,name:"Al-Hashr",arabic:"الحشر",ayahs:24,type:"Madani",theme:"The Gathering — expulsion of Banu Nadir, division of spoils, the attributes of Allah (last 3 ayahs)."},
+  {num:60,name:"Al-Mumtahanah",arabic:"الممتحنة",ayahs:13,type:"Madani",theme:"The Examined Woman — treaties with disbelievers, dealing with non-Muslim relatives, the oath of women."},
+  {num:61,name:"As-Saff",arabic:"الصف",ayahs:14,type:"Madani",theme:"The Ranks — fighting in ranks for Allah, saying what you do not do, Musa and Isa's prophecies."},
+  {num:62,name:"Al-Jumu'ah",arabic:"الجمعة",ayahs:11,type:"Madani",theme:"The Friday Congregation — Friday prayer obligation, seeking Allah's bounty, preferring trade over prayer."},
+  {num:63,name:"Al-Munafiqun",arabic:"المنافقون",ayahs:11,type:"Madani",theme:"The Hypocrites — exposing the hypocrites of Medina, their deception, spending for show."},
+  {num:64,name:"At-Taghabun",arabic:"التغابن",ayahs:18,type:"Madani",theme:"The Mutual Disillusion — the Day of Gathering, mutual loss, trust in Allah, the Hereafter."},
+  {num:65,name:"At-Talaq",arabic:"الطلاق",ayahs:12,type:"Madani",theme:"The Divorce — detailed rules of divorce, waiting period (iddah), provision, Allah's commands."},
+  {num:66,name:"At-Tahrim",arabic:"التحريم",ayahs:12,type:"Madani",theme:"The Prohibition — the Prophet's household incident, repentance, guarding family from Hellfire."},
+  {num:67,name:"Al-Mulk",arabic:"الملك",ayahs:30,type:"Makki",theme:"The Sovereignty — Allah's dominion, creation of death and life, protection from punishment of the grave."},
+  {num:68,name:"Al-Qalam",arabic:"القلم",ayahs:52,type:"Makki",theme:"The Pen — the Prophet's character, the pen and writing, the test of the garden owners."},
+  {num:69,name:"Al-Haqqah",arabic:"الحاقة",ayahs:52,type:"Makki",theme:"The Inevitable — the sure reality of judgement, destruction of past nations, the Quran is Allah's word."},
+  {num:70,name:"Al-Ma'arij",arabic:"المعارج",ayahs:44,type:"Makki",theme:"The Ascending Stairways — the Day of Judgement, the impatient nature of man, the prayerful believers."},
+  {num:71,name:"Nuh",arabic:"نوح",ayahs:28,type:"Makki",theme:"Noah — Prophet Nuh's long دعوة to his people, the flood, forgiveness of sins."},
+  {num:72,name:"Al-Jinn",arabic:"الجن",ayahs:28,type:"Makki",theme:"The Jinn — the jinn listening to the Quran, their belief, types of jinn, Allah's protection."},
+  {num:73,name:"Al-Muzzammil",arabic:"المزمل",ayahs:20,type:"Makki",theme:"The Wrapped One — night prayer (tahajjud), patience with the disbelievers, the Quran as a weighty word."},
+  {num:74,name:"Al-Muddaththir",arabic:"المدثر",ayahs:56,type:"Makki",theme:"The Cloaked One — the command to arise and warn, the Hereafter, the reckoning."},
+  {num:75,name:"Al-Qiyamah",arabic:"القيامة",ayahs:40,type:"Makki",theme:"The Resurrection — the Day of Resurrection, the soul at death, the face of Allah, human denial."},
+  {num:76,name:"Al-Insan",arabic:"الإنسان",ayahs:31,type:"Madani",theme:"Man — creation of man from a drop, guidance, the righteous drinking from a pure cup, patience."},
+  {num:77,name:"Al-Mursalat",arabic:"المرسلات",ayahs:50,type:"Makki",theme:"Those Sent Forth — the winds sent forth, the Day of Decision, woe to the deniers."},
+  {num:78,name:"An-Naba'",arabic:"النبأ",ayahs:40,type:"Makki",theme:"The Great News — the great news of resurrection, the Hereafter, the Day of Decision."},
+  {num:79,name:"An-Nazi'at",arabic:"النازعات",ayahs:46,type:"Makki",theme:"Those Who Pull Out — the angels pulling souls, story of Musa and Pharaoh, the final Hour."},
+  {num:80,name:"Abasa",arabic:"عبس",ayahs:42,type:"Makki",theme:"He Frowned — the Prophet frowning at the blind man Ibn Umm Maktum, the Quran as a reminder."},
+  {num:81,name:"At-Takwir",arabic:"التكوير",ayahs:29,type:"Makki",theme:"The Wrapping — the sun wrapped up, the Hereafter, the revelation of the Quran."},
+  {num:82,name:"Al-Infitar",arabic:"الانفطار",ayahs:19,type:"Makki",theme:"The Cleaving — the sky split apart, the record of deeds (Kiraman Katibin), the Day of Judgement."},
+  {num:83,name:"Al-Mutaffifin",arabic:"المطففين",ayahs:36,type:"Makki",theme:"The Defrauders — woe to those who cheat in weights and measures, the records (Sijjin and Illiyyun)."},
+  {num:84,name:"Al-Inshiqaq",arabic:"الانشقاق",ayahs:25,type:"Makki",theme:"The Splitting — the sky split open, the reckoning, the book given in the right vs. left hand."},
+  {num:85,name:"Al-Buruj",arabic:"البروج",ayahs:22,type:"Makki",theme:"The Mansions of the Stars — the story of the People of the Ditch (Ashab al-Ukhdud), the preserved tablet."},
+  {num:86,name:"At-Tariq",arabic:"الطارق",ayahs:17,type:"Makki",theme:"The Nightcomer — the piercing star, each soul has a guardian, the Quran is a decisive word."},
+  {num:87,name:"Al-A'la",arabic:"الأعلى",ayahs:19,type:"Makki",theme:"The Most High — glorify Allah's name, the Quran is easy to remember, the early scriptures."},
+  {num:88,name:"Al-Ghashiyah",arabic:"الغاشية",ayahs:26,type:"Makki",theme:"The Overwhelming — the overwhelming event, faces of Paradise and Hell, the Prophet is a reminder."},
+  {num:89,name:"Al-Fajr",arabic:"الفجر",ayahs:30,type:"Makki",theme:"The Dawn — the fate of Thamud, 'Ad, and Pharaoh, the love of wealth, 'O soul at peace, return to your Lord.'"},
+  {num:90,name:"Al-Balad",arabic:"البلد",ayahs:20,type:"Makki",theme:"The City — Makkah as the sacred city, man in toil, the two paths (good and evil)."},
+  {num:91,name:"Ash-Shams",arabic:"الشمس",ayahs:15,type:"Makki",theme:"The Sun — oath by Allah's creation, purification of the soul, story of Thamud and Salih."},
+  {num:92,name:"Al-Layl",arabic:"الليل",ayahs:21,type:"Makki",theme:"The Night — different paths of giving vs. stinginess, the Hereafter, 'and your Lord will give you and you will be satisfied.'"},
+  {num:93,name:"Ad-Duha",arabic:"الضحى",ayahs:11,type:"Makki",theme:"The Morning Brightness — comfort for the Prophet, Allah has not forsaken him, the Hereafter is better."},
+  {num:94,name:"Ash-Sharh",arabic:"الشرح",ayahs:8,type:"Makki",theme:"The Opening of the Breast — the Prophet's chest expanded, ease after hardship, strive for your Lord."},
+  {num:95,name:"At-Tin",arabic:"التين",ayahs:8,type:"Makki",theme:"The Fig — oath by the fig and olive, man created in the best form, the judgement."},
+  {num:96,name:"Al-Alaq",arabic:"العلق",ayahs:19,type:"Makki",theme:"The Clot — the first revelation, 'Read in the name of your Lord', man's transgression, the prostration."},
+  {num:97,name:"Al-Qadr",arabic:"القدر",ayahs:5,type:"Makki",theme:"The Decree — the Night of Decree (Laylat al-Qadr), the Quran sent down, better than a thousand months."},
+  {num:98,name:"Al-Bayyinah",arabic:"البينة",ayahs:8,type:"Madani",theme:"The Clear Evidence — the People of the Book until clear evidence came, the best of creation."},
+  {num:99,name:"Az-Zalzalah",arabic:"الزلزلة",ayahs:8,type:"Madani",theme:"The Earthquake — the earth's final quake, the weighing of deeds, an atom's weight of good and evil."},
+  {num:100,name:"Al-Adiyat",arabic:"العاديات",ayahs:11,type:"Makki",theme:"The Charging Steeds — the horses charging, man's ingratitude, the resurrection."},
+  {num:101,name:"Al-Qari'ah",arabic:"القارعة",ayahs:11,type:"Makki",theme:"The Striking Calamity — the Day of Judgement, scales weighed, the abyss of Hell."},
+  {num:102,name:"At-Takathur",arabic:"التكاثر",ayahs:8,type:"Makki",theme:"The Rivalry in Increase — worldly competition distracts from Allah, you will surely see Hellfire."},
+  {num:103,name:"Al-Asr",arabic:"العصر",ayahs:3,type:"Makki",theme:"The Time — by time, man is in loss except those who believe, do good, enjoin truth and patience."},
+  {num:104,name:"Al-Humazah",arabic:"الهمزة",ayahs:9,type:"Makki",theme:"The Slanderer — woe to every slanderer and backbiter who hoards wealth, the crushing Fire (Hutamah)."},
+  {num:105,name:"Al-Fil",arabic:"الفيل",ayahs:5,type:"Makki",theme:"The Elephant — the year of the elephant, Allah's protection of the Ka'bah from Abraha's army."},
+  {num:106,name:"Quraysh",arabic:"قريش",ayahs:4,type:"Makki",theme:"Quraysh — the Quraysh's secure caravans, let them worship the Lord of this House."},
+  {num:107,name:"Al-Ma'un",arabic:"الماعون",ayahs:7,type:"Makki",theme:"Small Kindness — those who deny the judgement, neglect the orphan, and withhold small kindness."},
+  {num:108,name:"Al-Kawthar",arabic:"الكوثر",ayahs:3,type:"Makki",theme:"The Abundance — the river of Paradise given to the Prophet, sacrifice, your enemy is cut off."},
+  {num:109,name:"Al-Kafirun",arabic:"الكافرون",ayahs:6,type:"Makki",theme:"The Disbelievers — 'I do not worship what you worship', clear separation of religions, tolerance."},
+  {num:110,name:"An-Nasr",arabic:"النصر",ayahs:3,type:"Madani",theme:"The Victory — Allah's help and victory, people entering Islam in crowds, glorify your Lord."},
+  {num:111,name:"Al-Masad",arabic:"المسد",ayahs:5,type:"Makki",theme:"The Palm Fiber — Abu Lahab and his wife, their punishment, Allah's protection of the message."},
+  {num:112,name:"Al-Ikhlas",arabic:"الإخلاص",ayahs:4,type:"Makki",theme:"The Sincerity — pure Tawheed, Allah is One, Eternal, He begets not nor is born. One-third of the Quran."},
+  {num:113,name:"Al-Falaq",arabic:"الفلق",ayahs:5,type:"Makki",theme:"The Daybreak — seeking refuge from all evil (creation, darkness, sorcery, envy)."},
+  {num:114,name:"An-Nas",arabic:"الناس",ayahs:6,type:"Makki",theme:"Mankind — seeking refuge in the Lord of mankind from the whispering of shaytan among jinn and mankind."},
 ];
 
-const SURAH_LIST_TEXT = "COMPLETE LIST OF ALL QURAN SURAHS WITH AYAH COUNTS:\n\n" + ALL_SURAHS.map(s =>
-  `Surah ${s.num}: ${s.name} (${s.arabic}) - ${s.type}, ${s.ayahs} ayahs.`
-).join("\n") + "\n\nUse this to verify surah numbers and ayah counts. If a user asks about an ayah number that exceeds a surah's ayah count, tell them it doesn't exist in that surah.";
+const SURAH_LIST_TEXT = "COMPLETE LIST OF ALL 114 QURAN SURAHS WITH AYAH COUNTS AND THEMES:\n\n" + ALL_SURAHS.map(s =>
+  `Surah ${s.num}: ${s.name} (${s.arabic}) - ${s.type}, ${s.ayahs} ayahs. Theme: ${s.theme}`
+).join("\n") + "\n\nUse this to verify surah numbers, ayah counts, and themes. If a user asks about an ayah number that exceeds a surah's ayah count, tell them it doesn't exist in that surah.";
 
 const DOCUMENTS = [
   {
@@ -590,6 +590,435 @@ All four schools agree that the beard is emphasized in Islam. The difference is 
 The Hanbali position is the most accommodating, permitting combination for any genuine hardship. The other schools restrict it to specific circumstances.`,
     source: "Comparative Fiqh - Sahih Muslim #705, Quran 4:103",
     category: "fiqh"
+  },
+
+  // ===== COMPREHENSIVE FIQH GUIDES =====
+  {
+    title: "Comprehensive Guide to Salah (Prayer) - Detailed",
+    content: `Salah is the second pillar of Islam and the most important physical act of worship. It is obligatory on every sane adult Muslim five times daily.
+
+TIMES OF PRAYER:
+Fajr: From true dawn (white light across the horizon) until sunrise. Dhuhr: From when the sun passes its zenith until the shadow of an object equals its length. Asr: From when the shadow equals the object's length until sunset (yellowing of the sun). Maghrib: From sunset until the red twilight disappears. Isha: From the disappearance of the red twilight until midnight (or true dawn according to some scholars).
+
+CONDITIONS OF VALIDITY (Shurut):
+1. Entry of the proper time. 2. Purification from minor hadath (wudu) and major hadath (ghusl). 3. Cleanliness of the body, clothing, and place of prayer. 4. Covering the awrah. 5. Facing the Qiblah. 6. Intention (niyyah) in the heart.
+
+PILLARS (Arkan) — prayer is invalid if any is omitted:
+1. Standing (if able). 2. Takbirat al-Ihram (saying Allahu Akbar to begin). 3. Reciting Surah Al-Fatihah. 4. Bowing (Ruku) with tranquility. 5. Rising from bowing and standing upright. 6. Prostration (Sujud) on seven limbs (forehead, nose, hands, knees, toes) with tranquility. 7. Rising from prostration and sitting between the two prostrations. 8. The final Tashahhud. 9. Sending salawat upon the Prophet in the final Tashahhud. 10. The final Taslim (saying Assalamu alaykum wa rahmatullah to the right). 11. Maintaining correct order of pillars. 12. Tranquility (tumaninah) in each pillar.
+
+WAJIBAT (Obligatory Acts) — if omitted unintentionally, make up with sujud al-sahw:
+1. All takbirs except Takbirat al-Ihram. 2. Saying Subhana Rabbiyal Adheem in ruku. 3. Saying Sami Allahu liman hamidah (for imam and alone). 4. Saying Rabbana lakal hamd after rising. 5. Saying Subhana Rabbiyal A'la in sujud. 6. The first Tashahhud. 7. Sitting for the first Tashahhud.
+
+INVALIDATORS OF PRAYER:
+1. Speaking intentionally. 2. Laughing aloud. 3. Eating or drinking. 4. Excessive movement unrelated to prayer. 5. Exposing the awrah. 6. Turning the chest away from the Qiblah without excuse. 7. Breaking wudu. 8. Passing of time (prayer time exiting). 9. Changing the intention.
+
+RECOMMENDED ACTS:
+Raising hands at takbirs, placing right hand over left on chest, reciting surah after Fatiha in first two rakats, saying Ameen, saying the opening du'a (thana), seeking refuge in Allah before reciting (ta'awwudh).`,
+    source: "Fiqh - Quran, Sahih Bukhari, Sahih Muslim, Ibn Baz, Ibn Uthaymeen",
+    category: "fiqh"
+  },
+  {
+    title: "Comprehensive Guide to Sawm (Fasting) - Detailed",
+    content: `Fasting Ramadan is the fourth pillar of Islam. It is obligatory on every sane, adult Muslim who is able. "O you who have believed, fasting is prescribed for you as it was prescribed for those before you, that you may attain piety (taqwa)." (Quran 2:183).
+
+PILLARS OF FASTING:
+1. Intention (niyyah) — must be made before Fajr each night. The Prophet (ﷺ) said: "Whoever does not intend to fast before Fajr, there is no fast for him." (Abu Dawud #2454, Tirmidhi #730, authenticated by Al-Albani).
+2. Abstaining from all nullifiers from true dawn (Fajr) until sunset.
+
+SUNNAH ACTS:
+1. Suhur (pre-dawn meal) — the Prophet (ﷺ) said: "Take suhur, for in suhur is blessing." (Bukhari #1923, Muslim #1095). It is delayed until just before Fajr.
+2. Iftar (breaking fast) promptly at sunset. The Prophet (ﷺ) used to break with fresh dates, or if not available, dry dates, or water. He said: "Allahumma laka sumtu wa ala rizqika aftartu" (O Allah, for You I fasted and with Your provision I break my fast).
+3. Supplication at iftar — "Dhahab al-zama' wa abtalat al-uruq wa thabata al-ajr in sha Allah" (The thirst is gone, the veins are moistened, and the reward is confirmed by Allah's will).
+4. Increasing good deeds: charity, Quran recitation, night prayer (Tarawih), and itikaf (seclusion in the mosque) especially in the last ten days.
+
+NULLIFIERS OF FASTING (require qada/makeup):
+1. Eating or drinking deliberately. 2. Intentional vomiting. 3. Menstruation or post-childbirth bleeding. 4. Sexual intercourse (requires both qada and kaffarah — expiation of fasting 60 consecutive days or feeding 60 poor people). 5. Injections that provide nourishment. 6. Cupping (hijamah) according to the stronger view. The Prophet (ﷺ) said: "The cupper and the one being cupped have broken their fast." (Abu Dawud #2367, authenticated by Al-Albani).
+
+DOES NOT BREAK THE FAST:
+1. Eating or drinking forgetfully (complete the fast, it is Allah's provision). 2. Swallowing saliva or dust unintentionally. 3. Using miswak or toothbrush (without swallowing). 4. Rinsing the mouth or nose with water (without exaggeration). 5. Applying eye drops or kohl (does not reach the stomach). 6. Having a blood test or injection that is not nourishing. 7. Wet dreams. 8. Kissing and embracing one's spouse if one can control oneself (the Prophet (ﷺ) used to kiss his wives while fasting — Bukhari #1927).
+
+VOLUNTARY FASTS:
+Recommended: Mondays and Thursdays (the Prophet's deeds were presented on these days), the White Days (13th, 14th, 15th of each lunar month), Day of Arafah (9th Dhul-Hijjah — expiates two years of sins), Day of Ashura (10th Muharram — expiates previous year's sins) along with the 9th or 11th, six days of Shawwal after Ramadan, and the month of Shaban.`,
+    source: "Fiqh - Quran 2:183, Sahih Bukhari, Sahih Muslim, Ibn Baz, Ibn Uthaymeen, Al-Albani",
+    category: "fiqh"
+  },
+  {
+    title: "Comprehensive Guide to Zakat (Obligatory Charity) - Detailed",
+    content: `Zakat is the third pillar of Islam. It is obligatory on every free Muslim who owns the minimum threshold (nisab) for one complete lunar year. The nisab is the equivalent of 85 grams of gold or 595 grams of silver. At current market rates, the silver nisab is often lower, making it easier for more people to be obligated. The purpose of zakat is to purify wealth and help the needy.
+
+CATEGORIES OF WEALTH SUBJECT TO ZAKAT:
+1. Gold and silver (including savings, cash, bank accounts, and investments) — 2.5% annually.
+2. Trade goods (inventory of a business) — 2.5% of the value annually.
+3. Agricultural produce — 10% if naturally watered (rain, rivers), 5% if irrigated with expense.
+4. Livestock (camels, cattle, sheep, goats) — specific amounts based on the number of animals. For sheep/goats: 1 for 40-120, 2 for 121-200, 3 for 201-300, etc. For cattle: 1 calf for 30, 2 for 60, etc. For camels: specific graded scale.
+5. Rikaz (buried treasure/minerals found) — 20% immediately, no annual wait.
+6. Income from rental properties, stocks, and investments — 2.5% of net income annually.
+
+ZAKAT IS PAID TO EIGHT CATEGORIES (Quran 9:60):
+1. Al-Fuqara (the poor) — those who have nothing or insufficient means. 2. Al-Masakin (the needy) — those in difficulty though not completely destitute. 3. Those employed to collect and distribute zakat. 4. Those whose hearts are to be reconciled (new Muslims or those inclined to Islam). 5. Freeing captives and slaves. 6. Al-Gharimun (those in debt) — people who have debts they cannot pay. 7. Fi Sabilillah (in the path of Allah) — includes Jihad, building Islamic institutions, and general charitable causes. 8. Ibn al-Sabil (the wayfarer) — travelers stranded without means.
+
+CONDITIONS:
+Zakat is not paid to: non-Muslims (except those whose hearts are reconciled), direct ascendants (parents, grandparents) or descendants (children, grandchildren) whom one is obligated to support, or one's spouse.
+Zakat should be given in the local area first, but can be transferred to more needy areas.
+It is recommended to give zakat during Ramadan for multiplied rewards.
+Zakat al-Fitr (Fitrana): 2.5 kg of staple food per person, given before Eid prayer at the end of Ramadan. The Prophet (ﷺ) made it obligatory to purify the fasting person from idle speech and to feed the poor.`,
+    source: "Fiqh - Quran 9:60, Sahih Bukhari, Sahih Muslim, Ibn Baz, Ibn Uthaymeen",
+    category: "fiqh"
+  },
+  {
+    title: "Comprehensive Guide to Hajj and Umrah - Detailed",
+    content: `Hajj is the fifth pillar of Islam. It is obligatory once in a lifetime on every Muslim who has the physical and financial ability to travel and perform it. "And Hajj to the House is a duty that mankind owes to Allah, for those who can afford the journey." (Quran 3:97). Umrah is recommended but not obligatory.
+
+TYPES OF HAJJ:
+1. Ifrad: Performing Hajj alone (no Umrah). 2. Qiran: Entering ihram for Umrah and Hajj together (requires a sacrificial animal). 3. Tamattu': Performing Umrah first, then Hajj separately in the same year (most recommended by the Prophet, requires a sacrificial animal).
+
+PILLARS OF HAJJ (arkan — missing any invalidates Hajj):
+1. Ihram (intention to begin Hajj). 2. Standing at Arafah (Wuquf) on the 9th of Dhul-Hijjah. The Prophet (ﷺ) said: "Hajj is Arafah" — meaning Arafah is the essential element. 3. Tawaf al-Ifadah (the obligatory circumambulation of the Ka'bah). 4. Sa'i between Safa and Marwah.
+
+WAJIBAT OF HAJJ:
+1. Ihram from the designated miqat (station). 2. Spending the night at Muzdalifah after Arafah. 3. Spending the nights of Tashriq (11th, 12th, 13th) at Mina. 4. Stoning the Jamarat. 5. Shaving or trimming the hair. 6. The Farewell Tawaf (for non-Makkah residents).
+
+PROHIBITIONS DURING IHRAM:
+1. Wearing stitched clothing (men). 2. Covering the head (men). 3. Using perfume. 4. Cutting nails or hair. 5. Hunting or killing animals. 6. Sexual relations and romantic talk. 7. Getting married or proposing. The Prophet (ﷺ) said: "Whoever performs Hajj and does not commit any obscenity or transgression, they return as pure as the day their mother gave birth to them." (Bukhari #1819).
+
+UMRAH PILLARS:
+1. Ihram. 2. Tawaf around the Ka'bah. 3. Sa'i between Safa and Marwah. 4. Shaving or trimming hair.
+
+VIRTUE OF UMRAH IN RAMADAN:
+The Prophet (ﷺ) said: "Umrah in Ramadan is equivalent to Hajj." (Bukhari #1782, Muslim #1256).
+
+SUNNAH OF HAJJ:
+Reciting talbiyah (Labbayk Allahumma labbayk...), kissing the Black Stone if possible, touching the Yemeni corner, praying behind Maqam Ibrahim, drinking Zamzam water, making abundant du'a at Arafah.`,
+    source: "Fiqh - Quran 3:97, Sahih Bukhari, Sahih Muslim, Ibn Baz, Ibn Uthaymeen",
+    category: "fiqh"
+  },
+
+  // ===== SEERAH (BIOGRAPHY OF THE PROPHET) =====
+  {
+    title: "Seerah - Makkan Period (610-622 CE)",
+    content: `BIRTH AND EARLY LIFE: Prophet Muhammad (ﷺ) was born in Makkah in the Year of the Elephant (approximately 570 CE) to Abdullah ibn Abd al-Muttalib (who died before his birth) and Aminah bint Wahb. His grandfather Abd al-Muttalib named him Muhammad. He was nursed by Halimah al-Sa'diyah in the desert. His mother died when he was 6, his grandfather when he was 8, after which his uncle Abu Talib took care of him. He worked as a shepherd and later in trade. He became known as al-Amin (the Trustworthy) for his honesty. At age 25, he married Khadijah bint Khuwaylid, a wealthy merchant woman 15 years his senior. She bore him six children: Al-Qasim, Zaynab, Ruqayyah, Umm Kulthum, Fatimah, and Abdullah. All sons died in infancy.
+
+THE FIRST REVELATION: At age 40, while meditating in the Cave of Hira on Mount Nur, Angel Jibril appeared and commanded: "Iqra (Read)!" The first revealed verses were Surah Al-Alaq 96:1-5. Khadijah believed him immediately and took him to her cousin Waraqah ibn Nawfal, a Christian scholar who confirmed the prophethood.
+
+THE EARLY CALL (3 years secret, then open): The Prophet called people to Tawheed secretly for three years. The first to believe: Khadijah, Abu Bakr, Ali (age 10), and Zayd ibn Harithah. Then Allah commanded: "And warn your closest relatives" (Quran 26:214). The Prophet climbed Mount Safa and called the Quraysh, announcing his prophethood. Abu Lahab cursed him, but most listened.
+
+PERSECUTION BEGINS: The Quraysh persecuted the weak Muslims severely. Bilal was tortured under hot rocks. Sumayyah and Yasir were tortured and killed — the first martyrs. The Prophet was mocked, called a poet, sorcerer, and madman. Abu Lahab's wife threw thorns at his door. Despite this, the Prophet continued preaching.
+
+FIRST HIJRAH TO ABYSSINIA (615 CE): The Prophet sent 11 men and 4 women to Christian Abyssinia (Ethiopia) under the protection of the Just Negus (Najashi), who refused to extradite them despite Quraysh gifts. He rejected the Quraysh's description of the Muslims as rebels, especially after hearing Surah Maryam.
+
+THE BOYCOTT (616-619 CE): The Quraysh boycotted Banu Hashim and Banu al-Muttalib in Shi'b Abi Talib. No trade or marriage was allowed. The Muslims endured extreme hunger for three years, eating leaves. The boycott ended when Allah sent termites that ate the document except for Allah's name.
+
+THE YEAR OF SORROW (619 CE): Khadijah and Abu Talib died in the same year. The Prophet called it the Year of Sorrow. With Abu Talib's protection gone, Quraysh intensified persecution. The Prophet went to Ta'if seeking support, but the people threw stones at him until his feet bled.
+
+AL-ISRA WAL-MIRAJ (620 CE): The Prophet was taken from the Sacred Mosque in Makkah to al-Aqsa Mosque in Jerusalem, then ascended through the heavens. He met the prophets, was shown Paradise and Hell, and received the obligation of five daily prayers.
+
+THE PLEDGE OF AQABAH: During the pilgrimage season, six men from Yathrib (Medina) accepted Islam. The next year 12 came, then 73 came and pledged to protect the Prophet as they protected their families. This was the Second Pledge of Aqabah — the foundation of the Islamic state of Medina.
+
+THE HIJRAH (622 CE): After the Quraysh plotted to assassinate the Prophet, Allah gave permission to emigrate. Ali slept in the Prophet's bed as a decoy. The Prophet and Abu Bakr hid in the Cave of Thawr for three days. A spider web and dove's nest at the cave entrance convinced the pursuers it was empty. They traveled south to Medina, arriving on Monday, 12 Rabi' al-Awwal (the Islamic calendar begins from this Hijrah).`,
+    source: "Seerah - Based on Ibn Hisham, Ibn Ishaq, Sahih Bukhari, Al-Bidayah wan-Nihayah (Ibn Kathir)",
+    category: "seerah"
+  },
+  {
+    title: "Seerah - Madani Period (622-632 CE)",
+    content: `ESTABLISHMENT OF THE STATE: Upon arriving in Medina (Yathrib), the Prophet built the first mosque (Masjid al-Nabawi) and established brotherhood (mu'akhah) between the Muhajirun (Makkan emigrants) and Ansar (Medinan helpers). He drafted the Constitution of Medina (Mithaq al-Madinah), which established rights and duties for all citizens including Jews, creating the first Islamic multi-religious state.
+
+THE BADRIYYUN (The Battles):
+BADR (2 AH/624 CE): 313 Muslims faced 1,000 Quraysh. Allah sent angels. The Muslims won, killing 70 Quraysh leaders (including Abu Jahl) and capturing 70. This was the first major battle of Islam. Quran 3:123-127 discusses it.
+UHUD (3 AH/625 CE): Quraysh returned to avenge Badr. The Prophet commanded 50 archers to stay on a hill. When Muslims appeared to be winning, the archers disobeyed to collect spoils. Khalid ibn al-Walid (then a disbeliever) exploited the gap, killing 70 Muslims including Hamza (the Prophet's uncle). The Prophet himself was wounded. Quran 3:140-180 addresses this lesson.
+TRENCH (5 AH/627 CE): The Confederates (10,000 men from various tribes) besieged Medina. Salman al-Farsi suggested digging a trench. After a month, Allah sent a wind and the confederates withdrew. Quran 33:9-27.
+HUDAYBIYYAH (6 AH/628 CE): The Prophet and 1,400 Muslims set out for Umrah. Quraysh blocked them. The Treaty of Hudaybiyyah was signed: 10-year truce, Muslims could return the following year for 3 days, and anyone could join either side. The Companions were upset at the terms, but Allah called it a "clear victory" (Quran 48:1). Within 2 years, more people accepted Islam than in the previous 20 years.
+KHAYBAR (7 AH/629 CE): The Muslim army conquered the Jewish stronghold of Khaybar.
+MUTAH (8 AH/629 CE): Muslims fought the Romans in northern Arabia. Khalid ibn al-Walid (now Muslim) took command after three commanders were martyred and withdrew successfully.
+CONQUEST OF MAKKAH (8 AH/630 CE): After Quraysh broke the Hudaybiyyah treaty, the Prophet marched with 10,000 men. Makkah was conquered without bloodshed. The Prophet proclaimed: "Whoever enters Abu Sufyan's house is safe, whoever locks their door is safe, whoever enters the Sacred Mosque is safe." He cleansed the Ka'bah of idols and declared: "Truth has come and falsehood has vanished" (Quran 17:81). He forgave the Quraysh entirely — a general amnesty.
+HUNAYN and TA'IF (8 AH/630 CE): Hawazin and Thaqif tribes opposed the Muslims but were defeated at Hunayn.
+
+THE FAREWELL PILGRIMAGE (10 AH/632 CE): The Prophet performed Hajj and delivered his famous Farewell Sermon at Arafah and Mina. He said: "O people, your Lord is one, your father is one. No Arab is superior to a non-Arab, no non-Arab is superior to an Arab, no white to a black, no black to a white, except by piety." He established the prohibition of riba and blood feuds from the Jahiliyyah. He instructed: "I leave with you that which if you hold to, you will never go astray: the Book of Allah and my Sunnah."
+
+THE PROPHET'S DEATH: Shortly after returning to Medina, the Prophet fell ill. He died on Monday, 12 Rabi' al-Awwal 11 AH (632 CE) at the age of 63, in the room of Aisha (may Allah be pleased with her). He was buried there, which is now the Green Dome of Masjid al-Nabawi. Abu Bakr announced: "Whoever worshipped Muhammad, Muhammad has died. Whoever worshipped Allah, Allah is alive and never dies."`,
+    source: "Seerah - Based on Ibn Hisham, Ibn Ishaq, Sahih Bukhari, Sahih Muslim, Al-Bidayah wan-Nihayah (Ibn Kathir)",
+    category: "seerah"
+  },
+  {
+    title: "The Rightly Guided Caliphs (Al-Khulafa' al-Rashidun)",
+    content: `The four Rightly Guided Caliphs are Abu Bakr, Umar, Uthman, and Ali (may Allah be pleased with them all). The Prophet (ﷺ) said: "Follow the example of those who come after me: Abu Bakr and Umar." (Tirmidhi #3662, authenticated by Al-Albani). And: "The guided successors after me are Abu Bakr and Umar." (Abu Dawud #4649).
+
+ABU BAKR AL-SIDDIQ (11-13 AH / 632-634 CE): The first adult male to accept Islam. His daughter Aisha married the Prophet. He was the Prophet's closest friend and companion in the Cave of Thawr. After the Prophet's death, some tribes refused zakat. Abu Bakr famously declared: "By Allah, if they withhold a single camel's rope they used to give the Prophet, I will fight them for it." He compiled the Quran into one book after the Battle of Yamamah (many memorizers were killed). He led the wars against the false prophets (Musaylimah, Tulayhah, etc.) and expanded into Syria and Iraq. He ruled for 2 years and died at 63. His last words: "O Allah, let me die as a Muslim and join me with the righteous."
+
+UMAR IBN AL-KHATTAB AL-FARUQ (13-23 AH / 634-644 CE): He initially opposed Islam but embraced after reading Surah Ta-Ha. His conversion strengthened the Muslims. He was known for justice (Adl), fearlessness, and simplicity. During his caliphate, the Islamic empire expanded dramatically: Persia (Sassanid Empire) was conquered, the Levant and Egypt were taken from the Byzantines, and Jerusalem surrendered peacefully. He established the Islamic calendar (Hijri), the treasury (Bayt al-Mal), provinces with governors, and the military register (Diwan). He prayed at Jerusalem's Church of the Holy Sepulchre but refused to pray inside to avoid setting a precedent for converting it to a mosque. He was assassinated by Abu Lu'lu'ah al-Majusi (a Persian slave) while leading Fajr prayer. He ruled for 10 years.
+
+UTHMAN IBN AFFAN DHU AL-NURAYN (23-35 AH / 644-656 CE): Known for modesty and generosity — he equipped the army of Tabuk with 1,000 camels and 10,000 dinars. He married two daughters of the Prophet (Ruqayyah then Umm Kulthum). He standardized the Quranic text (the Uthmanic codex) and ordered the destruction of variant copies to preserve unity. The empire expanded to North Africa, Armenia, and Cyprus. He continued Umar's administrative systems. Rebels from Egypt and other regions besieged his house for 49 days and killed him while he was reciting Quran. He ruled for 12 years.
+
+ALI IBN ABI TALIB (35-40 AH / 656-661 CE): The Prophet's cousin and son-in-law (married to Fatimah, father of Hasan and Husayn). He was the first youth to accept Islam and slept in the Prophet's bed during the Hijrah. His caliphate was marked by internal conflicts: the Battle of the Camel against Aisha's forces (which ended in reconciliation), the Battle of Siffin against Mu'awiyah (which ended in arbitration), and the Khawarij (Kharijites) who rebelled against both Ali and Mu'awiyah. Ali defeated the Khawarij at Nahrawan. He was assassinated by Abd al-Rahman ibn Muljam (a Kharijite) while praying Fajr in the Kufa mosque. He ruled for 5 years. His leadership was marked by deep knowledge, eloquence (Nahj al-Balaghah), and piety.`,
+    source: "Seerah/History - Sahih Bukhari, Sahih Muslim, Tarikh al-Tabari, Ibn Kathir",
+    category: "seerah"
+  },
+  {
+    title: "The Mothers of the Believers (Wives of the Prophet)",
+    content: `The Prophet (ﷺ) had 11 wives, known as Ummahat al-Mu'minin (Mothers of the Believers) — Quran 33:6. All were widows except Aisha:
+1. KHADIJAH BINT KHUWAYLID: The Prophet's first wife, a wealthy merchant. She was 40 and he was 25 when they married. She bore all his children except Ibrahim. She was the first to believe in his prophethood and supported him through persecutions. She died in the Year of Sorrow. The Prophet said she was the best woman of her time and that Allah sent her greetings of peace through Jibril (Bukhari #3820).
+2. SAWDAH BINT ZAM'AH: A widow who emigrated to Abyssinia. The Prophet married her after Khadijah's death, and she cared for his children.
+3. AISHA BINT ABI BAKR: The only virgin the Prophet married. She was a great scholar who narrated 2,210 hadith, the most from any single Companion. She led the Battle of the Camel seeking justice for Uthman's murder. She taught fiqh, tafsir, and hadith for decades after the Prophet's death. The Prophet said: "Take half of your religion from this Humayra (Aisha)." She was falsely accused of adultery (the Ifk incident, Quran 24:11-20) and Allah declared her innocence.
+4. HAFSAH BINT UMAR: Daughter of Umar ibn al-Khattab. She was entrusted with the first compiled Quran manuscript (the one collected by Abu Bakr), which became the basis for Uthman's standardized copy.
+5. ZAYNAB BINT KHUZAYMAH: Known as Umm al-Masakin (Mother of the Poor) for her charity. She lived only a few months after marriage.
+6. UMM SALAMAH (Hind bint Abi Umayyah): A wise and intelligent woman. She advised the Prophet at Hudaybiyyah — when the Companions hesitated to sacrifice, she told the Prophet to do it himself, and they followed.
+7. ZAYNAB BINT JAHSH: The Prophet's cousin, married by Allah's command (Quran 33:37). She was noble and righteous, and her marriage established the ruling that adopted sons are not real sons.
+8. JUWAYRIYAH BINT AL-HARITH: A captive from Banu Mustaliq. The Prophet married her, and the Companions freed 100 of her people saying "the Prophet's in-laws cannot be captives."
+9. UMM HABIBAH (Ramlah bint Abi Sufyan): Daughter of Abu Sufyan. She emigrated to Abyssinia with her first husband, who apostatized and died. The Negus (Najashi) performed her marriage to the Prophet.
+10. SAFIYYAH BINT HUYAYY: Daughter of a Jewish chief. The Prophet treated her with dignity and freed her. She was known for piety and generosity.
+11. MAYMUNAH BINT AL-HARITH: The last wife the Prophet married. She was a generous woman who freed many slaves.
+The Prophet's household was simple — they ate dates and barley, often went a month without cooking a meal, and slept on palm-fiber mats.`,
+    source: "Seerah - Sahih Bukhari, Sahih Muslim, Ibn Sa'd's Tabaqat, Ibn Kathir",
+    category: "seerah"
+  },
+
+  // ===== DAILY ADHKAR (SUPPLICATIONS) =====
+  {
+    title: "Morning and Evening Adhkar (Supplications)",
+    content: `Allah commands: "And remember your Lord frequently and exalt Him evening and morning" (Quran 3:41). The Prophet (ﷺ) recited these daily, especially between Fajr and sunrise, and between Asr and Maghrib.
+
+MORNING ADHKAR (recited between Fajr and sunrise):
+1. Ayat-ul-Kursi (Quran 2:255) — whoever recites it in the morning is protected until evening.
+2. Surah Al-Ikhlas, Al-Falaq, An-Nas (3 times each) — sufficient for protection from everything.
+3. "Amsayna wa ams al-mulku lillah..." (We have reached the evening and the sovereignty belongs to Allah).
+4. "Subhan Allah wa bi hamdihi" (100 times in the morning) — the Prophet said: "Whoever says it 100 times in the morning and evening, none will come with better than it on the Day of Resurrection except the one who said the same or more." (Muslim #2692).
+5. "La ilaha illa Allah wahdahu la sharika lah, lahul mulku wa lahul hamdu wa huwa 'ala kulli shay'in qadir" (10 times or once) — equivalent to freeing four slaves (Bukhari #3293, Muslim #2693).
+6. "Allahumma inni as'aluka al-'afiyah fi al-dunya wa al-akhirah" (O Allah, I ask You for well-being in this world and the Hereafter).
+7. "Allahumma bika amsayna wa bika asbahna..." (O Allah, by You we enter the evening and by You we enter the morning...).
+8. "Hasbi Allah la ilaha illa huwa, alayhi tawakkaltu wa huwa rabb al-'arsh al-'azim" (7 times) — Allah will suffice the one who says this (related with the story of Ibrahim).
+9. "Bismillah alladhi la yadurru ma'a ismihi shay'un fi al-ardi wa la fi al-sama'i wa huwa al-sami' al-'alim" (3 times in morning and evening) — nothing will harm the one who says it (Abu Dawud #5088, Tirmidhi #3388).
+10. Recitation of the last three ayahs of Surah Al-Hashr (59:22-24).
+
+EVENING ADHKAR (recited between Asr and Maghrib):
+The same as morning, substituting "amsayna" (we have reached the evening) for the morning version. The most important are Ayat-ul-Kursi, the three Quls (Ikhlas, Falaq, Nas), and Subhan Allah wa bi hamdihi 100 times.
+
+BEFORE SLEEP:
+1. Combine palms and recite Al-Ikhlas, Al-Falaq, An-Nas, then blow and wipe over the body (3 times) — Bukhari #5017.
+2. Ayat-ul-Kursi — a protector from Allah, and no devil approaches until morning (Bukhari #2311).
+3. "Bismika Allahumma amutu wa ahya" (In Your name, O Allah, I die and I live).
+4. Last two ayahs of Surah Al-Baqarah (285-286) — sufficient protection (Bukhari #5009, Muslim #807).
+5. "Subhan Allah" (33 times), "Alhamdulillah" (33 times), "Allahu Akbar" (34 times) before sleeping — better than a servant (Muslim #2727).
+
+UPON WAKING:
+"Alhamdulillah alladhi ahyana ba'da ma amatana wa ilayhin nushur" (Praise be to Allah who gave us life after death and to Him is the resurrection).`,
+    source: "Adhkar - Based on Sahih Bukhari, Sahih Muslim, Al-Adhkar by Imam al-Nawawi, Hisn al-Muslim",
+    category: "ibadah"
+  },
+  {
+    title: "Daily Adhkar for Eating, Entering Home, and Travel",
+    content: `BEFORE EATING:
+Say "Bismillah" (In the name of Allah). The Prophet (ﷺ) said: "When one of you eats, let him mention Allah's name. If he forgets at the beginning, let him say: 'Bismillah fi awwalihi wa akhirihi' (In the name of Allah, at its beginning and its end)." (Abu Dawud #3767, Tirmidhi #1858, authenticated by Al-Albani).
+
+AFTER EATING:
+"Alhamdulillah alladhi at'amana wa saqana wa ja'alana muslimin" (Praise be to Allah who fed us, gave us drink, and made us Muslims). Or: "Alhamdulillah hamdan kathiran tayyiban mubarakan fih" (Praise be to Allah, abundant, good, and blessed praise). The Prophet (ﷺ) said: "Allah is pleased with a servant who eats a meal and praises Him for it, or drinks a drink and praises Him for it." (Muslim #2734).
+
+AFTER DRINKING MILK:
+"Allahumma barik lana fihi wa zidna minh" (O Allah, bless it for us and give us more of it).
+
+SUNNAH OF EATING AND DRINKING:
+1. Eat with the right hand — "Do not eat with your left, for the shaytan eats with his left." (Muslim #2020).
+2. Drink in three sips, not one gulp — "Drink in three breaths, and mention Allah, and thank Him when you finish." (Tirmidhi, authenticated by Al-Albani).
+3. Do not blow on hot food or drink.
+4. Do not criticize food — "The Prophet never criticized any food. If he liked it, he ate. If not, he left it." (Bukhari #3563, Muslim #2064).
+5. Eat from what is in front of you (if eating from a shared dish).
+6. Lick the fingers after eating — you do not know which portion contains the barakah (Muslim #2032).
+
+WHEN ENTERING THE HOME:
+"Bismillah wa lajna wa bismillah kharajna wa 'ala rabbina tawakkalna" (In the name of Allah we enter, in the name of Allah we leave, and upon our Lord we rely). Then say salam to the household. The Prophet (ﷺ) said: "When a man enters his house and mentions Allah when entering and when eating, the shaytan says: 'You have no place to spend the night and no dinner.'" (Muslim #2018).
+
+WHEN LEAVING THE HOME:
+"Bismillah, tawakkaltu 'ala Allah, wa la hawla wa la quwwata illa billah" (In the name of Allah, I rely on Allah, and there is no power or strength except through Allah). It will be said: "You have been guided, sufficed, and protected." (Abu Dawud #5095, Tirmidhi #3426).
+
+TRAVEL DUA:
+"Allahu Akbar, Allahu Akbar, Allahu Akbar. Subhan alladhi sakhkhara lana hadha wa ma kunna lahu muqrinin. Wa inna ila rabbina lamunqalibun." (Allah is greatest. Glory to Him who has subjected this to us, and we could never have done it by ourselves. And to our Lord we shall return.) — Quran 43:13-14.
+When returning, add: "Ayibun, ta'ibun, 'abidun, li rabbina hamidun" (Returning, repenting, worshipping, praising our Lord). (Bukhari, Muslim).
+
+WHEN SNEEZING:
+Say: "Alhamdulillah." Others respond: "Yarhamuk Allah (May Allah have mercy on you)." The sneezer then says: "Yahdina wa yahdikum Allah (May Allah guide us and have mercy on you)." (Bukhari #6224).
+
+DUA FOR ANXIETY OR SADNESS:
+"Allahumma inni 'abduka ibn 'abdika ibn amatika, nasiyati bi yadika, maddin fiyya hukmuka, 'adlun fiyya qada'uka, as'aluka bi kulli ismin huwa laka..." (O Allah, I am Your servant, son of your male and female servants; my forelock is in Your hand; Your judgement is upon me; Your decree is just...). The Prophet (ﷺ) said: "No servant says this when afflicted with anxiety or sadness except that Allah removes it and replaces it with joy." (Ahmad, authenticated by Al-Albani).
+
+DUA FOR PROTECTION FROM ANXIETY AND LAZINESS:
+"Allahumma inni a'udhu bika minal hammi wal hazan, wa a'udhu bika minal 'ajzi wal kasal, wa a'udhu bika minal jubni wal bukhl, wa a'udhu bika min ghalabatid dayn wa qahrir rijal" (O Allah, I seek refuge in You from anxiety and sorrow, from weakness and laziness, from cowardice and miserliness, from overpowering debt and the oppression of men).`,
+    source: "Adhkar - Based on Sahih Bukhari, Sahih Muslim, Al-Adhkar by Imam al-Nawawi, Hisn al-Muslim",
+    category: "ibadah"
+  },
+  {
+    title: "Forty Hadith of Imam al-Nawawi - Complete List",
+    content: `Imam Yahya ibn Sharaf al-Nawawi (d. 676 AH) compiled 42 hadith that cover the essentials of Islam. Complete list:
+1. "Actions are but by intentions." (Bukhari, Muslim). 2. Jibril's hadith on Islam, Iman, Ihsan. (Bukhari, Muslim). 3. "Islam is built on five pillars." (Bukhari, Muslim). 4. "Actions are by what is intended, and every person will get what was intended." (Bukhari, Muslim). 5. "Whoever introduces an innovation in this matter of ours, it is rejected." (Bukhari, Muslim). 6. "Truly, the halal is clear and the haram is clear." (Bukhari, Muslim). 7. "Religion is sincere advice (naseehah)." (Muslim). 8. "I have been commanded to fight people until they testify that there is no god but Allah." (Bukhari, Muslim). 9. "What I have forbidden you, avoid; what I have commanded you, do as much as you can." (Bukhari, Muslim). 10. "Allah is good and accepts only what is good." (Muslim). 11. "Leave what makes you doubt for what does not make you doubt." (Tirmidhi, Nasa'i). 12. "Part of the perfection of one's Islam is leaving what does not concern him." (Tirmidhi). 13. "None of you has complete faith until he loves for his brother what he loves for himself." (Bukhari, Muslim). 14. "The blood of a Muslim is not permissible to shed except for three reasons." (Bukhari, Muslim). 15. "Whoever believes in Allah and the Last Day, let him speak good or remain silent." (Bukhari, Muslim). 16. "Do not become angry." (Bukhari). 17. "Allah has prescribed excellence (ihsan) in everything." (Muslim). 18. "Fear Allah wherever you are, follow up a bad deed with a good deed." (Tirmidhi). 19. "Be mindful of Allah and He will protect you." (Tirmidhi). 20. "If you feel no shame, do as you wish." (Bukhari). 21. "Say, 'I believe in Allah,' then be steadfast." (Muslim). 22. "Shall I inform you of the best of deeds?" (Tirmidhi). 23. "Purification is half of faith." (Muslim). 24. "O My servants, I have forbidden injustice for Myself." (Muslim). 25. "There are those who give charity from pure earnings." (Muslim). 26. "Every joint of the body must give charity every day." (Bukhari, Muslim). 27. "Righteousness is good character." (Muslim). 28. "I have been sent to perfect good character." (Muwatta). 29. "Ask me." (Tirmidhi). 30. "Allah has prescribed the obligations." (Nasa'i, Ibn Majah). 31. "Renounce the world and Allah will love you." (Ibn Majah). 32. "Do not harm yourselves or others." (Ibn Majah). 33. "The proof of the believer is the evidence." (related by al-Bayhaqi). 34. "Whoever sees an evil, let him change it with his hand." (Muslim). 35. "Do not envy one another, do not hate one another." (Bukhari, Muslim). 36. "Whoever fulfills the needs of his brother, Allah fulfills his needs." (Bukhari, Muslim). 37. "Allah wrote down the good deeds and the evil deeds." (Bukhari, Muslim). 38. "Allah says: Whoever is hostile to a friend of Mine, I declare war on them." (Bukhari). 39. "Allah has forgiven my ummah for mistakes, forgetfulness, and what they are forced to do." (Ibn Majah, authenticated by Al-Albani). 40. "Be in this world as if you were a stranger or a wayfarer." (Bukhari). 41. "None of you truly believes until his desires follow what I have brought." (reported by al-Bayhaqi). 42. "O son of Adam, as long as you call upon Me and ask of Me, I will forgive you." (Tirmidhi, Ahmad).`,
+    source: "Hadith - Al-Arba'in al-Nawawiyyah by Imam al-Nawawi",
+    category: "hadith"
+  },
+  {
+    title: "The Major Hadith Collections - Overview",
+    content: `SUNAN: The six canonical hadith collections (Kutub al-Sittah):
+1. SAHIH BUKHARI (d. 256 AH/870 CE): The most authentic book after the Quran. Muhammad ibn Isma'il al-Bukhari collected 600,000 hadith and selected 7,275 (about 2,602 without repetition). Conditions: narrator must have met his source (liqa'), be of proven integrity ('adalah), memory (dabt), with continuous chain (ittisal), without hidden defects ('illah) or anomaly (shudhudh). Every hadith that meets Bukhari's conditions is called muttafaq 'alayh if Muslim agrees.
+2. SAHIH MUSLIM (d. 261 AH/875 CE): Muslim ibn al-Hajjaj al-Qushayri collected 300,000 hadith and selected 12,000 (about 4,000 without repetition). His conditions are slightly less strict than Bukhari's on liqa' but equally strict on 'adalah and dabt. Together with Bukhari, they are called Al-Sahihan.
+3. SUNAN ABI DAWUD (d. 275 AH/889 CE): Abu Dawud al-Sijistani collected 5,274 hadith, including weak (da'if) ones with clarification. He said: "I have mentioned the hadith that are sahih, and those close to sahih, and those close to hasan."
+4. JAMI' AL-TIRMIDHI (d. 279 AH/892 CE): Muhammad ibn Isa al-Tirmidhi categorized hadith by authenticity (sahih, hasan, da'if) and included fiqh opinions of scholars. Contains 3,956 hadith.
+5. SUNAN AL-NASA'I (d. 303 AH/915 CE): Ahmad ibn Shu'ayb al-Nasa'i compiled Al-Mujtaba (the most authentic of the Sunan after Bukhari and Muslim). Contains 5,761 hadith.
+6. SUNAN IBN MAJAH (d. 273 AH/887 CE): Muhammad ibn Yazid ibn Majah al-Qazwini. Contains 4,341 hadith, with more weak hadith than others. Some scholars substitute Muwatta Malik as the sixth.
+
+OTHER MAJOR COLLECTIONS:
+MUSNAD AHMAD (d. 241 AH/855 CE): Imam Ahmad ibn Hanbal. The largest Musnad with 27,000+ hadith, organized by Companion.
+MUWATTA MALIK (d. 179 AH/795 CE): Imam Malik ibn Anas. The earliest surviving comprehensive hadith collection, combining hadith with the practice of the people of Medina.
+SUNAN AL-DARIMI, SAHIH IBN HIBBAN, SAHIH IBN KHUZAYMAH, AL-MUSTADRAK of al-Hakim, and AL-MU'JAM of al-Tabarani.
+
+TERMS:
+Sahih: Authentic — meets all conditions of accuracy.
+Hasan: Good — slightly weaker than sahih but still usable as evidence.
+Da'if: Weak — missing one or more conditions of authenticity.
+Muttafaq 'alayh: Agreed upon by both Bukhari and Muslim — the highest level of authenticity.
+Hasan Sahih: A hadith graded as hasan by some scholars and sahih by others (common in Tirmidhi).`,
+    source: "Hadith Sciences - Based on Ibn al-Salah, al-Nawawi, Ibn Hajar, al-Suyuti",
+    category: "hadith"
+  },
+  {
+    title: "Hadith on Mercy, Kindness, and Good Character",
+    content: `The Prophet (ﷺ) emphasized excellent character as the essence of faith:
+"The most complete of believers in faith are those with the best character." (Tirmidhi #1162, authenticated by Al-Albani). "The best of you are the best to their families, and I am the best to my family." (Tirmidhi #3895, Ibn Majah #1977).
+"None of you has complete faith until he loves for his brother what he loves for himself." (Bukhari #13, Muslim #45).
+"The believers in their mutual love, mercy, and compassion are like a single body: if one part complains, the rest of the body responds with fever and sleeplessness." (Muslim #2586).
+"Whoever does not show mercy will not be shown mercy." (Bukhari #6013, Muslim #2318).
+"Allah is not merciful to the one who is not merciful to people." (Bukhari #7376, Muslim #2319).
+"Those who are merciful will be shown mercy by the Most Merciful. Be merciful to those on earth, and the One in the heavens will be merciful to you." (Abu Dawud #4941, Tirmidhi #1924, authenticated by Al-Albani).
+"A good word is charity." (Bukhari #2989, Muslim #1009).
+"Beware of suspicion, for suspicion is the most false of speech. Do not spy on each other, do not backbite, do not envy, do not hate, do not turn away from each other. Be servants of Allah as brothers." (Bukhari #6064, Muslim #2563).
+"Avoid the seven destructive sins: shirk, sorcery, killing a soul except by right, consuming riba, consuming the wealth of orphans, fleeing from the battlefield, and slandering chaste believing women." (Bukhari #2766, Muslim #89).
+"The strong person is not the one who can wrestle others, but the one who controls himself at times of anger." (Bukhari #6114, Muslim #2609).
+"Whoever is kind, Allah is kind to him. Be kind to those on earth and the One in heaven will be kind to you." (Abu Dawud, Tirmidhi, authenticated by Al-Albani).`,
+    source: "Sahih Bukhari, Sahih Muslim, Tirmidhi, Abu Dawud - Ibn Baz, Al-Albani authentication",
+    category: "hadith"
+  },
+
+  // ===== QURANIC SCIENCES (ULUM AL-QURAN) =====
+  {
+    title: "Quranic Sciences (Ulum al-Quran) - Comprehensive Overview",
+    content: `DEFINITION: Ulum al-Quran is the field of study that deals with the Quran's revelation, compilation, preservation, interpretation, and miraculous nature.
+
+REVELATION (WAHY): The Quran was revealed to Prophet Muhammad (ﷺ) over 23 years (610-632 CE) through Angel Jibril. The first revelation: Surah Al-Alaq (96:1-5) in the Cave of Hira. The final revelation: "This day I have perfected your religion for you" (Quran 5:3), revealed at Arafah during the Farewell Pilgrimage. The Quran was revealed in seven ahruf (dialects/modes) for ease of recitation, but was later standardized to the Quraysh dialect by Caliph Uthman.
+
+MAKKI VS MADANI: Makki surahs (86 surahs) were revealed before the Hijrah — focus on Tawheed, the Hereafter, stories of prophets, and moral reform. They are typically shorter with powerful imagery. Madani surahs (28 surahs) were revealed after the Hijrah — focus on legislation, social laws, family law, jihad, and relations with People of the Book. They are typically longer. Distinguishing features: Makki surahs address "Ya ayyuha al-nas" (O mankind); Madani address "Ya ayyuha alladhina amanu" (O you who believe). Makki surahs contain sajdahs (prostrations) and the word "kalla" (never/by no means). Madani surahs contain detailed legal rulings.
+
+ASBAB AL-NUZUL (Reasons for Revelation): Understanding why specific ayahs were revealed is essential for correct interpretation (tafsir). Examples: Surah Al-Ikhlas was revealed when polytheists asked about Allah's nature. Ayat-ul-Kursi (2:255) was revealed to establish Allah's unique attributes. The Ifk incident (24:11-20) was revealed to declare Aisha's innocence after slander. The prohibition of alcohol (5:90-91) came in stages: first acknowledging benefit and sin (2:219), then prohibiting prayer while intoxicated (4:43), and finally complete prohibition (5:90).
+
+PRESERVATION: The Quran is the only revealed scripture preserved in its original language without alteration. Allah says: "Indeed, it is We who sent down the Quran, and indeed, We will be its guardian" (Quran 15:9). Preservation was first through memorization (the Prophet and thousands of Companions memorized it). During Abu Bakr's caliphate, Zayd ibn Thabit compiled it into one book after the Battle of Yamamah (many huffaz died). During Uthman's caliphate, the standard codex was produced and copies were sent to major cities.
+
+I'JAZ (MIRACULOUS NATURE): The Quran's miracles include: linguistic inimitability (no Arabic composition matches its eloquence), scientific accuracy (embryology, ocean barriers, etc.), historical accuracy (Pharaoh was drowned but his body preserved — Quran 10:92, confirmed by modern archaeology), legislation (comprehensive and timeless), and prophecies (Roman victory after defeat — Quran 30:2-5, preservation of the Quran — 15:9).
+
+TAFSIR (EXEGESIS): Major tafsir works: Tafsir al-Tabari (the most authoritative early tafsir), Tafsir Ibn Kathir (the most widely used, based on Quran, Sunnah, and Salaf understanding), Tafsir al-Sa'di (contemporary, easy to understand, aligned with Salafi methodology), Tafsir al-Qurtubi (focused on legal rulings), Tafsir al-Baghawi, and Tafsir al-Shanqiti (contemporary). The correct method: Quran explains Quran, then Sunnah, then the sayings of the Companions, then the Tabi'un, then linguistic analysis, and finally reasoned opinion (ijtihad) within bounds.`,
+    source: "Ulum al-Quran - Based on al-Suyuti (al-Itqan), Ibn Hajar, Ibn Kathir, al-Shatibi",
+    category: "quran"
+  },
+  {
+    title: "Tafsir of Surah Al-Fatihah - Detailed Explanation",
+    content: `Surah Al-Fatihah (The Opening) — 7 ayahs, Makki. It is the most recited surah in Islam, obligatory in every rakah of every prayer. The Prophet (ﷺ) said: "I have divided the prayer between Me and My servant into two halves, and My servant will have what he asks." (Sahih Muslim #395).
+
+AYAH 1: "Bismillah al-Rahman al-Rahim" (In the name of Allah, the Most Gracious, the Most Merciful). The basmalah contains three of Allah's names: Allah (the One worshipped with love and reverence), al-Rahman (the Most Gracious — mercy that encompasses all creation), and al-Rahim (the Most Merciful — mercy that is specifically for the believers). Tafsir Ibn Kathir: Begin every action with Allah's name.
+
+AYAH 2: "Alhamdulillah rabb al-alamin" (All praise is due to Allah, Lord of the worlds). Perfect praise belongs to Allah alone — all thanks, gratitude, and praise are for Him. He is the Lord (Rab) — the Creator, Owner, Sustainer, and Controller of all worlds (alamin = all of existence including humans, jinn, angels, and all creation).
+
+AYAH 3: "Al-Rahman al-Rahim" (The Most Gracious, the Most Merciful). These are emphasized again to encourage hope in Allah's mercy after acknowledging His lordship.
+
+AYAH 4: "Maliki yawm al-din" (Sovereign of the Day of Recompense). He alone owns and rules the Day of Judgement. This instills both fear (accountability) and hope (justice).
+
+AYAH 5: "Iyyaka na'budu wa iyyaka nasta'in" (You alone we worship, and You alone we ask for help). This is the essence of Tawhid — dedicating worship exclusively to Allah and seeking help only from Him. Ibn Taymiyyah said this ayah contains the cure for spiritual ailments.
+
+AYAH 6: "Ihdina al-sirata al-mustaqim" (Guide us to the straight path). The most important du'a — asking for continuous guidance to the straight path of Islam. The path is described as straight (mustaqim) — no deviation, no extremes.
+
+AYAH 7: "Sirata alladhina an'amta alayhim ghayri al-maghdubi alayhim wa la al-dallin" (The path of those You have blessed, not of those who earned Your anger, nor of those who go astray). "Those You have blessed" are the prophets, the truthful, the martyrs, and the righteous (Quran 4:69). "Those who earned anger" are the Jews who knew the truth but rejected it. "Those who go astray" are the Christians who followed ignorance and exaggeration in religion (Ibn Kathir, Tirmidhi #2953).`,
+    source: "Tafsir - Tafsir Ibn Kathir, Tafsir al-Sa'di, Tafsir al-Tabari, Sahih Muslim #395, Tirmidhi #2953",
+    category: "quran"
+  },
+
+  // ===== MAJOR SINS AND REPENTANCE =====
+  {
+    title: "Major Sins (Al-Kaba'ir) in Islam",
+    content: `Major sins (kaba'ir) are those that carry a specific punishment in the Quran or Sunnah, or are explicitly cursed or threatened with Hellfire. The Prophet (ﷺ) said: "Avoid the seven destructive sins: associating partners with Allah (shirk), sorcery, killing a soul whom Allah has forbidden except by right, consuming riba (interest/usury), consuming the wealth of orphans, fleeing from the battlefield, and slandering chaste, believing women." (Bukhari #2766, Muslim #89).
+
+The major sins include but are not limited to:
+1. Shirk (associating partners with Allah) — the greatest sin, not forgiven if died upon without repentance (Quran 4:48).
+2. Despairing of Allah's mercy and feeling safe from Allah's plan. (Quran 12:87, 7:99).
+3. Killing a soul without right — including abortion after ensoulment (after 120 days).
+4. Sorcery and magic.
+5. Not praying — the Prophet (ﷺ) said the covenant between us and them is the prayer; whoever abandons it has disbelieved (Tirmidhi #2621).
+6. Wrongfully consuming orphans' wealth.
+7. Consuming riba (interest).
+8. Zina (adultery and fornication) — "Do not approach zina, for it is an abomination and an evil way" (Quran 17:32).
+9. Homosexual acts (liwat) — "You commit such immorality as no one has preceded you with among the worlds" (Quran 7:80).
+10. False accusation of chaste women.
+11. Theft and robbery.
+12. Drinking alcohol and drugs.
+13. Lying about the Prophet (ﷺ) — "Whoever lies about me deliberately, let him take his seat in Hellfire." (Bukhari #110).
+14. Fleeing from the battlefield.
+15. Disobeying and disrespecting parents (uquq al-walidayn).
+16. Cutting ties of kinship.
+17. False testimony and bearing false witness.
+18. Backbiting (ghibah) — speaking about your brother in a way he dislikes (Muslim #2589).
+19. Slander (namimah) — carrying tales to cause discord between people.
+20. Taking false oaths.
+21. Hoarding wealth and refusing to pay zakat.
+22. Suicide — the person will be punished with the same means in Hellfire (Bukhari #5778).
+23. Spreading secrets and violating trust.
+24. Overcharging travelers and taking advantage of need (najsh).
+25. Breaking promises and covenants.
+
+Repentance (tawbah) is accepted for all sins as long as the person repents sincerely before death. The Prophet (ﷺ) said: "Allah accepts the repentance of a servant as long as the death rattle has not reached the throat." (Tirmidhi #3537, authenticated by Al-Albani).`,
+    source: "Fiqh/Aqeedah - Quran, Sahih Bukhari, Sahih Muslim, Al-Kaba'ir by Imam al-Dhahabi, Ibn Baz, Ibn Uthaymeen",
+    category: "aqeedah"
+  },
+  {
+    title: "Repentance (Tawbah) - Conditions and Acceptance",
+    content: `Tawbah (repentance) is an obligation on every Muslim. Allah says: "And turn to Allah in repentance, all of you, O believers, that you might succeed." (Quran 24:31). "Say: O My servants who have transgressed against themselves, do not despair of the mercy of Allah. Indeed, Allah forgives all sins. Indeed, it is He who is the Forgiving, the Merciful." (Quran 39:53).
+
+CONDITIONS OF ACCEPTED REPENTANCE:
+1. Ceasing the sin immediately.
+2. Regretting deeply for having committed the sin.
+3. Resolving never to return to the sin.
+4. If the sin involves a right of another person, restoring that right (returning stolen property, clearing someone's name from slander, seeking forgiveness from the person wronged).
+5. If the sin was committed against Allah alone, it is sufficient to repent sincerely between the servant and Allah.
+
+WHEN REPENTANCE IS NOT ACCEPTED:
+1. At the time of death — when the soul reaches the throat. The Prophet (ﷺ) said: "Allah accepts the repentance of a servant as long as the death rattle has not reached the throat." (Tirmidhi #3537, authenticated by Al-Albani). Pharaoh's repentance when he was drowning was not accepted (Quran 10:90-91).
+2. When the sun rises from the west (one of the major signs of the Hour). "The day that some of the signs of your Lord come, no soul will benefit from its faith if it did not believe before" (Quran 6:158).
+
+ACTS THAT ERASE SINS:
+1. The five daily prayers — expiate sins between them (Muslim #233).
+2. Jumu'ah (Friday prayer) to the next Jumu'ah — expiates sins (Muslim #857).
+3. Ramadan to Ramadan — expiates sins (Muslim #233).
+4. Umrah to Umrah — expiates sins (Bukhari #1773, Muslim #1349).
+5. Fasting the Day of Arafah — expiates two years (Muslim #1162).
+6. Fasting Ashura — expiates one year (Muslim #1162).
+7. Saying "Subhan Allah wa bi hamdihi" 100 times a day — sins are forgiven even if like the foam of the sea (Bukhari #6405, Muslim #2691).
+8. Performing wudu properly followed by two rak'ahs — Paradise (Bukhari #193, Muslim #234).
+9. Visiting the sick and attending funerals.
+10. Making du'a after the adhan.
+11. Sending blessings upon the Prophet (ﷺ) ten times in the morning and evening.
+
+ABUSING ALLAH'S MERCY: While Allah's mercy is vast, a person should not take it as a license to continue sinning while paying lip service to repentance. The Prophet (ﷺ) said: "Beware of the excuses of the careless." True repentance requires genuine change and avoidance of sin.`,
+    source: "Aqeedah/Tazkiyah - Quran, Sahih Bukhari, Sahih Muslim, Ibn Qayyim al-Jawziyyah (Madarij al-Salikin), Ibn Taymiyyah",
+    category: "aqeedah"
+  },
+
+  // ===== JANNAH AND JAHANNAM =====
+  {
+    title: "The Hereafter - Death, Barzakh, Resurrection, Paradise and Hell",
+    content: `DEATH: Every soul will taste death (Quran 3:185). When death approaches a believer, angels with white faces descend with silk and perfumed scents and take their soul gently. The soul of a disbeliever is taken harshly by angels with black faces. After burial, the soul experiences the barzakh (intermediate realm) until the Day of Resurrection.
+
+THE GRAVE (BARZAKH): The Prophet (ﷺ) said: "The grave is either a garden from the gardens of Paradise or a pit from the pits of Hellfire." (Tirmidhi #2460, authenticated by Al-Albani). The trial of the grave: two angels (Munkar and Nakir) ask: "Who is your Lord? What is your religion? Who is your Prophet?" The believer answers correctly and sees his place in Paradise. The disbeliever/hypocrite cannot answer and is punished. The Prophet (ﷺ) taught us to say: "Rabbi Allah, wa dini al-Islam, wa nabiyyi Muhammad (ﷺ)" (My Lord is Allah, my religion is Islam, and my prophet is Muhammad).
+
+THE RESURRECTION (YAWM AL-QIYAMAH): After the trumpet is blown by Israfil, all will be resurrected from their graves. The sun will approach within a mile, and people will sweat according to their deeds. The Prophet's intercession (shafa'ah) will begin the judgement. The records of deeds (Books) will be given: believers in their right hand, disbelievers in their left from behind their backs. The Scale (Mizan) will weigh deeds — even a mustard seed of good will be shown (Quran 99:7-8).
+
+THE BRIDGE (SIRAT): A bridge finer than a hair and sharper than a sword stretched over Hellfire. The believers cross it with varying speeds according to their deeds (some like lightning, some like a horse, some crawling). The disbelievers fall into Hell.
+
+PARADISE (JANNAH): A place of eternal bliss prepared for the righteous. Its descriptions in Quran and Sunnah: rivers of water, milk, honey, and wine (Quran 47:15), gardens beneath which rivers flow, lofty palaces, beautiful companions (hur al-'ayn), delicious fruits, no fatigue, no anger, no idle talk, and the greatest reward — seeing Allah's face (Quran 75:22-23). The Prophet (ﷺ) said: "In Paradise are things that no eye has seen, no ear has heard, and no human mind has conceived." (Bukhari #3244, Muslim #2824). Paradise has eight gates and multiple levels, the highest of which is Al-Firdaws.
+
+HELLFIRE (JAHANNAM): A place of eternal punishment for disbelievers and purification for sinful believers. Its descriptions: blazing fire, boiling water (hamim), eating from zaqqum (a bitter thorn tree), chains and shackles, scorching wind and black smoke. It has seven gates. The Prophet (ﷺ) said the fire of this world is 1/70th of Hellfire (Bukhari #3265). The least punished person stands on fire until his brains boil, yet thinks no one is punished more severely than him (Bukhari #6562, Muslim #284).
+
+Major signs of the Hour include: Dajjal (the false Messiah) will appear, Jesus (Isa) ibn Maryam will descend, Ya'juj and Ma'juj (Gog and Magog) will be released, the sun will rise from the west, the Beast will emerge, and a fire will gather people from Yemen to Sham.`,
+    source: "Aqeedah - Quran, Sahih Bukhari, Sahih Muslim, Ibn Kathir (al-Nihayah), Ibn al-Qayyim",
+    category: "aqeedah"
   },
 ];
 
