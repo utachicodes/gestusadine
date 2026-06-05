@@ -59,7 +59,7 @@ export const generate = action({
             results.map((r, i) =>
               `[${i + 1}] ${r.category ? `(${r.category}) ` : ""}${r.content}`
             ).join("\n\n") +
-            "\n\nUse the above reference material to support your answer where relevant. Cite sources using [1], [2], etc. You may also draw on your general Islamic knowledge for well-known facts (Quran surah names and order, well-known ayat, basic fiqh, seerah, etc.). Only say 'The available sources do not cover this question' if the question is obscure or speculative — not for basic Islamic knowledge.";
+            "\n\nREFERENCE MATERIAL is optional supporting context — it can help you cite sources more precisely. Answer from your knowledge first, then use [1], [2], etc. from the references to align or justify your answer with the Salafi methodology. If the references don't match what you know, trust your training. Only say 'I don't know' if you genuinely cannot answer.";
         }
       } catch {
         // RAG search failed — proceed without context
