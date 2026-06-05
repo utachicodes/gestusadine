@@ -147,8 +147,8 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <div className="lg:h-full">
-      <section className="container flex flex-col gap-3 py-4 md:py-6 lg:h-full lg:min-h-0">
+    <div className="w-full">
+      <section className="container flex flex-col gap-4 py-4 md:py-6">
         <AnimatePresence>
           {showBetaBanner && (
             <motion.div
@@ -191,7 +191,7 @@ const Dashboard: React.FC = () => {
         </header>
 
         {/* At-a-glance stats (reference-inspired) */}
-        <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 flex-shrink-0">
+        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 flex-shrink-0">
           {[
             { icon: Trophy, label: language === 'fr' ? 'Rang' : 'Rank', value: stats.rank, sub: `${stats.totalXp.toLocaleString()} XP` },
             { icon: Flame, label: language === 'fr' ? "Jours d'affilée" : 'Day streak', value: stats.streak, sub: language === 'fr' ? 'en cours' : 'in a row' },
@@ -210,13 +210,13 @@ const Dashboard: React.FC = () => {
           ))}
         </div>
 
-        {/* Main content  fills remaining height on large screens (no scroll) */}
-        <div className="grid gap-3 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 lg:flex-1 lg:min-h-0 lg:grid-rows-1">
+        {/* Main content */}
+        <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
           {/* Ayah / reminder */}
-          <div className="islamic-card md:col-span-1 lg:col-span-2 relative overflow-hidden group">
+          <div className="islamic-card md:col-span-2 relative overflow-hidden group min-h-[320px] flex flex-col">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-secondary/5 to-accent/10 opacity-80 group-hover:opacity-100 transition-opacity" />
             <div className="absolute top-0 right-0 w-32 h-32 bg-accent/5 rounded-full blur-3xl -translate-y-16 translate-x-16" />
-            <div className="relative p-6 h-full flex flex-col justify-between space-y-4">
+            <div className="relative p-6 flex flex-col justify-between flex-1 space-y-6">
               <div className="flex items-center justify-between gap-2">
                 <div>
                   <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground mb-1 font-semibold">
@@ -228,7 +228,7 @@ const Dashboard: React.FC = () => {
                 </div>
               </div>
 
-              <div className="space-y-4 flex flex-col items-center justify-center flex-1 min-h-0 overflow-y-auto w-full">
+              <div className="space-y-4 flex flex-col items-center justify-center flex-1">
                 <p className="font-arabic text-2xl md:text-3xl lg:text-4xl leading-[2] text-foreground text-center break-words w-full">
                   {daily?.ayah.arabic ?? (loadingDaily ? "…" : "")}
                 </p>
@@ -242,9 +242,9 @@ const Dashboard: React.FC = () => {
           </div>
 
           {/* Today summary */}
-          <div className="islamic-card p-5 relative overflow-hidden group flex flex-col">
+          <div className="islamic-card md:col-span-1 p-5 relative overflow-hidden group flex flex-col min-h-[320px]">
             <div className="absolute inset-0 bg-gradient-to-br from-secondary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-            <div className="relative z-10 flex flex-col flex-1">
+            <div className="relative z-10 flex flex-col flex-1 h-full">
               <div className="flex items-center justify-between mb-4">
                 <div>
                   <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground mb-1 font-semibold">
@@ -271,12 +271,14 @@ const Dashboard: React.FC = () => {
                   </div>
                 </div>
               </div>
-              <p className="text-xs text-muted-foreground mb-3 leading-relaxed flex-1">
-                {t('dashboard.todaySummary')}
-              </p>
+              <div className="flex-1 flex items-center mb-6">
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {t('dashboard.todaySummary')}
+                </p>
+              </div>
               <button
                 onClick={() => setShowReminder(!showReminder)}
-                className="btn-islamic w-full hover:scale-[1.02] transition-transform text-sm py-2"
+                className="btn-islamic w-full hover:scale-[1.02] transition-transform text-sm py-2.5 mt-auto"
               >
                 {t('dashboard.openReminder')}
               </button>
@@ -284,7 +286,7 @@ const Dashboard: React.FC = () => {
           </div>
 
           {/* Rank */}
-          <div className="md:col-span-1 space-y-3 lg:min-h-0 lg:overflow-y-auto custom-scrollbar">
+          <div className="md:col-span-1 space-y-3 min-h-[320px] flex flex-col">
             <RankDisplay currentRank={stats.rank} currentPoints={stats.totalXp} />
           </div>
         </div>
@@ -330,7 +332,7 @@ const Dashboard: React.FC = () => {
         )}
 
         {/* Duas, Facts, Quiz */}
-        <div className="grid gap-3 md:grid-cols-2 lg:flex-1 lg:min-h-0 lg:grid-rows-1">
+        <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
           <div className="islamic-card p-5 space-y-3 relative overflow-hidden group flex flex-col md:col-span-1">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             <div className="relative z-10 flex flex-col flex-1">
