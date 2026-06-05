@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button } from '../ui/button';
 import { Label } from '../ui/label';
 import { toast } from 'sonner';
-import { Palette, Sparkles, RotateCcw } from 'lucide-react';
+import { Palette, Sparkles, RotateCcw, Lightbulb } from 'lucide-react';
 import { useSubscription } from '@/data/subscription';
 import { useTheme } from '@/contexts/ThemeContext';
 import type { ThemeColors } from '@/types/theme';
@@ -114,9 +114,10 @@ export function ThemeCustomizer({ onThemeChange }: ThemeCustomizerProps) {
             </div>
 
             {hasAccess && (
-                <div className="mt-4 p-3 bg-primary/5 rounded-lg">
+                <div className="mt-4 p-3 bg-primary/5 rounded-lg flex items-start gap-2">
+                    <Lightbulb className="w-4 h-4 text-primary mt-0.5 shrink-0" />
                     <p className="text-xs text-muted-foreground">
-                        💡 <strong>{tr({ en: 'Pro tip:', fr: 'Astuce :' })}</strong> {tr({ en: 'Changes preview live. Click "Save Theme" to persist.', fr: 'Les changements s\'affichent en direct. Cliquez sur « Enregistrer » pour conserver.' })}
+                        <strong>{tr({ en: 'Pro tip:', fr: 'Astuce :' })}</strong> {tr({ en: 'Changes preview live. Click "Save Theme" to persist.', fr: 'Les changements s\'affichent en direct. Cliquez sur « Enregistrer » pour conserver.' })}
                     </p>
                 </div>
             )}

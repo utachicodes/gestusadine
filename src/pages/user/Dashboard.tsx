@@ -147,8 +147,8 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <div className="lg:h-full">
-      <section className="container flex flex-col gap-3 py-4 md:py-6 lg:h-full lg:min-h-0">
+    <div className="w-full lg:h-full">
+      <section className="container flex flex-col gap-3 py-3 md:py-4 lg:h-full lg:min-h-0">
         <AnimatePresence>
           {showBetaBanner && (
             <motion.div
@@ -191,7 +191,7 @@ const Dashboard: React.FC = () => {
         </header>
 
         {/* At-a-glance stats (reference-inspired) */}
-        <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 flex-shrink-0">
+        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 flex-shrink-0">
           {[
             { icon: Trophy, label: language === 'fr' ? 'Rang' : 'Rank', value: stats.rank, sub: `${stats.totalXp.toLocaleString()} XP` },
             { icon: Flame, label: language === 'fr' ? "Jours d'affilée" : 'Day streak', value: stats.streak, sub: language === 'fr' ? 'en cours' : 'in a row' },
@@ -210,30 +210,28 @@ const Dashboard: React.FC = () => {
           ))}
         </div>
 
-        {/* Main content  fills remaining height on large screens (no scroll) */}
-        <div className="grid gap-3 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 lg:flex-1 lg:min-h-0 lg:grid-rows-1">
-          {/* Ayah / reminder */}
-          <div className="islamic-card md:col-span-1 lg:col-span-2 relative overflow-hidden group">
+        {/* Main content — single 4x2 grid fills viewport */}
+        <div className="grid gap-3 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 lg:grid-rows-2 lg:flex-1 lg:min-h-0 auto-rows-fr">
+          {/* Ayah / reminder — spans 2 cols x 2 rows */}
+          <div className="islamic-card md:col-span-2 lg:row-span-2 relative overflow-hidden group flex flex-col">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-secondary/5 to-accent/10 opacity-80 group-hover:opacity-100 transition-opacity" />
             <div className="absolute top-0 right-0 w-32 h-32 bg-accent/5 rounded-full blur-3xl -translate-y-16 translate-x-16" />
-            <div className="relative p-6 h-full flex flex-col justify-between space-y-4">
+            <div className="relative p-4 md:p-5 flex flex-col justify-between flex-1 gap-3">
               <div className="flex items-center justify-between gap-2">
                 <div>
-                  <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground mb-1 font-semibold">
+                  <p className="text-[10px] uppercase tracking-[0.16em] text-muted-foreground font-semibold">
                     {t('dashboard.ayahOfTheDay')}
                   </p>
-                  <p className="text-sm text-muted-foreground font-medium">
+                  <p className="text-xs text-muted-foreground">
                     {daily?.ayah.reference ?? (loadingDaily ? t('dashboard.loading') : "")}
                   </p>
                 </div>
               </div>
-
-              <div className="space-y-4 flex flex-col items-center justify-center flex-1 min-h-0 overflow-y-auto w-full">
-                <p className="font-arabic text-2xl md:text-3xl lg:text-4xl leading-[2] text-foreground text-center break-words w-full">
+              <div className="flex flex-col items-center justify-center flex-1 min-h-0 gap-2 overflow-y-auto">
+                <p className="font-arabic text-2xl md:text-3xl lg:text-4xl leading-[1.8] text-foreground text-center break-words w-full">
                   {daily?.ayah.arabic ?? (loadingDaily ? "…" : "")}
                 </p>
-
-                <p className="text-base md:text-lg text-muted-foreground leading-relaxed italic text-center w-full">
+                <p className="text-sm md:text-base text-muted-foreground leading-relaxed italic text-center w-full">
                   {daily?.ayah.translation ??
                     (loadingDaily ? t('dashboard.ayahLoading') : t('dashboard.ayahError'))}
                 </p>
@@ -242,15 +240,15 @@ const Dashboard: React.FC = () => {
           </div>
 
           {/* Today summary */}
-          <div className="islamic-card p-5 relative overflow-hidden group flex flex-col">
+          <div className="islamic-card p-3 md:p-4 relative overflow-hidden group flex flex-col">
             <div className="absolute inset-0 bg-gradient-to-br from-secondary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-            <div className="relative z-10 flex flex-col flex-1">
-              <div className="flex items-center justify-between mb-4">
+            <div className="relative z-10 flex flex-col flex-1 h-full gap-1.5">
+              <div className="flex items-start justify-between gap-2">
                 <div>
-                  <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground mb-1 font-semibold">
+                  <p className="text-[10px] uppercase tracking-[0.16em] text-muted-foreground font-semibold">
                     {t('dashboard.todayLabel')}
                   </p>
-                  <p className="font-semibold text-foreground text-base">
+                  <p className="font-semibold text-foreground text-sm">
                     {daily?.gregorianDate ? new Date(daily.gregorianDate).toLocaleDateString(language === 'fr' ? 'fr-FR' : 'en-US', {
                       weekday: 'short',
                       year: 'numeric',
@@ -258,25 +256,27 @@ const Dashboard: React.FC = () => {
                       day: 'numeric'
                     }) : ""}
                   </p>
-                  <p className="font-medium text-muted-foreground mt-1 text-xs">
+                  <p className="text-muted-foreground text-[11px]">
                     {daily?.hijriDate ?? (loadingDaily ? t('dashboard.loading') : "")}
                   </p>
                 </div>
-                <div className="flex gap-1 text-accent-foreground">
-                  <div className="p-1.5 bg-accent/10 rounded-lg">
-                    <Sun className="w-4 h-4" />
+                <div className="flex gap-1 flex-shrink-0">
+                  <div className="p-1 bg-accent/10 rounded-lg">
+                    <Sun className="w-3 h-3" />
                   </div>
-                  <div className="p-1.5 bg-secondary/10 rounded-lg">
-                    <MoonStar className="w-4 h-4" />
+                  <div className="p-1 bg-secondary/10 rounded-lg">
+                    <MoonStar className="w-3 h-3" />
                   </div>
                 </div>
               </div>
-              <p className="text-xs text-muted-foreground mb-3 leading-relaxed flex-1">
-                {t('dashboard.todaySummary')}
-              </p>
+              <div className="flex-1 flex items-center">
+                <p className="text-xs text-muted-foreground leading-relaxed line-clamp-3">
+                  {t('dashboard.todaySummary')}
+                </p>
+              </div>
               <button
                 onClick={() => setShowReminder(!showReminder)}
-                className="btn-islamic w-full hover:scale-[1.02] transition-transform text-sm py-2"
+                className="btn-islamic w-full hover:scale-[1.02] transition-transform text-xs py-1.5"
               >
                 {t('dashboard.openReminder')}
               </button>
@@ -284,8 +284,43 @@ const Dashboard: React.FC = () => {
           </div>
 
           {/* Rank */}
-          <div className="md:col-span-1 space-y-3 lg:min-h-0 lg:overflow-y-auto custom-scrollbar">
+          <div className="flex flex-col min-h-0">
             <RankDisplay currentRank={stats.rank} currentPoints={stats.totalXp} />
+          </div>
+
+          {/* Dua */}
+          <div className="islamic-card p-3 md:p-4 relative overflow-hidden group flex flex-col">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="relative z-10 flex flex-col flex-1 gap-1.5">
+              <p className="text-[10px] uppercase tracking-[0.16em] text-muted-foreground font-semibold">
+                {t('dashboard.dailyDua')}
+              </p>
+              <div className="flex-1 flex flex-col justify-center min-h-0">
+                <p className="font-arabic text-lg md:text-xl text-foreground text-right leading-relaxed">
+                  {daily?.dua.arabic ?? (loadingDaily ? "…" : "")}
+                </p>
+                <p className="text-xs text-muted-foreground leading-relaxed mt-1">
+                  {daily?.dua.translation ??
+                    (loadingDaily ? t('dashboard.dailyDuaLoading') : t('dashboard.dailyDuaError'))}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Fact */}
+          <div className="islamic-card p-3 md:p-4 relative overflow-hidden group flex flex-col">
+            <div className="absolute inset-0 bg-gradient-to-br from-secondary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="relative z-10 flex flex-col flex-1 gap-1.5">
+              <p className="text-[10px] uppercase tracking-[0.16em] text-muted-foreground font-semibold">
+                {t('dashboard.smallFact')}
+              </p>
+              <div className="flex-1 flex items-center min-h-0 overflow-y-auto">
+                <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
+                  {daily?.fact ??
+                    (loadingDaily ? t('dashboard.factLoading') : t('dashboard.factError'))}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -329,41 +364,7 @@ const Dashboard: React.FC = () => {
           </div>
         )}
 
-        {/* Duas, Facts, Quiz */}
-        <div className="grid gap-3 md:grid-cols-2 lg:flex-1 lg:min-h-0 lg:grid-rows-1">
-          <div className="islamic-card p-5 space-y-3 relative overflow-hidden group flex flex-col md:col-span-1">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-            <div className="relative z-10 flex flex-col flex-1">
-              <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground mb-3 font-semibold">
-                {t('dashboard.dailyDua')}
-              </p>
-              <div className="flex-1 flex flex-col justify-center">
-                <p className="font-arabic text-2xl md:text-3xl text-foreground mb-3 text-right leading-relaxed min-h-[3rem]">
-                  {daily?.dua.arabic ?? (loadingDaily ? "…" : "")}
-                </p>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  {daily?.dua.translation ??
-                    (loadingDaily ? t('dashboard.dailyDuaLoading') : t('dashboard.dailyDuaError'))}
-                </p>
-              </div>
-            </div>
-          </div>
 
-          <div className="islamic-card p-5 space-y-3 relative overflow-hidden group flex flex-col md:col-span-1">
-            <div className="absolute inset-0 bg-gradient-to-br from-secondary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-            <div className="relative z-10 flex flex-col flex-1">
-              <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground mb-2 font-semibold">
-                {t('dashboard.smallFact')}
-              </p>
-              <div className="flex-1 flex items-center">
-                <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
-                  {daily?.fact ??
-                    (loadingDaily ? t('dashboard.factLoading') : t('dashboard.factError'))}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
       </section>
     </div>
   );
