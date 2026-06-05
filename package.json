@@ -57,6 +57,7 @@
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react-swc": "^3.8.1",
+    "@workos-inc/authkit-nextjs": "^4.1.1",
     "@workos-inc/node": "^10.2.0",
     "autoprefixer": "^10.4.20",
     "class-variance-authority": "^0.7.1",
