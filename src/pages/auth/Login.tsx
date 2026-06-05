@@ -23,6 +23,7 @@ const Login = () => {
   const [pendingRedirect, setPendingRedirect] = useState<string | null>(null);
   const [verificationEmail, setVerificationEmail] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
+  const { language } = useLanguage();
 
   const passwordChecks = React.useMemo(() => [
     { label: language === 'fr' ? 'Min. 8 caractères' : 'Min. 8 characters', check: password.length >= 8 },
@@ -34,7 +35,6 @@ const Login = () => {
   const { signInWithPassword, signUp, user, loading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const { language } = useLanguage();
   const [searchParams] = useSearchParams();
   const upgradeTier = searchParams.get('upgrade');
   const from = (location.state as { from?: { pathname: string } } | null)?.from?.pathname ?? '/dashboard';
