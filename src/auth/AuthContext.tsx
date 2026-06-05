@@ -154,12 +154,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     try {
       await signIn("password", { email, password, flow: "signIn" });
-    } catch (err: any) {
-      const msg = err?.message ?? "";
-      if (msg.includes("Invalid") || msg.includes("incorrect")) {
-        throw new Error("Invalid email or password.");
-      }
-      throw new Error(msg || "Sign in failed. Please try again.");
+    } catch {
+      throw new Error("Invalid email or password.");
     }
 
     // Check if email is verified; if not, sign out and show error
@@ -184,10 +180,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (msg.includes("already exists") || msg.includes("already in use")) {
         return { error: new Error("An account with this email already exists.") };
       }
-      if (msg.includes("Too many")) {
-        return { error: new Error(msg) };
-      }
-      return { error: new Error(msg || "Sign up failed. Please try again.") };
+      return { error: new Error("Sign up failed. Please try again.") };
     }
 
     // Send verification email and sign out (account was created)

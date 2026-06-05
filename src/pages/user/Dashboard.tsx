@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Sparkles, Sun, MoonStar, HelpCircle, Star, Trophy, Flame, Target, X, FlaskConical } from "lucide-react";
+import { Sparkles, Sun, MoonStar, Trophy, Flame, Target, X, FlaskConical } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { RankDisplay } from "@/components/gamification/RankDisplay";
@@ -8,7 +8,6 @@ import { useConvex } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 
 type LanguageCode = "fr" | "en";
-type Difficulty = "easy" | "medium" | "advanced";
 
 
 interface DailyData {
@@ -83,28 +82,9 @@ const Dashboard: React.FC = () => {
   const { language, t } = useLanguage();
   const convex = useConvex();
   const stats = useProfileStats();
-  const [difficulty, setDifficulty] = React.useState<Difficulty>("easy");
-  const [selectedOption, setSelectedOption] = React.useState<string | null>(
-    null,
-  );
-  const [submitted, setSubmitted] = React.useState(false);
   const [loadingDaily, setLoadingDaily] = React.useState(true);
   const [daily, setDaily] = React.useState<DailyData | null>(null);
   const [error, setError] = React.useState<string | null>(null);
-
-  // Quiz content derived from translations
-  const quiz = {
-    question: t(`quiz.${difficulty}.question`),
-    options: [
-      t(`quiz.${difficulty}.options.0`),
-      t(`quiz.${difficulty}.options.1`),
-      t(`quiz.${difficulty}.options.2`),
-    ],
-    correct: t(`quiz.${difficulty}.correct`),
-    hint: t(`quiz.${difficulty}.hint`),
-  };
-
-  const isCorrect = submitted && selectedOption === quiz.correct;
 
   React.useEffect(() => {
     const fetchDaily = async () => {
@@ -342,6 +322,9 @@ const Dashboard: React.FC = () => {
                   <p className="font-arabic text-lg text-foreground mb-3 text-right leading-relaxed">
                     {t('dashboard.hadith_text')}
                   </p>
+                  <p className="text-sm text-muted-foreground leading-relaxed mb-2">
+                    {t('dashboard.hadith_translation')}
+                  </p>
                   <p className="text-xs text-muted-foreground">{t('dashboard.source_authentic_hadith')}</p>
                 </div>
               </div>
@@ -350,11 +333,11 @@ const Dashboard: React.FC = () => {
         )}
 
         {/* Duas, Facts, Quiz */}
-        <div className="grid gap-3 md:grid-cols-3 lg:flex-1 lg:min-h-0 lg:grid-rows-1">
+        <div className="grid gap-3 md:grid-cols-2 lg:flex-1 lg:min-h-0 lg:grid-rows-1">
           <div className="islamic-card p-5 space-y-3 relative overflow-hidden group flex flex-col md:col-span-1">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             <div className="relative z-10 flex flex-col flex-1">
-              <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground mb-2 font-semibold">
+              <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground mb-3 font-semibold">
                 {t('dashboard.dailyDua')}
               </p>
               <div className="flex-1 flex flex-col justify-center">
@@ -381,126 +364,6 @@ const Dashboard: React.FC = () => {
                     (loadingDaily ? t('dashboard.factLoading') : t('dashboard.factError'))}
                 </p>
               </div>
-            </div>
-          </div>
-
-          <div className="islamic-card p-4 space-y-3 relative overflow-hidden group flex flex-col md:col-span-1">
-            <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-            <div className="relative z-10 flex flex-col flex-1 min-h-0">
-              <div className="flex items-start justify-between mb-2">
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground font-semibold">
-                    {t('dashboard.weeklyQuiz')}
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-0.5">
-                    {t('dashboard.weeklyQuizSubtitle')}
-                  </p>
-                </div>
-                <div className="p-1.5 bg-accent/10 rounded-lg flex-shrink-0 ml-2">
-                  <HelpCircle className="w-3.5 h-3.5 text-accent-foreground" />
-                </div>
-              </div>
-
-              <div className="flex flex-wrap gap-1 mb-2">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setDifficulty("easy");
-                    setSelectedOption(null);
-                    setSubmitted(false);
-                  }}
-                  className={`px-2 py-0.5 rounded-full border text-[10px] font-medium transition-colors ${difficulty === "easy"
-                    ? "bg-primary text-primary-foreground border-primary"
-                    : "bg-primary/10 text-primary border-transparent hover:bg-primary/20"
-                    }`}
-                >
-                  {t('dashboard.easy')}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setDifficulty("medium");
-                    setSelectedOption(null);
-                    setSubmitted(false);
-                  }}
-                  className={`px-2 py-0.5 rounded-full border text-[10px] font-medium transition-colors ${difficulty === "medium"
-                    ? "bg-accent text-accent-foreground border-accent"
-                    : "bg-accent/10 text-accent-foreground border-transparent hover:bg-accent/20"
-                    }`}
-                >
-                  {t('dashboard.medium')}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setDifficulty("advanced");
-                    setSelectedOption(null);
-                    setSubmitted(false);
-                  }}
-                  className={`px-2 py-0.5 rounded-full border text-[10px] font-medium transition-colors ${difficulty === "advanced"
-                    ? "bg-secondary text-secondary-foreground border-secondary"
-                    : "bg-secondary/10 text-secondary-foreground border-transparent hover:bg-secondary/20"
-                    }`}
-                >
-                  {t('dashboard.advanced')}
-                </button>
-              </div>
-
-              <p className="text-[11px] leading-tight text-foreground mb-2 line-clamp-2">{quiz.question}</p>
-
-              <div className="space-y-1 flex-1 min-h-0 overflow-y-auto">
-                {quiz.options.map((option) => {
-                  const selected = selectedOption === option;
-                  const correct = submitted && option === quiz.correct;
-                  const wrong = submitted && selected && !correct;
-
-                  return (
-                    <button
-                      key={option}
-                      type="button"
-                      onClick={() => {
-                        setSelectedOption(option);
-                        setSubmitted(false);
-                      }}
-                      disabled={submitted}
-                      className={`w-full text-left text-[10px] px-2 py-1.5 rounded-lg border transition-colors ${correct
-                        ? "border-primary bg-primary/5 dark:bg-primary/20 text-primary dark:text-primary-foreground"
-                        : wrong
-                          ? "border-destructive bg-destructive/10 dark:bg-destructive/20 text-destructive dark:text-destructive-foreground"
-                          : selected
-                            ? "border-primary bg-primary/5 text-primary"
-                            : "border-border bg-card text-muted-foreground hover:bg-muted"
-                        } ${submitted ? 'cursor-default' : 'cursor-pointer'}`}
-                    >
-                      <span className="line-clamp-2">{option}</span>
-                    </button>
-                  );
-                })}
-              </div>
-
-              <button
-                type="button"
-                onClick={() => {
-                  if (!selectedOption) return;
-                  setSubmitted(true);
-                }}
-                disabled={!selectedOption || submitted}
-                className="btn-islamic-outlined w-full mt-2 flex items-center justify-center gap-1 text-[10px] py-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <Star className="w-3 h-3" />
-                {t('dashboard.checkAnswer')}
-              </button>
-
-              {submitted && (
-                <p
-                  className={`mt-1 text-[10px] leading-tight ${isCorrect ? "text-primary dark:text-primary-foreground" : "text-muted-foreground"
-                    }`}
-                >
-                  {isCorrect
-                    ? t('dashboard.correctFeedback')
-                    : `${t('dashboard.wrongFeedbackPrefix')}${quiz.hint}`}
-                </p>
-              )}
             </div>
           </div>
         </div>

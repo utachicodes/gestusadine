@@ -111,7 +111,6 @@ export const confirmPayment = mutation({
   args: {
     orderId: v.string(),
     transactionStatus: v.string(),
-    tier: v.string(),
     customerEmail: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
@@ -126,13 +125,15 @@ export const confirmPayment = mutation({
     if (!activity) return { success: false };
 
     const userId = activity.userId;
-    const tier = args.tier;
+    const meta = activity.metadata as Record<string, unknown> | undefined;
+    const tier = (meta?.tier as string) ?? "student";
+    const amount = (meta?.amount as number) ?? TIER_PRICES[tier]?.amount ?? 0;
 
     await ctx.db.patch(userId, { subscriptionTier: tier as any });
     await ctx.db.insert("userActivity", {
       userId,
       activityType: "payment_completed",
-      metadata: { orderId: args.orderId, tier },
+      metadata: { orderId: args.orderId, tier, amount },
       createdAt: Date.now(),
     });
 

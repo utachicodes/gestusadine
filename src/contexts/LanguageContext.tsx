@@ -108,6 +108,7 @@ const translations = {
     'dashboard.action_text': 'Take a moment to remember Allah with sincerity, and share something beneficial with someone today.',
     'dashboard.hadith_of_the_day': 'Hadith of the day',
     'dashboard.hadith_text': 'إِنَّمَا الأَعْمَالُ بِالنِّيَّاتِ',
+    'dashboard.hadith_translation': 'Actions are but by intentions.',
     'dashboard.source_authentic_hadith': 'Sahih al-Bukhari',
     'dashboard.prayer_times': 'Prayer times',
     'dashboard.enable_location': "Enable location to see today's prayer times.",
@@ -227,6 +228,10 @@ const translations = {
     'common.welcome': 'Welcome!',
     'common.welcome_back': 'Welcome back',
     'index.learn_more': 'Learn More',
+
+    // Cookie consent
+    'cookie.message': 'GëstuSaDine doesn\'t use third-party cookies, only a single in-house cookie. No data is sent to a third party.',
+    'cookie.accept': 'Got it',
   },
   fr: {
     // Brand
@@ -326,6 +331,7 @@ const translations = {
     'dashboard.action_text': "Prenez un moment pour évoquer Allah avec sincérité, et partagez aujourd'hui quelque chose de bénéfique avec quelqu'un.",
     'dashboard.hadith_of_the_day': 'Hadith du jour',
     'dashboard.hadith_text': 'إِنَّمَا الأَعْمَالُ بِالنِّيَّاتِ',
+    'dashboard.hadith_translation': 'Les actions ne valent que par leurs intentions.',
     'dashboard.source_authentic_hadith': 'Sahih al-Bukhari',
     'dashboard.prayer_times': 'Horaires de prière',
     'dashboard.enable_location': 'Activez la localisation pour voir les horaires de prière.',
@@ -445,6 +451,10 @@ const translations = {
     'common.welcome': 'Bienvenue !',
     'common.welcome_back': 'Bon retour',
     'index.learn_more': 'En savoir plus',
+
+    // Cookie consent
+    'cookie.message': 'GëstuSaDine n\'utilise pas de cookies tiers, seulement un seul cookie interne. Aucune donnée n\'est envoyée à un tiers.',
+    'cookie.accept': 'Compris',
   }
 };
 

@@ -21,6 +21,7 @@ import type * as library from "../library.js";
 import type * as llm from "../llm.js";
 import type * as naboopay from "../naboopay.js";
 import type * as podcasts from "../podcasts.js";
+import type * as posthog from "../posthog.js";
 import type * as products from "../products.js";
 import type * as quizzes from "../quizzes.js";
 import type * as rag from "../rag.js";
@@ -54,6 +55,7 @@ declare const fullApi: ApiFromModules<{
   llm: typeof llm;
   naboopay: typeof naboopay;
   podcasts: typeof podcasts;
+  posthog: typeof posthog;
   products: typeof products;
   quizzes: typeof quizzes;
   rag: typeof rag;

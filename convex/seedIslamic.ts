@@ -1020,6 +1020,519 @@ Major signs of the Hour include: Dajjal (the false Messiah) will appear, Jesus (
     source: "Aqeedah - Quran, Sahih Bukhari, Sahih Muslim, Ibn Kathir (al-Nihayah), Ibn al-Qayyim",
     category: "aqeedah"
   },
+
+  // ===== HEART-SOFTENERS (CHARACTER & SPIRITUALITY) =====
+  {
+    title: "Sabr (Patience) in Islam - Complete Guide",
+    content: `Sabr (patience) is one of the most important virtues in Islam. Allah says: "Indeed, Allah is with the patient" (Quran 2:153). "Only those who are patient shall receive their reward in full, without reckoning" (Quran 39:10). The Prophet (ﷺ) said: "How wonderful is the affair of the believer, for all his affairs are good. If something good happens to him, he gives thanks, and that is good for him, and if something bad happens to him, he bears it with patience and that is good for him." (Muslim #2999).
+
+THREE TYPES OF SABR:
+1. Patience in obeying Allah (sabr 'ala al-ta'ah) — performing religious duties consistently despite laziness or difficulty.
+2. Patience in refraining from sin (sabr 'an al-ma'siyah) — resisting temptations and avoiding what Allah has forbidden.
+3. Patience with Allah's decrees (sabr 'ala al-qadr) — enduring hardships, trials, and calamities without despair or complaining.
+
+Allah has promised the patient an immense reward: "And their recompense shall be Paradise, and silken garments, because they were patient" (Quran 76:12). The Prophet (ﷺ) said: "Whoever persists in being patient, Allah will make him patient. No one is given a gift that is better and more comprehensive than patience." (Bukhari #1469, Muslim #1053).
+
+PATIENCE AT TIMES OF FITNAH: The Prophet (ﷺ) said: "After you there will come the days of patience. Patience during those (days) will be like grasping a live coal. During those (days) the reward for the one who adheres to the commands of Allah will be equivalent to the reward of fifty men." (Abu Dawud #4341, Ibn Majah #4014, authenticated by Al-Albani).
+
+When calamity strikes, the believer says: "Inna lillahi wa inna ilayhi raji'un" (Truly, to Allah we belong and truly, to Him we shall return) — Quran 2:156. This statement brings comfort and reminds the believer that everything belongs to Allah and will return to Him.
+
+The position of patience in faith is like that of the head in relation to the body. Without patience, faith cannot stand firm. The Prophet (ﷺ) said: "No one has been given anything better than patience." (Bukhari #1469).`,
+    source: "IslamQA - Based on Quran, Sahih Bukhari #1469, Sahih Muslim #2999, #1053, IslamQA #12380, #13403",
+    category: "ibadah"
+  },
+  {
+    title: "Tawakkul (Reliance on Allah) - Complete Guide",
+    content: `Tawakkul is the Islamic concept of complete reliance and trust in Allah while taking the necessary means. Allah says: "And whoever relies upon Allah, then He is sufficient for him. Indeed, Allah will accomplish His purpose. Allah has set a measure for all things" (Quran 65:3). "So rely upon Allah; indeed you are upon the clear truth" (Quran 27:79).
+
+THE CORRECT UNDERSTANDING OF TAWAKKUL:
+Tawakkul does NOT mean fatalism or passivity. The Prophet (ﷺ) was asked: "Should I tie my camel and rely on Allah, or leave it untied and rely on Allah?" He replied: "Tie it and then rely on Allah." (Tirmidhi #2517, authenticated by Al-Albani). This hadith perfectly illustrates the balance — take all necessary precautions, then place your trust in Allah for the outcome.
+
+TAWAKKUL AND PROVISION: "And whoever fears Allah, He will make a way out for him, and will provide for him from where he does not expect" (Quran 65:2-3). The Prophet (ﷺ) said: "If you were to rely upon Allah with the reliance He deserves, He would provide for you as He provides for the birds: they go out hungry in the morning and return full in the evening." (Tirmidhi #2344, Ibn Majah #4164, authenticated by Al-Albani).
+
+BENEFITS OF TAWAKKUL:
+1. Peace of mind — knowing the outcome is in Allah's hands removes anxiety.
+2. Strength in adversity — the believer is not shaken by setbacks.
+3. True independence — reliance on Allah frees from reliance on people.
+4. Increased blessing — Allah suffices the one who relies on Him.
+5. Protection from shirk — reliance on other than Allah is a form of minor shirk.
+
+LEVELS OF TAWAKKUL:
+1. Tawakkul of the common believer: relying on Allah in matters they cannot control.
+2. Tawakkul of the righteous: relying on Allah in all matters, while taking means.
+3. Tawakkul of the elite: complete trust that Allah's choice is always best, even when it contradicts personal desire.
+
+The Salaf exemplified tawakkul. When the people told the Companions: "Indeed, the people have gathered against you, so fear them," it only increased them in faith, and they said: "Sufficient for us is Allah, and He is the best Disposer of affairs" (Quran 3:173).`,
+    source: "IslamQA - Based on Quran 65:3, 65:2-3, 27:79, 3:173, Tirmidhi #2517, #2344, authenticated by Al-Albani",
+    category: "ibadah"
+  },
+  {
+    title: "Riya' (Showing Off) and Sincerity (Ikhlas)",
+    content: `Riya' (showing off) is to perform acts of worship or good deeds to be seen and praised by people, rather than for the sake of Allah alone. It is a form of minor shirk and one of the most dangerous spiritual diseases. Allah says: "So whoever expects to meet his Lord, let him do righteous work and not associate anyone in the worship of his Lord" (Quran 18:110).
+
+The Prophet (ﷺ) said: "What I fear most for you is minor shirk." They asked: "O Messenger of Allah, what is minor shirk?" He said: "Riya' (showing off)." (Ahmad, authenticated by Al-Albani). He also said: "Shall I not tell you what I fear for you more than the Dajjal? It is hidden shirk: a man stands to pray and beautifies his prayer because he sees people looking at him." (Ibn Majah #4204).
+
+THE THREE TYPES OF RIYA':
+1. Riya' in belief — pretending to have faith to gain worldly benefit (pure hypocrisy).
+2. Riya' in actions — such as lengthening prayer or giving charity to be praised.
+3. Riya' in speech — speaking words of wisdom or reminding others to appear pious.
+
+SIGNS OF RIYA':
+- Increasing acts of worship when around people, decreasing when alone.
+- Working harder when praised, slacking when criticized.
+- Liking people to know about one's good deeds and charity.
+- Being concerned about what others think of one's religious commitment.
+
+CURE FOR RIYA':
+1. Strengthening tawheed and ikhlas (sincerity) — remembering that only Allah can reward.
+2. Keeping good deeds hidden — "Charity given secretly extinguishes the wrath of the Lord" (Tabarani, authenticated by Al-Albani). The Prophet (ﷺ) said that among those whom Allah will shade on the Day of Resurrection is "a man who gives charity so secretly that his left hand does not know what his right hand gives" (Bukhari #1421, Muslim #1031).
+3. Seeking refuge from riya' — the Prophet (ﷺ) taught: "Allahumma inni a'udhu bika an ushrika bika wa ana a'lam, wa astaghfiruka lima la a'lam" (O Allah, I seek refuge in You from knowingly associating partners with You, and I seek Your forgiveness for what I do unknowingly).
+4. Reflecting on the Hereafter — remembering that people's opinions have no weight on the Day of Judgement.
+5. Accompanying the righteous and avoiding those who flatter.
+
+IKHLAS (SINCERITY): Ikhlas means purifying one's intention for Allah alone. Allah says: "And they were not commanded except to worship Allah, being sincere to Him in religion" (Quran 98:5). The Prophet (ﷺ) said: "Allah does not accept any deed unless it is done sincerely for His sake and seeking His pleasure." (Nasa'i, authenticated by Al-Albani). A small deed done with sincerity is better than a great deed done with riya'.`,
+    source: "IslamQA - Based on Quran, Sahih Bukhari, Sahih Muslim, Ibn Baz, Ibn Uthaymeen, IslamQA #129678",
+    category: "ibadah"
+  },
+  {
+    title: "Khushu' (Humility and Focus in Prayer)",
+    content: `Khushu' is the state of humility, focus, and presence of heart in prayer. Allah says: "Successful indeed are the believers, those who are humble in their prayers" (Quran 23:1-2). The absence of khushu' is a sign of neglect: "So woe to those who pray, who are heedless of their prayer" (Quran 107:4-5).
+
+ATTAINING KHUSHU':
+1. Preparing for prayer — performing wudu properly, using the miswak, dressing cleanly, and going to the mosque early.
+2. Remembering the greatness of Allah before starting — reciting the opening du'a with meaning.
+3. Pausing at each verse of Al-Fatihah — as the Prophet (ﷺ) used to pause after each ayah.
+4. Reflecting on the meaning of what is recited — the Prophet (ﷺ) said: "The prayer is not complete unless one recites Al-Fatihah with reflection."
+5. Looking at the place of prostration — the Prophet (ﷺ) used to look at the ground during prayer (his gaze was fixed on the place of sujud).
+6. Remembering death during prayer — the Prophet (ﷺ) said: "When you stand to pray, pray as if it is your last prayer." (Ibn Majah #4171, authenticated by Al-Albani).
+7. Avoiding distractions — removing anything that distracts the mind, not praying when food is served or when needing to relieve oneself.
+8. Not looking around — the Prophet (ﷺ) said: "When a person prays, he should not look around, for Allah turns His face to the face of His slave as long as he does not look around." (Tirmidhi, authenticated by Al-Albani).
+9. Praying with tranquility (tumaninah) — not rushing through the movements. The Prophet (ﷺ) saw a man praying hurriedly and said: "Go back and pray, for you have not prayed." (Bukhari #793, Muslim #397).
+10. Making du'a during sujud — the closest a slave is to his Lord is when prostrating (Muslim #482), so increase supplication at this time.
+
+The Salaf were very particular about khushu'. When Ibn al-Zubayr prayed, he was like a tree trunk planted in the ground — no movement, no distraction. Some of the Salaf would not even know who was sitting beside them in the mosque because of their concentration. The stronger one's iman, the deeper the khushu'. Conversely, sin weakens khushu' — the Prophet (ﷺ) said: "When a man commits a sin, a black spot appears on his heart. If he repents, it is erased. If he persists, it spreads until it overtakes his heart." (Tirmidhi #3334, authenticated by Al-Albani). This hardens the heart and destroys khushu'.`,
+    source: "IslamQA - Based on Quran 23:1-2, Sahih Bukhari #793, Sahih Muslim #397, #482, Ibn Majah #4171, Ibn Baz, Ibn Uthaymeen",
+    category: "ibadah"
+  },
+  {
+    title: "Purification of the Soul (Tazkiyah al-Nafs)",
+    content: `Tazkiyah means purification of the soul from spiritual diseases and its development toward Allah. Allah says: "He has succeeded who purifies it (the soul), and he has failed who corrupts it" (Quran 91:9-10). "Indeed, Allah loves those who repent and loves those who purify themselves" (Quran 2:222).
+
+SPIRITUAL DISEASES TO PURIFY:
+1. Kibr (arrogance) — the Prophet (ﷺ) said: "No one who has an atom's weight of arrogance in his heart will enter Paradise." (Muslim #91).
+2. Hasad (envy) — "And from the evil of an envier when he envies" (Quran 113:5). Hasad is resenting Allah's blessing on others and wishing it removed.
+3. Ghibah (backbiting) — "Would one of you like to eat the flesh of his dead brother?" (Quran 49:12). The Prophet (ﷺ) said: "Backbiting is mentioning your brother in a way he dislikes." (Muslim #2589).
+4. Ghadab (anger) — the Prophet (ﷺ) said: "The strong man is not the one who can wrestle, but the one who controls himself at times of anger." (Bukhari #6114, Muslim #2609).
+5. Hubb al-dunya (love of this world) — the root of all sin. The Prophet (ﷺ) said: "The love of this world and the dislike of death are the essence of every sin." (Kanz al-Ummal).
+6. Su' al-zann (bad suspicion) — "Avoid much suspicion, for some suspicion is sin" (Quran 49:12).
+7. Ghaflah (heedlessness) — forgetting Allah and the Hereafter due to worldly absorption.
+
+MEANS OF PURIFICATION:
+1. Taqwa (fear of Allah) — the foundation of all purification. "Whoever fears Allah, He will make a way out for him" (Quran 65:2).
+2. Regular dhikr (remembrance) — "Verily, in the remembrance of Allah do hearts find rest" (Quran 13:28).
+3. Muhasabah (self-accountability) — taking oneself to account before being taken to account. Umar (may Allah be pleased with him) said: "Take account of yourselves before you are brought to account."
+4. Tawbah (repentance) — constant return to Allah.
+5. Accompaniment of the righteous — "A man follows the religion of his close friend" (Abu Dawud #4833, Tirmidhi #2378).
+6. Reducing worldly attachments — zuhd is not forbidding what is halal but preferring the Hereafter over this world.
+7. Fasting and night prayer — the Prophet (ﷺ) said: "The month of patience (Ramadan) and three days of each month remove the whispers of the heart." (Ahmad).
+
+THE HEART IS THE KING: All good deeds depend on the state of the heart. The Prophet (ﷺ) said: "There is a piece of flesh in the body; if it is sound, the whole body is sound; if it is corrupt, the whole body is corrupt. It is the heart." (Bukhari #52, Muslim #1599).`,
+    source: "IslamQA - Based on Quran, Sahih Bukhari, Sahih Muslim, Ibn al-Qayyim (Madarij al-Salikin), Ibn Taymiyyah, al-Ghazali",
+    category: "ibadah"
+  },
+
+  // ===== KNOWLEDGE & DAWAH =====
+  {
+    title: "Seeking Islamic Knowledge (Talab al-Ilm)",
+    content: `Seeking Islamic knowledge is an obligation upon every Muslim. The Prophet (ﷺ) said: "Seeking knowledge is an obligation upon every Muslim." (Ibn Majah #224, authenticated by Al-Albani). "Whoever travels a path seeking knowledge, Allah makes easy for them a path to Paradise." (Muslim #2699). "The virtue of the scholar over the worshipper is like the virtue of the moon over all other heavenly bodies." (Abu Dawud #3641, Tirmidhi #2685).
+
+PRIORITIES IN SEEKING KNOWLEDGE:
+1. Knowledge of Tawhid (Aqeedah) — knowing Allah, His names and attributes, and the foundations of faith. This is the most important knowledge.
+2. Knowledge of Fiqh (rulings) — knowing what is obligatory (fard 'ayn) in worship and daily life: how to pray, fast, give zakah, etc.
+3. Knowledge of the Quran and Hadith — the primary sources of Islam.
+4. Knowledge of Arabic — to understand the Quran and Sunnah directly.
+5. Knowledge of Seerah (biography of the Prophet) — to love and follow him.
+
+The Salaf understood that knowledge precedes speech and action. Imam al-Bukhari titled a chapter: "Knowledge precedes speech and action." The proof is Allah's command: "Know that there is no god worthy of worship except Allah, and ask forgiveness for your sin" (Quran 47:19) — knowledge comes first, then action.
+
+ETIQUETTE OF SEEKING KNOWLEDGE:
+1. Sincere intention (ikhlas) — seeking knowledge for Allah's sake, not for status or argument.
+2. Acting upon knowledge — the Prophet (ﷺ) said: "A person will be brought on the Day of Resurrection and thrown into Hell, and his intestines will spill out. He will be asked: 'Did you not enjoin good and forbid evil?' He will say: 'I used to enjoin good but not do it, and forbid evil but do it.'" (Bukhari #3267, Muslim #2989).
+3. Humility — knowledge increases humility, not arrogance. The more one learns, the more they realize how little they know.
+4. Patience and perseverance — knowledge is not acquired overnight.
+5. Respecting teachers — standing up for them, not interrupting, and being grateful.
+6. Teaching others — "The best of you are those who learn the Quran and teach it." (Bukhari #5027).
+
+WHEN SEEKING KNOWLEDGE BECOMES OBLIGATORY: Fard 'ayn (personal obligation): knowing the basics of tawheed, how to pray correctly, how to fast, the rules of halal and haram in daily life, and how to deal with one's spouse and children. Fard kifayah (communal obligation): having enough scholars in the community to answer questions and guide the people.
+
+The Prophet (ﷺ) also said: "When a person dies, their deeds come to an end except for three: ongoing charity, beneficial knowledge (that they taught or left behind), or a righteous child who prays for them." (Muslim #1631).`,
+    source: "IslamQA - Based on Quran, Sahih Muslim #2699, #1631, Ibn Majah #224, Tirmidhi #2685, Bukhari #5027, IslamQA #349464, #315635",
+    category: "knowledge"
+  },
+  {
+    title: "Da'wah (Calling to Islam) - Principles and Etiquette",
+    content: `Da'wah means inviting people to the path of Allah with wisdom and good advice. Allah says: "Invite to the way of your Lord with wisdom and good instruction, and argue with them in a way that is best" (Quran 16:125). "Who is better in speech than one who calls to Allah, does righteousness, and says: 'Indeed, I am of the Muslims'?" (Quran 41:33).
+
+OBLIGATION OF DA'WAH: Every Muslim is a caller to Islam by their words and actions. The Prophet (ﷺ) said: "Convey from me, even if it is one ayah" (Bukhari #3461). Da'wah is fard kifayah (communal obligation) — if enough people do it, the rest are absolved, but if nobody does it, the entire community bears sin.
+
+METHODOLOGY OF DA'WAH (based on Quran 16:125):
+1. Al-Hikmah (Wisdom) — speaking appropriately to the audience, choosing the right time and place, addressing people according to their understanding. This includes starting with the most important matters (Tawheed before fiqh details), and using gentle persuasion.
+2. Al-Maw'izah al-Hasanah (Good Instruction) — kind advice, reminders of Allah and the Hereafter, using stories and examples from the Quran and Sunnah.
+3. Al-Mujadalah bi al-lati hiya ahsan (Argument in the Best Way) — debating politely, without insults or anger, presenting evidence clearly, and stopping when the other party becomes hostile.
+
+QUALITIES OF A DA'I (CALLER):
+1. Knowledge — one should not speak about Islam without knowledge. "Say: This is my way; I invite to Allah with insight" (Quran 12:108).
+2. Sincerity — calling for Allah's sake, not for fame or followers.
+3. Good character — the Prophet (ﷺ) had the best character and attracted people through his kindness. "And indeed, you are of a great moral character" (Quran 68:4).
+4. Patience — da'wah often involves rejection, mockery, and hardship. The Prophets were the most patient in calling to Allah.
+5. Gentleness — the Prophet (ﷺ) said: "Gentleness does not enter anything except that it beautifies it, and it is not removed from anything except that it damages it." (Muslim #2594).
+6. Mercy and compassion — desiring good for others, not being harsh or judgmental.
+7. Good example — actions speak louder than words. A caller should practice what they preach.
+
+COMMON MISTAKES IN DA'WAH:
+1. Starting with secondary issues (e.g., beard length, hand placement in prayer) before establishing Tawheed and the basics.
+2. Being harsh or argumentative — which drives people away.
+3. Neglecting personal character — the da'i's behavior is often the first "book" people read about Islam.
+4. Impatience — expecting immediate results. Guidance is from Allah alone.
+5. Not addressing people according to their level of understanding.
+6. Focusing on non-Muslims while neglecting Muslims who need strengthening.
+
+The Prophet (ﷺ) sent Mu'adh to Yemen and instructed him: "You are going to a People of the Book. Let the first thing you call them to be the testification that there is no god worthy of worship except Allah and that I am the Messenger of Allah. If they accept that, then inform them that Allah has obligated five prayers upon them each day and night..." (Bukhari #1496, Muslim #19). This hadith teaches the principle of priorities in da'wah.`,
+    source: "IslamQA - Based on Quran 16:125, Sahih Bukhari #1496, #3461, Sahih Muslim #19, #2594, Ibn Baz, Ibn Uthaymeen, IslamQA #508244, #199021",
+    category: "knowledge"
+  },
+
+  // ===== PSYCHOLOGICAL & SOCIAL ISSUES =====
+  {
+    title: "Waswasah (Whispers from Shaytan) - Islamic Perspective and Treatment",
+    content: `Waswasah are the whispers and obsessive thoughts that Shaytan (Satan) casts into the heart of the believer to cause doubt, anxiety, and distress. Allah says: "Say: I seek refuge in the Lord of mankind... from the evil of the whisperer who withdraws, who whispers in the breasts of mankind, from among the jinn and mankind" (Quran 114:1-6).
+
+TYPES OF WASWAS:
+1. Waswas in Aqeedah — whispers about Allah, His existence, His attributes, or the fundamentals of faith. The Companions suffered from this and came to the Prophet (ﷺ) saying: "O Messenger of Allah, some of us experience thoughts that are too terrible to speak of." He replied: "That is clear faith." (Muslim #132). Having such thoughts does not affect one's faith; what matters is resisting and ignoring them.
+2. Waswas in Worship — obsessive doubts about wudu, purity, prayer (e.g., "Did I say the takbir? Did water reach my elbow? Did I pray three or four rak'at?"). The Prophet (ﷺ) said: "If the Shaytan comes to one of you during his prayer and says: 'You have invalidated your wudu,' let him not leave until he hears a sound or detects an odor." (Bukhari #2056, Muslim #361).
+3. Waswas in Daily Life — obsessive thoughts about cleanliness, intentions, food, etc.
+
+THE PRINCIPLE: "DO NOT PAY ATTENTION TO IT":
+The general principle for dealing with waswas is to ignore it completely and not act upon it. The more attention one gives to waswas, the stronger it becomes. Ibn Taymiyyah said: "Waswas arises from a lack of knowledge and faith, or from weakness of will. If the person is strong in faith and will, he would not be affected by it."
+
+TREATMENT OF WASWAS:
+1. Seeking refuge in Allah (ta'awwudh) — reciting "A'udhu billahi min al-shaytan al-rajim" and the Mu'awwidhatayn (Surah Al-Falaq and An-Nas).
+2. Ignoring the whisper — not responding, not repeating, not checking. The Prophet (ﷺ) said: "The Shaytan comes to one of you and says: 'Who created this? Who created that?' until he says: 'Who created your Lord?' When anyone experiences that, let him seek refuge in Allah and stop such thoughts." (Bukhari #3276, Muslim #134).
+3. Increase in dhikr and seeking forgiveness.
+4. Distracting oneself with beneficial activities.
+5. Not giving in to compulsive behavior — e.g., if waswas makes you doubt wudu, do not repeat it. If it makes you doubt the number of rak'at, choose the lesser number and make sujud al-sahw.
+
+SCHOLARS' ADVICE ON WASWAS: Ibn al-Qayyim said: "The Shaytan may cast waswas into the hearts of the believers regarding the fundamentals of faith, but when they seek refuge in Allah, ignore it, and busy themselves with obedience, it vanishes." The cure for waswas is to treat the whispers as if they do not exist. The more you engage with them, the more they persist. When you ignore them, they disappear.
+
+SPECIFIC RULINGS:
+- A person who suffers from waswas in wudu should not repeat it more than three times for any body part.
+- A person who suffers from waswas in prayer should not repeat the prayer more than once.
+- A person who suffers from waswas about najasah (impurity) should follow the original ruling (purity) unless they are certain of impurity.
+- Doubts about the number of children, whether zakah was paid, etc. — the basis is that they did not occur, and the doubt is ignored.`,
+    source: "IslamQA - Based on Quran, Sahih Bukhari #2056, #3276, Sahih Muslim #132, #134, #361, Ibn Taymiyyah, Ibn al-Qayyim, Ibn Uthaymeen, IslamQA #258",
+    category: "ibadah"
+  },
+  {
+    title: "Anxiety, Depression, and Stress - Islamic Perspective and Remedies",
+    content: `Islam provides a comprehensive approach to dealing with anxiety, depression, and psychological distress. Allah addresses the human condition with mercy and offers practical and spiritual remedies.
+
+CAUSES OF ANXIETY IN ISLAMIC PERSPECTIVE:
+1. Weakness of iman (faith) — when a person forgets Allah, reliance on self replaces reliance on Allah, leading to anxiety.
+2. Attachment to this world (hubb al-dunya) — fear of losing wealth, status, or loved ones.
+3. Sin — sins darken the heart and cause distress. The Prophet (ﷺ) said: "When a person commits a sin, a black spot appears on his heart." (Tirmidhi #3334, authenticated by Al-Albani).
+4. Negative thoughts about Allah — thinking that Allah will not forgive or that His decree is unfair.
+5. Not accepting qadr (divine decree) — struggling against what Allah has written.
+
+QURANIC REMEDIES FOR ANXIETY:
+1. Dhikr (remembrance of Allah): "Verily, in the remembrance of Allah do hearts find rest" (Quran 13:28).
+2. Tawakkul: "And whoever relies upon Allah, then He is sufficient for him" (Quran 65:3).
+3. Sabr and prayer: "Seek help through patience and prayer; indeed, it is difficult except for the humble" (Quran 2:45).
+4. Trusting that trials bring reward: "And certainly, We shall test you with something of fear, hunger, loss of wealth, lives and fruits, but give glad tidings to the patient" (Quran 2:155).
+5. Hope in Allah's mercy: "Do not despair of the mercy of Allah. Indeed, Allah forgives all sins" (Quran 39:53).
+6. Contentment with qadr: "No calamity befalls except by the leave of Allah. And whoever believes in Allah, He guides his heart" (Quran 64:11).
+
+PROPHETIC REMEDIES:
+1. The du'a for anxiety: "Allahumma inni a'udhu bika minal hammi wal hazan, wa a'udhu bika minal 'ajzi wal kasal..." (O Allah, I seek refuge in You from anxiety and sorrow, weakness and laziness...).
+2. The du'a of Yunus (AS) when he was in the whale's belly: "La ilaha illa anta, subhanaka, inni kuntu min al-zalimin" (There is no god but You, glory to You, indeed I have been among the wrongdoers). The Prophet (ﷺ) said: "No Muslim prays to Allah with this du'a concerning any matter except that Allah will answer him." (Tirmidhi #3505, authenticated by Al-Albani).
+3. "Hasbi Allah la ilaha illa huwa, alayhi tawakkaltu wa huwa rabb al-'arsh al-'azim" (Allah is sufficient for me, there is no god but Him. In Him I put my trust, and He is the Lord of the Mighty Throne) — seven times in the morning and evening.
+4. Looking at those who have less: The Prophet (ﷺ) said: "Look at those who are below you in worldly terms, not at those above you, so that you will not underestimate the blessings of Allah upon you." (Bukhari #6490, Muslim #2963).
+
+PRACTICAL STEPS:
+1. Maintain the five daily prayers — the connection with Allah provides strength.
+2. Night prayer (tahajjud) — the Prophet (ﷺ) would stand in prayer during times of distress.
+3. Reciting and reflecting on the Quran — especially Surah Al-Duha, Al-Sharh, and Al-Fatihah.
+4. Giving charity — "Charity extinguishes sin as water extinguishes fire" (Tirmidhi #2616, authenticated by Al-Albani).
+5. Talking to a trusted person — sharing concerns with a wise friend, scholar, or therapist is encouraged in Islam.
+6. Seeking medical help when needed — using permissible (halal) medication and therapy is not contrary to tawakkul.
+7. Exercise and healthy lifestyle — the body has rights over the person.
+
+The Prophet (ﷺ) experienced sadness (at the death of his son Ibrahim and wife Khadijah) but never depression or despair. He taught us: "How wonderful is the affair of the believer, for all his affairs are good. If something good happens, he gives thanks and that is good for him. If something bad happens, he bears it with patience and that is good for him." (Muslim #2999).`,
+    source: "IslamQA - Based on Quran, Sahih Bukhari #6490, Sahih Muslim #2999, #2963, Tirmidhi #3505, Ibn al-Qayyim (al-Fawa'id, Zad al-Ma'ad)",
+    category: "ibadah"
+  },
+  {
+    title: "Social Relationships and Brotherhood in Islam",
+    content: `Islam places great emphasis on strong social bonds and brotherhood among believers. Allah says: "The believers are but brothers, so make peace between your brothers" (Quran 49:10). The Prophet (ﷺ) said: "The believers in their mutual love, mercy, and compassion are like a single body: if one part complains, the rest of the body responds with fever and sleeplessness." (Muslim #2586).
+
+RIGHTS OF ONE MUSLIM OVER ANOTHER:
+The Prophet (ﷺ) said: "The rights of one Muslim over another are six: When you meet him, greet him with salam; when he invites you, accept; when he seeks advice, advise him; when he sneezes and praises Allah, say yarhamuk Allah; when he falls sick, visit him; and when he dies, follow his funeral." (Muslim #2162). In another narration: "Do not envy one another, do not outbid one another, do not hate one another, do not turn away from one another, and do not undercut one another in business. Be servants of Allah as brothers." (Muslim #2564).
+
+GOOD CHARACTER WITH PEOPLE:
+1. Truthfulness — being honest in speech and dealings.
+2. Trustworthiness — fulfilling promises and returning what is entrusted.
+3. Gentleness — the Prophet (ﷺ) said: "Gentleness does not enter anything except that it beautifies it." (Muslim #2594).
+4. Forbearance — not reacting to provocation with anger.
+5. Generosity — the Prophet (ﷺ) was the most generous of people.
+6. Visiting the sick and attending funerals.
+7. Making peace between people — "Shall I not tell you of a deed that is better than prayer, fasting, and charity? Making peace between people." (Abu Dawud #4919, Tirmidhi #2509, authenticated by Al-Albani).
+8. Smiling — "Your smile in the face of your brother is charity." (Tirmidhi #1956, authenticated by Al-Albani).
+
+FORBIDDEN IN SOCIAL RELATIONSHIPS:
+1. Backbiting (ghibah) — mentioning your brother in a way he dislikes (Muslim #2589).
+2. Slander (namimah) — carrying tales between people to create discord.
+3. Suspicion — "Avoid much suspicion, for some suspicion is sin" (Quran 49:12).
+4. Spying — "Do not spy on one another" (Quran 49:12).
+5. Mocking and ridiculing — "Do not ridicule one another; it may be that those who are ridiculed are better than those who ridicule" (Quran 49:11).
+6. Cutting ties of kinship — the Prophet (ﷺ) said: "The one who cuts ties of kinship will not enter Paradise." (Bukhari #5984, Muslim #2556).
+7. Abandoning a Muslim for more than three days — "It is not permissible for a Muslim to forsake his brother for more than three nights." (Bukhari #6065, Muslim #2560).
+
+The best of people are those who are most beneficial to others. The Prophet (ﷺ) said: "The best of people are those who are most beneficial to people." (Ibn Majah, authenticated by Al-Albani).`,
+    source: "IslamQA - Based on Quran 49:10-12, Sahih Muslim #2162, #2564, #2586, #2589, Sahih Bukhari #5984, #6065, IslamQA #34621",
+    category: "ibadah"
+  },
+
+  // ===== FAMILY FIQH =====
+  {
+    title: "Talaq (Divorce) in Islam - Complete Guide",
+    content: `Divorce (talaq) is permitted in Islam but is the most disliked permissible act. The Prophet (ﷺ) said: "The most hated of permissible things to Allah is divorce." (Abu Dawud #2178, Ibn Majah #2018, authenticated by Al-Albani). Divorce should only be resorted to when all attempts at reconciliation have failed.
+
+TYPES OF TALAQ:
+1. Talaq al-Sunnah (according to the Prophet's way) — the recommended divorce:
+   - One pronouncement of divorce during the wife's tuhr (period of purity between menstruations) during which no intercourse occurred.
+   - After this pronouncement, the 'iddah (waiting period) begins. The husband may revoke the divorce at any time during the 'iddah.
+   - If the 'iddah ends without revocation, the divorce becomes final (ba'in).
+2. Talaq al-Bid'ah (innovated divorce) — a sinful but still effective divorce:
+   - Three divorces pronounced at once (triple talaq).
+   - Divorce pronounced during menstruation.
+   - The majority of scholars count it as valid but sinful. Ibn Taymiyyah held that triple talaq counts as one.
+
+TALAQ RAJ'I (REVOCABLE DIVORCE): After the first or second talaq, the husband has the right to take his wife back during the 'iddah period without a new marriage contract. Allah says: "Divorce is twice. Then either keep her in kindness or release her in kindness" (Quran 2:229). The husband may revoke by saying "I take you back" or by having intercourse with the intention of taking her back.
+
+TALAQ BA'IN (IRREVOCABLE DIVORCE):
+- Talaq Ba'in Baynunah Sughra (minor irrevocability): After the first or second talaq if the 'iddah expires without revocation. The couple can remarry with a new contract and mahr.
+- Talaq Ba'in Baynunah Kubra (major irrevocability): After the third talaq. The woman becomes haram for the husband until she marries another man and that marriage ends naturally (not through a fraudulent arrangement called tahlil). Allah says: "And if he divorces her (the third time), she is not lawful to him afterward until she marries another husband" (Quran 2:230).
+
+CONDITIONS FOR VALID TALAQ:
+1. The husband must be sane and adult.
+2. The husband must divorce of his own free will (not coerced).
+3. The wife must be in a state of purity (tuhr) during which no intercourse occurred (for sunni talaq).
+4. Clear words expressing divorce — either explicit (saarih) like "I divorce you" or implicit (kinaayah) depending on intent.
+
+CONSEQUENCES OF TALAQ:
+1. The wife must observe 'iddah (waiting period).
+2. The husband must provide maintenance (nafaqah) during the 'iddah.
+3. Mahr is divided: if consummated, full mahr is owed; if before consummation, half mahr.
+4. If revocable, the wife stays in the marital home.
+5. Children's custody is determined (see custody document).
+
+RECONCILIATION: Before final divorce, Islam encourages reconciliation. Allah says: "If you fear a breach between them, appoint an arbitrator from his family and an arbitrator from her family. If they both desire reconciliation, Allah will bring about agreement between them" (Quran 4:35).`,
+    source: "IslamQA - Based on Quran 2:229-230, 4:35, Abu Dawud #2178, Ibn Majah #2018, Ibn Baz, Ibn Uthaymeen, IslamQA #48",
+    category: "fiqh"
+  },
+  {
+    title: "Khula' (Divorce Initiated by the Wife) - Complete Guide",
+    content: `Khula' is a divorce initiated by the wife in exchange for compensation (usually returning the mahr or paying an amount agreed upon). Allah says: "And it is not lawful for you to take anything of what you have given them unless both fear that they cannot maintain the limits of Allah. If you fear that they cannot maintain the limits of Allah, then there is no blame on either of them for what she gives to get herself free" (Quran 2:229).
+
+PROPHETIC EXAMPLE: The wife of Thabit ibn Qays came to the Prophet (ﷺ) and said: "O Messenger of Allah, I do not find any fault with Thabit's character or religion, but I cannot bear to live with him." The Prophet (ﷺ) asked: "Will you give back his garden?" She agreed. The Prophet (ﷺ) told Thabit: "Accept the garden and divorce her." (Bukhari #5273, Muslim #2895).
+
+DIFFERENCES BETWEEN KHULA' AND TALAQ:
+1. Initiation: Talaq is initiated by the husband; khula' is initiated by the wife.
+2. Compensation: In talaq, the husband gives the mahr; in khula', the wife gives compensation.
+3. Revocability: Talaq raj'i is revocable; khula' is irrevocable (ba'in) — the husband cannot take her back during the 'iddah without a new marriage contract.
+4. Iddah: In khula', the 'iddah is usually one menstrual cycle (some scholars say three, as in regular talaq).
+
+GROUNDS FOR KHULA':
+- The wife dislikes her husband's character or treatment.
+- She fears she cannot fulfill her marital obligations.
+- She cannot continue the marriage due to incompatibility.
+- She dislikes the husband's appearance, smell, or other personal matters.
+- The husband is not fulfilling her rights.
+- She simply cannot bear to live with him.
+
+CONSEQUENCES:
+1. The wife gives up part or all of her mahr to the husband.
+2. The divorce becomes irrevocable (ba'in).
+3. The wife observes 'iddah.
+4. The husband is not obligated to provide maintenance during 'iddah (according to the majority).
+5. Remarriage is possible with a new contract and mahr.
+
+RULING ON KHULA': Khula' is permissible when the wife has a valid reason. Without a valid reason, it is discouraged. The Prophet (ﷺ) said: "If a woman seeks khula' without a valid reason, she will not smell the fragrance of Paradise." (Abu Dawud #2226, Tirmidhi #1187, Ibn Majah #2055, authenticated by Al-Albani).`,
+    source: "IslamQA - Based on Quran 2:229, Sahih Bukhari #5273, Sahih Muslim #2895, Abu Dawud #2226, Ibn Baz, Ibn Uthaymeen, IslamQA #35",
+    category: "fiqh"
+  },
+  {
+    title: "Child Custody (Hadhanah) in Islam",
+    content: `Child custody (hadhanah) in Islam is primarily about the best interests and welfare of the child. The basic principle is that the child should be with the mother during early childhood, as she is more nurturing and compassionate.
+
+RIGHT OF THE MOTHER TO CUSTODY:
+The Prophet (ﷺ) said to a woman who came asking about custody: "You have more right to him as long as you do not remarry." (Abu Dawud #2276, authenticated by Al-Albani). This establishes the mother's primary right to custody. Another woman came to the Prophet (ﷺ) and said: "This son of mine, my womb was a vessel for him, my breast was a source of drink for him, my lap was a refuge for him, and his father has divorced me and wants to take him away." The Prophet (ﷺ) said: "You have more right to him as long as you do not remarry." (Ahmad, authenticated by Al-Albani).
+
+QUALIFICATIONS FOR THE CUSTODIAN:
+1. Sane and adult.
+2. Muslim — a non-Muslim cannot have custody of a Muslim child.
+3. Trustworthy (not a sinner openly) — the child's religious and moral upbringing must be ensured.
+4. Capable of raising the child — physically and mentally able.
+5. Residing in a safe environment.
+6. For the mother: not remarried to a non-mahram man (her right to custody transfers if she remarries).
+
+ORDER OF CUSTODY RIGHTS:
+1. The mother, then the maternal grandmother, then the mother's mother upwards.
+2. The father, then the paternal grandmother, etc. (some differences among madhabs).
+3. If no one qualifies, custody goes to the nearest female relatives on the mother's side.
+4. If no female qualifies, custody goes to the father or nearest male mahram.
+
+AGE OF CUSTODY (AGE OF DISCRETION):
+- Hanafi: Mother has custody until the son is 7 (can choose thereafter) and daughter until puberty.
+- Maliki: Daughter until marriage; son until puberty.
+- Shafi'i: Son until 7-9 years (can choose), daughter until marriage.
+- Hanbali: Son until 7 (can choose), daughter until 7 or 9 (can choose), after which father takes over.
+The child may be given the choice between parents at the age of discretion if both are equally qualified. The Prophet (ﷺ) gave a child the choice between his father and mother (Abu Dawud #2277, Tirmidhi #1357, authenticated by Al-Albani).
+
+THE FATHER'S ROLE: The father is responsible for:
+1. Financial support (nafaqah) of the children regardless of who has custody.
+2. Education and religious upbringing.
+3. Supervision of major decisions (marriage, education, travel).
+4. The child's housing if he is the custodian.
+
+CUSTODY AFTER DIVORCE: The custodial parent (usually the mother) has the right to:
+1. Live in a suitable home (the father must provide housing if he can afford it).
+2. Travel with the child locally; for long-distance travel, permission of the other parent is needed.
+3. Make day-to-day decisions about the child's welfare.
+Major decisions (schooling, medical procedures, marriage) require mutual consultation.
+
+ABANDONMENT OF CUSTODY: Custody cannot be abandoned without valid reason. Whoever abandons custody responsibilities without excuse is sinful. If both parents abandon custody, the judge appoints a suitable guardian.
+
+Child custody in Islam is always determined by what is best for the child. The ultimate goal is the child's physical, emotional, and spiritual well-being.`,
+    source: "IslamQA - Based on Abu Dawud #2276, #2277, Tirmidhi #1357, Ahmad, Ibn Qudamah (al-Mughni), Ibn Baz, IslamQA #51",
+    category: "fiqh"
+  },
+  {
+    title: "'Iddah (Waiting Period) After Divorce or Death",
+    content: `'Iddah is the waiting period a woman must observe after divorce or the death of her husband before she can remarry. Allah says: "Divorced women shall wait for three periods (quru')" (Quran 2:228). "And those who are taken in death among you and leave wives behind — they shall wait for four months and ten days" (Quran 2:234).
+
+PURPOSES OF 'IDDAH:
+1. To ascertain whether the woman is pregnant (to avoid mixing lineages).
+2. To allow time for reconciliation between the spouses (in case of revocable divorce).
+3. To allow the woman to grieve for her husband (in case of death).
+4. To give the woman time to adjust to her new situation.
+
+TYPES OF 'IDDAH:
+1. 'Iddah of Divorce (Talaq):
+   - If the wife is menstruating: three complete menstrual cycles (quru').
+   - If the wife is young/old and does not menstruate: three months.
+   - If the wife is pregnant: until she gives birth — regardless of how soon or late that is.
+2. 'Iddah of Death (Widow):
+   - If not pregnant: four months and ten days.
+   - If pregnant: until she gives birth (the longer of the two periods).
+3. 'Iddah of Khula':
+   - One menstrual cycle (according to some scholars) or three (according to others).
+4. 'Iddah of an Annulled Marriage:
+   - Varies based on whether the marriage was consummated.
+
+RULINGS DURING 'IDDAH:
+During revocable divorce 'iddah (talaq raj'i):
+- The wife stays in the marital home — "Do not turn them out of their homes, nor shall they leave" (Quran 65:1).
+- The husband may take her back by words or actions.
+- The husband is obligated to provide maintenance, food, clothing, and housing.
+- The wife may beautify herself (if hoping for reconciliation).
+- She may not leave the house except for necessity.
+
+During irrevocable divorce 'iddah (talaq ba'in):
+- Same as above regarding staying in the home.
+- Maintenance is due (according to the majority).
+- The husband cannot take her back without a new marriage.
+
+During widow's 'iddah:
+- She may stay in the marital home or any appropriate place.
+- She may not leave the house unnecessarily for 4 months and 10 days.
+- She should avoid perfumes, jewelry, and beautification.
+- Maintenance from the husband's estate is due for the duration.
+
+It is haram for a woman to conceal her pregnancy or lie about her 'iddah. Proposing marriage during 'iddah is prohibited: "There is no blame on you for what you hint of a proposal to women or conceal it in your hearts" (Quran 2:235) — direct proposals are not allowed, but hints are permitted.`,
+    source: "IslamQA - Based on Quran 2:228, 2:234, 2:235, 65:1, Ibn Baz, Ibn Uthaymeen, IslamQA #53",
+    category: "fiqh"
+  },
+  {
+    title: "Kind Treatment of Spouses and Marital Harmony",
+    content: `Islam places great emphasis on kind treatment between spouses. Allah says: "And live with them in kindness. If you dislike them, it may be that you dislike something in which Allah has placed much good" (Quran 4:19). "And of His signs is that He created for you from yourselves mates that you may find tranquility in them, and He placed between you love and mercy" (Quran 30:21).
+
+THE PROPHET'S EXAMPLE: The Prophet (ﷺ) said: "The best of you are the best to their families, and I am the best to my family." (Tirmidhi #3895, Ibn Majah #1977). He used to help with household chores, mend his own clothes, and treat his wives with gentleness and humor. He said: "A believer should not hate a believing woman; if he dislikes one characteristic in her, he will be pleased with another." (Muslim #1469).
+
+RIGHTS OF THE WIFE:
+1. Mahr (dowry) — "Give the women their bridal gift as a free gift" (Quran 4:4).
+2. Maintenance (nafaqah) — the husband must provide food, clothing, housing, and medical care according to his means. "Let the wealthy man spend according to his wealth" (Quran 65:7).
+3. Kind treatment — the husband should not harm her physically, verbally, or emotionally. "And do not treat them with harshness that you may take away what you have given them" (Quran 4:19).
+4. Fair division of time (in polygynous marriages) — "And you will never be able to be perfectly just between wives, so do not incline completely toward one" (Quran 4:129).
+5. Sexual fulfillment — the husband should not neglect his wife's physical needs.
+6. Protection and security — the husband is the protector (qawwam) of the family.
+7. Right to education and religious practice.
+8. Right to visit her family and receive visitors.
+
+RIGHTS OF THE HUSBAND:
+1. Obedience (ta'ah) in what is good and permissible — "Therefore righteous women are obedient and guard in the husband's absence what Allah would have them guard" (Quran 4:34).
+2. Respect and honor as the head of the household.
+3. The wife should not admit anyone into the home whom the husband dislikes.
+4. The wife should guard his wealth and honor.
+5. Physical intimacy — the wife should not refuse without a valid excuse. The Prophet (ﷺ) said: "If a husband calls his wife to bed and she refuses and he spends the night angry, the angels curse her until morning." (Bukhari #3237, Muslim #1436).
+
+MUTUAL RESPONSIBILITIES:
+1. Living together with love, mercy, and companionship.
+2. Consulting each other in family matters.
+3. Keeping each other's secrets.
+4. Helping one another in righteousness and piety.
+5. Being patient with each other's shortcomings.
+6. Raising children together with Islamic values.
+7. Expressing love and appreciation.
+
+RESOLVING CONFLICTS (Quran 4:34-35):
+1. First: Advise and remind the spouse of Allah.
+2. Second: Separate beds (as a temporary measure).
+3. Third: Lightly admonish (without causing injury).
+4. If still unresolved: Appoint arbitrators from both families.
+The Prophet (ﷺ) never hit any of his wives or servants. His advice was always kindness and patience.
+
+A GOOD WIFE: The Prophet (ﷺ) said: "This world is temporary enjoyment, and the best enjoyment in it is a righteous wife." (Muslim #1467). "Marry a woman who is loving and fertile, for I will boast of your numbers before the other nations." (Abu Dawud #2050, authenticated by Al-Albani).
+
+A GOOD HUSBAND: The Prophet (ﷺ) said: "The most complete of believers in faith are those with the best character, and the best of you are those who are best to their wives." (Tirmidhi #1162, authenticated by Al-Albani).`,
+    source: "IslamQA - Based on Quran 4:19, 4:34, 30:21, Sahih Bukhari #3237, Sahih Muslim #1436, #1467, #1469, Tirmidhi #3895, Ibn Baz, IslamQA #45, #47",
+    category: "fiqh"
+  },
+  {
+    title: "Zuhd (Asceticism) and Contentment in Islam",
+    content: `Zuhd is not about abandoning the world completely or forbidding what is halal. It is about having the Hereafter in one's heart while living in this world. The Prophet (ﷺ) said: "Be in this world as if you are a stranger or a wayfarer." (Bukhari #6416). Ibn Umar (may Allah be pleased with him) used to say: "When you reach the evening, do not wait for the morning. When you reach the morning, do not wait for the evening. Take from your health for your sickness and from your life for your death."
+
+THE MEANING OF ZUHD:
+Imam Ahmad said: "Zuhd is of three types: (1) Abstaining from the unlawful — this is the zuhd of the common people. (2) Abstaining from excess of the lawful — this is the zuhd of the elite. (3) Abstaining from everything that distracts from Allah — this is the zuhd of the scholars."
+
+Ibn al-Qayyim said: "Zuhd is not about having little wealth; zuhd is about having no attachment to wealth. Some people have much wealth but are ascetics. Some have little but are attached to it."
+
+CONTENTMENT (QANAAH): Qana'ah is being satisfied with what Allah has provided. The Prophet (ﷺ) said: "Richness is not about having many possessions, but richness is contentment of the soul." (Bukhari #6446, Muslim #1051). "Whoever among you wakes up secure in his dwelling, healthy in his body, and having his food for the day, it is as if the entire world has been gathered for him." (Tirmidhi #2346, authenticated by Al-Albani).
+
+HOW TO DEVELOP ZUHD AND QANAAH:
+1. Contemplating the temporary nature of this world and the permanence of the Hereafter.
+2. Remembering death frequently — the Prophet (ﷺ) said: "Remember often the destroyer of pleasures (death)." (Tirmidhi #2307, Nasa'i #1824, authenticated by Al-Albani).
+3. Looking at those who have less in worldly terms (Bukhari #6490, Muslim #2963).
+4. Reducing hopes and expectations — living each day as if it were the last.
+5. Fulfilling obligations without excess in luxuries.
+6. Giving charity regularly.
+7. Reflecting on the lives of the Prophets and the Salaf — how they lived simply.
+
+THE BALANCE: Islam does not require poverty. The Prophet (ﷺ) himself made du'a: "O Allah, I ask You for guidance, piety, chastity, and self-sufficiency." (Muslim #2721). Wealth can be a great blessing if used correctly. The righteous Salaf included both wealthy (Uthman, Abd al-Rahman ibn Awf) and poor (Abu Dharr, Ahl al-Suffah). What matters is the attachment of the heart, not the amount of wealth.
+
+The Prophet (ﷺ) said: "If the son of Adam had a valley full of gold, he would wish for a second valley. Nothing fills his mouth except the dirt of the grave. But Allah accepts the repentance of those who repent." (Bukhari #6438, Muslim #1048).`,
+    source: "IslamQA - Based on Sahih Bukhari #6416, #6438, #6446, #6490, Sahih Muslim #1048, #1051, #2721, #2963, Tirmidhi #2307, Ibn al-Qayyim (Madarij al-Salikin), Ibn Rajab",
+    category: "ibadah"
+  },
 ];
 
 export const seed = action({

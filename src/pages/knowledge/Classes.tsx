@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 import { useClasses } from '@/data/classes';
 import { useTr, type Loc } from '@/lib/i18n';
 import { PageHeader } from '@/components/layout/PageHeader';
+import { QuizWidget } from '@/components/knowledge/QuizWidget';
 
 const LEVEL_LABELS: Record<string, Loc> = {
     Beginner: { en: 'Beginner', fr: 'Débutant' },
@@ -45,76 +46,46 @@ const Classes = () => {
                     ))}
                 </div>
 
-                {/* Classes Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {/* Classes Grid + Quiz */}
+                <div className="lg:flex lg:gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 flex-1">
                     {filteredClasses.map((item) => (
-                        <div key={item.id} className="islamic-card group relative overflow-hidden flex flex-col h-full hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border-t-4 border-t-transparent hover:border-t-islamic-gold">
-                            <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-islamic-gold/5 to-islamic-primary/5 rounded-bl-[100px] -mr-10 -mt-10 transition-transform duration-700 group-hover:scale-110" />
-                            <div className="absolute inset-0 bg-gold-shine opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
-
-                            <div className="p-6 flex-1 flex flex-col relative z-10">
-                                <div className="flex justify-between items-start mb-4">
-                                    <Badge
-                                        className={
-                                            item.category === 'Tawhid' ? 'bg-purple-100 text-purple-700 hover:bg-purple-200 border-purple-200' :
-                                                item.category === 'Fiqh' ? 'bg-islamic-emerald-100 text-islamic-emerald-800 hover:bg-islamic-emerald-200 border-islamic-emerald-200' :
-                                                    'bg-islamic-blue-100 text-islamic-blue-800 hover:bg-islamic-blue-200 border-islamic-blue-200'
-                                        }
-                                        variant="outline"
-                                    >
-                                        {item.category}
-                                    </Badge>
-                                    {item.locked ? (
-                                        <div className="p-2 bg-slate-100 rounded-full text-slate-400">
-                                            <Lock className="w-5 h-5" />
-                                        </div>
-                                    ) : (
-                                        <div className="p-2 bg-islamic-gold/10 rounded-full text-islamic-gold-600">
-                                            <PlayCircle className="w-5 h-5" />
-                                        </div>
-                                    )}
-                                </div>
-
-                                <h3 className="text-xl font-bold mb-2 text-foreground group-hover:text-islamic-gold-600 transition-colors duration-300">
-                                    {item.title}
-                                </h3>
-
-                                <div className="flex items-center gap-4 text-xs font-medium text-muted-foreground mb-6">
-                                    <span className="flex items-center gap-1.5 p-1 px-2 rounded-md bg-secondary/50">
-                                        <GraduationCap className="w-3.5 h-3.5" />
-                                        {tr(LEVEL_LABELS[item.level] ?? { en: item.level, fr: item.level })}
-                                    </span>
-                                    <span className="flex items-center gap-1.5 p-1 px-2 rounded-md bg-secondary/50">
-                                        <Book className="w-3.5 h-3.5" />
-                                        {item.lessons} {tr({ en: 'Lessons', fr: 'leçons' })}
-                                    </span>
-                                </div>
-
-                                <p className="text-sm text-muted-foreground mt-auto leading-relaxed">
-                                    {item.locked
-                                        ? tr({ en: 'Reach a higher rank to unlock this wisdom.', fr: 'Atteignez un rang supérieur pour débloquer ce savoir.' })
-                                        : tr({ en: 'Begin this journey to increase your knowledge.', fr: 'Commencez ce parcours pour accroître votre savoir.' })}
-                                </p>
-                            </div>
-
-                            <div className="p-4 border-t border-border/50 bg-gradient-to-b from-transparent to-muted/20 backdrop-blur-sm">
-                                <button
-                                    onClick={() => toast(tr({ en: `“${item.title}”  course content is coming soon, inshā’Allāh.`, fr: `« ${item.title} » : le contenu du cours arrive bientôt, inshā’Allāh.` }))}
-                                    className={`w-full py-3 rounded-full font-semibold text-sm transition-all duration-300 ${item.locked
-                                        ? "bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200"
-                                        : "btn-islamic text-white shadow-lg hover:shadow-islamic-gold/25"
-                                        }`}
-                                    disabled={item.locked}
-                                >
-                                    {item.locked ? tr({ en: 'Currently Locked', fr: 'Verrouillé' }) : tr({ en: 'Start Learning', fr: 'Commencer' })}
-                                </button>
-                            </div>
+                      <div key={item.id} className="islamic-card group relative overflow-hidden flex flex-col h-full hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border-t-4 border-t-transparent hover:border-t-islamic-gold">
+                        <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-islamic-gold/5 to-islamic-primary/5 rounded-bl-[100px] -mr-10 -mt-10 transition-transform duration-700 group-hover:scale-110" />
+                        <div className="absolute inset-0 bg-gold-shine opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+                        <div className="p-6 flex-1 flex flex-col relative z-10">
+                          <div className="flex justify-between items-start mb-4">
+                            <Badge className={item.category === 'Tawhid' ? 'bg-purple-100 text-purple-700 hover:bg-purple-200 border-purple-200' : item.category === 'Fiqh' ? 'bg-islamic-emerald-100 text-islamic-emerald-800 hover:bg-islamic-emerald-200 border-islamic-emerald-200' : 'bg-islamic-blue-100 text-islamic-blue-800 hover:bg-islamic-blue-200 border-islamic-blue-200'} variant="outline">{item.category}</Badge>
+                            {item.locked ? (
+                              <div className="p-2 bg-slate-100 rounded-full text-slate-400"><Lock className="w-5 h-5" /></div>
+                            ) : (
+                              <div className="p-2 bg-islamic-gold/10 rounded-full text-islamic-gold-600"><PlayCircle className="w-5 h-5" /></div>
+                            )}
+                          </div>
+                          <h3 className="text-xl font-bold mb-2 text-foreground group-hover:text-islamic-gold-600 transition-colors duration-300">{item.title}</h3>
+                          <div className="flex items-center gap-4 text-xs font-medium text-muted-foreground mb-6">
+                            <span className="flex items-center gap-1.5 p-1 px-2 rounded-md bg-secondary/50"><GraduationCap className="w-3.5 h-3.5" />{tr(LEVEL_LABELS[item.level] ?? { en: item.level, fr: item.level })}</span>
+                            <span className="flex items-center gap-1.5 p-1 px-2 rounded-md bg-secondary/50"><Book className="w-3.5 h-3.5" />{item.lessons} {tr({ en: 'Lessons', fr: 'leçons' })}</span>
+                          </div>
+                          <p className="text-sm text-muted-foreground mt-auto leading-relaxed">
+                            {item.locked
+                              ? tr({ en: 'Reach a higher rank to unlock this wisdom.', fr: 'Atteignez un rang supérieur pour débloquer ce savoir.' })
+                              : tr({ en: 'Begin this journey to increase your knowledge.', fr: 'Commencez ce parcours pour accroître votre savoir.' })}
+                          </p>
                         </div>
+                        <div className="p-4 border-t border-border/50 bg-gradient-to-b from-transparent to-muted/20 backdrop-blur-sm">
+                          <button onClick={() => toast(tr({ en: `"${item.title}" course content is coming soon, inshā'Allāh.`, fr: `« ${item.title} » : le contenu du cours arrive bientôt, inshā'Allāh.` }))} className={`w-full py-3 rounded-full font-semibold text-sm transition-all duration-300 ${item.locked ? "bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200" : "btn-islamic text-white shadow-lg hover:shadow-islamic-gold/25"}`} disabled={item.locked}>
+                            {item.locked ? tr({ en: 'Currently Locked', fr: 'Verrouillé' }) : tr({ en: 'Start Learning', fr: 'Commencer' })}
+                          </button>
+                        </div>
+                      </div>
                     ))}
+                  </div>
+                  <QuizWidget />
                 </div>
             </section>
-        </div>
-    );
-};
+          </div>
+        );
+      };
 
-export default Classes;
+      export default Classes;

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Amiri:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Amiri:wght@400;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -45,7 +45,30 @@
     --sidebar-ring: 173 70% 36%;
   }
 
-  /* Dark theme removed — the product ships light-only. */
+  /* Frosted surface variants — controlled by ThemeContext via root class */
+  .frosted-solid {
+    --card-bg-alpha: 1;
+    --card-blur: 0px;
+    --panel-blur: 0px;
+    --frost-bg: hsl(var(--card) / 1);
+  }
+  .frosted-frosted {
+    --card-bg-alpha: 0.8;
+    --card-blur: 12px;
+    --panel-blur: 12px;
+    --frost-bg: hsl(var(--card) / 0.8);
+  }
+  .frosted-glass {
+    --card-bg-alpha: 0.6;
+    --card-blur: 24px;
+    --panel-blur: 24px;
+    --frost-bg: hsl(var(--card) / 0.6);
+  }
+
+  /* Density spacing — radius only; layout spacing controlled per-component */
+  .density-comfortable { --radius: 0.9rem; }
+  .density-compact { --radius: 0.5rem; }
+  .density-spacious { --radius: 1.2rem; }
 
   /* --- Agentic & Sacred: Cinematic Motion Background --- */
   .bg-sacred-dark {
@@ -103,7 +126,8 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans selection:bg-primary/15 selection:text-primary;
+    @apply bg-background text-foreground selection:bg-primary/15 selection:text-primary;
+    font-family: var(--font-family, 'Inter', sans-serif);
     text-rendering: optimizeLegibility;
   }
 }
@@ -279,6 +303,22 @@
   .glass-card-warm {
     @apply relative bg-card text-card-foreground border border-border rounded-2xl
            shadow-[0_1px_2px_rgba(16,24,40,0.04),0_4px_16px_-8px_rgba(16,24,40,0.08)];
+  }
+
+  /* Frosted/density overrides applied by root-level classes from ThemeContext */
+  .frosted-frosted .islamic-card,
+  .frosted-frosted .glass-card-premium,
+  .frosted-frosted .glass-card-saas,
+  .frosted-frosted .glass-card-warm {
+    background: hsl(var(--card) / 0.8);
+    backdrop-filter: blur(12px);
+  }
+  .frosted-glass .islamic-card,
+  .frosted-glass .glass-card-premium,
+  .frosted-glass .glass-card-saas,
+  .frosted-glass .glass-card-warm {
+    background: hsl(var(--card) / 0.6);
+    backdrop-filter: blur(24px);
   }
 
   .btn-spiritual {

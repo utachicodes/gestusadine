@@ -1,17 +1,35 @@
-import { Users, MessageSquare, FileText, Settings, Activity, Calendar, Video, BookOpen, Headphones, Database } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { Users, MessageSquare, FileText, Settings, Activity, Calendar, Video, BookOpen, Headphones, Database, DollarSign, TrendingUp, BarChart3 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/auth/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useTr } from "@/lib/i18n";
 import { api } from "../../../convex/_generated/api";
-import { useQuery } from "convex/react";
+import { useQuery, useAction } from "convex/react";
 
 export const AdminDashboard = () => {
   const { isAdmin } = useAuth();
   const navigate = useNavigate();
   const tr = useTr();
   const stats = useQuery(api.stats.dashboard);
+  const fetchPostHogStats = useAction(api.posthog.fetchPostHogStats);
+  const [phStats, setPhStats] = useState<{
+    activeUsers7d: number;
+    activeUsers30d: number;
+    pageViews7d: number;
+    pageViews30d: number;
+    errors7d: number;
+    errors30d: number;
+  } | null>(null);
+  const [phLoading, setPhLoading] = useState(true);
+
+  useEffect(() => {
+    fetchPostHogStats().then((result) => {
+      setPhStats(result as any);
+      setPhLoading(false);
+    }).catch(() => setPhLoading(false));
+  }, [fetchPostHogStats]);
 
   if (!isAdmin) {
     navigate("/");
@@ -61,6 +79,125 @@ export const AdminDashboard = () => {
               </CardContent>
             </Card>
           ))}
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <Card className="bg-card/80 backdrop-blur-sm border border-emerald-200">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-islamic-dark/70">{tr({ en: "Total Revenue", fr: "Revenu total" })}</p>
+                  <p className="text-2xl font-bold text-islamic-dark mt-1">{stats?.totalRevenue?.toLocaleString() ?? 0} FCFA</p>
+                </div>
+                <div className="p-3 rounded-lg bg-emerald-100">
+                  <DollarSign className="h-6 w-6 text-emerald-600" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="bg-card/80 backdrop-blur-sm border border-emerald-200">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-islamic-dark/70">{tr({ en: "Revenue (30 days)", fr: "Revenu (30 jours)" })}</p>
+                  <p className="text-2xl font-bold text-islamic-dark mt-1">{stats?.revenueThisMonth?.toLocaleString() ?? 0} FCFA</p>
+                </div>
+                <div className="p-3 rounded-lg bg-emerald-100">
+                  <TrendingUp className="h-6 w-6 text-emerald-600" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="bg-card/80 backdrop-blur-sm border border-emerald-200">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-islamic-dark/70">{tr({ en: "Paid Subscribers", fr: "Abonnés payants" })}</p>
+                  <p className="text-2xl font-bold text-islamic-dark mt-1">{stats?.paidSubscribers ?? 0}</p>
+                </div>
+                <div className="p-3 rounded-lg bg-emerald-100">
+                  <Users className="h-6 w-6 text-emerald-600" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="bg-card/80 backdrop-blur-sm border border-emerald-200">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-islamic-dark/70">{tr({ en: "Conversion Rate", fr: "Taux de conversion" })}</p>
+                  <p className="text-2xl font-bold text-islamic-dark mt-1">
+                    {stats?.totalUsers
+                      ? `${((stats.paidSubscribers / stats.totalUsers) * 100).toFixed(1)}%`
+                      : "0%"}
+                  </p>
+                </div>
+                <div className="p-3 rounded-lg bg-emerald-100">
+                  <TrendingUp className="h-6 w-6 text-emerald-600" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="mb-8">
+          <div className="flex items-center gap-2 mb-4">
+            <BarChart3 className="h-5 w-5 text-islamic-primary-teal" />
+            <h2 className="text-lg font-semibold text-islamic-dark">{tr({ en: "PostHog Analytics", fr: "Analytiques PostHog" })}</h2>
+          </div>
+          {phLoading ? (
+            <p className="text-sm text-muted-foreground">{tr({ en: "Loading analytics...", fr: "Chargement des analytiques..." })}</p>
+          ) : phStats ? (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <Card className="bg-card/80 backdrop-blur-sm border border-blue-200">
+                <CardContent className="p-6">
+                  <p className="text-sm font-medium text-islamic-dark/70 mb-1">{tr({ en: "Active Users", fr: "Utilisateurs actifs" })}</p>
+                  <div className="flex items-baseline gap-4">
+                    <div>
+                      <p className="text-xs text-muted-foreground">{tr({ en: "7 days", fr: "7 jours" })}</p>
+                      <p className="text-2xl font-bold text-islamic-dark">{phStats.activeUsers7d}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground">{tr({ en: "30 days", fr: "30 jours" })}</p>
+                      <p className="text-2xl font-bold text-islamic-dark">{phStats.activeUsers30d}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="bg-card/80 backdrop-blur-sm border border-blue-200">
+                <CardContent className="p-6">
+                  <p className="text-sm font-medium text-islamic-dark/70 mb-1">{tr({ en: "Page Views", fr: "Pages vues" })}</p>
+                  <div className="flex items-baseline gap-4">
+                    <div>
+                      <p className="text-xs text-muted-foreground">{tr({ en: "7 days", fr: "7 jours" })}</p>
+                      <p className="text-2xl font-bold text-islamic-dark">{phStats.pageViews7d.toLocaleString()}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground">{tr({ en: "30 days", fr: "30 jours" })}</p>
+                      <p className="text-2xl font-bold text-islamic-dark">{phStats.pageViews30d.toLocaleString()}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="bg-card/80 backdrop-blur-sm border border-blue-200">
+                <CardContent className="p-6">
+                  <p className="text-sm font-medium text-islamic-dark/70 mb-1">{tr({ en: "Errors Captured", fr: "Erreurs capturées" })}</p>
+                  <div className="flex items-baseline gap-4">
+                    <div>
+                      <p className="text-xs text-muted-foreground">{tr({ en: "7 days", fr: "7 jours" })}</p>
+                      <p className="text-2xl font-bold text-islamic-dark">{phStats.errors7d}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground">{tr({ en: "30 days", fr: "30 jours" })}</p>
+                      <p className="text-2xl font-bold text-islamic-dark">{phStats.errors30d}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground">{tr({ en: "PostHog not configured. Set POSTHOG_PERSONAL_API_KEY and POSTHOG_PROJECT_ID env vars.", fr: "PostHog non configuré. Définissez les variables d'env POSTHOG_PERSONAL_API_KEY et POSTHOG_PROJECT_ID." })}</p>
+          )}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">

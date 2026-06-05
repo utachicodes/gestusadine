@@ -46,7 +46,6 @@ http.route({
       await ctx.runMutation(internal.naboopay.confirmPayment, {
         orderId,
         transactionStatus: status,
-        tier: "student",
         customerEmail: payload.customer?.email,
       });
     }

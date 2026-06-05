@@ -29,13 +29,17 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    // Log error to console in development
     if (import.meta.env.DEV) {
       console.error('ErrorBoundary caught an error:', error, errorInfo);
     }
 
-    // In production, you could log to an error reporting service
-    // Example: logErrorToService(error, errorInfo);
+    if (typeof window !== 'undefined' && typeof window.capturePostHogError === 'function') {
+      try {
+        window.capturePostHogError(error);
+      } catch {
+        // PostHog error capture should never break the app
+      }
+    }
 
     this.setState({
       error,

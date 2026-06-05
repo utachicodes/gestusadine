@@ -1,45 +1,47 @@
 import { useState } from 'react';
 import { Button } from '../ui/button';
-import { Card } from '../ui/card';
 import { Label } from '../ui/label';
 import { toast } from 'sonner';
-import { Palette, Sparkles } from 'lucide-react';
+import { Palette, Sparkles, RotateCcw } from 'lucide-react';
 import { useSubscription } from '@/data/subscription';
-import { useTheme, type ThemeColors } from '@/contexts/ThemeContext';
+import { useTheme } from '@/contexts/ThemeContext';
+import type { ThemeColors } from '@/types/theme';
+import { DEFAULT_LIGHT } from '@/types/theme';
 import { useTr, type Loc } from '@/lib/i18n';
 
 interface ThemeCustomizerProps {
     onThemeChange?: (colors: ThemeColors) => void;
 }
 
-// On-brand starting point: Heritage Emerald + Teal.
-const BRAND_DEFAULTS: ThemeColors = {
-    primary: '#064E3B',
-    secondary: '#0D9488',
-    accent: '#0F766E',
+type ColorKey = keyof ThemeColors;
+
+const COLOR_LABELS: Record<ColorKey, Loc> = {
+  background: { en: 'Background', fr: 'Fond' },
+  text: { en: 'Text', fr: 'Texte' },
+  panel: { en: 'Panel', fr: 'Panneau' },
+  sidebar: { en: 'Sidebar', fr: 'Barre lat.' },
+  border: { en: 'Border', fr: 'Bordure' },
+  accent: { en: 'Accent', fr: 'Accent' },
 };
 
-/**
- * Routes through ThemeContext's `personalized` mode, which converts hex → HSL
- * and derives the full surface palette  so custom colors apply correctly to
- * the `hsl(var(--token))` system (a raw hex would break it) and persist via the
- * single source of truth.
- */
+const COLOR_ORDER: ColorKey[] = ['background', 'text', 'panel', 'sidebar', 'border', 'accent'];
+
 export function ThemeCustomizer({ onThemeChange }: ThemeCustomizerProps) {
     const tr = useTr();
     const { canCustomizeTheme: hasAccess } = useSubscription();
-    const { colors, setColors, setTheme } = useTheme();
-    const [draft, setDraft] = useState<ThemeColors>(colors);
+    const { theme, updateColors, reset } = useTheme();
+    const [draft, setDraft] = useState<ThemeColors>(theme.colors);
 
     const preview = (next: ThemeColors) => {
         setDraft(next);
-        setColors(next);
-        setTheme('personalized');
+        updateColors(next);
         onThemeChange?.(next);
     };
 
-    const handleColorChange = (key: keyof ThemeColors, value: string) => {
-        preview({ ...draft, [key]: value });
+    const handleColorChange = (key: ColorKey, value: string) => {
+        if (/^#[0-9a-fA-F]{6}$/.test(value)) {
+            preview({ ...draft, [key]: value });
+        }
     };
 
     const saveTheme = () => {
@@ -47,28 +49,22 @@ export function ThemeCustomizer({ onThemeChange }: ThemeCustomizerProps) {
             toast.error(tr({ en: 'Upgrade to a paid plan to customize your theme.', fr: 'Passez à une formule payante pour personnaliser votre thème.' }));
             return;
         }
-        // ThemeContext persists colors + mode to localStorage automatically.
         preview(draft);
         toast.success(tr({ en: 'Theme saved.', fr: 'Thème enregistré.' }));
     };
 
     const resetTheme = () => {
-        setColors(BRAND_DEFAULTS);
-        setDraft(BRAND_DEFAULTS);
-        setTheme('light');
-        toast.success(tr({ en: 'Theme reset to the default light palette.', fr: 'Thème réinitialisé à la palette claire par défaut.' }));
+        const defaults = { ...DEFAULT_LIGHT };
+        setDraft(defaults);
+        reset();
+        toast.success(tr({ en: 'Theme reset to default.', fr: 'Thème réinitialisé.' }));
     };
 
-    const fields: { key: keyof ThemeColors; label: Loc; placeholder: string }[] = [
-        { key: 'primary', label: { en: 'Primary Color', fr: 'Couleur principale' }, placeholder: '#064E3B' },
-        { key: 'accent', label: { en: 'Accent Color', fr: 'Couleur d’accent' }, placeholder: '#0F766E' },
-    ];
-
     return (
-        <Card className="p-6">
-            <div className="flex items-center gap-2 mb-6">
+        <div>
+            <div className="flex items-center gap-2 mb-4">
                 <Palette className="w-5 h-5 text-primary" />
-                <h3 className="text-lg font-semibold">{tr({ en: 'Custom Theme Colors', fr: 'Couleurs de thème personnalisées' })}</h3>
+                <h3 className="text-lg font-semibold">{tr({ en: 'Custom Theme Colors', fr: 'Couleurs personnalisées' })}</h3>
                 {!hasAccess && (
                     <span className="ml-auto text-xs bg-primary/10 text-primary px-2 py-1 rounded-full flex items-center gap-1">
                         <Sparkles className="w-3 h-3" />
@@ -85,37 +81,34 @@ export function ThemeCustomizer({ onThemeChange }: ThemeCustomizerProps) {
                 </div>
             )}
 
-            <div className="space-y-4">
-                {fields.map(({ key, label, placeholder }) => (
-                    <div key={key}>
-                        <Label htmlFor={`${key}-color`}>{tr(label)}</Label>
-                        <div className="flex gap-2 mt-1">
-                            <input
-                                id={`${key}-color`}
-                                type="color"
-                                value={draft[key]}
-                                onChange={(e) => handleColorChange(key, e.target.value)}
-                                className="h-10 w-16 rounded border cursor-pointer disabled:opacity-50"
-                                disabled={!hasAccess}
-                            />
-                            <input
-                                type="text"
-                                value={draft[key]}
-                                onChange={(e) => handleColorChange(key, e.target.value)}
-                                className="flex-1 px-3 py-2 rounded-lg border border-input bg-background disabled:opacity-50"
-                                placeholder={placeholder}
-                                disabled={!hasAccess}
-                            />
-                        </div>
+            <div className="space-y-3">
+                {COLOR_ORDER.map((key) => (
+                    <div key={key} className="flex items-center gap-2">
+                        <Label className="w-20 text-xs shrink-0">{tr(COLOR_LABELS[key])}</Label>
+                        <input
+                            type="color"
+                            value={draft[key]}
+                            onChange={(e) => handleColorChange(key, e.target.value)}
+                            className="h-8 w-10 rounded border cursor-pointer disabled:opacity-50 shrink-0"
+                            disabled={!hasAccess}
+                        />
+                        <input
+                            type="text"
+                            value={draft[key]}
+                            onChange={(e) => handleColorChange(key, e.target.value)}
+                            className="flex-1 px-2 py-1 text-sm rounded-lg border border-input bg-background font-mono disabled:opacity-50"
+                            maxLength={7}
+                            disabled={!hasAccess}
+                        />
                     </div>
                 ))}
 
                 <div className="pt-4 flex gap-2">
                     <Button onClick={saveTheme} disabled={!hasAccess} className="flex-1">
-                        {tr({ en: 'Save Theme', fr: 'Enregistrer le thème' })}
+                        {tr({ en: 'Save Theme', fr: 'Enregistrer' })}
                     </Button>
                     <Button onClick={resetTheme} variant="outline" disabled={!hasAccess}>
-                        {tr({ en: 'Reset', fr: 'Réinitialiser' })}
+                        <RotateCcw className="w-4 h-4 mr-1" /> {tr({ en: 'Reset', fr: 'Réinitialiser' })}
                     </Button>
                 </div>
             </div>
@@ -123,10 +116,10 @@ export function ThemeCustomizer({ onThemeChange }: ThemeCustomizerProps) {
             {hasAccess && (
                 <div className="mt-4 p-3 bg-primary/5 rounded-lg">
                     <p className="text-xs text-muted-foreground">
-                        💡 <strong>{tr({ en: 'Pro tip:', fr: 'Astuce :' })}</strong> {tr({ en: 'Changes preview live. Click "Save Theme" to persist your palette.', fr: 'Les changements s’affichent en direct. Cliquez sur « Enregistrer le thème » pour conserver votre palette.' })}
+                        💡 <strong>{tr({ en: 'Pro tip:', fr: 'Astuce :' })}</strong> {tr({ en: 'Changes preview live. Click "Save Theme" to persist.', fr: 'Les changements s\'affichent en direct. Cliquez sur « Enregistrer » pour conserver.' })}
                     </p>
                 </div>
             )}
-        </Card>
+        </div>
     );
 }

@@ -22,6 +22,8 @@ import Login from "./pages/auth/Login";
 import VerificationSuccess from "./pages/auth/VerificationSuccess";
 import AppShell from "./components/layout/AppShell";
 import { ChatInterface } from "@/components/chat/ChatInterface";
+import { CookieConsent } from "@/components/layout/CookieConsent";
+import { PostHogProvider } from "@/components/layout/PostHogProvider";
 import { AdminDashboard } from "@/pages/admin/Dashboard";
 import EventsPage from "./pages/knowledge/EventsPage";
 import ManageEvents from "./pages/admin/ManageEvents";
@@ -32,6 +34,7 @@ import ManageLibrary from "./pages/admin/ManageLibrary";
 import ManageQuizzes from "./pages/admin/ManageQuizzes";
 import ManagePodcasts from "./pages/admin/ManagePodcasts";
 import ManageRag from "./pages/admin/ManageRag";
+import ThemeDesigner from "./pages/admin/ThemeDesigner";
 
 import About from "./pages/core/About";
 import Contact from "./pages/core/Contact";
@@ -66,9 +69,11 @@ const App = () => {
             <TooltipProvider>
               <Toaster />
               <Sonner />
+              <CookieConsent />
               <LanguageProvider>
                 <CartProvider>
                   <BrowserRouter>
+                    <PostHogProvider>
                     <Routes>
                         <Route
                           path="/"
@@ -325,6 +330,16 @@ const App = () => {
                             </ProtectedRoute>
                           }
                         />
+                        <Route
+                          path="/admin/theme"
+                          element={
+                            <ProtectedRoute adminOnly>
+                              <DashboardLayout>
+                                <ThemeDesigner />
+                              </DashboardLayout>
+                            </ProtectedRoute>
+                          }
+                        />
 
                         {/* Islamic Education Routes */}
                         {/* Courses & classes are a Student-tier feature. */}
@@ -391,6 +406,7 @@ const App = () => {
                           }
                         />
                       </Routes>
+                    </PostHogProvider>
                   </BrowserRouter>
                 </CartProvider>
               </LanguageProvider>
