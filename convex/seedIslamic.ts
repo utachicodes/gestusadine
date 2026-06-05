@@ -1,5 +1,6 @@
 import { action } from "./_generated/server";
 import { internal } from "./_generated/api";
+import { v } from "convex/values";
 
 const DOCUMENTS = [
   // ===== QURAN (SALAFI TAFSIR - IBN KATHIR, IBN BAZ, AL-SADI) =====
@@ -277,10 +278,10 @@ export const seed = action({
 
 export const upsertDoc = action({
   args: {
-    title: "any",
-    content: "any",
-    source: "any",
-    category: "any",
+    title: v.string(),
+    content: v.string(),
+    source: v.string(),
+    category: v.string(),
   },
   handler: async (ctx, args: any) => {
     const docId = await ctx.runMutation(internal.ragInternal.insertDocument, {

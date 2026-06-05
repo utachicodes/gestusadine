@@ -27,6 +27,7 @@ import type * as rag from "../rag.js";
 import type * as ragInternal from "../ragInternal.js";
 import type * as rateLimiter from "../rateLimiter.js";
 import type * as seed from "../seed.js";
+import type * as seedIslamic from "../seedIslamic.js";
 import type * as stats from "../stats.js";
 import type * as subscription from "../subscription.js";
 import type * as users from "../users.js";
@@ -59,6 +60,7 @@ declare const fullApi: ApiFromModules<{
   ragInternal: typeof ragInternal;
   rateLimiter: typeof rateLimiter;
   seed: typeof seed;
+  seedIslamic: typeof seedIslamic;
   stats: typeof stats;
   subscription: typeof subscription;
   users: typeof users;
