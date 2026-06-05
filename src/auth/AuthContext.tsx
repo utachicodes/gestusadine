@@ -77,6 +77,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   });
 
+  // Clear any stale Convex Auth tokens from localStorage on mount
+  React.useEffect(() => {
+    try {
+      const keysToRemove: string[] = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith("__convexAuth")) {
+          keysToRemove.push(key);
+        }
+      }
+      keysToRemove.forEach((k) => localStorage.removeItem(k));
+    } catch { /* noop */ }
+  }, []);
+
   React.useEffect(() => {
     try {
       if (hardcodedAdmin) {
