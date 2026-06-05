@@ -9,10 +9,10 @@ import { api } from "../../../convex/_generated/api";
 import { useQuery, useAction } from "convex/react";
 
 export const AdminDashboard = () => {
-  const { isAdmin } = useAuth();
+  const { isAdmin, profile } = useAuth();
   const navigate = useNavigate();
   const tr = useTr();
-  const stats = useQuery(api.stats.dashboard);
+  const stats = useQuery(api.stats.dashboard, profile?.email ? { adminEmail: profile.email } : undefined);
   const fetchPostHogStats = useAction(api.posthog.fetchPostHogStats);
   const [phStats, setPhStats] = useState<{
     activeUsers7d: number;

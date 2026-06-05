@@ -142,24 +142,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (password !== HARDCODED_ADMIN_PASSWORD) {
         throw new Error("Incorrect password for admin account.");
       }
-      // Fast path: use hardcoded admin immediately (works offline)
       setHardcodedAdmin(true);
-      // Fire-and-forget: try to establish a real session in background
-      // (if server is reachable, this upgrades from hardcoded to real auth)
-      (async () => {
-        try {
-          const exists = await convex.query(api.users.checkEmailExists, { email: trimmedEmail });
-          if (exists) {
-            await signIn("password", { email, password, flow: "signIn" });
-          } else {
-            await signIn("password", { email, password, name: "Admin", flow: "signUp" });
-            await convexSignOut();
-          }
-          setHardcodedAdmin(false);
-        } catch {
-          // Server unreachable — stay on hardcoded bypass
-        }
-      })();
       return;
     }
 
