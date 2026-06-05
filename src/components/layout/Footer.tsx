@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, Mail, Twitter, Instagram } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { toast } from "sonner";
 import { useTr, type Loc } from "@/lib/i18n";
 
@@ -16,13 +16,6 @@ const ECOSYSTEM: { label: Loc; path: string }[] = [
   { label: { en: 'Podcasts', fr: 'Podcasts' }, path: '/podcasts' },
   { label: { en: 'Community', fr: 'Communauté' }, path: '/community' },
   { label: { en: 'Council', fr: 'Conseil' }, path: '/chat' },
-];
-
-// TODO: swap in the real social handles when available.
-const SOCIALS = [
-  { Icon: Twitter, href: 'https://twitter.com', label: 'Twitter' },
-  { Icon: Instagram, href: 'https://instagram.com', label: 'Instagram' },
-  { Icon: Mail, href: 'mailto:contact@gestusadine.com', label: 'Email' },
 ];
 
 const Footer = () => {
@@ -50,22 +43,7 @@ const Footer = () => {
                 fr: 'Un savoir authentique, une guidance réfléchie et une communauté de chercheurs.',
               })}
             </p>
-            <div className="flex gap-3 mt-6">
-              {SOCIALS.map(({ Icon, href, label }) => {
-                const external = href.startsWith('http');
-                return (
-                  <a
-                    key={label}
-                    href={href}
-                    aria-label={label}
-                    {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                    className="flex h-9 w-9 items-center justify-center rounded-full border border-stone-300 text-stone-500 hover:border-emerald-800 hover:text-emerald-800 transition-colors"
-                  >
-                    <Icon className="w-4 h-4" />
-                  </a>
-                );
-              })}
-            </div>
+
           </div>
 
           {/* Company */}
