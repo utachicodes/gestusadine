@@ -46,7 +46,6 @@ const QUIZ_DATA: Record<Difficulty, { question: Loc; options: Loc[]; correct: Lo
 
 export const QuizWidget = () => {
   const tr = useTr();
-  const { language } = useLanguage();
   const [collapsed, setCollapsed] = useState(false);
   const [difficulty, setDifficulty] = useState<Difficulty>('easy');
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
