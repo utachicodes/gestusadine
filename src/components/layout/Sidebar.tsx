@@ -203,16 +203,32 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggleCollapsed, 
             <TooltipContent side="right">{language === 'fr' ? 'Français' : 'English'}</TooltipContent>
           </Tooltip>
         ) : (
-          <div className="flex items-center gap-3 px-3 py-2 rounded-xl text-muted-foreground">
-            <Globe className="w-[18px] h-[18px] flex-shrink-0" />
-            <select
-              value={language}
-              onChange={(e) => setLanguage(e.target.value as 'en' | 'fr')}
-              className="flex-1 bg-transparent border-none text-sm font-medium focus:outline-none cursor-pointer text-foreground"
-            >
-              <option value="en">English</option>
-              <option value="fr">Français</option>
-            </select>
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-sidebar-border/20">
+            <Globe className="w-[18px] h-[18px] flex-shrink-0 text-muted-foreground" />
+            <div className="flex rounded-lg border border-sidebar-border p-0.5 bg-background/50">
+              <button
+                type="button"
+                onClick={() => setLanguage('en')}
+                className={`relative px-2.5 py-1 text-xs font-semibold rounded-md transition-all duration-150 ${
+                  language === 'en'
+                    ? 'bg-primary text-primary-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                EN
+              </button>
+              <button
+                type="button"
+                onClick={() => setLanguage('fr')}
+                className={`relative px-2.5 py-1 text-xs font-semibold rounded-md transition-all duration-150 ${
+                  language === 'fr'
+                    ? 'bg-primary text-primary-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                FR
+              </button>
+            </div>
           </div>
         )}
 
