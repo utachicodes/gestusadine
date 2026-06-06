@@ -7,7 +7,7 @@ type Tier = "free" | "student" | "pro";
 const TIER_RANK: Record<Tier, number> = { free: 0, student: 1, pro: 2 };
 
 const TIER_CREDITS: Record<Tier, number> = {
-  free: 5,
+  free: 15,
   student: 500,
   pro: -1,
 };
