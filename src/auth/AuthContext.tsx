@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useConvexAuth, useAuthActions } from "@convex-dev/auth/react";
-import { useQuery, useMutation, useAction, useConvex } from "convex/react";
+import { useQuery, useMutation, useConvex } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import type { Doc } from "../../convex/_generated/dataModel";
 import { UserRole } from "./rbac";
@@ -10,6 +10,7 @@ const HARDCODED_ADMIN_PASSWORD = "gestus@dine";
 const LS_KEY = "gestu_hardcoded_admin";
 
 export type SubscriptionTier = 'free' | 'student' | 'pro';
+export type Gender = 'male' | 'female';
 
 export type UserProfile = {
   id: string;
@@ -19,6 +20,8 @@ export type UserProfile = {
   full_name?: string;
   avatar_url?: string;
   created_at: any;
+  gender?: Gender;
+  onboarding_completed?: boolean;
 };
 
 export type User = {
@@ -38,7 +41,7 @@ type AuthState = {
   isAdmin: boolean;
   loading: boolean;
   signInWithPassword: (params: { email: string; password: string }) => Promise<void>;
-  signUp: (params: { email: string; password: string; fullName: string }) => Promise<SignUpResult>;
+  signUp: (params: { email: string; password: string; fullName: string; gender?: Gender }) => Promise<SignUpResult>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
   refreshProfile: () => Promise<void>;
@@ -57,6 +60,8 @@ function toUserProfile(doc: Doc<"users"> | null): UserProfile | null {
     full_name: doc.fullName ?? undefined,
     avatar_url: doc.avatarUrl ?? undefined,
     created_at: doc._creationTime,
+    gender: doc.gender as Gender | undefined,
+    onboarding_completed: doc.onboardingCompleted ?? false,
   };
 }
 
@@ -123,6 +128,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         subscription_tier: "pro" as SubscriptionTier,
         full_name: "Admin",
         created_at: Date.now(),
+        gender: undefined,
+        onboarding_completed: true,
       };
     }
     return toUserProfile(currentUser ?? null);
@@ -155,11 +162,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (password !== HARDCODED_ADMIN_PASSWORD) {
         throw new Error("Incorrect password for admin account.");
       }
-      // Establish a REAL Convex Auth session so server functions (chat, prayer
-      // tracker, Quran progress, gated content) actually work — the client-side
-      // admin flag alone carries no session. Sign in if the account exists,
-      // otherwise create it. (For full server-side admin powers, this email
-      // must also be in the ADMIN_EMAILS env var.)
       try {
         await signIn("password", {
           email: HARDCODED_ADMIN_EMAIL,
@@ -200,7 +202,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [signIn, convexSignOut, convex]);
 
-  const signUp = React.useCallback(async ({ email, password, fullName }: { email: string; password: string; fullName: string }) => {
+  const signUp = React.useCallback(async ({
+    email,
+    password,
+    fullName,
+    gender,
+  }: {
+    email: string;
+    password: string;
+    fullName: string;
+    gender?: Gender;
+  }) => {
     const trimmedEmail = email.toLowerCase().trim();
 
     if (!fullName?.trim()) {
@@ -213,7 +225,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     try {
-      await signIn("password", { email, password, name: fullName, flow: "signUp" });
+      await signIn("password", {
+        email,
+        password,
+        name: fullName,
+        gender: gender ?? undefined,
+        flow: "signUp",
+      } as any);
     } catch {
       // signIn is a non-atomic action — it may create the user in DB then fail
       // before the session is created. Check if the user was actually created.

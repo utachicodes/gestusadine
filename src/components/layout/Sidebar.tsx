@@ -15,6 +15,8 @@ import {
   GraduationCap,
   PanelLeftClose,
   PanelLeftOpen,
+  BookMarked,
+  Heart,
   type LucideIcon,
 } from 'lucide-react';
 import { useAuth } from '@/auth/AuthContext';
@@ -31,6 +33,9 @@ interface NavItem {
   label: Label;
   path: string;
   permission?: Permission;
+  /** If true, only show when user gender is 'female' */
+  femaleOnly?: boolean;
+  tourId?: string;
 }
 
 interface NavSection {
@@ -38,18 +43,18 @@ interface NavSection {
   items: NavItem[];
 }
 
-const SECTIONS: NavSection[] = [
+const ALL_SECTIONS: NavSection[] = [
   {
     label: { en: 'Workspace', fr: 'Espace de travail' },
     items: [
-      { icon: LayoutDashboard, label: { en: 'Dashboard', fr: 'Tableau de bord' }, path: '/dashboard' },
-      { icon: MessageSquare, label: { en: 'The Council', fr: 'Le Conseil' }, path: '/chat' },
+      { icon: LayoutDashboard, label: { en: 'Dashboard', fr: 'Tableau de bord' }, path: '/dashboard', tourId: 'nav-dashboard' },
+      { icon: MessageSquare, label: { en: 'The Council', fr: 'Le Conseil' }, path: '/chat', tourId: 'nav-council' },
     ],
   },
   {
     label: { en: 'Knowledge', fr: 'Savoir' },
     items: [
-      { icon: BookOpenText, label: { en: 'Quran', fr: 'Coran' }, path: '/quran' },
+      { icon: BookOpenText, label: { en: 'Quran', fr: 'Coran' }, path: '/quran', tourId: 'nav-quran' },
       { icon: BookOpen, label: { en: 'Library', fr: 'Bibliothèque' }, path: '/library' },
       { icon: Calendar, label: { en: 'Events', fr: 'Événements' }, path: '/events' },
       { icon: GraduationCap, label: { en: 'Classes', fr: 'Cours' }, path: '/classes' },
@@ -58,9 +63,16 @@ const SECTIONS: NavSection[] = [
   {
     label: { en: 'Tools', fr: 'Outils' },
     items: [
-      { icon: Clock, label: { en: 'Prayer Times', fr: 'Horaires de prière' }, path: '/prayer-times' },
+      { icon: Clock, label: { en: 'Prayer Times', fr: 'Horaires de prière' }, path: '/prayer-times', tourId: 'nav-prayer' },
       { icon: CalendarDays, label: { en: 'Calendar', fr: 'Calendrier' }, path: '/calendar' },
       { icon: Calculator, label: { en: 'Zakat', fr: 'Zakât' }, path: '/zakat' },
+    ],
+  },
+  {
+    label: { en: 'Wellness', fr: 'Bien-être' },
+    items: [
+      { icon: BookMarked, label: { en: 'Journal', fr: 'Journal' }, path: '/journal', tourId: 'nav-journal' },
+      { icon: Heart, label: { en: 'Cycle Tracker', fr: 'Suivi du cycle' }, path: '/period-tracker', femaleOnly: true, tourId: 'nav-period' },
     ],
   },
   {
@@ -74,17 +86,19 @@ const SECTIONS: NavSection[] = [
 interface SidebarProps {
   collapsed: boolean;
   onToggleCollapsed: () => void;
-  /** Called after a nav item is clicked  used to close the mobile drawer. */
+  /** Called after a nav item is clicked — used to close the mobile drawer. */
   onNavigate?: () => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggleCollapsed, onNavigate }) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { signOut, refreshProfile } = useAuth();
+  const { signOut, refreshProfile, profile } = useAuth();
   const { can } = useAuthz();
   const { language, setLanguage } = useLanguage();
   const { theme } = useTheme();
+
+  const isFemale = profile?.gender === 'female';
 
   // Refresh profile on mount so admin-gated sections appear once role loads.
   React.useEffect(() => {
@@ -102,8 +116,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggleCollapsed, 
   const isActive = (path: string) =>
     location.pathname === path || location.pathname.startsWith(path + '/');
 
-  const visibleSections = SECTIONS
-    .map((s) => ({ ...s, items: s.items.filter((i) => !i.permission || can(i.permission)) }))
+  const visibleSections = ALL_SECTIONS
+    .map((s) => ({
+      ...s,
+      items: s.items.filter((i) => {
+        if (i.permission && !can(i.permission)) return false;
+        if (i.femaleOnly && !isFemale) return false;
+        return true;
+      }),
+    }))
     .filter((s) => s.items.length > 0);
 
   const NavLink = ({ item }: { item: NavItem }) => {
@@ -115,6 +136,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggleCollapsed, 
         to={item.path}
         onClick={onNavigate}
         aria-current={active ? 'page' : undefined}
+        data-tour={item.tourId}
         className={`group relative flex items-center rounded-xl text-sm font-medium transition-all duration-200
           ${collapsed ? 'justify-center px-0 py-2.5 mx-auto w-11 h-11' : 'gap-3 px-3 py-2.5'}
           ${active
@@ -162,7 +184,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggleCollapsed, 
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto overflow-x-hidden py-4 px-3 space-y-6 custom-scrollbar">
+      <nav className="flex-1 overflow-y-auto overflow-x-hidden py-4 px-3 space-y-5 custom-scrollbar">
         {visibleSections.map((section) => (
           <div key={section.label.en} className="space-y-1">
             {collapsed ? (

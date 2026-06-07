@@ -34,6 +34,9 @@ import ManageQuizzes from "./pages/admin/ManageQuizzes";
 import ManagePodcasts from "./pages/admin/ManagePodcasts";
 import ManageRag from "./pages/admin/ManageRag";
 import ThemeDesigner from "./pages/admin/ThemeDesigner";
+import Journal from "./pages/wellness/Journal";
+import PeriodTracker from "./pages/wellness/PeriodTracker";
+import { OnboardingTutorial } from "./components/onboarding/OnboardingTutorial";
 
 import About from "./pages/core/About";
 import Contact from "./pages/core/Contact";
@@ -73,7 +76,8 @@ const App = () => {
                 <CartProvider>
                   <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
                     <PostHogProvider>
-                    <Routes>
+                      <OnboardingTutorial />
+                      <Routes>
                         <Route
                           path="/"
                           element={
@@ -199,15 +203,35 @@ const App = () => {
                             </ProtectedRoute>
                           }
                         />
-                        {/* Council is open to all signed-in users — Seekers get a
-                            metered "taste" (monthly cap enforced in ChatInterface),
-                            paid tiers get more. */}
+                        {/* Council is open to all signed-in users */}
                         <Route
                           path="/chat"
                           element={
                             <ProtectedRoute>
                               <DashboardLayout>
                                 <ChatInterface />
+                              </DashboardLayout>
+                            </ProtectedRoute>
+                          }
+                        />
+
+                        {/* ── Wellness ── */}
+                        <Route
+                          path="/journal"
+                          element={
+                            <ProtectedRoute>
+                              <DashboardLayout>
+                                <Journal />
+                              </DashboardLayout>
+                            </ProtectedRoute>
+                          }
+                        />
+                        <Route
+                          path="/period-tracker"
+                          element={
+                            <ProtectedRoute>
+                              <DashboardLayout>
+                                <PeriodTracker />
                               </DashboardLayout>
                             </ProtectedRoute>
                           }
@@ -253,7 +277,6 @@ const App = () => {
                             </ProtectedRoute>
                           }
                         />
-
                         <Route
                           path="/admin/daily"
                           element={
@@ -286,8 +309,6 @@ const App = () => {
                             </ProtectedRoute>
                           }
                         />
-
-
                         <Route
                           path="/admin/library"
                           element={
@@ -340,7 +361,6 @@ const App = () => {
                         />
 
                         {/* Islamic Education Routes */}
-                        {/* Courses & classes are a Student-tier feature. */}
                         <Route
                           path="/classes"
                           element={
