@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { FileText, Plus, Edit, Trash2, Search, BookOpen, Layers } from "lucide-react";
 import { toast } from "sonner";
 import { useTr } from "@/lib/i18n";
+import { getErrorMessage } from "@/types/errors";
 import { api } from "../../../convex/_generated/api";
 import { useQuery, useMutation, useAction } from "convex/react";
 
@@ -73,7 +74,7 @@ export default function ManageRag() {
       setIsAddDialogOpen(false);
       toast.success(tr({ en: "Document added", fr: "Document ajouté" }));
     } catch (error: any) {
-      toast.error(error.message);
+      toast.error(getErrorMessage(error));
     }
   };
 
@@ -95,7 +96,7 @@ export default function ManageRag() {
       setSelectedDoc(null);
       toast.success(tr({ en: "Document updated", fr: "Document mis à jour" }));
     } catch (error: any) {
-      toast.error(error.message);
+      toast.error(getErrorMessage(error));
     }
   };
 
@@ -107,7 +108,7 @@ export default function ManageRag() {
       setSelectedDoc(null);
       toast.success(tr({ en: "Document deleted", fr: "Document supprimé" }));
     } catch (error: any) {
-      toast.error(error.message);
+      toast.error(getErrorMessage(error));
     }
   };
 

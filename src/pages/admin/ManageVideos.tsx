@@ -6,6 +6,7 @@ import { PlayCircle, Plus, Edit, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { useTr } from "@/lib/i18n";
+import { getErrorMessage } from "@/types/errors";
 import { api } from "../../../convex/_generated/api";
 import { useQuery, useMutation } from "convex/react";
 
@@ -58,7 +59,7 @@ export default function ManageVideos() {
       }
       setFormData({ ...EMPTY });
     } catch (error: any) {
-      toast.error(error.message);
+      toast.error(getErrorMessage(error));
     }
   };
 
@@ -81,7 +82,7 @@ export default function ManageVideos() {
       await removeVideo({ id: id as any });
       toast.success(tr({ en: "Video deleted", fr: "Vidéo supprimée" }));
     } catch (error: any) {
-      toast.error(error.message);
+      toast.error(getErrorMessage(error));
     }
   };
 

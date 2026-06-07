@@ -30,7 +30,6 @@ export type User = {
 
 type SignUpResult = {
   error: Error | null;
-  verificationSent?: boolean;
 };
 
 type AuthState = {

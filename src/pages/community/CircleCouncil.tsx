@@ -22,6 +22,7 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useTr } from '@/lib/i18n';
+import { getErrorMessage } from '@/types/errors';
 import {
     CouncilQueryForm,
     CouncilMembersDisplay,
@@ -263,7 +264,7 @@ const CirclePage: React.FC = () => {
                 variant: 'default'
             });
         } catch (error: unknown) {
-            const message = error instanceof Error ? error.message : tr({ en: 'Failed to get council response', fr: 'Échec de l\'obtention de la réponse du conseil' });
+            const message = getErrorMessage(error, tr({ en: 'Failed to get council response', fr: 'Échec de l\'obtention de la réponse du conseil' }));
             toast({
                 title: tr({ en: 'Error', fr: 'Erreur' }),
                 description: message,
@@ -296,7 +297,7 @@ const CirclePage: React.FC = () => {
                 variant: 'default'
             });
         } catch (error: unknown) {
-            const message = error instanceof Error ? error.message : tr({ en: 'Failed to upload document', fr: 'Échec du téléversement du document' });
+            const message = getErrorMessage(error, tr({ en: 'Failed to upload document', fr: 'Échec du téléversement du document' }));
             toast({
                 title: tr({ en: 'Error', fr: 'Erreur' }),
                 description: message,
@@ -330,7 +331,7 @@ const CirclePage: React.FC = () => {
             };
             setSearchResults(mappedResults);
         } catch (error: unknown) {
-            const message = error instanceof Error ? error.message : t('error.search_failed');
+            const message = getErrorMessage(error, t('error.search_failed'));
             toast({
                 title: tr({ en: 'Error', fr: 'Erreur' }),
                 description: message,
@@ -351,7 +352,7 @@ const CirclePage: React.FC = () => {
                 variant: 'default'
             });
         } catch (error: unknown) {
-            const message = error instanceof Error ? error.message : t('error.delete_failed');
+            const message = getErrorMessage(error, t('error.delete_failed'));
             toast({
                 title: tr({ en: 'Error', fr: 'Erreur' }),
                 description: message,

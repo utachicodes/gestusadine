@@ -1,8 +1,16 @@
 import { action } from "./_generated/server";
-import { v } from "convex/values";
-import { api } from "./_generated/api";
+import { v, ConvexError } from "convex/values";
+import { api, internal } from "./_generated/api";
+import {
+  buildCouncilSystemPrompt,
+  isGreeting,
+  greetingReply,
+  RAG_HEADER,
+  RAG_FOOTER,
+} from "./prompts";
 
 const FANAR_BASE = "https://api.fanar.qa/v1";
+const FANAR_MODEL = "Fanar";
 
 async function fanarFetch(
   path: string,
@@ -18,69 +26,96 @@ async function fanarFetch(
     body: JSON.stringify(body),
   });
   if (!res.ok) {
-    const err = await res.text();
+    const err = await res.text().catch(() => "");
+    // Full provider detail goes to Convex server logs only — never the client.
+    console.error("[fanar] request failed", { status: res.status, detail: err.slice(0, 500) });
     if (res.status === 429) {
-      throw new Error("You've exceeded your Fanar API rate limit. Please wait a moment and try again.");
+      throw new ConvexError("The assistant is busy right now. Please wait a moment and try again.");
     }
-    throw new Error(`Fanar error (${res.status}): ${err}`);
+    // Auth / server errors are infrastructure problems — keep the cause opaque.
+    throw new ConvexError("The assistant is temporarily unavailable. Please try again later.");
   }
   return res.json();
 }
 
 export const generate = action({
   args: {
-    model: v.string(),
-    systemPrompt: v.string(),
+    // The client supplies ONLY the conversation + display preferences. The
+    // system prompt, methodology, guardrails, model and sampling are all set
+    // server-side and cannot be overridden by the caller.
     messages: v.array(
       v.object({
         role: v.union(v.literal("user"), v.literal("assistant")),
         content: v.string(),
       })
     ),
-    temperature: v.optional(v.number()),
-    maxTokens: v.optional(v.number()),
+    language: v.optional(v.string()),
+    madhab: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    // The chat action must not be anonymously callable — otherwise the Fanar
+    // budget and per-tier quota can be bypassed by calling it directly.
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new ConvexError("Please sign in to use the assistant.");
+
+    const lastUserMsg = [...args.messages].reverse().find((m) => m.role === "user");
+    const userText = lastUserMsg?.content?.trim() ?? "";
+
+    // Pure greetings/pleasantries get a quick reply — no model call, and NOT
+    // charged against the monthly quota.
+    if (isGreeting(userText)) {
+      return greetingReply(args.language);
+    }
+
+    // Enforce the per-tier quota on the SERVER, before doing any work. This
+    // closes the client-side counting bypass and the race window.
+    await ctx.runQuery(internal.subscription.checkCouncilQuota);
+
     const apiKey = process.env.FANAR_API_KEY;
-    if (!apiKey) throw new Error("FANAR_API_KEY not configured");
+    if (!apiKey) {
+      console.error("[fanar] FANAR_API_KEY not configured");
+      throw new ConvexError("The assistant is temporarily unavailable. Please try again later.");
+    }
 
-    // Get the last user message for RAG search
-    const lastUserMsg = [...args.messages].reverse().find(m => m.role === "user");
+    // RAG retrieval (best-effort). Retrieved text is framed as untrusted data.
     let ragContext = "";
-
-    if (lastUserMsg) {
+    if (userText) {
       try {
-        const results = await ctx.runAction(api.rag.search, {
-          query: lastUserMsg.content,
+        const results = (await ctx.runAction(api.rag.search, {
+          query: userText,
           topK: 8,
-        }) as any[];
+        })) as any[];
         if (results.length > 0) {
-          ragContext = "\n\nREFERENCE MATERIAL FROM ISLAMIC SOURCES:\n" +
-            results.map((r, i) =>
-              `[${i + 1}] ${r.category ? `(${r.category}) ` : ""}${r.content}`
-            ).join("\n\n") +
-            "\n\nREFERENCE MATERIAL is provided to help you verify and cite accurately. When you're unsure about surah ayat counts, hadith wording, or exact numbers — check the references first. If the references contradict what you think you know, the references are more reliable than your training. Never fabricate verses, hadith, or numbers.";
+          ragContext =
+            RAG_HEADER +
+            results
+              .map((r, i) => `[${i + 1}] ${r.category ? `(${r.category}) ` : ""}${r.content}`)
+              .join("\n\n") +
+            RAG_FOOTER;
         }
       } catch {
-        // RAG search failed — proceed without context
+        // RAG search failed — proceed without context.
       }
     }
 
-    const systemPrompt = ragContext
-      ? args.systemPrompt + ragContext
-      : args.systemPrompt;
+    const systemPrompt =
+      buildCouncilSystemPrompt({ language: args.language, madhab: args.madhab }) + ragContext;
 
     const data = await fanarFetch("/chat/completions", apiKey, {
-      model: args.model,
-      messages: [
-        { role: "system", content: systemPrompt },
-        ...args.messages,
-      ],
-      temperature: args.temperature ?? 0.7,
-      max_tokens: args.maxTokens ?? 2000,
+      model: FANAR_MODEL,
+      messages: [{ role: "system", content: systemPrompt }, ...args.messages],
+      temperature: 0.3,
+      max_tokens: 800,
     });
 
-    return data.choices[0]?.message?.content ?? "";
+    const content = data.choices?.[0]?.message?.content;
+    if (!content || content.trim().length === 0) {
+      throw new ConvexError("The assistant couldn't generate a response. Please try rephrasing your question.");
+    }
+
+    // Only a successful answer is charged against the quota.
+    await ctx.runMutation(internal.subscription.incrementCouncilUsage);
+    return content;
   },
 });
 
@@ -90,8 +125,18 @@ export const testModel = action({
     temperature: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
+    // Admin-only diagnostic — gate it so it can't be used to probe models or
+    // burn the Fanar budget anonymously.
+    const me = await ctx.runQuery(api.users.currentUser);
+    if (!me || (me.role !== "admin" && me.role !== "system")) {
+      throw new ConvexError("Not authorized.");
+    }
+
     const apiKey = process.env.FANAR_API_KEY;
-    if (!apiKey) throw new Error("FANAR_API_KEY not configured");
+    if (!apiKey) {
+      console.error("[fanar] FANAR_API_KEY not configured");
+      throw new ConvexError("The assistant is temporarily unavailable. Please try again later.");
+    }
 
     const startTime = Date.now();
     const data = await fanarFetch("/chat/completions", apiKey, {

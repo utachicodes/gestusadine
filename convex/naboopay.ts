@@ -1,4 +1,4 @@
-import { action, mutation } from "./_generated/server";
+import { action, internalMutation } from "./_generated/server";
 import { internal } from "./_generated/api";
 import { v, ConvexError } from "convex/values";
 
@@ -67,9 +67,16 @@ export const createCheckoutSession = action({
       body: JSON.stringify(body),
     });
 
-    const data = await res.json();
+    const data = await res.json().catch(() => ({}));
     if (!res.ok) {
-      throw new ConvexError(`NabooPay error: ${data.error ?? res.statusText}`);
+      // Log full provider detail server-side (Convex logs only) for diagnosis;
+      // never surface NabooPay internals to the client.
+      console.error("[naboopay] checkout failed", {
+        status: res.status,
+        tier: args.tier,
+        detail: data?.error ?? data?.message ?? res.statusText,
+      });
+      throw new ConvexError("Payment could not be started. Please try again or contact support.");
     }
 
     const orderId = data.order_id ?? data.id;
@@ -86,7 +93,7 @@ export const createCheckoutSession = action({
   },
 });
 
-export const recordPaymentInit = mutation({
+export const recordPaymentInit = internalMutation({
   args: {
     userId: v.id("users"),
     orderId: v.string(),
@@ -107,7 +114,7 @@ export const recordPaymentInit = mutation({
   },
 });
 
-export const confirmPayment = mutation({
+export const confirmPayment = internalMutation({
   args: {
     orderId: v.string(),
     transactionStatus: v.string(),
@@ -116,10 +123,16 @@ export const confirmPayment = mutation({
   handler: async (ctx, args) => {
     if (args.transactionStatus !== "completed") return { success: false };
 
+    // userActivity has no index on metadata.orderId, so filter on the fields
+    // directly. Webhook traffic is low-volume, so a scan here is acceptable.
     const activity = await ctx.db
       .query("userActivity")
-      .withIndex("userId", (q) => q.eq("activityType", "payment_initiated"))
-      .filter((q) => q.eq(q.field("metadata.orderId"), args.orderId))
+      .filter((q) =>
+        q.and(
+          q.eq(q.field("activityType"), "payment_initiated"),
+          q.eq(q.field("metadata.orderId"), args.orderId),
+        ),
+      )
       .first();
 
     if (!activity) return { success: false };

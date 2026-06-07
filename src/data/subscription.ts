@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useAuth, type SubscriptionTier } from "@/auth/AuthContext";
 import { api } from "../../convex/_generated/api";
-import { useQuery, useMutation } from "convex/react";
+import { useQuery } from "convex/react";
 
 export type Feature =
   | "council.access"
@@ -41,7 +41,6 @@ export function tierHasFeature(tier: SubscriptionTier, feature: Feature): boolea
 export function useSubscription() {
   const { profile, isAdmin } = useAuth();
   const sub = useQuery(api.subscription.getMySubscription);
-  const recordCouncilQueryMut = useMutation(api.subscription.recordCouncilQuery);
 
   const tier: SubscriptionTier = isAdmin
     ? "pro"
@@ -71,8 +70,7 @@ export function useSubscription() {
       meetsTier,
       councilRemaining: remaining,
       canAskCouncil: sub?.canAskCouncil ?? true,
-      recordCouncilQuery: () => { recordCouncilQueryMut(); },
       canCustomizeTheme: can("theme.customize"),
     };
-  }, [tier, sub, recordCouncilQueryMut]);
+  }, [tier, sub]);
 }

@@ -1,19 +1,12 @@
 import { query } from "./_generated/server";
-import { v } from "convex/values";
 import { getCurrentUser } from "./authz";
 
 export const dashboard = query({
-  args: {
-    adminEmail: v.optional(v.string()),
-  },
-  handler: async (ctx, args) => {
-    let user = await getCurrentUser(ctx);
-    if (!user && args.adminEmail) {
-      user = (await ctx.db
-        .query("users")
-        .withIndex("email", (q) => q.eq("email", args.adminEmail!.toLowerCase().trim()))
-        .unique()) as any;
-    }
+  args: {},
+  handler: async (ctx) => {
+    // Authorization is derived solely from the authenticated session. Never
+    // trust a client-supplied email as an identity (that was an auth bypass).
+    const user = await getCurrentUser(ctx);
     if (!user || (user.role !== "admin" && user.role !== "system")) {
       return null;
     }

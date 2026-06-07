@@ -20,11 +20,9 @@ const schema = defineSchema({
     xp: v.optional(v.number()),
     streak: v.optional(v.number()),
     lastActiveDate: v.optional(v.number()),
-    workosId: v.optional(v.string()),
   })
     .index("email", ["email"])
-    .index("phone", ["phone"])
-    .index("workosId", ["workosId"]),
+    .index("phone", ["phone"]),
 
   products: defineTable({
     name: v.string(),
@@ -287,6 +285,32 @@ const schema = defineSchema({
     createdAt: v.number(),
     updatedAt: v.number(),
   }).index("circleId", ["circleId"]),
+
+  // One row per (user, day, prayer). Presence = that prayer was logged that day.
+  prayerLogs: defineTable({
+    userId: v.id("users"),
+    prayer: v.union(
+      v.literal("fajr"),
+      v.literal("dhuhr"),
+      v.literal("asr"),
+      v.literal("maghrib"),
+      v.literal("isha"),
+    ),
+    date: v.number(), // start-of-day, ms
+    createdAt: v.number(),
+  })
+    .index("userId", ["userId"])
+    .index("userId_date", ["userId", "date"]),
+
+  // One row per user — their Quran reading progress.
+  quranProgress: defineTable({
+    userId: v.id("users"),
+    currentPage: v.number(), // furthest page reached, 1..604
+    completedSurahs: v.array(v.number()), // surah numbers, 1..114
+    streak: v.number(),
+    lastReadDate: v.optional(v.number()), // start-of-day, ms
+    updatedAt: v.number(),
+  }).index("userId", ["userId"]),
 });
 
 export default schema;

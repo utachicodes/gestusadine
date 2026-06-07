@@ -19,7 +19,6 @@ import Language from "./pages/core/Language";
 import AdminConfig from "./pages/admin/AdminConfig";
 import { AccessGuard } from "./components/auth/AccessGuard";
 import Login from "./pages/auth/Login";
-import VerificationSuccess from "./pages/auth/VerificationSuccess";
 import AppShell from "./components/layout/AppShell";
 import { ChatInterface } from "@/components/chat/ChatInterface";
 import { CookieConsent } from "@/components/layout/CookieConsent";
@@ -53,8 +52,10 @@ import Pricing from "./pages/core/Pricing";
 import Quran from "./pages/quran/Quran";
 import SurahView from "./pages/quran/SurahView";
 import PrayerTimes from "./pages/tools/PrayerTimes";
+import PrayerTracker from "./pages/tools/PrayerTracker";
 import HijriCalendar from "./pages/tools/HijriCalendar";
 import ZakatCalculator from "./pages/tools/ZakatCalculator";
+import QuranProgress from "./pages/quran/QuranProgress";
 
 import { ThemeProvider } from "@/contexts/ThemeContext";
 
@@ -92,7 +93,6 @@ const App = () => {
                         <Route path="/terms" element={<AppShell><Terms /></AppShell>} />
                         <Route path="/pricing" element={<AppShell><Pricing /></AppShell>} />
                         <Route path="/login" element={<Login />} />
-                        <Route path="/auth/verification-success" element={<AppShell><VerificationSuccess /></AppShell>} />
                         <Route
                           path="/shop"
                           element={
@@ -197,6 +197,26 @@ const App = () => {
                             <ProtectedRoute>
                               <DashboardLayout>
                                 <PrayerTimes />
+                              </DashboardLayout>
+                            </ProtectedRoute>
+                          }
+                        />
+                        <Route
+                          path="/prayer-tracker"
+                          element={
+                            <ProtectedRoute>
+                              <DashboardLayout>
+                                <PrayerTracker />
+                              </DashboardLayout>
+                            </ProtectedRoute>
+                          }
+                        />
+                        <Route
+                          path="/quran-progress"
+                          element={
+                            <ProtectedRoute>
+                              <DashboardLayout>
+                                <QuranProgress />
                               </DashboardLayout>
                             </ProtectedRoute>
                           }

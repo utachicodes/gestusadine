@@ -1,5 +1,5 @@
 import { mutation, query } from "./_generated/server";
-import { v } from "convex/values";
+import { v, ConvexError } from "convex/values";
 import { getCurrentUserOrThrow, requireStaff } from "./authz";
 
 export const list = query({
@@ -82,6 +82,7 @@ export const remove = mutation({
 
 export const generateUploadUrl = mutation({
   handler: async (ctx) => {
+    await requireStaff(ctx);
     return ctx.storage.generateUploadUrl();
   },
 });
@@ -89,8 +90,9 @@ export const generateUploadUrl = mutation({
 export const saveUploadedFile = mutation({
   args: { storageId: v.id("_storage") },
   handler: async (ctx, args) => {
+    await requireStaff(ctx);
     const url = await ctx.storage.getUrl(args.storageId);
-    if (!url) throw new Error("File not found in storage");
+    if (!url) throw new ConvexError("File not found in storage");
     return { url, storageId: args.storageId };
   },
 });

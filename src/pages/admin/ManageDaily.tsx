@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BookOpen, Plus, Edit, Trash2, Sparkles, HelpCircle } from "lucide-react";
 import { toast } from "sonner";
 import { useTr } from "@/lib/i18n";
+import { getErrorMessage } from "@/types/errors";
 import { api } from "../../../convex/_generated/api";
 import { useQuery, useMutation } from "convex/react";
 
@@ -72,7 +73,7 @@ export default function ManageDaily() {
       }
       resetForm();
     } catch (error: any) {
-      toast.error(error.message);
+      toast.error(getErrorMessage(error));
     }
   };
 
@@ -97,7 +98,7 @@ export default function ManageDaily() {
       await removeItem({ id: id as any });
       toast.success(tr({ en: "Deleted", fr: "Supprimé" }));
     } catch (error: any) {
-      toast.error(error.message);
+      toast.error(getErrorMessage(error));
     }
   };
 

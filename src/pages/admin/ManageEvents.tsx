@@ -6,6 +6,7 @@ import { Calendar, MapPin, Users, Plus, Edit, Trash2 } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
 import { useTr } from "@/lib/i18n";
+import { getErrorMessage } from "@/types/errors";
 import { api } from "../../../convex/_generated/api";
 import { useQuery, useMutation } from "convex/react";
 
@@ -60,7 +61,7 @@ export default function ManageEvents() {
       }
       setFormData({ ...EMPTY });
     } catch (error: any) {
-      toast.error(error.message);
+      toast.error(getErrorMessage(error));
     }
   };
 
@@ -83,7 +84,7 @@ export default function ManageEvents() {
       await removeEvent({ id: id as any });
       toast.success(tr({ en: "Event deleted", fr: "Événement supprimé" }));
     } catch (error: any) {
-      toast.error(error.message);
+      toast.error(getErrorMessage(error));
     }
   };
 
