@@ -58,28 +58,6 @@ http.route({
 });
 
 http.route({
-  path: "/workos-verify",
-  method: "GET",
-  handler: httpAction(async (ctx, request) => {
-    const url = new URL(request.url);
-    const code = url.searchParams.get("code");
-    const userId = url.searchParams.get("userId");
-
-    if (!code || !userId) {
-      return new Response("Missing verification parameters", { status: 400 });
-    }
-
-    await ctx.runAction(internal.workos.verifyEmail, {
-      code,
-      workosUserId: userId,
-    });
-
-    // Redirect user to a verification success page
-    return Response.redirect(`${url.origin}/auth/verification-success`, 302);
-  }),
-});
-
-http.route({
   path: "/health",
   method: "GET",
   handler: httpAction(async () => {

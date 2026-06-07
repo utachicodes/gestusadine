@@ -1,5 +1,5 @@
 import { mutation, query } from "./_generated/server";
-import { v } from "convex/values";
+import { v, ConvexError } from "convex/values";
 import { getCurrentUserOrThrow, requireStaff } from "./authz";
 
 export const list = query({
@@ -68,8 +68,8 @@ export const register = mutation({
   handler: async (ctx, args) => {
     const user = await getCurrentUserOrThrow(ctx);
     const event = await ctx.db.get(args.eventId);
-    if (!event) throw new Error("Event not found");
-    if (event.registered >= event.capacity) throw new Error("Event is full");
+    if (!event) throw new ConvexError("This event no longer exists.");
+    if (event.registered >= event.capacity) throw new ConvexError("This event is full.");
 
     const existing = await ctx.db
       .query("eventRegistrations")
@@ -77,7 +77,7 @@ export const register = mutation({
       .filter((q) => q.eq(q.field("userId"), user._id))
       .first();
 
-    if (existing) throw new Error("Already registered");
+    if (existing) throw new ConvexError("You're already registered for this event.");
 
     await ctx.db.insert("eventRegistrations", {
       eventId: args.eventId,

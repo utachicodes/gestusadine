@@ -13,6 +13,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { useTr } from "@/lib/i18n";
+import { getErrorMessage } from "@/types/errors";
 import { api } from "../../../convex/_generated/api";
 import { useQuery, useMutation } from "convex/react";
 
@@ -133,7 +134,7 @@ export default function ManageLibrary() {
       setIsAddDialogOpen(false);
       toast.success(tr({ en: "Book added", fr: "Livre ajouté" }));
     } catch (error: any) {
-      toast.error(error.message);
+      toast.error(getErrorMessage(error));
     }
   };
 
@@ -159,7 +160,7 @@ export default function ManageLibrary() {
       setSelectedBook(null);
       toast.success(tr({ en: "Book updated", fr: "Livre mis à jour" }));
     } catch (error: any) {
-      toast.error(error.message);
+      toast.error(getErrorMessage(error));
     }
   };
 
@@ -171,7 +172,7 @@ export default function ManageLibrary() {
       setSelectedBook(null);
       toast.success(tr({ en: "Book deleted", fr: "Livre supprimé" }));
     } catch (error: any) {
-      toast.error(error.message);
+      toast.error(getErrorMessage(error));
     }
   };
 
@@ -193,7 +194,7 @@ export default function ManageLibrary() {
       setUploadedFileName(file.name);
       toast.success(tr({ en: "File uploaded", fr: "Fichier téléchargé" }));
     } catch (error: any) {
-      toast.error(error.message || tr({ en: "Upload failed", fr: "Échec du téléchargement" }));
+      toast.error(getErrorMessage(error, tr({ en: "Upload failed", fr: "Échec du téléchargement" })));
     } finally {
       setUploadingFile(false);
     }
@@ -217,7 +218,7 @@ export default function ManageLibrary() {
       setUploadedCoverName(file.name);
       toast.success(tr({ en: "Cover uploaded", fr: "Couverture téléchargée" }));
     } catch (error: any) {
-      toast.error(error.message || tr({ en: "Upload failed", fr: "Échec du téléchargement" }));
+      toast.error(getErrorMessage(error, tr({ en: "Upload failed", fr: "Échec du téléchargement" })));
     } finally {
       setUploadingCover(false);
     }
@@ -229,7 +230,7 @@ export default function ManageLibrary() {
     try {
       await updateBook({ id: bookId as any, featured: !book.featured });
     } catch (error: any) {
-      toast.error(error.message);
+      toast.error(getErrorMessage(error));
     }
   };
 

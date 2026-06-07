@@ -1,6 +1,6 @@
 import { query, mutation } from "./_generated/server";
-import { v } from "convex/values";
-import { getCurrentUserOrThrow } from "./authz";
+import { v, ConvexError } from "convex/values";
+import { getCurrentUserOrThrow, requireStaff } from "./authz";
 
 export const list = query({
   args: { category: v.optional(v.string()) },
@@ -71,6 +71,7 @@ export const update = mutation({
     price: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
+    await requireStaff(ctx);
     const { id, ...fields } = args;
     await ctx.db.patch(id, { ...fields, updatedAt: Date.now() });
   },
@@ -79,6 +80,7 @@ export const update = mutation({
 export const remove = mutation({
   args: { id: v.id("classes") },
   handler: async (ctx, args) => {
+    await requireStaff(ctx);
     await ctx.db.delete(args.id);
   },
 });
@@ -86,8 +88,9 @@ export const remove = mutation({
 export const enroll = mutation({
   args: { classId: v.id("classes") },
   handler: async (ctx, args) => {
+    await getCurrentUserOrThrow(ctx);
     const cls = await ctx.db.get(args.classId);
-    if (!cls) throw new Error("Class not found");
+    if (!cls) throw new ConvexError("Class not found");
     await ctx.db.patch(args.classId, { enrolled: (cls.enrolled ?? 0) + 1 });
   },
 });

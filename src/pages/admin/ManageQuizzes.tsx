@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { HelpCircle, Plus, Edit, Trash2, Calendar } from "lucide-react";
 import { toast } from "sonner";
 import { useTr } from "@/lib/i18n";
+import { getErrorMessage } from "@/types/errors";
 import { api } from "../../../convex/_generated/api";
 import { useQuery, useMutation } from "convex/react";
 
@@ -59,7 +60,7 @@ export default function ManageQuizzes() {
       }
       setFormData({ ...EMPTY });
     } catch (error: any) {
-      toast.error(error.message);
+      toast.error(getErrorMessage(error));
     }
   };
 
@@ -83,7 +84,7 @@ export default function ManageQuizzes() {
       await removeQuiz({ id: id as any });
       toast.success(tr({ en: "Quiz deleted", fr: "Quiz supprimé" }));
     } catch (error: any) {
-      toast.error(error.message);
+      toast.error(getErrorMessage(error));
     }
   };
 

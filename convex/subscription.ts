@@ -1,5 +1,5 @@
-import { query, mutation } from "./_generated/server";
-import { v } from "convex/values";
+import { query, internalMutation, internalQuery } from "./_generated/server";
+import { ConvexError } from "convex/values";
 import { getCurrentUser, getCurrentUserOrThrow } from "./authz";
 
 type Tier = "free" | "student" | "pro";
@@ -53,25 +53,41 @@ export const getMySubscription = query({
   },
 });
 
-export const recordCouncilQuery = mutation({
+// Internal — called by the chat action BEFORE generating. Throws when the
+// caller is over their monthly limit. Not exposed to the client, so usage can't
+// be bypassed by skipping a client-side call.
+export const checkCouncilQuota = internalQuery({
   args: {},
   handler: async (ctx) => {
     const user = await getCurrentUserOrThrow(ctx);
-    const period = currentPeriod();
     const tier = effectiveTier(user.subscriptionTier as Tier, user.role);
     const limit = TIER_CREDITS[tier];
+    if (limit === -1) return; // unlimited
 
-    if (limit !== -1) {
-      const existing = await ctx.db
-        .query("subscriptionUsage")
-        .withIndex("userId", (q) => q.eq("userId", user._id))
-        .filter((q) => q.eq(q.field("period"), period))
-        .unique();
+    const period = currentPeriod();
+    const existing = await ctx.db
+      .query("subscriptionUsage")
+      .withIndex("userId", (q) => q.eq("userId", user._id))
+      .filter((q) => q.eq(q.field("period"), period))
+      .unique();
 
-      const used = existing?.queriesUsed ?? 0;
-      if (used >= limit) throw new Error("Monthly council query limit reached");
+    const used = existing?.queriesUsed ?? 0;
+    if (used >= limit) {
+      throw new ConvexError("You've reached your monthly question limit. Upgrade for more.");
     }
+  },
+});
 
+// Internal — called by the chat action AFTER a successful answer. Only
+// successful responses are charged against the quota.
+export const incrementCouncilUsage = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    const user = await getCurrentUserOrThrow(ctx);
+    const tier = effectiveTier(user.subscriptionTier as Tier, user.role);
+    if (TIER_CREDITS[tier] === -1) return; // unlimited — no need to track
+
+    const period = currentPeriod();
     const existing = await ctx.db
       .query("subscriptionUsage")
       .withIndex("userId", (q) => q.eq("userId", user._id))
@@ -81,13 +97,7 @@ export const recordCouncilQuery = mutation({
     if (existing) {
       await ctx.db.patch(existing._id, { queriesUsed: existing.queriesUsed + 1 });
     } else {
-      await ctx.db.insert("subscriptionUsage", {
-        userId: user._id,
-        period,
-        queriesUsed: 1,
-      });
+      await ctx.db.insert("subscriptionUsage", { userId: user._id, period, queriesUsed: 1 });
     }
-
-    return { success: true };
   },
 });

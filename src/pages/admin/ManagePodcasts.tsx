@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Mic, Plus, Edit, Trash2, Headphones } from "lucide-react";
 import { toast } from "sonner";
 import { useTr } from "@/lib/i18n";
+import { getErrorMessage } from "@/types/errors";
 import { api } from "../../../convex/_generated/api";
 import { useQuery, useMutation } from "convex/react";
 
@@ -53,7 +54,7 @@ export default function ManagePodcasts() {
       }
       setFormData({ ...EMPTY });
     } catch (error: any) {
-      toast.error(error.message);
+      toast.error(getErrorMessage(error));
     }
   };
 
@@ -77,7 +78,7 @@ export default function ManagePodcasts() {
       await removePodcast({ id: id as any });
       toast.success(tr({ en: "Podcast deleted", fr: "Podcast supprimé" }));
     } catch (error: any) {
-      toast.error(error.message);
+      toast.error(getErrorMessage(error));
     }
   };
 

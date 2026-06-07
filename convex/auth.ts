@@ -1,5 +1,6 @@
 import { convexAuth } from "@convex-dev/auth/server";
 import { Password } from "@convex-dev/auth/providers/Password";
+import { ConvexError } from "convex/values";
 import { MutationCtx } from "./_generated/server";
 
 const SESSION_TOTAL_DURATION_MS = 1000 * 60 * 60 * 24 * 7;
@@ -10,7 +11,7 @@ const ADMIN_EMAILS = (process.env.ADMIN_EMAILS ?? "")
   .map((e) => e.trim().toLowerCase())
   .filter(Boolean);
 
-function getRole(email: string): string {
+function getRole(email: string): "admin" | "user" {
   return ADMIN_EMAILS.includes(email.toLowerCase()) ? "admin" : "user";
 }
 
@@ -37,7 +38,7 @@ export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
       }
 
       if (!args.profile?.name) {
-        throw new Error("Full name is required.");
+        throw new ConvexError("Full name is required.");
       }
 
       return ctx.db.insert("users", {

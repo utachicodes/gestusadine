@@ -1,5 +1,5 @@
 import { query, mutation } from "./_generated/server";
-import { v } from "convex/values";
+import { v, ConvexError } from "convex/values";
 import { getCurrentUserOrThrow, getCurrentUser } from "./authz";
 
 export const list = query({
@@ -59,6 +59,13 @@ export const update = mutation({
     isPrivate: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
+    const user = await getCurrentUserOrThrow(ctx);
+    const circle = await ctx.db.get(args.id);
+    if (!circle) throw new ConvexError("Circle not found");
+    const isPlatformAdmin = user.role === "admin" || user.role === "system";
+    if (circle.createdBy !== user._id && !isPlatformAdmin) {
+      throw new ConvexError("You don't have permission to modify this circle.");
+    }
     const { id, ...fields } = args;
     await ctx.db.patch(id, { ...fields, updatedAt: Date.now() });
   },
@@ -67,6 +74,13 @@ export const update = mutation({
 export const remove = mutation({
   args: { id: v.id("communityCircles") },
   handler: async (ctx, args) => {
+    const user = await getCurrentUserOrThrow(ctx);
+    const circle = await ctx.db.get(args.id);
+    if (!circle) throw new ConvexError("Circle not found");
+    const isPlatformAdmin = user.role === "admin" || user.role === "system";
+    if (circle.createdBy !== user._id && !isPlatformAdmin) {
+      throw new ConvexError("You don't have permission to delete this circle.");
+    }
     const members = await ctx.db.query("circleMembers").withIndex("circleId", (q) => q.eq("circleId", args.id)).collect();
     const posts = await ctx.db.query("circlePosts").withIndex("circleId", (q) => q.eq("circleId", args.id)).collect();
     for (const m of members) await ctx.db.delete(m._id);
@@ -155,6 +169,16 @@ export const createPost = mutation({
 export const deletePost = mutation({
   args: { id: v.id("circlePosts") },
   handler: async (ctx, args) => {
+    const user = await getCurrentUserOrThrow(ctx);
+    const post = await ctx.db.get(args.id);
+    if (!post) return;
+    const circle = await ctx.db.get(post.circleId);
+    const isPlatformAdmin = user.role === "admin" || user.role === "system";
+    const isAuthor = post.authorId === user._id;
+    const isCircleOwner = circle?.createdBy === user._id;
+    if (!isAuthor && !isCircleOwner && !isPlatformAdmin) {
+      throw new ConvexError("You don't have permission to delete this post.");
+    }
     await ctx.db.delete(args.id);
   },
 });

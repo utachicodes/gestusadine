@@ -1,6 +1,6 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
-import { getCurrentUserOrThrow } from "./authz";
+import { getCurrentUserOrThrow, requireStaff } from "./authz";
 
 export const list = query({
   args: { category: v.optional(v.string()) },
@@ -54,6 +54,7 @@ export const update = mutation({
     guestName: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    await requireStaff(ctx);
     const { id, ...fields } = args;
     await ctx.db.patch(id, { ...fields, updatedAt: Date.now() });
   },
@@ -62,6 +63,7 @@ export const update = mutation({
 export const remove = mutation({
   args: { id: v.id("podcasts") },
   handler: async (ctx, args) => {
+    await requireStaff(ctx);
     await ctx.db.delete(args.id);
   },
 });

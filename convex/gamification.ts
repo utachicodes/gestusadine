@@ -59,6 +59,11 @@ export const myStats = query({
 export const leaderboard = query({
   args: { limit: v.optional(v.number()) },
   handler: async (ctx, args) => {
+    // Authenticated users only — and never expose email addresses as the
+    // display name (PII leak). Fall back to a privacy-safe label instead.
+    const viewer = await getCurrentUser(ctx);
+    if (!viewer) return [];
+
     const users = await ctx.db.query("users").collect();
     return users
       .filter((u) => (u.xp ?? 0) > 0)
@@ -66,7 +71,7 @@ export const leaderboard = query({
       .slice(0, args.limit ?? 50)
       .map((u) => ({
         userId: u._id,
-        fullName: u.fullName ?? u.email ?? "Anonymous",
+        fullName: u.fullName ?? u.name ?? "Anonymous",
         xp: u.xp ?? 0,
         rank: computeRank(u.xp ?? 0),
       }));

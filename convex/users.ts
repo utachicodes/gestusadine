@@ -1,5 +1,5 @@
 import { query, mutation } from "./_generated/server";
-import { v } from "convex/values";
+import { v, ConvexError } from "convex/values";
 import { getCurrentUserOrThrow, getCurrentUser } from "./authz";
 
 export const currentUser = query({
@@ -37,6 +37,15 @@ export const updateSubscriptionTier = mutation({
   },
   handler: async (ctx, args) => {
     const user = await getCurrentUserOrThrow(ctx);
+    // Self-service tier changes are a paid-feature bypass. The real upgrade path
+    // is the NabooPay webhook -> internal confirmPayment mutation. Allow direct
+    // changes only for platform admins, or on a dev deployment that explicitly
+    // opts in (used by the DEV-only tier switcher in Settings).
+    const isPlatformAdmin = user.role === "admin" || user.role === "system";
+    const devSwitchEnabled = process.env.ALLOW_SELF_TIER_SWITCH === "true";
+    if (!isPlatformAdmin && !devSwitchEnabled) {
+      throw new ConvexError("Subscription tier can only be changed through checkout.");
+    }
     await ctx.db.patch(user._id, { subscriptionTier: args.tier });
   },
 });
@@ -49,23 +58,9 @@ export const setRole = mutation({
   handler: async (ctx, args) => {
     const caller = await getCurrentUserOrThrow(ctx);
     if (caller.role !== "admin" && caller.role !== "system") {
-      throw new Error("Only admins can change roles");
+      throw new ConvexError("You don't have permission to do that.");
     }
     await ctx.db.patch(args.userId, { role: args.role });
-  },
-});
-
-export const getEmailVerificationStatus = query({
-  args: { email: v.string() },
-  handler: async (ctx, args) => {
-    const email = args.email.toLowerCase().trim();
-    if (!email) return null;
-    const user = await ctx.db
-      .query("users")
-      .withIndex("email", (q) => q.eq("email", email))
-      .first();
-    if (!user) return null;
-    return { verified: !!user.emailVerificationTime };
   },
 });
 

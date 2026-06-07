@@ -1,6 +1,6 @@
 import { query, mutation } from "./_generated/server";
-import { v } from "convex/values";
-import { getCurrentUserOrThrow, getCurrentUser } from "./authz";
+import { v, ConvexError } from "convex/values";
+import { getCurrentUserOrThrow, getCurrentUser, requireStaff } from "./authz";
 
 export const list = query({
   args: { date: v.optional(v.number()) },
@@ -57,6 +57,7 @@ export const update = mutation({
     category: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    await requireStaff(ctx);
     const { id, ...fields } = args;
     await ctx.db.patch(id, fields);
   },
@@ -65,6 +66,7 @@ export const update = mutation({
 export const remove = mutation({
   args: { id: v.id("dailyQuizzes") },
   handler: async (ctx, args) => {
+    await requireStaff(ctx);
     await ctx.db.delete(args.id);
   },
 });
@@ -77,7 +79,7 @@ export const submitAnswer = mutation({
   handler: async (ctx, args) => {
     const user = await getCurrentUserOrThrow(ctx);
     const quiz = await ctx.db.get(args.quizId);
-    if (!quiz) throw new Error("Quiz not found");
+    if (!quiz) throw new ConvexError("This quiz is no longer available.");
 
     const correct = args.selectedIndex === quiz.correctIndex;
     const xpEarned = correct ? (quiz.difficulty === "easy" ? 10 : quiz.difficulty === "medium" ? 25 : 50) : 0;
