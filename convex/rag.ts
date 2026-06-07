@@ -203,6 +203,16 @@ export const deleteDocument = mutation({
   args: { id: v.id("ragDocuments") },
   handler: async (ctx, args) => {
     const user = await getCurrentUserOrThrow(ctx);
+
+    // Only admins or the original uploader may delete documents.
+    const doc = await ctx.db.get(args.id);
+    if (!doc) return; // already gone
+    const isAdmin = user.role === "admin" || user.role === "system";
+    const isOwner = doc.uploadedBy !== undefined && doc.uploadedBy === user._id;
+    if (!isAdmin && !isOwner) {
+      throw new Error("You do not have permission to delete this document.");
+    }
+
     const chunks = await ctx.db
       .query("ragChunks")
       .withIndex("documentId", (q) => q.eq("documentId", args.id))

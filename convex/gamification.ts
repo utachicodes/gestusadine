@@ -68,12 +68,13 @@ export const leaderboard = query({
     return users
       .filter((u) => (u.xp ?? 0) > 0)
       .sort((a, b) => (b.xp ?? 0) - (a.xp ?? 0))
-      .slice(0, args.limit ?? 50)
+      .slice(0, Math.min(args.limit ?? 50, 100))
       .map((u) => ({
-        userId: u._id,
-        fullName: u.fullName ?? u.name ?? "Anonymous",
+        // userId intentionally omitted — prevents cross-referencing to accounts.
+        displayName: u.fullName ?? u.name ?? "Anonymous",
         xp: u.xp ?? 0,
         rank: computeRank(u.xp ?? 0),
+        isMe: u._id === viewer._id,
       }));
   },
 });

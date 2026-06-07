@@ -18,9 +18,12 @@ function getRole(email: string): "admin" | "user" {
 export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
   providers: [Password({
     profile(params) {
+      // Accept any extra signup fields (gender) forwarded by the client.
+      const p = params as Record<string, unknown>;
       return {
-        email: params.email as string,
-        name: params.name as string,
+        email: p.email as string,
+        name: p.name as string,
+        gender: (p.gender as "male" | "female" | undefined) ?? undefined,
       };
     },
   })],
@@ -41,14 +44,19 @@ export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
         throw new ConvexError("Full name is required.");
       }
 
+      const p = args.profile as Record<string, unknown>;
+      const gender = p.gender as "male" | "female" | undefined;
+
       return ctx.db.insert("users", {
         email,
-        name: args.profile.name,
-        image: args.profile?.image,
+        name: p.name as string,
+        image: p.image as string | undefined,
         role,
         subscriptionTier: "free",
-        fullName: args.profile.name,
+        fullName: p.name as string,
         isAnonymous: false,
+        gender,
+        onboardingCompleted: false,
       });
     },
   },

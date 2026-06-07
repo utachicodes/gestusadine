@@ -6,11 +6,15 @@ import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useSubscription } from "@/data/subscription";
-import { useAuth, type SubscriptionTier } from "@/auth/AuthContext";
+import { useAuth, type SubscriptionTier, type Gender } from "@/auth/AuthContext";
+import { useMutation } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 import { useTr, type Loc } from "@/lib/i18n";
 import { ThemeCustomizer } from "@/components/settings/ThemeCustomizer";
 import { CreditUsageWidget } from "@/components/subscription/CreditUsageWidget";
-import { Globe, Palette, Bell, CreditCard, Crown, FlaskConical } from "lucide-react";
+import { resetOnboardingTutorial } from "@/components/onboarding/OnboardingTutorial";
+import { Globe, Palette, Bell, CreditCard, Crown, FlaskConical, PlayCircle, User, Users } from "lucide-react";
+import { toast } from "sonner";
 
 const DEV_TIERS: { value: SubscriptionTier; label: Loc }[] = [
   { value: 'free', label: { en: 'Seeker (Free)', fr: 'Chercheur (Gratuit)' } },
@@ -22,10 +26,25 @@ const Settings: React.FC = () => {
   const navigate = useNavigate();
   const { language, setLanguage } = useLanguage();
   const { tier: userTier, canCustomizeTheme } = useSubscription();
-  const { setSubscriptionTier } = useAuth();
+  const { setSubscriptionTier, profile } = useAuth();
+  const updateGender = useMutation(api.users.updateGender);
   const tr = useTr();
   const [notifications, setNotifications] = useState(true);
   const [showCustomizer, setShowCustomizer] = useState(false);
+
+  const handleGenderChange = async (g: Gender) => {
+    try {
+      await updateGender({ gender: g });
+      toast.success(tr({ en: 'Profile updated.', fr: 'Profil mis à jour.' }));
+    } catch {
+      toast.error(tr({ en: 'Failed to update profile.', fr: 'Erreur lors de la mise à jour.' }));
+    }
+  };
+
+  const handleRestartTutorial = () => {
+    resetOnboardingTutorial();
+    window.location.href = '/dashboard';
+  };
 
   return (
     <div className="flex-1 overflow-y-auto">
@@ -172,6 +191,65 @@ const Settings: React.FC = () => {
                 </p>
               </div>
             )}
+          </Card>
+          {/* Gender / Profile section */}
+          {profile && profile.id !== 'hardcoded-admin' && (
+            <Card className="p-6 space-y-4">
+              <div>
+                <h2 className="text-xl font-semibold text-foreground mb-1 flex items-center gap-2">
+                  <User className="w-5 h-5 text-primary" />
+                  {tr({ en: 'Profile', fr: 'Profil' })}
+                </h2>
+                <p className="text-sm text-muted-foreground">
+                  {tr({ en: 'Your gender setting determines which features are available to you.', fr: 'Votre genre détermine les fonctionnalités disponibles.' })}
+                </p>
+              </div>
+              <div className="space-y-2">
+                <Label className="text-base font-medium">{tr({ en: 'I identify as…', fr: 'Je suis…' })}</Label>
+                <div className="flex gap-3">
+                  {(['male', 'female'] as Gender[]).map((g) => (
+                    <button
+                      key={g}
+                      type="button"
+                      onClick={() => handleGenderChange(g)}
+                      className={`flex-1 flex items-center gap-2 px-4 py-3 rounded-xl border-2 transition-all text-sm font-medium ${
+                        profile.gender === g
+                          ? 'border-primary bg-primary/10 text-primary'
+                          : 'border-border text-muted-foreground hover:border-primary/50'
+                      }`}
+                    >
+                      {g === 'male' ? <User className="w-4 h-4" /> : <Users className="w-4 h-4" />}
+                      {g === 'male'
+                        ? tr({ en: 'Male', fr: 'Homme' })
+                        : tr({ en: 'Female', fr: 'Femme' })}
+                    </button>
+                  ))}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  {tr({ en: 'Female users get access to the Cycle Tracker.', fr: 'Les utilisatrices ont accès au Suivi du cycle.' })}
+                </p>
+              </div>
+            </Card>
+          )}
+
+          {/* Tutorial restart */}
+          <Card className="p-6 space-y-4">
+            <div>
+              <h2 className="text-xl font-semibold text-foreground mb-1 flex items-center gap-2">
+                <PlayCircle className="w-5 h-5 text-primary" />
+                {tr({ en: 'Guided Tour', fr: 'Visite guidée' })}
+              </h2>
+              <p className="text-sm text-muted-foreground">
+                {tr({ en: 'Revisit the introduction tutorial at any time.', fr: 'Revoyez le tutoriel d\'introduction à tout moment.' })}
+              </p>
+            </div>
+            <Button
+              onClick={handleRestartTutorial}
+              className="w-full"
+              variant="outline"
+            >
+              {tr({ en: 'Restart Tutorial', fr: 'Relancer le tutoriel' })}
+            </Button>
           </Card>
         </div>
       </section>

@@ -16,27 +16,30 @@ http.route({
     const payload: any = await request.json();
 
     const secret = process.env.NABOOPAY_WEBHOOK_SECRET;
-    if (secret) {
-      if (!signature) {
-        return new Response("Missing signature", { status: 401 });
-      }
-      const encoder = new TextEncoder();
-      const key = await crypto.subtle.importKey(
-        "raw",
-        encoder.encode(secret),
-        { name: "HMAC", hash: "SHA-256" },
-        false,
-        ["verify"],
-      );
-      const payloadBytes = encoder.encode(JSON.stringify(payload));
-      const expected = await crypto.subtle.sign("HMAC", key, payloadBytes);
-      const expectedHex = Array.from(new Uint8Array(expected))
-        .map((b) => b.toString(16).padStart(2, "0"))
-        .join("");
+    // Signature verification is mandatory — no secret means misconfigured deployment.
+    if (!secret) {
+      console.error("[naboopay] NABOOPAY_WEBHOOK_SECRET is not set — rejecting webhook");
+      return new Response("Webhook secret not configured", { status: 500 });
+    }
+    if (!signature) {
+      return new Response("Missing signature", { status: 401 });
+    }
+    const encoder = new TextEncoder();
+    const key = await crypto.subtle.importKey(
+      "raw",
+      encoder.encode(secret),
+      { name: "HMAC", hash: "SHA-256" },
+      false,
+      ["verify"],
+    );
+    const payloadBytes = encoder.encode(JSON.stringify(payload));
+    const expected = await crypto.subtle.sign("HMAC", key, payloadBytes);
+    const expectedHex = Array.from(new Uint8Array(expected))
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
 
-      if (signature !== expectedHex) {
-        return new Response("Invalid signature", { status: 401 });
-      }
+    if (signature !== expectedHex) {
+      return new Response("Invalid signature", { status: 401 });
     }
 
     const orderId = payload.order_id;

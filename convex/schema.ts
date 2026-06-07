@@ -20,6 +20,8 @@ const schema = defineSchema({
     xp: v.optional(v.number()),
     streak: v.optional(v.number()),
     lastActiveDate: v.optional(v.number()),
+    gender: v.optional(v.union(v.literal("male"), v.literal("female"))),
+    onboardingCompleted: v.optional(v.boolean()),
   })
     .index("email", ["email"])
     .index("phone", ["phone"]),
@@ -309,6 +311,65 @@ const schema = defineSchema({
     completedSurahs: v.array(v.number()), // surah numbers, 1..114
     streak: v.number(),
     lastReadDate: v.optional(v.number()), // start-of-day, ms
+    updatedAt: v.number(),
+  }).index("userId", ["userId"]),
+
+  // ── Journal ──────────────────────────────────────────────────────────────
+  journalEntries: defineTable({
+    userId: v.id("users"),
+    title: v.optional(v.string()),
+    content: v.string(),
+    mood: v.optional(v.string()), // emoji key e.g. "happy", "grateful", "anxious"
+    tags: v.optional(v.array(v.string())),
+    entryDate: v.number(), // start-of-day UTC timestamp for calendar alignment
+    template: v.optional(v.string()), // "free" | "gratitude" | "reflection" | "daily"
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("userId", ["userId"])
+    .index("userId_entryDate", ["userId", "entryDate"]),
+
+  // ── Period Tracker ────────────────────────────────────────────────────────
+  // One row per menstrual cycle.
+  periodCycles: defineTable({
+    userId: v.id("users"),
+    startDate: v.number(), // start-of-day UTC of first day of bleeding
+    endDate: v.optional(v.number()), // start-of-day UTC of last day (null if ongoing)
+    notes: v.optional(v.string()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("userId", ["userId"])
+    .index("userId_startDate", ["userId", "startDate"]),
+
+  // One row per calendar day — flow, symptoms, mood, notes.
+  periodLogs: defineTable({
+    userId: v.id("users"),
+    date: v.number(), // start-of-day UTC
+    flow: v.optional(v.union(
+      v.literal("none"),
+      v.literal("spotting"),
+      v.literal("light"),
+      v.literal("medium"),
+      v.literal("heavy"),
+    )),
+    symptoms: v.optional(v.array(v.string())), // e.g. ["cramps", "headache", "fatigue"]
+    mood: v.optional(v.string()), // e.g. "happy", "irritable", "sad", "calm"
+    notes: v.optional(v.string()),
+    temperature: v.optional(v.number()), // basal body temp in °C
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("userId", ["userId"])
+    .index("userId_date", ["userId", "date"]),
+
+  // One row per user — cycle length preferences & notification settings.
+  periodSettings: defineTable({
+    userId: v.id("users"),
+    avgCycleLength: v.number(), // default 28
+    avgPeriodLength: v.number(), // default 5
+    notifications: v.boolean(),
+    reminderDays: v.number(), // days before expected period to remind
     updatedAt: v.number(),
   }).index("userId", ["userId"]),
 });

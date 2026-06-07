@@ -31,6 +31,24 @@ export const updateProfile = mutation({
   },
 });
 
+export const updateGender = mutation({
+  args: {
+    gender: v.union(v.literal("male"), v.literal("female")),
+  },
+  handler: async (ctx, args) => {
+    const user = await getCurrentUserOrThrow(ctx);
+    await ctx.db.patch(user._id, { gender: args.gender });
+  },
+});
+
+export const setOnboardingCompleted = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const user = await getCurrentUserOrThrow(ctx);
+    await ctx.db.patch(user._id, { onboardingCompleted: true });
+  },
+});
+
 export const updateSubscriptionTier = mutation({
   args: {
     tier: v.union(v.literal("free"), v.literal("student"), v.literal("pro")),
@@ -59,6 +77,15 @@ export const setRole = mutation({
     const caller = await getCurrentUserOrThrow(ctx);
     if (caller.role !== "admin" && caller.role !== "system") {
       throw new ConvexError("You don't have permission to do that.");
+    }
+    // Prevent self-role modification (accidental de-privileging or elevation).
+    if (args.userId === caller._id) {
+      throw new ConvexError("You cannot change your own role.");
+    }
+    // Protect system accounts from being modified by non-system callers.
+    const target = await ctx.db.get(args.userId);
+    if (target?.role === "system" && caller.role !== "system") {
+      throw new ConvexError("Only system accounts can modify another system account.");
     }
     await ctx.db.patch(args.userId, { role: args.role });
   },
