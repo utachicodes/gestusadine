@@ -13,8 +13,6 @@ import {
   Users,
   Globe,
   GraduationCap,
-  ListChecks,
-  TrendingUp,
   PanelLeftClose,
   PanelLeftOpen,
   type LucideIcon,
@@ -52,7 +50,6 @@ const SECTIONS: NavSection[] = [
     label: { en: 'Knowledge', fr: 'Savoir' },
     items: [
       { icon: BookOpenText, label: { en: 'Quran', fr: 'Coran' }, path: '/quran' },
-      { icon: TrendingUp, label: { en: 'Quran Progress', fr: 'Progression Coran' }, path: '/quran-progress' },
       { icon: BookOpen, label: { en: 'Library', fr: 'Bibliothèque' }, path: '/library' },
       { icon: Calendar, label: { en: 'Events', fr: 'Événements' }, path: '/events' },
       { icon: GraduationCap, label: { en: 'Classes', fr: 'Cours' }, path: '/classes' },
@@ -62,7 +59,6 @@ const SECTIONS: NavSection[] = [
     label: { en: 'Tools', fr: 'Outils' },
     items: [
       { icon: Clock, label: { en: 'Prayer Times', fr: 'Horaires de prière' }, path: '/prayer-times' },
-      { icon: ListChecks, label: { en: 'Prayer Tracker', fr: 'Suivi des prières' }, path: '/prayer-tracker' },
       { icon: CalendarDays, label: { en: 'Calendar', fr: 'Calendrier' }, path: '/calendar' },
       { icon: Calculator, label: { en: 'Zakat', fr: 'Zakât' }, path: '/zakat' },
     ],

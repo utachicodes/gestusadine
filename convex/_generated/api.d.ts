@@ -23,8 +23,11 @@ import type * as llm from "../llm.js";
 import type * as naboopay from "../naboopay.js";
 import type * as podcasts from "../podcasts.js";
 import type * as posthog from "../posthog.js";
+import type * as prayers from "../prayers.js";
 import type * as products from "../products.js";
+import type * as prompts from "../prompts.js";
 import type * as quizzes from "../quizzes.js";
+import type * as quranProgress from "../quranProgress.js";
 import type * as rag from "../rag.js";
 import type * as ragInternal from "../ragInternal.js";
 import type * as rateLimiter from "../rateLimiter.js";
@@ -34,7 +37,6 @@ import type * as stats from "../stats.js";
 import type * as subscription from "../subscription.js";
 import type * as users from "../users.js";
 import type * as videos from "../videos.js";
-import type * as workos from "../workos.js";
 
 import type {
   ApiFromModules,
@@ -58,8 +60,11 @@ declare const fullApi: ApiFromModules<{
   naboopay: typeof naboopay;
   podcasts: typeof podcasts;
   posthog: typeof posthog;
+  prayers: typeof prayers;
   products: typeof products;
+  prompts: typeof prompts;
   quizzes: typeof quizzes;
+  quranProgress: typeof quranProgress;
   rag: typeof rag;
   ragInternal: typeof ragInternal;
   rateLimiter: typeof rateLimiter;
@@ -69,7 +74,6 @@ declare const fullApi: ApiFromModules<{
   subscription: typeof subscription;
   users: typeof users;
   videos: typeof videos;
-  workos: typeof workos;
 }>;
 
 /**

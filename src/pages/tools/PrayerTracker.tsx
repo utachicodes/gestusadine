@@ -1,8 +1,10 @@
 import React from 'react';
 import { useQuery, useMutation } from 'convex/react';
+import { toast } from 'sonner';
 import { api } from '../../../convex/_generated/api';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { useTr } from '@/lib/i18n';
+import { getErrorMessage } from '@/types/errors';
 import { Sunrise, Sun, CloudSun, Sunset, Moon, Flame, CheckCircle2, CalendarCheck, ListChecks, type LucideIcon } from 'lucide-react';
 
 type PrayerKey = 'fajr' | 'dhuhr' | 'asr' | 'maghrib' | 'isha';
@@ -18,11 +20,20 @@ const PRAYERS: { key: PrayerKey; en: string; fr: string; ar: string; icon: Lucid
 const WEEKDAYS_EN = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const WEEKDAYS_FR = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
 
-const PrayerTracker: React.FC = () => {
+const PrayerTracker: React.FC<{ embedded?: boolean }> = ({ embedded = false }) => {
   const tr = useTr();
   const today = useQuery(api.prayers.getToday);
   const stats = useQuery(api.prayers.getStats);
   const toggle = useMutation(api.prayers.togglePrayer);
+
+  const handleToggle = (prayer: PrayerKey) => {
+    toggle({ prayer }).catch((e) =>
+      toast.error(getErrorMessage(e, tr({
+        en: 'Could not update your prayer log. Please try again.',
+        fr: "Impossible de mettre à jour votre suivi. Veuillez réessayer.",
+      }))),
+    );
+  };
 
   const logged = new Set(today?.logged ?? []);
   const todayCount = stats?.todayCount ?? logged.size;
@@ -40,15 +51,21 @@ const PrayerTracker: React.FC = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto w-full px-4 py-6 space-y-6">
-      <PageHeader
-        eyebrow={tr({ en: 'Worship', fr: 'Adoration' })}
-        title={tr({ en: 'Prayer Tracker', fr: 'Suivi des prières' })}
-        subtitle={tr({
-          en: 'Mark each of the five daily prayers and build a consistent streak.',
-          fr: 'Marquez chacune des cinq prières quotidiennes et construisez une série régulière.',
-        })}
-      />
+    <div className={embedded ? 'space-y-6' : 'max-w-4xl mx-auto w-full px-4 py-6 space-y-6'}>
+      {embedded ? (
+        <h2 className="text-xl font-bold text-foreground">
+          {tr({ en: "Track today's prayers", fr: 'Suivez vos prières du jour' })}
+        </h2>
+      ) : (
+        <PageHeader
+          eyebrow={tr({ en: 'Worship', fr: 'Adoration' })}
+          title={tr({ en: 'Prayer Tracker', fr: 'Suivi des prières' })}
+          subtitle={tr({
+            en: 'Mark each of the five daily prayers and build a consistent streak.',
+            fr: 'Marquez chacune des cinq prières quotidiennes et construisez une série régulière.',
+          })}
+        />
+      )}
 
       {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
@@ -79,7 +96,7 @@ const PrayerTracker: React.FC = () => {
               <button
                 key={p.key}
                 type="button"
-                onClick={() => toggle({ prayer: p.key })}
+                onClick={() => handleToggle(p.key)}
                 aria-pressed={done}
                 className={`flex flex-col items-center gap-1.5 rounded-2xl border-2 px-3 py-4 transition-all duration-200 ${
                   done

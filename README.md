@@ -1,158 +1,140 @@
 <div align="center">
   <img src="public/logofinal.png" alt="GëstuSaDine" width="120" />
   <h1>GëstuSaDine</h1>
-  <p><em>The Digital Ecosystem for Modern Islamic Living</em></p>
+  <p><em>A full-stack Islamic knowledge platform for West Africa</em></p>
 </div>
 
-GëstuSaDine is more than just a chatbot; it is a **comprehensive Service-Oriented Platform** that merges traditional Islamic scholarship with state-of-the-art AI. Designed for scalability and epistemic integrity, it offers a unified interface for commerce, education, and spiritual guidance.
+GëstuSaDine combines an AI Islamic-knowledge assistant ("the Council") with education, community, and commerce features. It is a **React single-page app backed entirely by [Convex](https://convex.dev)** — auth, database, serverless functions, file storage, and retrieval all run on one platform. The AI is powered by the **[Fanar](https://fanar.qa) API** and follows a strict scholarly methodology (see [METHODOLOGY.md](./METHODOLOGY.md)).
 
-![Maintained](https://img.shields.io/badge/Maintained-yes-34D399?style=for-the-badge)
-![License](https://img.shields.io/badge/License-MIT-3B82F6?style=for-the-badge)
-![Platform](https://img.shields.io/badge/Platform-SaaS--Ready-F59E0B?style=for-the-badge)
-
----
-
-## Why GëstuSaDine?
-
-In an era of generic AI, **GëstuSaDine** stands out by enforcing strictly grounded, scholar-verified responses through its unique "Council" architecture. Whether you're shopping for exclusive merchandise, perfecting your recitation, or seeking a fatwa, we provide a premium, authenticated experience.
+![Stack](https://img.shields.io/badge/Stack-React%20%2B%20Convex-34D399?style=for-the-badge)
+![AI](https://img.shields.io/badge/AI-Fanar-3B82F6?style=for-the-badge)
+![License](https://img.shields.io/badge/License-MIT-F59E0B?style=for-the-badge)
 
 ---
 
-## System Architecture
+## Architecture
 
-The platform follows a **Microservices-inspired Monolith** pattern using an API Gateway to bridge the React frontend with specialized backend logic.
+A React SPA talks directly to Convex. There is **no separate backend server** — every query, mutation, action, webhook, and file upload is a Convex function. The AI assistant and retrieval run as Convex actions that call the Fanar API; all secrets stay server-side.
 
 ```mermaid
 graph TD
-    User["User Interface (Vite/React)"] --> Gateway["API Gateway (Express)"]
-    
-    subgraph " Intelligence Layer"
-        Gateway --> Council["LLM Council (Consensus Engine)"]
-        Council --> Agents["Agent Array (Fiqh, Aqeedah, Modern)"]
-        Council --> RAG["RAG Engine"]
+    UI["React 18 + Vite SPA"] -->|"useQuery / useMutation / useAction (WebSocket)"| Convex
+
+    subgraph Convex["Convex (single backend)"]
+        Auth["Convex Auth — Password provider"]
+        DB["Database + indexes"]
+        Fns["Queries / Mutations / Actions"]
+        Files["File storage"]
+        HTTP["HTTP routes (webhooks)"]
     end
-    
-    subgraph " Lifestyle Layer"
-        Gateway --> Shop["Islamic Shop (NabooPay Integration)"]
-        Gateway --> Tarteel["Tarteel AI (Web Speech Analysis)"]
-        Gateway --> Library["Digital Library (CMS)"]
-    end
-    
-    subgraph " Infrastructure"
-        Agents --> OpenRouter["OpenRouter (Claude/GPT-4o)"]
-        RAG --> Firestore["Firebase Firestore"]
-        Shop --> Firestore["Firebase Firestore"]
-    end
+
+    Fns -->|"chat action"| Fanar["Fanar API (LLM)"]
+    Fns -->|"RAG retrieval"| DB
+    NabooPay["NabooPay (Wave / Orange Money)"] -->|"payment webhook"| HTTP
 ```
 
----
-
-## Core Features
-
-### The LLM Council (Circle of Knowledge)
-Our flagship AI implementation using multi-model consensus:
-- **Distributed Reasoning**: Every question is reviewed by independent agents (Fiqh, Aqeedah, Context).
-- **Epistemic Integrity**: A dedicated "Humility Agent" prevents hallucinations and handles ethical boundaries.
-- **RAG-Powered**: Semantic search across uploaded Islamic PDF/TXT documents.
-
-### The Islamic Shop
-A turnkey commerce solution:
-- **Direct Payments**: Integrated with **NabooPay**, supporting local methods like Wave and Orange Money.
-- **Secure Handling**: Real-time webhook processing for order verification.
-- **Exclusive Drops**: Support for categorized digital and physical goods.
-
-### Tarteel AI & Library
-- **Speech Recognition**: Uses the browser's `webkitSpeechRecognition` to provide instant feedback on Quranic recitation.
-- **Digital Archive**: A robust repository of searchable books, articles, and media content.
+**Request flow for the chat:** the client sends only the conversation + language/madhab → `convex/llm.ts` builds the system prompt server-side ([convex/prompts.ts](convex/prompts.ts)), runs RAG retrieval over uploaded Islamic sources, enforces the per-tier quota, then calls Fanar and returns the answer.
 
 ---
 
-## Tech Stack
+## Features
 
-| Layer | Technologies |
+- **The Council** — an Islamic Q&A assistant with a server-authoritative methodology: hierarchy of evidence (Quran → Sahih/Hasan Hadith → scholarly consensus), four-madhhab respect, empathy-first tone, citation verification, and a strict "I don't know" rule. Hardened against prompt injection, off-topic, and identity-leak attempts.
+- **Quran** — full surah reader with multiple translations, bookmarks, and reading-progress tracking (page, surah completion, streak).
+- **Prayer Times & Tracker** — accurate daily times by location plus a five-prayer daily tracker with streaks and history.
+- **Library, Classes, Podcasts, Events** — content modules managed from the admin dashboard.
+- **Community** — circles, membership, and posts.
+- **Gamification** — XP, ranks (Talib → Murid → Bahith → Alim → Faqih), daily streaks, and daily quizzes.
+- **Tools** — Hijri calendar, Zakat calculator.
+- **Shop & subscriptions** — NabooPay checkout (Wave / Orange Money, XOF) with webhook-driven tier upgrades.
+
+---
+
+## Tech stack
+
+| Layer | Technology |
 | :--- | :--- |
-| **Frontend** | React 18, Vite, Tailwind CSS, Framer Motion, Lucide Icons |
-| **Backend** | Node.js, TypeScript, Express, TSX, Zod |
-| **Database** | Firebase (Firestore, Auth, Storage) |
-| **AI/ML** | OpenRouter (Claude 3.5, GPT-4o), Transformers.js |
-| **DevOps** | Docker, multi-stage builds |
-| **Subscriptions** | Tier-based system (Free, Core, Pro) |
+| Frontend | React 18, TypeScript, Vite, Tailwind CSS, shadcn/ui, lucide-react |
+| Backend | **Convex** — auth, database, serverless functions, file storage, HTTP routes |
+| Auth | Convex Auth (`@convex-dev/auth`), Password provider; admins via `ADMIN_EMAILS` |
+| AI | Fanar API (OpenAI-compatible chat completions) + keyword/synonym RAG over uploaded sources |
+| Payments | NabooPay (Wave, Orange Money) — currency XOF |
+| i18n | French / English / Arabic (`src/contexts/LanguageContext.tsx`) |
+| Hosting | Frontend on Vercel; backend on Convex |
 
 ---
 
-## Subscription Tiers
+## Subscription tiers
 
-The platform offers three subscription tiers with different feature access:
+Enforced server-side in [convex/subscription.ts](convex/subscription.ts). Admins always act as the top tier.
 
-### Free — Access Tier
-- **Price**: 0 XOF
-- **Chat Credits**: 50/month
-- **Purpose**: Discovery and first exposure
-- **Features**: Basic guidance only
+| Tier | Price (XOF/mo) | Monthly Council questions |
+| :--- | :--- | :--- |
+| Free | 0 | 15 |
+| Student | 5,000 | 500 |
+| Pro | Contact | Unlimited |
 
-### Core — Primary Tier
-- **Price**: 5,000 XOF/month (~$8.50 USD)
-- **Chat Credits**: 500/month
-- **Purpose**: Main experience for most users
-- **Features**:
-  - Specialized modes (Fiqh, Aqeedah)
-  - Personalized themes  
-  - Memory & personalization
-  - Templates & planners
-  - Priority model responses
-
-### Pro / Builder — Advanced Tier
-- **Price**: 10,000 XOF/month (~$17 USD)
-- **Chat Credits**: Unlimited
-- **Purpose**: For serious, long-term users
-- **Features**: All Core features, plus:
-  - Advanced planning tools
-  - Early access to new features
-  - Unlimited chat usage
-
-> **Note**: Payment integration (NabooPay) is in development. Current implementation allows immediate subscription activation without payment processing.
+Simple greetings are not counted against the quota.
 
 ---
 
-## Getting Started
+## Getting started
 
-### 1. Requirements
+### Requirements
 - Node.js 20+
-- Firebase Project
-- API Keys (OpenRouter, NabooPay)
+- A Convex deployment (`npx convex dev` provisions one)
+- A Fanar API key, and NabooPay keys for payments
 
-### 2. Local Setup
+### Local development
 ```bash
-# Clone the repository
-git clone https://github.com/UtachiCodes/xamsadine-ai-website-v2.git
-
-# Install dependencies
 npm install
 
-# Setup Environment (fill in .env)
-cp .env.example .env
+# Run frontend (Vite, port 3000) + Convex together
+npm run dev:full
 
-# Run Unified Platform
-npm run dev:api  # Starts Backend (port 4000)
-npm run dev      # Starts Frontend (port 8080)
+# …or individually
+npm run dev:frontend   # Vite only
+npm run dev:convex     # npx convex dev (watches convex/)
 ```
+
+### Other scripts
+```bash
+npm run build          # Production build (Vite)
+npm run lint           # ESLint
+npm test               # Vitest
+```
+
+---
+
+## Environment variables
+
+Frontend variables live in `.env.local`; server variables are set on the Convex deployment with `npx convex env set <NAME> <VALUE>`.
+
+| Variable | Where | Purpose |
+| :--- | :--- | :--- |
+| `VITE_CONVEX_URL` | `.env.local` / Vercel | Convex deployment URL |
+| `AUTH_SECRET` | Convex | Convex Auth secret |
+| `JWT_PRIVATE_KEY` | Convex | RSA private key for JWT signing |
+| `JWKS` | Convex | JWKS key set (required by Convex Auth) |
+| `ADMIN_EMAILS` | Convex | Comma-separated admin emails |
+| `FANAR_API_KEY` | Convex | Fanar API key for the AI chat |
+| `NABOOPAY_API_KEY` | Convex | NabooPay payments |
+| `NABOOPAY_WEBHOOK_SECRET` | Convex | NabooPay webhook signature secret |
 
 ---
 
 ## Deployment
 
-The application is optimized for containerized environments.
-
-**Deploy to Render (One-Click Ready)**:
-1. Connect GitHub.
-2. Select `Dockerfile`.
-3. Add environment variables (see `DEPLOYMENT.md`).
+- **Backend (Convex):** `npx convex deploy` pushes `convex/` (schema, functions, HTTP routes) to the production deployment.
+- **Frontend (Vercel):** `npm run build` and deploy `dist/`. Set `VITE_CONVEX_URL` in the Vercel project.
 
 ---
 
-## Support & License
+## Documentation
 
-- **License**: MIT
-- **Contact**: [contact@example.com](mailto:contact@example.com)
+- [METHODOLOGY.md](./METHODOLOGY.md) — how the AI answers (the canonical methodology the Council follows).
+- [CLAUDE.md](./CLAUDE.md) — architecture notes and conventions for contributors.
 
-*Built for the Global Islamic Community.*
+## License
+
+MIT.
