@@ -1,8 +1,10 @@
 import React from 'react';
 import { useQuery, useMutation } from 'convex/react';
+import { toast } from 'sonner';
 import { api } from '../../../convex/_generated/api';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { useTr } from '@/lib/i18n';
+import { getErrorMessage } from '@/types/errors';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { BookOpenText, Flame, BookMarked, Layers, Minus, Plus } from 'lucide-react';
@@ -10,11 +12,19 @@ import { BookOpenText, Flame, BookMarked, Layers, Minus, Plus } from 'lucide-rea
 const TOTAL_PAGES = 604;
 const TOTAL_JUZ = 30;
 
-const QuranProgress: React.FC = () => {
+const QuranProgress: React.FC<{ embedded?: boolean }> = ({ embedded = false }) => {
   const tr = useTr();
   const progress = useQuery(api.quranProgress.get);
   const setPage = useMutation(api.quranProgress.setPage);
-  const toggleSurah = useMutation(api.quranProgress.toggleSurah);
+  const toggleSurahMut = useMutation(api.quranProgress.toggleSurah);
+
+  const onError = (e: unknown) =>
+    toast.error(getErrorMessage(e, tr({
+      en: 'Could not save your progress. Please try again.',
+      fr: "Impossible d'enregistrer votre progression. Veuillez réessayer.",
+    })));
+
+  const toggleSurah = (args: { surah: number }) => toggleSurahMut(args).catch(onError);
 
   const currentPage = progress?.currentPage ?? 0;
   const pagePercent = progress?.pagePercent ?? 0;
@@ -29,7 +39,7 @@ const QuranProgress: React.FC = () => {
   const commitPage = (value: number) => {
     const clamped = Math.max(0, Math.min(TOTAL_PAGES, Math.floor(value || 0)));
     setPageInput(String(clamped));
-    setPage({ page: clamped });
+    setPage({ page: clamped }).catch(onError);
   };
 
   const statCards = [
@@ -42,15 +52,21 @@ const QuranProgress: React.FC = () => {
   const milestones = [25, 50, 75, 100];
 
   return (
-    <div className="max-w-4xl mx-auto w-full px-4 py-6 space-y-6">
-      <PageHeader
-        eyebrow={tr({ en: 'Knowledge', fr: 'Savoir' })}
-        title={tr({ en: 'Quran Progress', fr: 'Progression du Coran' })}
-        subtitle={tr({
-          en: 'Track your reading page by page and surah by surah, and keep your streak alive.',
-          fr: 'Suivez votre lecture page par page et sourate par sourate, et gardez votre série active.',
-        })}
-      />
+    <div className={embedded ? 'space-y-6' : 'max-w-4xl mx-auto w-full px-4 py-6 space-y-6'}>
+      {embedded ? (
+        <h2 className="text-xl font-bold text-foreground">
+          {tr({ en: 'Your reading progress', fr: 'Votre progression de lecture' })}
+        </h2>
+      ) : (
+        <PageHeader
+          eyebrow={tr({ en: 'Knowledge', fr: 'Savoir' })}
+          title={tr({ en: 'Quran Progress', fr: 'Progression du Coran' })}
+          subtitle={tr({
+            en: 'Track your reading page by page and surah by surah, and keep your streak alive.',
+            fr: 'Suivez votre lecture page par page et sourate par sourate, et gardez votre série active.',
+          })}
+        />
+      )}
 
       {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">

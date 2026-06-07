@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { SURAHS } from '@/data/surahs';
+import QuranProgress from './QuranProgress';
 
 /** Translation editions offered across the Quran reader (alquran.cloud, no key). */
 export const TRANSLATION_EDITIONS: {
@@ -185,6 +186,9 @@ export default function Quran() {
             </div>
           </div>
         </div>
+
+        {/* Your reading progress */}
+        <QuranProgress embedded />
 
         {/* Result count */}
         <p className="text-sm text-muted-foreground">

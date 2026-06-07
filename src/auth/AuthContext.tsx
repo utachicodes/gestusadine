@@ -155,9 +155,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (password !== HARDCODED_ADMIN_PASSWORD) {
         throw new Error("Incorrect password for admin account.");
       }
+      // Establish a REAL Convex Auth session so server functions (chat, prayer
+      // tracker, Quran progress, gated content) actually work — the client-side
+      // admin flag alone carries no session. Sign in if the account exists,
+      // otherwise create it. (For full server-side admin powers, this email
+      // must also be in the ADMIN_EMAILS env var.)
+      try {
+        await signIn("password", {
+          email: HARDCODED_ADMIN_EMAIL,
+          password: HARDCODED_ADMIN_PASSWORD,
+          flow: "signIn",
+        });
+      } catch {
+        try {
+          await signIn("password", {
+            email: HARDCODED_ADMIN_EMAIL,
+            password: HARDCODED_ADMIN_PASSWORD,
+            name: "Admin",
+            flow: "signUp",
+          });
+        } catch {
+          // Couldn't establish a server session — fall back to client-only admin UI.
+        }
+      }
       setHardcodedAdmin(true);
-      // Clear any stored Convex Auth session to prevent WebSocket auth errors
-      try { await convexSignOut(); } catch { /* ignore */ }
       return;
     }
 

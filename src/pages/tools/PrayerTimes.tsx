@@ -1,5 +1,6 @@
 ﻿import * as React from "react";
 import { useTr, type Loc } from "@/lib/i18n";
+import PrayerTracker from "./PrayerTracker";
 import {
   Clock,
   Sunrise,
@@ -662,6 +663,11 @@ const PrayerTimes: React.FC = () => {
             </p>
           </>
         )}
+
+        {/* Daily prayer tracker — log today's prayers and keep your streak */}
+        <div className="pt-2 border-t border-border/60">
+          <PrayerTracker embedded />
+        </div>
       </section>
     </div>
   );

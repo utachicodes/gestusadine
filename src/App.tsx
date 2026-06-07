@@ -52,10 +52,8 @@ import Pricing from "./pages/core/Pricing";
 import Quran from "./pages/quran/Quran";
 import SurahView from "./pages/quran/SurahView";
 import PrayerTimes from "./pages/tools/PrayerTimes";
-import PrayerTracker from "./pages/tools/PrayerTracker";
 import HijriCalendar from "./pages/tools/HijriCalendar";
 import ZakatCalculator from "./pages/tools/ZakatCalculator";
-import QuranProgress from "./pages/quran/QuranProgress";
 
 import { ThemeProvider } from "@/contexts/ThemeContext";
 
@@ -197,26 +195,6 @@ const App = () => {
                             <ProtectedRoute>
                               <DashboardLayout>
                                 <PrayerTimes />
-                              </DashboardLayout>
-                            </ProtectedRoute>
-                          }
-                        />
-                        <Route
-                          path="/prayer-tracker"
-                          element={
-                            <ProtectedRoute>
-                              <DashboardLayout>
-                                <PrayerTracker />
-                              </DashboardLayout>
-                            </ProtectedRoute>
-                          }
-                        />
-                        <Route
-                          path="/quran-progress"
-                          element={
-                            <ProtectedRoute>
-                              <DashboardLayout>
-                                <QuranProgress />
                               </DashboardLayout>
                             </ProtectedRoute>
                           }
