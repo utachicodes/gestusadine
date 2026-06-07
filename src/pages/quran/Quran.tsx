@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, BookOpen, Bookmark } from 'lucide-react';
+import { useQuery } from 'convex/react';
+import { Search, BookOpen, Bookmark, CheckCircle2, Flame } from 'lucide-react';
 import { useTr, type Loc } from '@/lib/i18n';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Input } from '@/components/ui/input';
@@ -12,7 +13,10 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { SURAHS } from '@/data/surahs';
-import QuranProgress from './QuranProgress';
+import { api } from '../../../convex/_generated/api';
+
+/** Total ayat in the Quran — used to weight reading progress by surah length. */
+const TOTAL_VERSES = 6236;
 
 /** Translation editions offered across the Quran reader (alquran.cloud, no key). */
 export const TRANSLATION_EDITIONS: {
@@ -79,6 +83,19 @@ export default function Quran() {
   const [query, setQuery] = useState('');
   const [translation, setTranslation] = useState<string>(() => readTranslation(language));
   const [saved, setSaved] = useState<number[]>(() => readSaved());
+
+  // Reading progress is tracked automatically (a surah is marked read when you
+  // open it in the reader — see SurahView). This view is read-only.
+  const progress = useQuery(api.quranProgress.get);
+  const completedSurahs = useMemo(
+    () => new Set<number>(progress?.completedSurahs ?? []),
+    [progress],
+  );
+  const versesRead = useMemo(
+    () => SURAHS.filter((s) => completedSurahs.has(s.number)).reduce((sum, s) => sum + s.verses, 0),
+    [completedSurahs],
+  );
+  const readPercent = Math.round((versesRead / TOTAL_VERSES) * 100);
 
   // Refresh the saved count if the user returns from the reader.
   useEffect(() => {
@@ -187,8 +204,40 @@ export default function Quran() {
           </div>
         </div>
 
-        {/* Your reading progress */}
-        <QuranProgress embedded />
+        {/* Reading progress — auto-tracked as you read surahs */}
+        <div className="islamic-card p-4 md:p-5">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-sm font-semibold text-foreground">
+              {tr({ en: 'Your reading progress', fr: 'Votre progression de lecture' })}
+            </h2>
+            <span className="text-[11px] text-muted-foreground">
+              {tr({ en: 'Auto-tracked as you read', fr: 'Suivi automatique pendant la lecture' })}
+            </span>
+          </div>
+          <div className="grid grid-cols-3 gap-3 mb-4">
+            <div>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground mb-1">{tr({ en: 'Completion', fr: 'Achèvement' })}</p>
+              <p className="text-2xl font-bold text-foreground leading-none">{readPercent}%</p>
+              <p className="text-[11px] text-muted-foreground mt-1">{tr({ en: 'of the Quran', fr: 'du Coran' })}</p>
+            </div>
+            <div>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground mb-1">{tr({ en: 'Surahs read', fr: 'Sourates lues' })}</p>
+              <p className="text-2xl font-bold text-foreground leading-none">
+                {progress?.completedSurahCount ?? 0}<span className="text-base text-muted-foreground">/114</span>
+              </p>
+            </div>
+            <div>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground mb-1">{tr({ en: 'Streak', fr: 'Série' })}</p>
+              <p className="text-2xl font-bold text-foreground leading-none inline-flex items-center gap-1">
+                <Flame className="w-5 h-5 text-primary" />{progress?.streak ?? 0}
+              </p>
+              <p className="text-[11px] text-muted-foreground mt-1">{tr({ en: 'days', fr: 'jours' })}</p>
+            </div>
+          </div>
+          <div className="h-2.5 rounded-full bg-muted/50 overflow-hidden">
+            <div className="h-full bg-primary rounded-full transition-all duration-500" style={{ width: `${readPercent}%` }} />
+          </div>
+        </div>
 
         {/* Result count */}
         <p className="text-sm text-muted-foreground">
@@ -210,12 +259,15 @@ export default function Quran() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {filtered.map((surah) => {
               const isSaved = saved.includes(surah.number);
+              const isRead = completedSurahs.has(surah.number);
               return (
                 <button
                   key={surah.number}
                   type="button"
                   onClick={() => navigate(`/quran/${surah.number}`)}
-                  className="islamic-card p-5 text-left transition-all duration-200 hover:shadow-md hover:border-primary/30 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 group"
+                  className={`islamic-card p-5 text-left transition-all duration-200 hover:shadow-md hover:border-primary/30 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 group ${
+                    isRead ? 'border-primary/30 bg-primary/[0.03]' : ''
+                  }`}
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-3 min-w-0">
@@ -230,14 +282,23 @@ export default function Quran() {
                       </div>
                     </div>
                     <div className="flex flex-col items-end gap-1 shrink-0">
-                      {isSaved && <Bookmark className="h-4 w-4 text-primary fill-primary" />}
+                      <div className="flex items-center gap-1">
+                        {isRead && <CheckCircle2 className="h-4 w-4 text-emerald-600" />}
+                        {isSaved && <Bookmark className="h-4 w-4 text-primary fill-primary" />}
+                      </div>
                       <span className="font-arabic text-xl text-foreground" dir="rtl">
                         {surah.arabicName}
                       </span>
                     </div>
                   </div>
-                  <div className="mt-4 pt-3 border-t border-border text-xs text-muted-foreground">
-                    {surah.verses} {tr({ en: 'verses', fr: 'versets' })} · {revelationLabel(surah.revelation)}
+                  <div className="mt-4 pt-3 border-t border-border text-xs text-muted-foreground flex items-center justify-between">
+                    <span>{surah.verses} {tr({ en: 'verses', fr: 'versets' })} · {revelationLabel(surah.revelation)}</span>
+                    {isRead && (
+                      <span className="inline-flex items-center gap-1 text-emerald-600 font-medium">
+                        <CheckCircle2 className="h-3.5 w-3.5" />
+                        {tr({ en: 'Read', fr: 'Lu' })}
+                      </span>
+                    )}
                   </div>
                 </button>
               );

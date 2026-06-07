@@ -1,8 +1,7 @@
 import { mutation, query } from "./_generated/server";
-import { v, ConvexError } from "convex/values";
+import { v } from "convex/values";
 import { getCurrentUser, getCurrentUserOrThrow } from "./authz";
 
-const TOTAL_PAGES = 604; // standard Madani mushaf
 const TOTAL_SURAHS = 114;
 const DAY_MS = 86_400_000;
 
@@ -31,72 +30,41 @@ export const get = query({
       .query("quranProgress")
       .withIndex("userId", (q) => q.eq("userId", user._id))
       .unique();
-
-    const currentPage = rec?.currentPage ?? 0;
     const completedSurahs = rec?.completedSurahs ?? [];
     return {
-      currentPage,
-      totalPages: TOTAL_PAGES,
-      pagePercent: Math.round((currentPage / TOTAL_PAGES) * 100),
       completedSurahs,
       completedSurahCount: completedSurahs.length,
       totalSurahs: TOTAL_SURAHS,
-      surahPercent: Math.round((completedSurahs.length / TOTAL_SURAHS) * 100),
       streak: rec?.streak ?? 0,
       lastReadDate: rec?.lastReadDate,
     };
   },
 });
 
-// Set the reading bookmark (furthest page reached).
-export const setPage = mutation({
-  args: { page: v.number() },
-  handler: async (ctx, args) => {
-    const user = await getCurrentUserOrThrow(ctx);
-    const page = Math.max(0, Math.min(TOTAL_PAGES, Math.floor(args.page)));
-    const rec = await ctx.db
-      .query("quranProgress")
-      .withIndex("userId", (q) => q.eq("userId", user._id))
-      .unique();
-    const { streak, lastReadDate } = bumpStreak(rec);
-    if (rec) {
-      await ctx.db.patch(rec._id, { currentPage: page, streak, lastReadDate, updatedAt: Date.now() });
-    } else {
-      await ctx.db.insert("quranProgress", {
-        userId: user._id,
-        currentPage: page,
-        completedSurahs: [],
-        streak,
-        lastReadDate,
-        updatedAt: Date.now(),
-      });
-    }
-  },
-});
-
-// Mark/unmark a surah as completed.
-export const toggleSurah = mutation({
+// Auto-called when a surah is opened in the reader — marks it as read
+// (idempotent) and advances the reading streak. No manual marking required.
+export const recordSurahRead = mutation({
   args: { surah: v.number() },
   handler: async (ctx, args) => {
     const user = await getCurrentUserOrThrow(ctx);
     const surah = Math.floor(args.surah);
-    if (surah < 1 || surah > TOTAL_SURAHS) throw new ConvexError("Invalid surah number.");
+    if (surah < 1 || surah > TOTAL_SURAHS) return;
+
     const rec = await ctx.db
       .query("quranProgress")
       .withIndex("userId", (q) => q.eq("userId", user._id))
       .unique();
     const { streak, lastReadDate } = bumpStreak(rec);
     const current = rec?.completedSurahs ?? [];
-    const next = current.includes(surah)
-      ? current.filter((s) => s !== surah)
-      : [...current, surah];
+    const completedSurahs = current.includes(surah) ? current : [...current, surah];
+
     if (rec) {
-      await ctx.db.patch(rec._id, { completedSurahs: next, streak, lastReadDate, updatedAt: Date.now() });
+      await ctx.db.patch(rec._id, { completedSurahs, streak, lastReadDate, updatedAt: Date.now() });
     } else {
       await ctx.db.insert("quranProgress", {
         userId: user._id,
         currentPage: 0,
-        completedSurahs: next,
+        completedSurahs,
         streak,
         lastReadDate,
         updatedAt: Date.now(),

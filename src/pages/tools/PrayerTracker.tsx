@@ -67,23 +67,7 @@ const PrayerTracker: React.FC<{ embedded?: boolean }> = ({ embedded = false }) =
         />
       )}
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        {statCards.map(({ icon: Icon, label, value, sub }) => (
-          <div key={label} className="islamic-card p-3 sm:p-4 flex items-center justify-between gap-2">
-            <div className="min-w-0">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground mb-1 truncate">{label}</p>
-              <p className="text-xl sm:text-2xl font-bold text-foreground leading-none">{value}</p>
-              <p className="text-xs text-muted-foreground mt-1 truncate">{sub}</p>
-            </div>
-            <div className="flex-shrink-0 p-2 sm:p-2.5 rounded-xl bg-accent/50 text-primary">
-              <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Today's prayers */}
+      {/* Today's prayers — first, so the actionable toggles are above the fold */}
       <div className="islamic-card p-4 sm:p-5">
         <h2 className="text-sm font-semibold text-foreground mb-4">
           {tr({ en: "Today's prayers", fr: "Prières d'aujourd'hui" })}
@@ -118,6 +102,22 @@ const PrayerTracker: React.FC<{ embedded?: boolean }> = ({ embedded = false }) =
             fr: 'Touchez une prière pour la valider. Touchez à nouveau pour annuler.',
           })}
         </p>
+      </div>
+
+      {/* Stats */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        {statCards.map(({ icon: Icon, label, value, sub }) => (
+          <div key={label} className="islamic-card p-3 sm:p-4 flex items-center justify-between gap-2">
+            <div className="min-w-0">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground mb-1 truncate">{label}</p>
+              <p className="text-xl sm:text-2xl font-bold text-foreground leading-none">{value}</p>
+              <p className="text-xs text-muted-foreground mt-1 truncate">{sub}</p>
+            </div>
+            <div className="flex-shrink-0 p-2 sm:p-2.5 rounded-xl bg-accent/50 text-primary">
+              <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
+            </div>
+          </div>
+        ))}
       </div>
 
       {/* 7-day history */}

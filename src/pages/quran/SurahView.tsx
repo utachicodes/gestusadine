@@ -17,6 +17,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { useMutation } from 'convex/react';
+import { api } from '../../../convex/_generated/api';
 import { SURAHS } from '@/data/surahs';
 import { TRANSLATION_EDITIONS } from './Quran';
 
@@ -185,6 +187,18 @@ export default function SurahView() {
 
     return () => controller.abort();
   }, [surahNumber, isValid, reloadKey, translation]);
+
+  // Reading a surah automatically records it as read and advances the Quran
+  // reading streak — once per surah, after its verses have loaded. No manual
+  // marking needed.
+  const recordSurahRead = useMutation(api.quranProgress.recordSurahRead);
+  const recordedRef = useRef<Set<number>>(new Set());
+  useEffect(() => {
+    if (isValid && ayahs.length > 0 && !recordedRef.current.has(surahNumber)) {
+      recordedRef.current.add(surahNumber);
+      recordSurahRead({ surah: surahNumber }).catch(() => {});
+    }
+  }, [isValid, ayahs.length, surahNumber, recordSurahRead]);
 
   // Invalid surah number  friendly not-found.
   if (!isValid) {

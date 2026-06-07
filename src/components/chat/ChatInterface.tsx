@@ -328,7 +328,11 @@ export const ChatInterface = () => {
       {/* Input area */}
       <div className="border-t border-border/60 bg-background">
         <div className="max-w-3xl mx-auto w-full px-4 py-4">
-          {usage.chat_credits_limit !== -1 && !usage.fair_use && (
+          {usage.chat_credits_limit === -1 ? (
+            <div className="mb-3 flex items-center justify-center rounded-xl border border-border bg-muted/50 px-4 py-2 text-xs font-medium text-muted-foreground">
+              {tr({ en: 'Unlimited questions', fr: 'Questions illimitées' })}
+            </div>
+          ) : (
             <div className={`mb-3 flex items-center justify-between rounded-xl border px-4 py-2 text-xs font-medium ${
               canAskCouncil ? 'border-border bg-muted/50 text-muted-foreground' : 'border-amber-200 bg-amber-50 text-amber-800'
             }`}>

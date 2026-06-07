@@ -392,6 +392,9 @@ const PrayerTimes: React.FC = () => {
           </p>
         </header>
 
+        {/* Daily prayer tracker — placed first so it's visible without scrolling */}
+        <PrayerTracker embedded />
+
         {/* Controls card */}
         <div className="islamic-card p-5">
           <div className="flex flex-wrap items-start gap-4 sm:gap-6">
@@ -663,11 +666,6 @@ const PrayerTimes: React.FC = () => {
             </p>
           </>
         )}
-
-        {/* Daily prayer tracker — log today's prayers and keep your streak */}
-        <div className="pt-2 border-t border-border/60">
-          <PrayerTracker embedded />
-        </div>
       </section>
     </div>
   );
