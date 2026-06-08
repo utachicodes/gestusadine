@@ -5,10 +5,6 @@ import { api } from "../../convex/_generated/api";
 import type { Doc } from "../../convex/_generated/dataModel";
 import { UserRole } from "./rbac";
 
-const HARDCODED_ADMIN_EMAIL = "admin@gestusadine.org";
-const HARDCODED_ADMIN_PASSWORD = "gestus@dine";
-const LS_KEY = "gestu_hardcoded_admin";
-
 export type SubscriptionTier = 'free' | 'student' | 'pro';
 export type Gender = 'male' | 'female';
 
@@ -72,14 +68,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const updateTier = useMutation(api.users.updateSubscriptionTier);
   const convex = useConvex();
 
-  const [hardcodedAdmin, setHardcodedAdmin] = React.useState<boolean>(() => {
-    try {
-      return localStorage.getItem(LS_KEY) === "true";
-    } catch {
-      return false;
-    }
-  });
-
   // Clear any stale Convex Auth tokens from localStorage on mount
   React.useEffect(() => {
     try {
@@ -94,56 +82,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch { /* noop */ }
   }, []);
 
-  React.useEffect(() => {
-    try {
-      if (hardcodedAdmin) {
-        localStorage.setItem(LS_KEY, "true");
-      } else {
-        localStorage.removeItem(LS_KEY);
-      }
-    } catch { /* noop */ }
-  }, [hardcodedAdmin]);
-
   // Detect stale JWT tokens (e.g., after key rotation) and auto-sign-out
-  // to break the infinite WebSocket reconnect loop
-  // Skip for hardcoded admin who has no real Convex Auth session
+  // to break the infinite WebSocket reconnect loop.
   const wasAuthenticatedRef = React.useRef(false);
 
   React.useEffect(() => {
-    if (isLoading || hardcodedAdmin) return;
+    if (isLoading) return;
 
     if (wasAuthenticatedRef.current && !isAuthenticated) {
       convexSignOut();
     }
 
     wasAuthenticatedRef.current = isAuthenticated;
-  }, [isLoading, isAuthenticated, convexSignOut, hardcodedAdmin]);
+  }, [isLoading, isAuthenticated, convexSignOut]);
 
-  const profile = React.useMemo(() => {
-    if (hardcodedAdmin) {
-      return {
-        id: "hardcoded-admin",
-        email: HARDCODED_ADMIN_EMAIL,
-        role: "admin" as UserRole,
-        subscription_tier: "pro" as SubscriptionTier,
-        full_name: "Admin",
-        created_at: Date.now(),
-        gender: undefined,
-        onboarding_completed: true,
-      };
-    }
-    return toUserProfile(currentUser ?? null);
-  }, [currentUser, hardcodedAdmin]);
+  const profile = React.useMemo(() => toUserProfile(currentUser ?? null), [currentUser]);
 
   const user = React.useMemo((): User | null => {
-    if (hardcodedAdmin) {
-      return {
-        uid: "hardcoded-admin",
-        email: HARDCODED_ADMIN_EMAIL,
-        displayName: "Admin",
-        photoURL: null,
-      };
-    }
     if (!currentUser) return null;
     return {
       uid: currentUser._id,
@@ -151,38 +106,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       displayName: currentUser.fullName ?? currentUser.name ?? null,
       photoURL: currentUser.image ?? null,
     };
-  }, [currentUser, hardcodedAdmin]);
+  }, [currentUser]);
 
-  const isAdmin = React.useMemo(() => profile?.role === 'admin', [profile]);
+  const isAdmin = React.useMemo(() => profile?.role === 'admin' || profile?.role === 'system', [profile]);
 
   const signInWithPassword = React.useCallback(async ({ email, password }: { email: string; password: string }) => {
     const trimmedEmail = email.toLowerCase().trim();
-
-    if (trimmedEmail === HARDCODED_ADMIN_EMAIL) {
-      if (password !== HARDCODED_ADMIN_PASSWORD) {
-        throw new Error("Incorrect password for admin account.");
-      }
-      try {
-        await signIn("password", {
-          email: HARDCODED_ADMIN_EMAIL,
-          password: HARDCODED_ADMIN_PASSWORD,
-          flow: "signIn",
-        });
-      } catch {
-        try {
-          await signIn("password", {
-            email: HARDCODED_ADMIN_EMAIL,
-            password: HARDCODED_ADMIN_PASSWORD,
-            name: "Admin",
-            flow: "signUp",
-          });
-        } catch {
-          // Couldn't establish a server session — fall back to client-only admin UI.
-        }
-      }
-      setHardcodedAdmin(true);
-      return;
-    }
 
     // Pre-check if email exists to avoid triggering a server exception from the auth provider
     try {
@@ -200,7 +129,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch {
       throw new Error("Invalid email or password.");
     }
-  }, [signIn, convexSignOut, convex]);
+  }, [signIn, convex]);
 
   const signUp = React.useCallback(async ({
     email,
@@ -251,7 +180,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [signIn, convexSignOut, convex]);
 
   const signOutFn = React.useCallback(async () => {
-    setHardcodedAdmin(false);
     await convexSignOut();
   }, [convexSignOut]);
 
@@ -267,7 +195,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     updateTier({ tier });
   }, [updateTier]);
 
-  const loading = hardcodedAdmin ? false : (isLoading || (isAuthenticated && currentUser === undefined));
+  const loading = isLoading || (isAuthenticated && currentUser === undefined);
 
   const value = React.useMemo(
     () => ({

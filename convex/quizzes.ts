@@ -37,7 +37,7 @@ export const create = mutation({
     category: v.string(),
   },
   handler: async (ctx, args) => {
-    const user = await getCurrentUserOrThrow(ctx);
+    const user = await requireStaff(ctx);
     return ctx.db.insert("dailyQuizzes", {
       ...args,
       createdBy: user._id,

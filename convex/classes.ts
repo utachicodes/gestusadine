@@ -38,7 +38,7 @@ export const create = mutation({
     price: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
-    const user = await getCurrentUserOrThrow(ctx);
+    const user = await requireStaff(ctx);
     return ctx.db.insert("classes", {
       ...args,
       enrolled: 0,

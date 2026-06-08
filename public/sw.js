@@ -1,4 +1,12 @@
-const CACHE = 'gsd-v1';
+const CACHE = 'gsd-v2';
+
+// Only cache immutable static assets (hashed filenames from the Vite build).
+const STATIC_EXTENSIONS = ['.js', '.css', '.woff2', '.woff', '.ttf', '.png', '.svg', '.ico'];
+
+function isStaticAsset(url) {
+  const path = new URL(url).pathname;
+  return STATIC_EXTENSIONS.some((ext) => path.endsWith(ext));
+}
 
 self.addEventListener('install', () => self.skipWaiting());
 
@@ -13,21 +21,26 @@ self.addEventListener('activate', (e) => {
 self.addEventListener('fetch', (e) => {
   const { request } = e;
   if (request.method !== 'GET') return;
+
   const url = new URL(request.url);
-  // Only cache same-origin assets — never touch Convex or other external APIs.
+
+  // Never intercept requests to Convex or any external origin.
   if (url.origin !== location.origin) return;
 
+  // Only cache static assets — never cache HTML, API responses, or
+  // anything that could contain authenticated user data.
+  if (!isStaticAsset(url.href)) return;
+
   e.respondWith(
-    fetch(request)
-      .then((res) => {
+    caches.match(request).then((cached) => {
+      if (cached) return cached;
+      return fetch(request).then((res) => {
         if (res.ok) {
           const clone = res.clone();
           caches.open(CACHE).then((c) => c.put(request, clone));
         }
         return res;
-      })
-      .catch(() =>
-        caches.match(request).then((r) => r ?? caches.match('/'))
-      )
+      });
+    })
   );
 });
