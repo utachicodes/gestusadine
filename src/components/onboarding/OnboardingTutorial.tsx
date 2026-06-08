@@ -111,8 +111,15 @@ export function OnboardingTutorial() {
   const [active, setActive] = useState(false);
   const [stepIndex, setStepIndex] = useState(0);
   const [spotlight, setSpotlight] = useState<DOMRect | null>(null);
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
   const highlightRef = useRef<Element | null>(null);
   const resizeObserverRef = useRef<ResizeObserver | null>(null);
+
+  useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handler);
+    return () => window.removeEventListener('resize', handler);
+  }, []);
 
   // Determine steps based on user gender
   const steps = React.useMemo(() => {
@@ -204,10 +211,11 @@ export function OnboardingTutorial() {
 
   if (!active) return null;
 
-  const isCenter = !currentStep?.targetSelector || !spotlight || currentStep.position === 'center';
+  // On mobile the sidebar is hidden — spotlight targeting makes no sense.
+  // Render a bottom sheet instead; all positioning logic is skipped.
+  const isCenter = isMobile || !currentStep?.targetSelector || !spotlight || currentStep.position === 'center';
   const isLast = stepIndex === steps.length - 1;
 
-  // Compute callout position relative to spotlight
   const getCalloutStyle = (): React.CSSProperties => {
     if (!spotlight || isCenter) return {};
     const MARGIN = 16;
@@ -215,33 +223,102 @@ export function OnboardingTutorial() {
     const CALLOUT_H = 220;
     const vw = window.innerWidth;
     const vh = window.innerHeight;
-
-    // Try right of spotlight first
     if (spotlight.right + MARGIN + CALLOUT_W < vw) {
-      return {
-        position: 'fixed',
-        top: Math.min(spotlight.top, vh - CALLOUT_H - MARGIN),
-        left: spotlight.right + MARGIN,
-        width: CALLOUT_W,
-      };
+      return { position: 'fixed', top: Math.min(spotlight.top, vh - CALLOUT_H - MARGIN), left: spotlight.right + MARGIN, width: CALLOUT_W };
     }
-    // Try left
     if (spotlight.left - MARGIN - CALLOUT_W > 0) {
-      return {
-        position: 'fixed',
-        top: Math.min(spotlight.top, vh - CALLOUT_H - MARGIN),
-        right: vw - spotlight.left + MARGIN,
-        width: CALLOUT_W,
-      };
+      return { position: 'fixed', top: Math.min(spotlight.top, vh - CALLOUT_H - MARGIN), right: vw - spotlight.left + MARGIN, width: CALLOUT_W };
     }
-    // Below
-    return {
-      position: 'fixed',
-      top: spotlight.bottom + MARGIN,
-      left: Math.max(MARGIN, Math.min(spotlight.left, vw - CALLOUT_W - MARGIN)),
-      width: CALLOUT_W,
-    };
+    return { position: 'fixed', top: spotlight.bottom + MARGIN, left: Math.max(MARGIN, Math.min(spotlight.left, vw - CALLOUT_W - MARGIN)), width: CALLOUT_W };
   };
+
+  // Shared card content so mobile and desktop render the same UI
+  const CardContent = () => (
+    <div className="bg-white overflow-hidden" style={isMobile ? { borderRadius: '1.25rem 1.25rem 0 0' } : { borderRadius: '1rem' }}>
+      {/* Header */}
+      <div className="bg-gradient-to-r from-emerald-900 to-emerald-700 px-5 py-4 flex items-start justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0">
+            {currentStep.icon}
+          </div>
+          <div className="min-w-0">
+            <p className="text-[10px] font-semibold text-emerald-200 uppercase tracking-wider">
+              {language === 'fr' ? `Étape ${stepIndex + 1} sur ${steps.length}` : `Step ${stepIndex + 1} of ${steps.length}`}
+            </p>
+            <p className="text-white font-bold text-base leading-tight mt-0.5">
+              {language === 'fr' ? currentStep.titleFr : currentStep.title}
+            </p>
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={skip}
+          className="text-white/60 hover:text-white transition-colors ml-3 flex-shrink-0"
+          aria-label="Skip tutorial"
+        >
+          <X className="w-5 h-5" />
+        </button>
+      </div>
+
+      {/* Body */}
+      <div className="px-5 py-4">
+        <p className="text-sm text-stone-600 leading-relaxed">
+          {language === 'fr' ? currentStep.descriptionFr : currentStep.description}
+        </p>
+      </div>
+
+      {/* Progress dots */}
+      <div className="flex items-center justify-center gap-1.5 pb-2">
+        {steps.map((_, i) => (
+          <div
+            key={i}
+            className={`h-1.5 rounded-full transition-all ${
+              i === stepIndex ? 'w-4 bg-emerald-600' : 'w-1.5 bg-stone-200'
+            }`}
+          />
+        ))}
+      </div>
+
+      {/* Footer */}
+      <div
+        className="px-5 pb-4 flex items-center gap-2"
+        style={isMobile ? { paddingBottom: 'calc(1rem + env(safe-area-inset-bottom, 0px))' } : undefined}
+      >
+        {stepIndex > 0 && (
+          <button
+            type="button"
+            onClick={prev}
+            className="flex items-center gap-1 px-4 py-3 rounded-xl border border-stone-200 text-stone-600 text-sm font-medium hover:bg-stone-50 transition-colors"
+          >
+            <ChevronLeft className="w-4 h-4" />
+            {language === 'fr' ? 'Précédent' : 'Back'}
+          </button>
+        )}
+        <button
+          type="button"
+          onClick={next}
+          className="flex-1 flex items-center justify-center gap-1.5 px-4 py-3 rounded-xl bg-emerald-900 text-white text-sm font-semibold hover:bg-emerald-800 transition-colors"
+        >
+          {isLast
+            ? (language === 'fr' ? 'Commencer' : "Let's go!")
+            : (language === 'fr' ? 'Suivant' : 'Next')}
+          {!isLast && <ChevronRight className="w-4 h-4" />}
+        </button>
+      </div>
+
+      {stepIndex === 0 && (
+        <div className="pb-4 text-center" style={isMobile ? { paddingBottom: 'calc(1rem + env(safe-area-inset-bottom, 0px))' } : undefined}>
+          <button
+            type="button"
+            onClick={skip}
+            className="text-xs text-stone-400 hover:text-stone-600 transition-colors"
+          >
+            {language === 'fr' ? 'Passer le tutoriel' : 'Skip tutorial'}
+          </button>
+        </div>
+      )}
+    </div>
+  );
 
   return (
     <AnimatePresence>
@@ -253,11 +330,16 @@ export function OnboardingTutorial() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[9000] pointer-events-none"
-            style={{ background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(1px)' }}
+            onClick={isMobile ? skip : undefined}
+            className="fixed inset-0 z-[9000]"
+            style={{
+              background: 'rgba(0,0,0,0.55)',
+              backdropFilter: 'blur(1px)',
+              pointerEvents: isMobile ? 'auto' : 'none',
+            }}
           >
-            {/* Spotlight cutout using clip-path trick via SVG mask */}
-            {spotlight && !isCenter && (
+            {/* Desktop spotlight cutout */}
+            {!isMobile && spotlight && !isCenter && (
               <svg className="absolute inset-0 w-full h-full">
                 <defs>
                   <mask id="spotlight-mask">
@@ -277,126 +359,55 @@ export function OnboardingTutorial() {
             )}
           </motion.div>
 
-          {/* Spotlight ring */}
-          {spotlight && !isCenter && (
+          {/* Desktop spotlight ring */}
+          {!isMobile && spotlight && !isCenter && (
             <motion.div
               key="ring"
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed z-[9001] pointer-events-none rounded-xl ring-2 ring-emerald-400 ring-offset-0"
+              className="fixed z-[9001] pointer-events-none rounded-xl ring-2 ring-emerald-400"
               style={{
                 top: spotlight.top - 6,
                 left: spotlight.left - 6,
                 width: spotlight.width + 12,
                 height: spotlight.height + 12,
-                boxShadow: '0 0 0 9999px rgba(0,0,0,0.0)',
               }}
             />
           )}
 
-          {/* Callout card */}
-          <motion.div
-            key={`callout-${stepIndex}`}
-            initial={{ opacity: 0, scale: 0.95, y: 8 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.22, ease: 'easeOut' }}
-            className="fixed z-[9002] pointer-events-auto"
-            style={
-              isCenter
-                ? {
-                    position: 'fixed',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    width: 'min(90vw, 380px)',
-                  }
-                : getCalloutStyle()
-            }
-          >
-            <div className="bg-white rounded-2xl shadow-2xl border border-stone-200 overflow-hidden">
-              {/* Header */}
-              <div className="bg-gradient-to-r from-emerald-900 to-emerald-700 px-5 py-4 flex items-start justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
-                    {currentStep.icon}
-                  </div>
-                  <div>
-                    <p className="text-[10px] font-semibold text-emerald-200 uppercase tracking-wider">
-                      {language === 'fr' ? `Étape ${stepIndex + 1} sur ${steps.length}` : `Step ${stepIndex + 1} of ${steps.length}`}
-                    </p>
-                    <p className="text-white font-bold text-base leading-tight mt-0.5">
-                      {language === 'fr' ? currentStep.titleFr : currentStep.title}
-                    </p>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  onClick={skip}
-                  className="text-white/60 hover:text-white transition-colors"
-                  aria-label="Skip tutorial"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
+          {/* ── Mobile: bottom sheet ── */}
+          {isMobile && (
+            <motion.div
+              key={`sheet-${stepIndex}`}
+              initial={{ y: '100%' }}
+              animate={{ y: 0 }}
+              exit={{ y: '100%' }}
+              transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+              className="fixed inset-x-0 bottom-0 z-[9002] pointer-events-auto shadow-2xl"
+            >
+              <CardContent />
+            </motion.div>
+          )}
 
-              {/* Body */}
-              <div className="px-5 py-4">
-                <p className="text-sm text-stone-600 leading-relaxed">
-                  {language === 'fr' ? currentStep.descriptionFr : currentStep.description}
-                </p>
-              </div>
-
-              {/* Progress dots */}
-              <div className="flex items-center justify-center gap-1.5 pb-2">
-                {steps.map((_, i) => (
-                  <div
-                    key={i}
-                    className={`h-1.5 rounded-full transition-all ${
-                      i === stepIndex ? 'w-4 bg-emerald-600' : 'w-1.5 bg-stone-200'
-                    }`}
-                  />
-                ))}
-              </div>
-
-              {/* Footer */}
-              <div className="px-5 pb-4 flex items-center gap-2">
-                {stepIndex > 0 && (
-                  <button
-                    type="button"
-                    onClick={prev}
-                    className="flex items-center gap-1 px-3 py-2 rounded-lg border border-stone-200 text-stone-600 text-sm hover:bg-stone-50 transition-colors"
-                  >
-                    <ChevronLeft className="w-4 h-4" />
-                    {language === 'fr' ? 'Précédent' : 'Back'}
-                  </button>
-                )}
-                <button
-                  type="button"
-                  onClick={next}
-                  className="flex-1 flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-emerald-900 text-white text-sm font-semibold hover:bg-emerald-800 transition-colors"
-                >
-                  {isLast
-                    ? (language === 'fr' ? 'Commencer' : "Let's go!")
-                    : (language === 'fr' ? 'Suivant' : 'Next')}
-                  {!isLast && <ChevronRight className="w-4 h-4" />}
-                </button>
-              </div>
-
-              {stepIndex === 0 && (
-                <div className="pb-4 text-center">
-                  <button
-                    type="button"
-                    onClick={skip}
-                    className="text-xs text-stone-400 hover:text-stone-600 transition-colors"
-                  >
-                    {language === 'fr' ? 'Passer le tutoriel' : 'Skip tutorial'}
-                  </button>
-                </div>
-              )}
-            </div>
-          </motion.div>
+          {/* ── Desktop: floating callout ── */}
+          {!isMobile && (
+            <motion.div
+              key={`callout-${stepIndex}`}
+              initial={{ opacity: 0, scale: 0.95, y: 8 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.22, ease: 'easeOut' }}
+              className="fixed z-[9002] pointer-events-auto"
+              style={
+                isCenter
+                  ? { position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 'min(90vw, 380px)' }
+                  : getCalloutStyle()
+              }
+            >
+              <CardContent />
+            </motion.div>
+          )}
         </>
       )}
     </AnimatePresence>
