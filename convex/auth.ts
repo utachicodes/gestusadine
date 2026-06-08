@@ -33,27 +33,40 @@ export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
   },
   callbacks: {
     async createOrUpdateUser(ctx: MutationCtx, args) {
-      const email = args.profile.email ?? "";
+      const email = (args.profile.email ?? "").toLowerCase().trim();
       const role = getRole(email);
+      const p = args.profile as Record<string, unknown>;
+      const gender = p.gender as "male" | "female" | undefined;
+      const name = (p.name as string | undefined)?.trim() ?? "";
 
       if (args.existingUserId) {
+        // The auth account already exists. Verify the users row is complete —
+        // a previous signup may have created the authAccount then crashed before
+        // inserting the user row (or inserted it without a name).
+        const existing = await ctx.db.get(args.existingUserId);
+        if (existing && !existing.fullName && name) {
+          await ctx.db.patch(args.existingUserId, {
+            email,
+            name,
+            fullName: name,
+            role,
+            gender,
+          });
+        }
         return args.existingUserId;
       }
 
-      if (!args.profile?.name) {
+      if (!name) {
         throw new ConvexError("Full name is required.");
       }
 
-      const p = args.profile as Record<string, unknown>;
-      const gender = p.gender as "male" | "female" | undefined;
-
       return ctx.db.insert("users", {
         email,
-        name: p.name as string,
+        name,
         image: p.image as string | undefined,
         role,
         subscriptionTier: "free",
-        fullName: p.name as string,
+        fullName: name,
         isAnonymous: false,
         gender,
         onboardingCompleted: false,
