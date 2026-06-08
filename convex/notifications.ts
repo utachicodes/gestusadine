@@ -258,17 +258,19 @@ export const scheduleForToday = action({
       }
     }
 
-    // Quran reminder
-    if (settings.quranEnabled && settings.quranTime && settings.timezone) {
-      const t = getReminderTimeTodayUtc(settings.quranTime, settings.timezone);
+    const tz = settings.timezone ?? "Africa/Dakar";
+
+    // Quran reminder — on by default unless explicitly disabled
+    if (settings.quranEnabled !== false) {
+      const t = getReminderTimeTodayUtc(settings.quranTime ?? "10:00", tz);
       if (t !== null) {
         await ctx.scheduler.runAt(t, internal.notifications.deliverQuranReminder, { userId });
       }
     }
 
-    // Daily content reminder
-    if (settings.dailyContentEnabled && settings.timezone) {
-      const t = getReminderTimeTodayUtc(settings.dailyContentTime ?? "08:00", settings.timezone);
+    // Daily content reminder — on by default unless explicitly disabled
+    if (settings.dailyContentEnabled !== false) {
+      const t = getReminderTimeTodayUtc(settings.dailyContentTime ?? "22:00", tz);
       if (t !== null) {
         await ctx.scheduler.runAt(t, internal.notifications.deliverDailyContentReminder, { userId });
       }
@@ -418,7 +420,7 @@ export const deliverQuranReminder = internalAction({
       internal.notifications._getSettingsForUser,
       { userId }
     );
-    if (!settings?.quranEnabled) return;
+    if (settings?.quranEnabled === false) return;
 
     const subs = await ctx.runQuery(
       internal.notifications._getSubscriptionsForUser,
@@ -449,7 +451,7 @@ export const deliverDailyContentReminder = internalAction({
       internal.notifications._getSettingsForUser,
       { userId }
     );
-    if (!settings?.dailyContentEnabled) return;
+    if (settings?.dailyContentEnabled === false) return;
 
     const subs = await ctx.runQuery(
       internal.notifications._getSubscriptionsForUser,
@@ -481,10 +483,10 @@ export const scheduleReminders = internalAction({
     );
 
     for (const s of allSettings) {
-      if (!s.timezone) continue;
+      const tz = s.timezone ?? "Africa/Dakar";
 
-      if (s.quranEnabled && s.quranTime) {
-        const t = getReminderTimeTodayUtc(s.quranTime, s.timezone);
+      if (s.quranEnabled !== false) {
+        const t = getReminderTimeTodayUtc(s.quranTime ?? "10:00", tz);
         if (t !== null) {
           await ctx.scheduler.runAt(
             t,
@@ -494,9 +496,8 @@ export const scheduleReminders = internalAction({
         }
       }
 
-      if (s.dailyContentEnabled) {
-        const timeStr = s.dailyContentTime ?? "08:00";
-        const t = getReminderTimeTodayUtc(timeStr, s.timezone);
+      if (s.dailyContentEnabled !== false) {
+        const t = getReminderTimeTodayUtc(s.dailyContentTime ?? "22:00", tz);
         if (t !== null) {
           await ctx.scheduler.runAt(
             t,
@@ -524,15 +525,9 @@ export const _getAllPrayerSettings = internalQuery({
 export const _getAllReminderSettings = internalQuery({
   args: {},
   handler: async (ctx) => {
-    return await ctx.db
-      .query("notificationSettings")
-      .filter((q) =>
-        q.or(
-          q.eq(q.field("quranEnabled"), true),
-          q.eq(q.field("dailyContentEnabled"), true)
-        )
-      )
-      .collect();
+    // Fetch all rows; opt-out filtering (quranEnabled === false, etc.) happens
+    // in the caller so rows with unset fields (undefined) are treated as enabled.
+    return await ctx.db.query("notificationSettings").collect();
   },
 });
 
