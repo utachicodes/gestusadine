@@ -7,6 +7,7 @@ import {
   HelpCircle,
   ChevronRight,
   LogOut,
+  Globe,
   type LucideIcon,
   LayoutDashboard,
   MessageSquare,
@@ -72,7 +73,7 @@ export const DashboardTopbar: React.FC<DashboardTopbarProps> = ({ onOpenMobileSi
   const location = useLocation();
   const navigate = useNavigate();
   const { user, profile, signOut } = useAuth();
-  const { language } = useLanguage();
+  const { language, setLanguage } = useLanguage();
   const tr = (l: Label) => l[language] ?? l.en;
 
   const [query, setQuery] = React.useState('');
@@ -223,6 +224,34 @@ export const DashboardTopbar: React.FC<DashboardTopbarProps> = ({ onOpenMobileSi
         >
           <HelpCircle className="w-[18px] h-[18px]" />
         </Link>
+
+        {/* Language toggle */}
+        <div className="flex items-center rounded-xl border border-border bg-secondary/50 p-0.5 gap-0.5">
+          <button
+            type="button"
+            onClick={() => setLanguage('en')}
+            aria-label="Switch to English"
+            className={`px-2.5 py-1.5 text-xs font-semibold rounded-lg transition-all duration-150 ${
+              language === 'en'
+                ? 'bg-primary text-primary-foreground shadow-sm'
+                : 'text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            EN
+          </button>
+          <button
+            type="button"
+            onClick={() => setLanguage('fr')}
+            aria-label="Passer en français"
+            className={`px-2.5 py-1.5 text-xs font-semibold rounded-lg transition-all duration-150 ${
+              language === 'fr'
+                ? 'bg-primary text-primary-foreground shadow-sm'
+                : 'text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            FR
+          </button>
+        </div>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

@@ -2,7 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import { format, isToday, isSameDay } from 'date-fns';
-import { BookOpen, Flame, BarChart2, Calendar, ChevronLeft, ChevronRight, Trash2, Edit3, X, Search, Tag } from 'lucide-react';
+import {
+  BookOpen, Flame, BarChart2, Calendar, ChevronLeft, ChevronRight,
+  Trash2, Edit3, X, Search, Tag,
+  Pencil, Sparkles, Star, Sun, Moon,
+  Heart, Smile, Wind, TrendingUp, AlertCircle, CloudRain, Zap,
+  type LucideIcon,
+} from 'lucide-react';
 import { toast } from 'sonner';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { useTr } from '@/lib/i18n';
@@ -10,25 +16,38 @@ import type { Id } from '../../../convex/_generated/dataModel';
 
 // ── Mood config ───────────────────────────────────────────────────────────────
 
-const MOODS = [
-  { key: 'grateful', emoji: '🤲', en: 'Grateful', fr: 'Reconnaissant' },
-  { key: 'happy',    emoji: '😊', en: 'Happy',    fr: 'Heureux' },
-  { key: 'calm',     emoji: '🧘', en: 'Calm',     fr: 'Calme' },
-  { key: 'hopeful',  emoji: '✨', en: 'Hopeful',  fr: "Plein d'espoir" },
-  { key: 'tired',    emoji: '😴', en: 'Tired',    fr: 'Fatigué' },
-  { key: 'anxious',  emoji: '😟', en: 'Anxious',  fr: 'Anxieux' },
-  { key: 'sad',      emoji: '😔', en: 'Sad',      fr: 'Triste' },
-  { key: 'angry',    emoji: '😤', en: 'Frustrated', fr: 'Frustré' },
-] as const;
+interface MoodDef {
+  key: string;
+  icon: LucideIcon;
+  en: string;
+  fr: string;
+}
 
-type MoodKey = (typeof MOODS)[number]['key'];
+const MOODS: MoodDef[] = [
+  { key: 'grateful', icon: Heart,        en: 'Grateful',   fr: 'Reconnaissant' },
+  { key: 'happy',    icon: Smile,        en: 'Happy',       fr: 'Heureux' },
+  { key: 'calm',     icon: Wind,         en: 'Calm',        fr: 'Calme' },
+  { key: 'hopeful',  icon: TrendingUp,   en: 'Hopeful',     fr: "Plein d'espoir" },
+  { key: 'tired',    icon: Moon,         en: 'Tired',       fr: 'Fatigué' },
+  { key: 'anxious',  icon: AlertCircle,  en: 'Anxious',     fr: 'Anxieux' },
+  { key: 'sad',      icon: CloudRain,    en: 'Sad',         fr: 'Triste' },
+  { key: 'angry',    icon: Zap,          en: 'Frustrated',  fr: 'Frustré' },
+];
 
-const TEMPLATES = [
-  { key: 'free',       en: 'Free write',      fr: 'Écriture libre',  icon: '✏️', prompt: '' },
-  { key: 'gratitude',  en: 'Gratitude',       fr: 'Gratitude',       icon: '🤲', prompt: "Today I am grateful for:\n1. \n2. \n3. \n\nA blessing I noticed:\n\nA dua I want to make:\n" },
-  { key: 'reflection', en: 'Reflection',      fr: 'Réflexion',       icon: '🌙', prompt: "What I did today:\n\nWhat went well:\n\nWhat I want to improve:\n\nLesson I learned:\n" },
-  { key: 'daily',      en: 'Daily check-in',  fr: 'Bilan quotidien', icon: '☀️', prompt: "Mood today: \n\nMy intention for the day:\n\nWhat I want to accomplish:\n\nOne thing I look forward to:\n" },
-] as const;
+interface TemplateDef {
+  key: string;
+  icon: LucideIcon;
+  en: string;
+  fr: string;
+  prompt: string;
+}
+
+const TEMPLATES: TemplateDef[] = [
+  { key: 'free',       icon: Pencil,    en: 'Free write',      fr: 'Écriture libre',  prompt: '' },
+  { key: 'gratitude',  icon: Sparkles,  en: 'Gratitude',       fr: 'Gratitude',       prompt: "Today I am grateful for:\n1. \n2. \n3. \n\nA blessing I noticed:\n\nA dua I want to make:\n" },
+  { key: 'reflection', icon: Star,      en: 'Reflection',      fr: 'Réflexion',       prompt: "What I did today:\n\nWhat went well:\n\nWhat I want to improve:\n\nLesson I learned:\n" },
+  { key: 'daily',      icon: Sun,       en: 'Daily check-in',  fr: 'Bilan quotidien', prompt: "Mood today: \n\nMy intention for the day:\n\nWhat I want to accomplish:\n\nOne thing I look forward to:\n" },
+];
 
 function startOfDayUTC(date: Date): number {
   const d = new Date(date);
@@ -148,7 +167,7 @@ export default function Journal() {
     return (e.title ?? '').toLowerCase().includes(q) || e.content.toLowerCase().includes(q);
   });
 
-  const getMoodEntry = (key?: string | null) => MOODS.find((m) => m.key === key);
+  const getMoodDef = (key?: string | null) => MOODS.find((m) => m.key === key);
 
   // Calendar grid
   const calYear = calendarMonth.getFullYear();
@@ -196,20 +215,23 @@ export default function Journal() {
               {tr({ en: 'Template', fr: 'Modèle' })}
             </p>
             <div className="flex flex-wrap gap-2">
-              {TEMPLATES.map((t) => (
-                <button
-                  key={t.key}
-                  onClick={() => applyTemplate(t.key)}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-sm font-medium transition-all ${
-                    editorTemplate === t.key
-                      ? 'border-primary bg-primary/10 text-primary'
-                      : 'border-border bg-muted/30 text-muted-foreground hover:border-primary/40 hover:text-foreground'
-                  }`}
-                >
-                  <span>{t.icon}</span>
-                  {tr({ en: t.en, fr: t.fr })}
-                </button>
-              ))}
+              {TEMPLATES.map((t) => {
+                const Icon = t.icon;
+                return (
+                  <button
+                    key={t.key}
+                    onClick={() => applyTemplate(t.key)}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-sm font-medium transition-all ${
+                      editorTemplate === t.key
+                        ? 'border-primary bg-primary/10 text-primary'
+                        : 'border-border bg-muted/30 text-muted-foreground hover:border-primary/40 hover:text-foreground'
+                    }`}
+                  >
+                    <Icon className="w-3.5 h-3.5 flex-shrink-0" />
+                    {tr({ en: t.en, fr: t.fr })}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
@@ -236,20 +258,23 @@ export default function Journal() {
                 {tr({ en: 'Mood', fr: 'Humeur' })}
               </p>
               <div className="flex flex-wrap gap-2">
-                {MOODS.map((m) => (
-                  <button
-                    key={m.key}
-                    onClick={() => { setEditorMood(editorMood === m.key ? undefined : m.key); setIsDirty(true); }}
-                    className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border text-xs font-medium transition-all ${
-                      editorMood === m.key
-                        ? 'border-primary bg-primary/10 text-primary'
-                        : 'border-border bg-muted/30 text-muted-foreground hover:border-primary/40'
-                    }`}
-                  >
-                    <span>{m.emoji}</span>
-                    <span className="hidden sm:inline">{tr({ en: m.en, fr: m.fr })}</span>
-                  </button>
-                ))}
+                {MOODS.map((m) => {
+                  const Icon = m.icon;
+                  return (
+                    <button
+                      key={m.key}
+                      onClick={() => { setEditorMood(editorMood === m.key ? undefined : m.key); setIsDirty(true); }}
+                      className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border text-xs font-medium transition-all ${
+                        editorMood === m.key
+                          ? 'border-primary bg-primary/10 text-primary'
+                          : 'border-border bg-muted/30 text-muted-foreground hover:border-primary/40'
+                      }`}
+                    >
+                      <Icon className="w-3.5 h-3.5 flex-shrink-0" />
+                      <span>{tr({ en: m.en, fr: m.fr })}</span>
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
@@ -319,7 +344,8 @@ export default function Journal() {
           ) : (
             <div className="space-y-3">
               {filteredEntries.map((entry) => {
-                const mood = getMoodEntry(entry.mood);
+                const moodDef = getMoodDef(entry.mood);
+                const MoodIcon = moodDef?.icon;
                 return (
                   <div key={entry._id} className="islamic-card p-4 sm:p-5">
                     <div className="flex items-start justify-between gap-3">
@@ -328,7 +354,7 @@ export default function Journal() {
                           <p className="text-xs text-muted-foreground">
                             {format(new Date(entry.entryDate), 'dd MMM yyyy')}
                           </p>
-                          {mood && <span className="text-sm">{mood.emoji}</span>}
+                          {MoodIcon && <MoodIcon className="w-3.5 h-3.5 text-muted-foreground" />}
                           {isToday(new Date(entry.entryDate)) && (
                             <span className="text-xs font-medium text-primary px-2 py-0.5 rounded-full bg-primary/10">
                               {tr({ en: 'Today', fr: "Aujourd'hui" })}
@@ -419,7 +445,6 @@ export default function Journal() {
                 const hasEntry = mood !== undefined;
                 const isSelected = isSameDay(dayDate, selectedDate);
                 const isT = isToday(dayDate);
-                const moodMeta = getMoodEntry(mood);
                 return (
                   <button
                     key={i}
@@ -435,8 +460,8 @@ export default function Journal() {
                     }`}
                   >
                     <span>{i + 1}</span>
-                    {hasEntry && !isSelected && moodMeta && (
-                      <span className="text-[10px] leading-none">{moodMeta.emoji}</span>
+                    {hasEntry && !isSelected && (
+                      <span className="w-1.5 h-1.5 rounded-full bg-primary/60 mt-0.5" />
                     )}
                   </button>
                 );
@@ -456,9 +481,17 @@ export default function Journal() {
                 {selectedDateEntry.title && (
                   <p className="text-sm font-semibold text-foreground">{selectedDateEntry.title}</p>
                 )}
-                {selectedDateEntry.mood && (
-                  <p className="text-lg">{getMoodEntry(selectedDateEntry.mood)?.emoji}</p>
-                )}
+                {selectedDateEntry.mood && (() => {
+                  const moodDef = getMoodDef(selectedDateEntry.mood);
+                  if (!moodDef) return null;
+                  const Icon = moodDef.icon;
+                  return (
+                    <div className="flex items-center gap-1.5 text-muted-foreground">
+                      <Icon className="w-4 h-4" />
+                      <span className="text-xs">{tr({ en: moodDef.en, fr: moodDef.fr })}</span>
+                    </div>
+                  );
+                })()}
                 <p className="text-sm text-muted-foreground whitespace-pre-line line-clamp-8">{selectedDateEntry.content}</p>
                 {(selectedDateEntry.tags ?? []).length > 0 && (
                   <div className="flex flex-wrap gap-1 pt-1">
@@ -517,9 +550,10 @@ export default function Journal() {
                   const count = (stats?.moodCounts ?? {})[m.key] ?? 0;
                   const total = stats?.total ?? 1;
                   const pct = Math.round((count / total) * 100);
+                  const Icon = m.icon;
                   return (
                     <div key={m.key} className="flex items-center gap-3">
-                      <span className="text-base w-6 text-center">{m.emoji}</span>
+                      <Icon className="w-4 h-4 flex-shrink-0 text-primary/70" />
                       <div className="flex-1 h-2.5 rounded-full bg-muted/40 overflow-hidden">
                         <div className="h-full rounded-full bg-primary/70 transition-all duration-300" style={{ width: `${pct}%` }} />
                       </div>

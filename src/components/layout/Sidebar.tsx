@@ -11,7 +11,6 @@ import {
   LogOut,
   BookOpen,
   Users,
-  Globe,
   GraduationCap,
   PanelLeftClose,
   PanelLeftOpen,
@@ -95,7 +94,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggleCollapsed, 
   const navigate = useNavigate();
   const { signOut, refreshProfile, profile } = useAuth();
   const { can } = useAuthz();
-  const { language, setLanguage } = useLanguage();
+  const { language } = useLanguage();
   const { theme } = useTheme();
 
   const isFemale = profile?.gender === 'female';
@@ -203,57 +202,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggleCollapsed, 
 
       {/* Account footer */}
       <div className="border-t border-sidebar-border p-3 space-y-1">
-        {!collapsed && (
-          <p className="px-3 mb-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/70">
-            {language === 'fr' ? 'Compte' : 'Account'}
-          </p>
-        )}
-
-        {/* Language toggle */}
-        {collapsed ? (
-          <Tooltip delayDuration={0}>
-            <TooltipTrigger asChild>
-              <button
-                type="button"
-                onClick={() => setLanguage(language === 'fr' ? 'en' : 'fr')}
-                aria-label="Toggle language"
-                className="flex items-center justify-center mx-auto w-11 h-11 rounded-xl text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
-              >
-                <Globe className="w-[18px] h-[18px]" />
-              </button>
-            </TooltipTrigger>
-            <TooltipContent side="right">{language === 'fr' ? 'Français' : 'English'}</TooltipContent>
-          </Tooltip>
-        ) : (
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-sidebar-border/20">
-            <Globe className="w-[18px] h-[18px] flex-shrink-0 text-muted-foreground" />
-            <div className="flex rounded-lg border border-sidebar-border p-0.5 bg-background/50">
-              <button
-                type="button"
-                onClick={() => setLanguage('en')}
-                className={`relative px-2.5 py-1 text-xs font-semibold rounded-md transition-all duration-150 ${
-                  language === 'en'
-                    ? 'bg-primary text-primary-foreground shadow-sm'
-                    : 'text-muted-foreground hover:text-foreground'
-                }`}
-              >
-                EN
-              </button>
-              <button
-                type="button"
-                onClick={() => setLanguage('fr')}
-                className={`relative px-2.5 py-1 text-xs font-semibold rounded-md transition-all duration-150 ${
-                  language === 'fr'
-                    ? 'bg-primary text-primary-foreground shadow-sm'
-                    : 'text-muted-foreground hover:text-foreground'
-                }`}
-              >
-                FR
-              </button>
-            </div>
-          </div>
-        )}
-
         {/* Sign out */}
         {collapsed ? (
           <Tooltip delayDuration={0}>
