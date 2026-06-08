@@ -94,7 +94,11 @@ const Login = () => {
       await signInWithPassword({ email, password });
       setPendingRedirect(upgradeTier ? `/dashboard?upgrade=${upgradeTier}` : from);
     } catch (err: any) {
-      setError(err?.message || 'Something went wrong.');
+      setError(
+        err?.message && !err.message.startsWith('[CONVEX')
+          ? err.message
+          : 'Something went wrong. Please try again.'
+      );
     } finally {
       setIsLoading(false);
     }
@@ -118,7 +122,11 @@ const Login = () => {
       // Signup succeeded and the session is live — redirect straight to dashboard.
       navigate('/dashboard', { replace: true });
     } catch (err: any) {
-      setError(err?.message || 'Something went wrong.');
+      setError(
+        err?.message && !err.message.startsWith('[CONVEX')
+          ? err.message
+          : 'Something went wrong. Please try again.'
+      );
       setIsLoading(false);
     }
   };
