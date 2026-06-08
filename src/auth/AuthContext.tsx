@@ -68,32 +68,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const updateTier = useMutation(api.users.updateSubscriptionTier);
   const convex = useConvex();
 
-  // Clear any stale Convex Auth tokens from localStorage on mount
-  React.useEffect(() => {
-    try {
-      const keysToRemove: string[] = [];
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key && key.startsWith("__convexAuth")) {
-          keysToRemove.push(key);
-        }
-      }
-      keysToRemove.forEach((k) => localStorage.removeItem(k));
-    } catch { /* noop */ }
-  }, []);
-
   // Detect stale JWT tokens (e.g., after key rotation) and auto-sign-out
-  // to break the infinite WebSocket reconnect loop.
-  const wasAuthenticatedRef = React.useRef(false);
+  // to break the infinite WebSocket reconnect loop. We only trigger this
+  // after the initial load settles — not on first mount — to avoid signing
+  // out PWA users whose tokens are still valid when the app resumes.
+  const wasAuthenticatedRef = React.useRef<boolean | null>(null);
 
   React.useEffect(() => {
     if (isLoading) return;
 
-    if (wasAuthenticatedRef.current && !isAuthenticated) {
+    if (wasAuthenticatedRef.current === true && !isAuthenticated) {
+      // Auth was confirmed on a previous render, now it's gone — stale token.
       convexSignOut();
     }
 
-    wasAuthenticatedRef.current = isAuthenticated;
+    if (wasAuthenticatedRef.current === null) {
+      // First settled render: record state without triggering sign-out.
+      wasAuthenticatedRef.current = isAuthenticated;
+    } else {
+      wasAuthenticatedRef.current = isAuthenticated;
+    }
   }, [isLoading, isAuthenticated, convexSignOut]);
 
   const profile = React.useMemo(() => toUserProfile(currentUser ?? null), [currentUser]);

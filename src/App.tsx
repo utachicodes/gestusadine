@@ -5,7 +5,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/auth/AuthContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
-import { CartProvider } from "@/contexts/CartContext";
 import { ProtectedRoute } from "@/components/layout/ProtectedRoute";
 import { PublicRoute } from "@/components/layout/PublicRoute";
 import { ErrorBoundary } from "@/components/layout/ErrorBoundary";
@@ -31,7 +30,6 @@ import ManageDaily from "./pages/admin/ManageDaily";
 import Library from "./pages/knowledge/Library";
 import ManageLibrary from "./pages/admin/ManageLibrary";
 import ManageQuizzes from "./pages/admin/ManageQuizzes";
-import ManagePodcasts from "./pages/admin/ManagePodcasts";
 import ManageRag from "./pages/admin/ManageRag";
 import ThemeDesigner from "./pages/admin/ThemeDesigner";
 import Journal from "./pages/wellness/Journal";
@@ -44,12 +42,6 @@ import FAQ from "./pages/core/FAQ";
 import Privacy from "./pages/core/Privacy";
 import Terms from "./pages/core/Terms";
 import Classes from "./pages/knowledge/Classes";
-import HadithPage from "./pages/islamic/Hadith";
-import TawhidPage from "./pages/islamic/Tawhid";
-import PodcastsPage from "./pages/knowledge/PodcastsPage";
-import CommunityPage from "./pages/community/CommunityPage";
-import CircleDetail from "./pages/community/CircleDetail";
-import IslamicShop from "./pages/islamic/IslamicShop";
 import Settings from "./pages/user/Settings";
 import Pricing from "./pages/core/Pricing";
 import Quran from "./pages/quran/Quran";
@@ -73,7 +65,6 @@ const App = () => {
               <Sonner />
               <LanguageProvider>
                 <CookieConsent />
-                <CartProvider>
                   <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
                     <PostHogProvider>
                       <OnboardingTutorial />
@@ -95,14 +86,6 @@ const App = () => {
                         <Route path="/terms" element={<AppShell><Terms /></AppShell>} />
                         <Route path="/pricing" element={<AppShell><Pricing /></AppShell>} />
                         <Route path="/login" element={<Login />} />
-                        <Route
-                          path="/shop"
-                          element={
-                            <AppShell>
-                              <IslamicShop />
-                            </AppShell>
-                          }
-                        />
                         <Route
                           path="/dashboard"
                           element={
@@ -330,16 +313,6 @@ const App = () => {
                           }
                         />
                         <Route
-                          path="/admin/podcasts"
-                          element={
-                            <ProtectedRoute adminOnly>
-                              <DashboardLayout>
-                                <ManagePodcasts />
-                              </DashboardLayout>
-                            </ProtectedRoute>
-                          }
-                        />
-                        <Route
                           path="/admin/rag"
                           element={
                             <ProtectedRoute adminOnly>
@@ -373,46 +346,6 @@ const App = () => {
                             </ProtectedRoute>
                           }
                         />
-                        <Route
-                          path="/hadith"
-                          element={
-                            <AppShell>
-                              <HadithPage />
-                            </AppShell>
-                          }
-                        />
-                        <Route
-                          path="/tawhid"
-                          element={
-                            <AppShell>
-                              <TawhidPage />
-                            </AppShell>
-                          }
-                        />
-                        <Route
-                          path="/podcasts"
-                          element={
-                            <AppShell>
-                              <PodcastsPage />
-                            </AppShell>
-                          }
-                        />
-                        <Route
-                          path="/community"
-                          element={
-                            <AppShell>
-                              <CommunityPage />
-                            </AppShell>
-                          }
-                        />
-                        <Route
-                          path="/community/:circleId"
-                          element={
-                            <AppShell>
-                              <CircleDetail />
-                            </AppShell>
-                          }
-                        />
 
                         {/* Catch-all */}
                         <Route
@@ -426,7 +359,6 @@ const App = () => {
                       </Routes>
                     </PostHogProvider>
                   </BrowserRouter>
-                </CartProvider>
               </LanguageProvider>
             </TooltipProvider>
           </ThemeProvider>

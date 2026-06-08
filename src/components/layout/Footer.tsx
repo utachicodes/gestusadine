@@ -13,8 +13,8 @@ const NAV: { label: Loc; path: string }[] = [
 
 const ECOSYSTEM: { label: Loc; path: string }[] = [
   { label: { en: 'Library', fr: 'Bibliothèque' }, path: '/library' },
-  { label: { en: 'Podcasts', fr: 'Podcasts' }, path: '/podcasts' },
-  { label: { en: 'Community', fr: 'Communauté' }, path: '/community' },
+  { label: { en: 'Events', fr: 'Événements' }, path: '/events' },
+  { label: { en: 'Prayer Times', fr: 'Horaires de prière' }, path: '/prayer-times' },
   { label: { en: 'Council', fr: 'Conseil' }, path: '/chat' },
 ];
 

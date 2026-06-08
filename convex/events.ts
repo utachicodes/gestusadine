@@ -1,6 +1,6 @@
 import { mutation, query } from "./_generated/server";
 import { v, ConvexError } from "convex/values";
-import { getCurrentUserOrThrow, requireStaff } from "./authz";
+import { getCurrentUser, getCurrentUserOrThrow, requireStaff } from "./authz";
 
 export const list = query({
   args: {},
@@ -60,6 +60,19 @@ export const remove = mutation({
   handler: async (ctx, args) => {
     await requireStaff(ctx);
     await ctx.db.delete(args.id);
+  },
+});
+
+export const myRegistrations = query({
+  args: {},
+  handler: async (ctx) => {
+    const user = await getCurrentUser(ctx);
+    if (!user) return [];
+    const regs = await ctx.db
+      .query("eventRegistrations")
+      .filter((q) => q.eq(q.field("userId"), user._id))
+      .collect();
+    return regs.map((r) => r.eventId);
   },
 });
 
