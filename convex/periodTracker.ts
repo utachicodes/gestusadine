@@ -1,6 +1,6 @@
 import { query, mutation } from "./_generated/server";
 import { v, ConvexError } from "convex/values";
-import { getCurrentUserOrThrow } from "./authz";
+import { getCurrentUser, getCurrentUserOrThrow } from "./authz";
 
 function startOfDay(ts: number): number {
   const d = new Date(ts);
@@ -8,7 +8,14 @@ function startOfDay(ts: number): number {
   return d.getTime();
 }
 
-/** Throws if the caller is not a female user. Enforces feature access server-side. */
+/** Returns null if unauthenticated or not female. Used in read-only queries (no error thrown). */
+async function getFemaleUser(ctx: Parameters<typeof getCurrentUserOrThrow>[0]) {
+  const user = await getCurrentUser(ctx);
+  if (!user || user.gender !== "female") return null;
+  return user;
+}
+
+/** Throws if the caller is not a female user. Used in mutations. */
 async function requireFemaleUser(ctx: Parameters<typeof getCurrentUserOrThrow>[0]) {
   const user = await getCurrentUserOrThrow(ctx);
   if (user.gender !== "female") {
@@ -22,12 +29,12 @@ async function requireFemaleUser(ctx: Parameters<typeof getCurrentUserOrThrow>[0
 export const getSettings = query({
   args: {},
   handler: async (ctx) => {
-    const user = await requireFemaleUser(ctx);
+    const user = await getFemaleUser(ctx);
+    if (!user) return null;
     const settings = await ctx.db
       .query("periodSettings")
       .withIndex("userId", (q) => q.eq("userId", user._id))
       .first();
-    // Return defaults if no settings row yet
     return settings ?? {
       avgCycleLength: 28,
       avgPeriodLength: 5,
@@ -77,7 +84,8 @@ export const updateSettings = mutation({
 export const getDayLog = query({
   args: { date: v.number() },
   handler: async (ctx, args) => {
-    const user = await requireFemaleUser(ctx);
+    const user = await getFemaleUser(ctx);
+    if (!user) return null;
     const day = startOfDay(args.date);
     return ctx.db
       .query("periodLogs")
@@ -89,7 +97,8 @@ export const getDayLog = query({
 export const getTodayLog = query({
   args: {},
   handler: async (ctx) => {
-    const user = await requireFemaleUser(ctx);
+    const user = await getFemaleUser(ctx);
+    if (!user) return null;
     const today = startOfDay(Date.now());
     return ctx.db
       .query("periodLogs")
@@ -101,7 +110,8 @@ export const getTodayLog = query({
 export const getLogsInRange = query({
   args: { fromDate: v.number(), toDate: v.number() },
   handler: async (ctx, args) => {
-    const user = await requireFemaleUser(ctx);
+    const user = await getFemaleUser(ctx);
+    if (!user) return [];
     const from = startOfDay(args.fromDate);
     const to = startOfDay(args.toDate);
     if (to < from) throw new ConvexError("toDate must be on or after fromDate.");
@@ -175,7 +185,8 @@ export const logDay = mutation({
 export const getCycles = query({
   args: { limit: v.optional(v.number()) },
   handler: async (ctx, args) => {
-    const user = await requireFemaleUser(ctx);
+    const user = await getFemaleUser(ctx);
+    if (!user) return [];
     return ctx.db
       .query("periodCycles")
       .withIndex("userId", (q) => q.eq("userId", user._id))
@@ -187,7 +198,8 @@ export const getCycles = query({
 export const getActiveCycle = query({
   args: {},
   handler: async (ctx) => {
-    const user = await requireFemaleUser(ctx);
+    const user = await getFemaleUser(ctx);
+    if (!user) return null;
     const cycles = await ctx.db
       .query("periodCycles")
       .withIndex("userId", (q) => q.eq("userId", user._id))
@@ -275,7 +287,8 @@ export const endCycle = mutation({
 export const getAnalytics = query({
   args: {},
   handler: async (ctx) => {
-    const user = await requireFemaleUser(ctx);
+    const user = await getFemaleUser(ctx);
+    if (!user) return null;
 
     const cycles = await ctx.db
       .query("periodCycles")

@@ -1,6 +1,6 @@
 import { query, mutation } from "./_generated/server";
 import { v, ConvexError } from "convex/values";
-import { getCurrentUserOrThrow } from "./authz";
+import { getCurrentUser, getCurrentUserOrThrow } from "./authz";
 
 function startOfDay(ts: number): number {
   const d = new Date(ts);
@@ -15,7 +15,8 @@ export const getEntries = query({
     limit: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
-    const user = await getCurrentUserOrThrow(ctx);
+    const user = await getCurrentUser(ctx);
+    if (!user) return [];
     return ctx.db
       .query("journalEntries")
       .withIndex("userId", (q) => q.eq("userId", user._id))
@@ -27,7 +28,8 @@ export const getEntries = query({
 export const getEntryByDate = query({
   args: { date: v.number() },
   handler: async (ctx, args) => {
-    const user = await getCurrentUserOrThrow(ctx);
+    const user = await getCurrentUser(ctx);
+    if (!user) return null;
     const day = startOfDay(args.date);
     return ctx.db
       .query("journalEntries")
@@ -39,7 +41,8 @@ export const getEntryByDate = query({
 export const getTodayEntry = query({
   args: {},
   handler: async (ctx) => {
-    const user = await getCurrentUserOrThrow(ctx);
+    const user = await getCurrentUser(ctx);
+    if (!user) return null;
     const today = startOfDay(Date.now());
     return ctx.db
       .query("journalEntries")
@@ -52,7 +55,8 @@ export const getTodayEntry = query({
 export const getStreak = query({
   args: {},
   handler: async (ctx) => {
-    const user = await getCurrentUserOrThrow(ctx);
+    const user = await getCurrentUser(ctx);
+    if (!user) return 0;
     const entries = await ctx.db
       .query("journalEntries")
       .withIndex("userId", (q) => q.eq("userId", user._id))
@@ -79,7 +83,8 @@ export const getStreak = query({
 export const getStats = query({
   args: {},
   handler: async (ctx) => {
-    const user = await getCurrentUserOrThrow(ctx);
+    const user = await getCurrentUser(ctx);
+    if (!user) return { total: 0, streak: 0, moodCounts: {}, tagCounts: {} };
     const entries = await ctx.db
       .query("journalEntries")
       .withIndex("userId", (q) => q.eq("userId", user._id))
@@ -115,7 +120,8 @@ export const getEntryDates = query({
     toDate: v.number(),
   },
   handler: async (ctx, args) => {
-    const user = await getCurrentUserOrThrow(ctx);
+    const user = await getCurrentUser(ctx);
+    if (!user) return [];
     const from = startOfDay(args.fromDate);
     const to = startOfDay(args.toDate);
 
