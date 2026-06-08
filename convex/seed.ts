@@ -2,6 +2,21 @@ import { mutation } from "./_generated/server";
 import { v, ConvexError } from "convex/values";
 import { createAccount } from "@convex-dev/auth/server";
 
+// One-time fix: reset a specific user's XP to a correct value.
+// Run via: npx convex run seed:resetXp --email "you@example.com" --xp 0
+export const resetXp = mutation({
+  args: { email: v.string(), xp: v.number() },
+  handler: async (ctx, args) => {
+    const user = await ctx.db
+      .query("users")
+      .withIndex("email", (q) => q.eq("email", args.email.toLowerCase()))
+      .unique();
+    if (!user) throw new ConvexError("User not found.");
+    await ctx.db.patch(user._id, { xp: args.xp, lastActiveDate: undefined });
+    return { reset: true, userId: user._id };
+  },
+});
+
 export const createAdmin = mutation({
   args: {
     email: v.string(),

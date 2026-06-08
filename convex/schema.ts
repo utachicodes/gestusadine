@@ -370,8 +370,24 @@ const schema = defineSchema({
     avgPeriodLength: v.number(), // default 5
     notifications: v.boolean(),
     reminderDays: v.number(), // days before expected period to remind
+    // Qadaa schedule preferences
+    qadaaDaysPerWeek: v.optional(v.number()),      // how many days/week to fast qadaa (1–7)
+    qadaaPreferredDays: v.optional(v.array(v.number())), // weekdays: 0=Sun … 6=Sat
+    qadaaReminderEnabled: v.optional(v.boolean()),
     updatedAt: v.number(),
   }).index("userId", ["userId"]),
+
+  // One row per missed Ramadan fasting day (sawm qadaa).
+  // Inserted automatically when a period cycle overlaps with Ramadan.
+  sawmQadaa: defineTable({
+    userId: v.id("users"),
+    ramadanDate: v.number(),   // start-of-day UTC of the specific Ramadan day missed
+    ramadanYear: v.number(),   // Gregorian year of that Ramadan
+    completedAt: v.optional(v.number()), // when she made it up; undefined = still owed
+    createdAt: v.number(),
+  })
+    .index("userId", ["userId"])
+    .index("userId_ramadanDate", ["userId", "ramadanDate"]),
 
   // ── PWA Push Notifications ────────────────────────────────────────────────
 

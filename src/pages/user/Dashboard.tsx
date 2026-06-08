@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { RankDisplay } from "@/components/gamification/RankDisplay";
 import { useProfileStats } from "@/data/profile";
-import { useConvex, useMutation, useQuery } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 
 type LanguageCode = "fr" | "en";
@@ -51,68 +51,41 @@ const MOCK_DAILY: DailyData = {
 
 const Dashboard: React.FC = () => {
   const { language, t } = useLanguage();
-  const convex = useConvex();
   const stats = useProfileStats();
   const subscription = useQuery(api.subscription.getMySubscription);
   const recordActivity = useMutation(api.gamification.recordDailyActivity);
   const isFree = subscription?.tier === 'free';
 
+  // Fire once on mount — backend now guards against double-counting per day
   React.useEffect(() => {
     recordActivity().catch(() => {});
-  }, [recordActivity]);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const [loadingDaily, setLoadingDaily] = React.useState(true);
-  const [daily, setDaily] = React.useState<DailyData | null>(null);
-  const [error, setError] = React.useState<string | null>(null);
+  // Reactive query — data arrives as soon as the WS connection delivers it,
+  // no extra imperative round-trip after mount.
+  const dailyRaw = useQuery(api.daily.getDaily);
+  const loadingDaily = dailyRaw === undefined;
 
+  const [hijriDate, setHijriDate] = React.useState<string>("-");
+
+  // Fetch Hijri date once per session, derived from today's date (no Convex dep)
   React.useEffect(() => {
-    const fetchDaily = async () => {
-      setLoadingDaily(true);
-      setError(null);
-      try {
-        const data = await convex.query(api.daily.getDaily);
+    const now = new Date();
+    const day = String(now.getDate()).padStart(2, "0");
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const year = now.getFullYear();
+    fetch(`https://api.aladhan.com/v1/gToH/${day}-${month}-${year}`)
+      .then((r) => r.ok ? r.json() : null)
+      .then((payload) => {
+        const hijri = payload?.data?.hijri;
+        if (hijri) setHijriDate(`${hijri.day} ${hijri.month?.en} ${hijri.year}`);
+      })
+      .catch(() => {});
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-        // Fetch Hijri date client-side via AlAdhan API
-        let hijriDate = "Hijri date unavailable";
-        try {
-          const now = new Date(data.gregorianDate);
-          const day = String(now.getDate()).padStart(2, "0");
-          const month = String(now.getMonth() + 1).padStart(2, "0");
-          const year = now.getFullYear();
-
-          const url = `https://api.aladhan.com/v1/gToH/${day}-${month}-${year}`;
-          const res = await fetch(url);
-          if (res.ok) {
-            const payload = (await res.json()) as any;
-            const hijri = payload?.data?.hijri;
-            if (hijri) {
-              hijriDate = `${hijri.day} ${hijri.month?.en} ${hijri.year}`;
-            }
-          }
-        } catch (err) {
-          console.error("Error fetching Hijri date:", err);
-        }
-
-        setDaily({
-          gregorianDate: data.gregorianDate,
-          hijriDate,
-          ayah: data.ayah,
-          hadith: data.hadith,
-          dua: data.dua,
-          fact: data.fact,
-          action: data.action,
-        });
-      } catch (err) {
-        console.error('Error fetching daily content:', err);
-        setError('Failed to load daily content');
-        setDaily(MOCK_DAILY);
-      } finally {
-        setLoadingDaily(false);
-      }
-    };
-
-    fetchDaily();
-  }, [language, convex]);
+  const daily: DailyData | null = dailyRaw
+    ? { ...dailyRaw, hijriDate }
+    : loadingDaily ? null : MOCK_DAILY;
 
   const [showReminder, setShowReminder] = React.useState(false);
   const [showBetaBanner, setShowBetaBanner] = React.useState(() => {
