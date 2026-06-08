@@ -2,6 +2,7 @@ import { mutation, internalMutation, internalQuery, query, internalAction, actio
 import { v } from "convex/values";
 import { internal } from "./_generated/api";
 import { getCurrentUserOrThrow } from "./authz";
+import { getAuthUserId } from "@convex-dev/auth/server";
 import { Coordinates, CalculationMethod, PrayerTimes } from "adhan";
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
@@ -218,10 +219,11 @@ export const saveSettings = mutation({
 export const sendTestNotification = action({
   args: {},
   handler: async (ctx) => {
-    const user = await getCurrentUserOrThrow(ctx);
+    const userId = await getAuthUserId(ctx);
+    if (!userId) throw new Error("Please sign in to continue.");
     const subs = await ctx.runQuery(
       internal.notifications._getSubscriptionsForUser,
-      { userId: user._id }
+      { userId }
     );
     if (subs.length === 0) {
       throw new Error("No push subscription found. Enable push notifications first.");
