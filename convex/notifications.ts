@@ -135,6 +135,28 @@ export const saveSubscription = mutation({
   },
 });
 
+// Save an Expo Push Token (React Native). Reuses pushSubscriptions table
+// with endpoint = expo push token and empty p256dh/auth (not needed for Expo).
+export const saveExpoPushToken = mutation({
+  args: { token: v.string() },
+  handler: async (ctx, args) => {
+    const user = await getCurrentUserOrThrow(ctx);
+    const existing = await ctx.db
+      .query("pushSubscriptions")
+      .withIndex("userId", (q) => q.eq("userId", user._id))
+      .filter((q) => q.eq(q.field("endpoint"), args.token))
+      .unique();
+    if (!existing) {
+      await ctx.db.insert("pushSubscriptions", {
+        userId: user._id,
+        endpoint: args.token,
+        p256dh: "",
+        auth: "",
+      });
+    }
+  },
+});
+
 export const removeSubscription = mutation({
   args: {
     endpoint: v.string(),

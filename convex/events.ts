@@ -70,7 +70,7 @@ export const myRegistrations = query({
     if (!user) return [];
     const regs = await ctx.db
       .query("eventRegistrations")
-      .filter((q) => q.eq(q.field("userId"), user._id))
+      .withIndex("userId", (q) => q.eq("userId", user._id))
       .collect();
     return regs.map((r) => r.eventId);
   },
