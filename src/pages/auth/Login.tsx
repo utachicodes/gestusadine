@@ -115,10 +115,10 @@ const Login = () => {
         setIsLoading(false);
         return;
       }
-      switchMode();
+      // Signup succeeded and the session is live — redirect straight to dashboard.
+      navigate('/dashboard', { replace: true });
     } catch (err: any) {
       setError(err?.message || 'Something went wrong.');
-    } finally {
       setIsLoading(false);
     }
   };

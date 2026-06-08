@@ -149,29 +149,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     try {
       await signIn("password", {
-        email,
+        email: trimmedEmail,
         password,
-        name: fullName,
+        name: fullName.trim(),
         gender: gender ?? undefined,
         flow: "signUp",
       } as any);
-    } catch {
-      // signIn is a non-atomic action — it may create the user in DB then fail
-      // before the session is created. Check if the user was actually created.
-      const userExists = await convex.query(api.users.checkEmailExists, { email: trimmedEmail });
-      if (!userExists) {
-        return { error: new Error("Sign up failed. Please try again.") };
-      }
+    } catch (err: any) {
+      return { error: new Error(err?.message ?? "Sign up failed. Please try again.") };
     }
 
-    try {
-      await convexSignOut();
-    } catch {
-      // Ignore sign-out failures
-    }
-
+    // Signup succeeded — user is now authenticated, redirect them straight in.
     return { error: null };
-  }, [signIn, convexSignOut, convex]);
+  }, [signIn, convex]);
 
   const signOutFn = React.useCallback(async () => {
     await convexSignOut();
