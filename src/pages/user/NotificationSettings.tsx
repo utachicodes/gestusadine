@@ -77,10 +77,10 @@ const TIMEZONES = [
 const DEFAULT_SETTINGS: NotificationSettingsState = {
   prayers: { fajr: false, dhuhr: false, asr: false, maghrib: false, isha: false },
   prayerLocation: { lat: "", lng: "", timezone: "Africa/Dakar" },
-  quranReminderEnabled: false,
-  quranReminderTime: "06:00",
-  dailyContentEnabled: false,
-  dailyContentTime: "08:00",
+  quranReminderEnabled: true,
+  quranReminderTime: "10:00",
+  dailyContentEnabled: true,
+  dailyContentTime: "22:00",
 };
 
 // ─── helpers ──────────────────────────────────────────────────────────────────
@@ -149,10 +149,10 @@ const NotificationSettings: React.FC = () => {
         lng:      s.longitude != null ? String(s.longitude) : "",
         timezone: typeof s.timezone === "string" ? s.timezone : "Africa/Dakar",
       },
-      quranReminderEnabled: !!(s.quranEnabled),
-      quranReminderTime:    typeof s.quranTime === "string" ? s.quranTime : "06:00",
-      dailyContentEnabled:  !!(s.dailyContentEnabled),
-      dailyContentTime:     typeof s.dailyContentTime === "string" ? s.dailyContentTime : "08:00",
+      quranReminderEnabled: s.quranEnabled !== false,
+      quranReminderTime:    typeof s.quranTime === "string" ? s.quranTime : "10:00",
+      dailyContentEnabled:  s.dailyContentEnabled !== false,
+      dailyContentTime:     typeof s.dailyContentTime === "string" ? s.dailyContentTime : "22:00",
     });
   }, [savedSettings]);
 
