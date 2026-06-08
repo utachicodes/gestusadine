@@ -3,6 +3,7 @@ import { v, ConvexError } from "convex/values";
 import { getCurrentUser, getCurrentUserOrThrow } from "./authz";
 import { MutationCtx } from "./_generated/server";
 import { Id } from "./_generated/dataModel";
+import { rateLimiter } from "./rateLimiter";
 
 function startOfDay(ts: number): number {
   const d = new Date(ts);
@@ -140,6 +141,21 @@ export const updateSettings = mutation({
   },
   handler: async (ctx, args) => {
     const user = await requireFemaleUser(ctx);
+
+    if (args.avgCycleLength !== undefined && (args.avgCycleLength < 18 || args.avgCycleLength > 60))
+      throw new ConvexError("Average cycle length must be between 18 and 60 days.");
+    if (args.avgPeriodLength !== undefined && (args.avgPeriodLength < 1 || args.avgPeriodLength > 15))
+      throw new ConvexError("Average period length must be between 1 and 15 days.");
+    if (args.reminderDays !== undefined && (args.reminderDays < 0 || args.reminderDays > 14))
+      throw new ConvexError("Reminder days must be between 0 and 14.");
+    if (args.qadaaDaysPerWeek !== undefined && (args.qadaaDaysPerWeek < 1 || args.qadaaDaysPerWeek > 7))
+      throw new ConvexError("Qadaa days per week must be between 1 and 7.");
+    if (args.qadaaPreferredDays !== undefined) {
+      if (args.qadaaPreferredDays.length > 7) throw new ConvexError("Too many preferred days.");
+      if (args.qadaaPreferredDays.some((d) => d < 0 || d > 6))
+        throw new ConvexError("Preferred days must be 0–6 (Sunday–Saturday).");
+    }
+
     const existing = await ctx.db
       .query("periodSettings")
       .withIndex("userId", (q) => q.eq("userId", user._id))
@@ -238,8 +254,10 @@ export const logDay = mutation({
   },
   handler: async (ctx, args) => {
     const user = await requireFemaleUser(ctx);
+    await rateLimiter.limit(ctx, "periodLog", { key: user._id, throws: true });
     if (args.notes && args.notes.length > 2000) throw new ConvexError("Notes must be 2000 characters or fewer.");
     if (args.symptoms && args.symptoms.length > 20) throw new ConvexError("Too many symptoms.");
+    if (args.mood && args.mood.length > 50) throw new ConvexError("Mood must be 50 characters or fewer.");
     const now = Date.now();
     const day = startOfDay(args.date ?? now);
 
@@ -311,6 +329,8 @@ export const startCycle = mutation({
   },
   handler: async (ctx, args) => {
     const user = await requireFemaleUser(ctx);
+    await rateLimiter.limit(ctx, "periodLog", { key: user._id, throws: true });
+    if (args.notes && args.notes.length > 2_000) throw new ConvexError("Notes must be 2 000 characters or fewer.");
     const now = Date.now();
     const startDate = startOfDay(args.startDate ?? now);
 
@@ -364,6 +384,7 @@ export const endCycle = mutation({
   },
   handler: async (ctx, args) => {
     const user = await requireFemaleUser(ctx);
+    await rateLimiter.limit(ctx, "periodLog", { key: user._id, throws: true });
     const cycle = await ctx.db.get(args.cycleId);
     if (!cycle || cycle.userId !== user._id) {
       throw new ConvexError("Cycle not found.");
@@ -476,6 +497,7 @@ export const markQadaaCompleted = mutation({
   args: { qadaaId: v.id("sawmQadaa") },
   handler: async (ctx, args) => {
     const user = await requireFemaleUser(ctx);
+    await rateLimiter.limit(ctx, "qadaaAction", { key: user._id, throws: true });
     const row = await ctx.db.get(args.qadaaId);
     if (!row || row.userId !== user._id) {
       throw new ConvexError("Record not found.");
@@ -489,6 +511,7 @@ export const unmarkQadaaCompleted = mutation({
   args: { qadaaId: v.id("sawmQadaa") },
   handler: async (ctx, args) => {
     const user = await requireFemaleUser(ctx);
+    await rateLimiter.limit(ctx, "qadaaAction", { key: user._id, throws: true });
     const row = await ctx.db.get(args.qadaaId);
     if (!row || row.userId !== user._id) {
       throw new ConvexError("Record not found.");

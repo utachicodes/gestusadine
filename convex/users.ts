@@ -13,7 +13,17 @@ export const getUserById = query({
   args: { userId: v.id("users") },
   handler: async (ctx, args) => {
     await getCurrentUserOrThrow(ctx);
-    return ctx.db.get(args.userId);
+    const user = await ctx.db.get(args.userId);
+    if (!user) return null;
+    // Only return display-safe fields — never email, phone, gender, or
+    // verification timestamps to prevent full-DB PII enumeration.
+    return {
+      _id: user._id,
+      fullName: user.fullName,
+      name: user.name,
+      avatarUrl: user.avatarUrl,
+      role: user.role,
+    };
   },
 });
 
@@ -24,6 +34,10 @@ export const updateProfile = mutation({
   },
   handler: async (ctx, args) => {
     const user = await getCurrentUserOrThrow(ctx);
+    if (args.fullName !== undefined && args.fullName.length > 150)
+      throw new ConvexError("Display name must be 150 characters or fewer.");
+    if (args.avatarUrl !== undefined && args.avatarUrl.length > 600)
+      throw new ConvexError("Avatar URL is too long.");
     const patch: Record<string, any> = {};
     if (args.fullName !== void 0) patch.fullName = args.fullName;
     if (args.avatarUrl !== void 0) patch.avatarUrl = args.avatarUrl;
@@ -55,13 +69,11 @@ export const updateSubscriptionTier = mutation({
   },
   handler: async (ctx, args) => {
     const user = await getCurrentUserOrThrow(ctx);
-    // Self-service tier changes are a paid-feature bypass. The real upgrade path
-    // is the NabooPay webhook -> internal confirmPayment mutation. Allow direct
-    // changes only for platform admins, or on a dev deployment that explicitly
-    // opts in (used by the DEV-only tier switcher in Settings).
-    const isPlatformAdmin = user.role === "admin" || user.role === "system";
-    const devSwitchEnabled = process.env.ALLOW_SELF_TIER_SWITCH === "true";
-    if (!isPlatformAdmin && !devSwitchEnabled) {
+    // Admin-only. The real upgrade path for all other users is the NabooPay
+    // webhook → internal confirmPayment. The ALLOW_SELF_TIER_SWITCH flag has
+    // been removed — it was a privilege-escalation risk if the env var leaked
+    // to production.
+    if (user.role !== "admin" && user.role !== "system") {
       throw new ConvexError("Subscription tier can only be changed through checkout.");
     }
     await ctx.db.patch(user._id, { subscriptionTier: args.tier });

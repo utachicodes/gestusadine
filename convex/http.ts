@@ -1,7 +1,6 @@
 import { httpRouter } from "convex/server";
 import { httpAction } from "./_generated/server";
 import { internal } from "./_generated/api";
-import { v } from "convex/values";
 import { auth } from "./auth";
 
 const http = httpRouter();
@@ -40,6 +39,22 @@ http.route({
 
     if (signature !== expectedHex) {
       return new Response("Invalid signature", { status: 401 });
+    }
+
+    // Replay-attack window: reject webhooks whose embedded timestamp is older
+    // than 5 minutes. If NabooPay includes `created_at` (Unix s) or `timestamp`
+    // we enforce it; if absent we proceed but log a warning.
+    const webhookTs: number | undefined =
+      typeof payload.created_at === "number" ? payload.created_at :
+      typeof payload.timestamp   === "number" ? payload.timestamp  : undefined;
+    if (webhookTs !== undefined) {
+      const ageSecs = Math.floor(Date.now() / 1000) - webhookTs;
+      if (ageSecs > 300 || ageSecs < -60) {
+        console.warn("[naboopay] webhook outside 5-min freshness window", { ageSecs });
+        return new Response("Webhook expired", { status: 400 });
+      }
+    } else {
+      console.warn("[naboopay] webhook payload missing timestamp — cannot enforce freshness window");
     }
 
     const orderId = payload.order_id;

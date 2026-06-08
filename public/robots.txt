@@ -1,14 +1,41 @@
-User-agent: Googlebot
+User-agent: *
 Allow: /
+Disallow: /dashboard/
+Disallow: /admin/
 
-User-agent: Bingbot
-Allow: /
-
+# Social media crawlers — allow for preview cards
 User-agent: Twitterbot
 Allow: /
 
 User-agent: facebookexternalhit
 Allow: /
 
-User-agent: *
+User-agent: LinkedInBot
 Allow: /
+
+# AI training crawlers — disallow
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: Claude-Web
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: PerplexityBot
+Disallow: /
+
+User-agent: Omgili
+Disallow: /
+
+Sitemap: https://gestusadine.com/sitemap.xml

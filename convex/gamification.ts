@@ -1,6 +1,7 @@
 import { query, mutation } from "./_generated/server";
-import { v } from "convex/values";
+import { v, ConvexError } from "convex/values";
 import { getCurrentUser, getCurrentUserOrThrow } from "./authz";
+import { rateLimiter } from "./rateLimiter";
 
 const RANK_THRESHOLDS = [
   { rank: "Talib", minXp: 0 },
@@ -88,7 +89,15 @@ export const awardXp = mutation({
     reason: v.string(),
   },
   handler: async (ctx, args) => {
+    // Validate: positive, capped at 500 per call, reason max 200 chars.
+    if (!Number.isFinite(args.amount) || args.amount <= 0 || args.amount > 500) {
+      throw new ConvexError("XP amount must be between 1 and 500.");
+    }
+    if (args.reason.length > 200) {
+      throw new ConvexError("Reason must be 200 characters or fewer.");
+    }
     const user = await getCurrentUserOrThrow(ctx);
+    await rateLimiter.limit(ctx, "xpAward", { key: user._id, throws: true });
     const currentXp = user.xp ?? 0;
     await ctx.db.patch(user._id, { xp: currentXp + args.amount });
     await ctx.db.insert("userActivity", {

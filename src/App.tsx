@@ -33,6 +33,7 @@ const Contact         = lazy(() => import("./pages/core/Contact"));
 const FAQ             = lazy(() => import("./pages/core/FAQ"));
 const Privacy         = lazy(() => import("./pages/core/Privacy"));
 const Terms           = lazy(() => import("./pages/core/Terms"));
+const DataCompliance  = lazy(() => import("./pages/core/DataCompliance"));
 const Pricing         = lazy(() => import("./pages/core/Pricing"));
 
 const ChatInterface   = lazy(() => import("./components/chat/ChatInterface").then(m => ({ default: m.ChatInterface })));
@@ -88,8 +89,9 @@ const App = () => {
                         <Route path="/about"   element={<AppShell><About /></AppShell>} />
                         <Route path="/contact" element={<AppShell><Contact /></AppShell>} />
                         <Route path="/faq"     element={<AppShell><FAQ /></AppShell>} />
-                        <Route path="/privacy" element={<AppShell><Privacy /></AppShell>} />
-                        <Route path="/terms"   element={<AppShell><Terms /></AppShell>} />
+                        <Route path="/privacy"          element={<AppShell><Privacy /></AppShell>} />
+                        <Route path="/terms"            element={<AppShell><Terms /></AppShell>} />
+                        <Route path="/data-compliance"  element={<AppShell><DataCompliance /></AppShell>} />
                         <Route path="/pricing" element={<AppShell><Pricing /></AppShell>} />
                         <Route path="/login"   element={<Login />} />
 
