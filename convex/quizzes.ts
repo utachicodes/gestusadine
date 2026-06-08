@@ -38,6 +38,16 @@ export const create = mutation({
   },
   handler: async (ctx, args) => {
     const user = await requireStaff(ctx);
+    if (args.question.length > 2_000) throw new ConvexError("Question must be 2 000 chars or fewer.");
+    if (args.options.length > 6) throw new ConvexError("Max 6 options.");
+    for (const opt of args.options) {
+      if (opt.length > 500) throw new ConvexError("Each option must be 500 chars or fewer.");
+    }
+    if (args.correctIndex < 0 || args.correctIndex >= args.options.length)
+      throw new ConvexError("correctIndex out of range.");
+    if (args.explanation && args.explanation.length > 5_000)
+      throw new ConvexError("Explanation must be 5 000 chars or fewer.");
+    if (args.category.length > 100) throw new ConvexError("Category must be 100 chars or fewer.");
     return ctx.db.insert("dailyQuizzes", {
       ...args,
       createdBy: user._id,
@@ -80,6 +90,19 @@ export const submitAnswer = mutation({
     const user = await getCurrentUserOrThrow(ctx);
     const quiz = await ctx.db.get(args.quizId);
     if (!quiz) throw new ConvexError("This quiz is no longer available.");
+
+    if (args.selectedIndex < 0 || args.selectedIndex >= quiz.options.length)
+      throw new ConvexError("Invalid answer selection.");
+
+    // Idempotency guard — one attempt per user per quiz, ever.
+    const existing = await ctx.db
+      .query("quizAttempts")
+      .withIndex("quizId", (q) => q.eq("quizId", args.quizId))
+      .filter((q) => q.eq(q.field("userId"), user._id))
+      .first();
+    if (existing) {
+      return { correct: existing.correct, xpEarned: 0, correctIndex: quiz.correctIndex, explanation: quiz.explanation };
+    }
 
     const correct = args.selectedIndex === quiz.correctIndex;
     const xpEarned = correct ? (quiz.difficulty === "easy" ? 10 : quiz.difficulty === "medium" ? 25 : 50) : 0;

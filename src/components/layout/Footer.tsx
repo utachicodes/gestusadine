@@ -105,9 +105,10 @@ const Footer = () => {
           <p className="text-xs text-muted-foreground/60">
             © {currentYear} GëstuSaDine. {tr({ en: 'All rights reserved.', fr: 'Tous droits réservés.' })}
           </p>
-          <div className="flex gap-6">
-            <Link to="/privacy" className="text-xs text-muted-foreground/60 hover:text-muted-foreground transition-colors">{tr({ en: 'Privacy', fr: 'Confidentialité' })}</Link>
-            <Link to="/terms" className="text-xs text-muted-foreground/60 hover:text-muted-foreground transition-colors">{tr({ en: 'Terms', fr: 'Conditions' })}</Link>
+          <div className="flex gap-6 flex-wrap justify-center sm:justify-end">
+            <Link to="/privacy"         className="text-xs text-muted-foreground/60 hover:text-muted-foreground transition-colors">{tr({ en: 'Privacy', fr: 'Confidentialité' })}</Link>
+            <Link to="/terms"           className="text-xs text-muted-foreground/60 hover:text-muted-foreground transition-colors">{tr({ en: 'Terms', fr: 'Conditions' })}</Link>
+            <Link to="/data-compliance" className="text-xs text-muted-foreground/60 hover:text-muted-foreground transition-colors">{tr({ en: 'Data & Compliance', fr: 'Données & Conformité' })}</Link>
           </div>
         </div>
       </div>

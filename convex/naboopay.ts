@@ -41,7 +41,7 @@ export const createCheckoutSession = action({
       if (args.phone) customer.phone = args.phone;
 
       const body: Record<string, unknown> = {
-        method_of_payment: ["wave", "orange_money"],
+        method_of_payment: ["wave", "orange_money"], // Additionallly add a credit card option for non-mobile users
         products: [
           {
             name: tierInfo.label,

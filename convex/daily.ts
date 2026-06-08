@@ -1,5 +1,5 @@
 import { mutation, query, internalMutation } from "./_generated/server";
-import { v } from "convex/values";
+import { v, ConvexError } from "convex/values";
 import { requireStaff } from "./authz";
 
 export const list = query({
@@ -38,6 +38,9 @@ export const create = mutation({
   },
   handler: async (ctx, args) => {
     const user = await requireStaff(ctx);
+    if (args.content.length > 5_000) throw new ConvexError("Content must be 5 000 characters or fewer.");
+    if (args.source.length > 500) throw new ConvexError("Source must be 500 characters or fewer.");
+    if (args.translation && args.translation.length > 5_000) throw new ConvexError("Translation must be 5 000 characters or fewer.");
     return ctx.db.insert("dailyContent", {
       ...args,
       createdAt: Date.now(),
@@ -57,6 +60,9 @@ export const update = mutation({
   },
   handler: async (ctx, args) => {
     await requireStaff(ctx);
+    if (args.content && args.content.length > 5_000) throw new ConvexError("Content must be 5 000 characters or fewer.");
+    if (args.source && args.source.length > 500) throw new ConvexError("Source must be 500 characters or fewer.");
+    if (args.translation && args.translation.length > 5_000) throw new ConvexError("Translation must be 5 000 characters or fewer.");
     const { id, ...fields } = args;
     await ctx.db.patch(id, { ...fields });
   },

@@ -49,14 +49,31 @@ export const generate = action({
         content: v.string(),
       })
     ),
-    language: v.optional(v.string()),
-    madhab: v.optional(v.string()),
+    // Whitelisted literals only — prevents prompt injection via these fields.
+    language: v.optional(v.union(v.literal("en"), v.literal("fr"), v.literal("ar"))),
+    madhab: v.optional(v.union(
+      v.literal("general"),
+      v.literal("hanafi"),
+      v.literal("maliki"),
+      v.literal("shafii"),
+      v.literal("hanbali"),
+    )),
   },
   handler: async (ctx, args) => {
     // The chat action must not be anonymously callable — otherwise the Fanar
     // budget and per-tier quota can be bypassed by calling it directly.
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new ConvexError("Please sign in to use the assistant.");
+
+    // Hard caps: max 50 turns, each message max 4 000 chars.
+    if (args.messages.length > 50) {
+      throw new ConvexError("Conversation is too long. Please start a new one.");
+    }
+    for (const msg of args.messages) {
+      if (msg.content.length > 4_000) {
+        throw new ConvexError("Message is too long (max 4 000 characters).");
+      }
+    }
 
     const lastUserMsg = [...args.messages].reverse().find((m) => m.role === "user");
     const userText = lastUserMsg?.content?.trim() ?? "";

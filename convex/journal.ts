@@ -1,6 +1,7 @@
 import { query, mutation } from "./_generated/server";
 import { v, ConvexError } from "convex/values";
 import { getCurrentUser, getCurrentUserOrThrow } from "./authz";
+import { rateLimiter } from "./rateLimiter";
 
 function startOfDay(ts: number): number {
   const d = new Date(ts);
@@ -17,11 +18,12 @@ export const getEntries = query({
   handler: async (ctx, args) => {
     const user = await getCurrentUser(ctx);
     if (!user) return [];
+    const limit = Math.min(Math.max(1, args.limit ?? 50), 500);
     return ctx.db
       .query("journalEntries")
       .withIndex("userId", (q) => q.eq("userId", user._id))
       .order("desc")
-      .take(args.limit ?? 50);
+      .take(limit);
   },
 });
 
@@ -150,6 +152,7 @@ export const createEntry = mutation({
   },
   handler: async (ctx, args) => {
     const user = await getCurrentUserOrThrow(ctx);
+    await rateLimiter.limit(ctx, "journalWrite", { key: user._id, throws: true });
 
     if (!args.content.trim()) {
       throw new ConvexError("Journal entry content cannot be empty.");
@@ -157,6 +160,7 @@ export const createEntry = mutation({
     if (args.content.length > 20000) throw new ConvexError("Content must be 20,000 characters or fewer.");
     if (args.title && args.title.length > 200) throw new ConvexError("Title must be 200 characters or fewer.");
     if (args.tags && args.tags.length > 20) throw new ConvexError("Too many tags.");
+    if (args.tags && args.tags.some((t) => t.length > 50)) throw new ConvexError("Each tag must be 50 characters or fewer.");
 
     const now = Date.now();
     const entryDate = startOfDay(args.entryDate ?? now);
@@ -203,6 +207,7 @@ export const updateEntry = mutation({
   },
   handler: async (ctx, args) => {
     const user = await getCurrentUserOrThrow(ctx);
+    await rateLimiter.limit(ctx, "journalWrite", { key: user._id, throws: true });
     const entry = await ctx.db.get(args.id);
     if (!entry || entry.userId !== user._id) {
       throw new ConvexError("Entry not found.");
@@ -221,6 +226,7 @@ export const updateEntry = mutation({
     if (args.mood !== undefined) patch.mood = args.mood;
     if (args.tags !== undefined) {
       if (args.tags.length > 20) throw new ConvexError("Too many tags.");
+      if (args.tags.some((t) => t.length > 50)) throw new ConvexError("Each tag must be 50 characters or fewer.");
       patch.tags = args.tags;
     }
 
