@@ -9,7 +9,7 @@ export default defineConfig(({ mode }) => ({
       output: {
         manualChunks: {
           // Convex runtime — rarely changes, long cache life
-          "vendor-convex": ["convex", "@convex-dev/auth"],
+          "vendor-convex": ["convex"],
           // React ecosystem
           "vendor-react": ["react", "react-dom", "react-router-dom"],
           // Radix UI / Shadcn component primitives
