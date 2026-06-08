@@ -1,11 +1,95 @@
 import { query, mutation } from "./_generated/server";
 import { v, ConvexError } from "convex/values";
 import { getCurrentUser, getCurrentUserOrThrow } from "./authz";
+import { MutationCtx } from "./_generated/server";
+import { Id } from "./_generated/dataModel";
 
 function startOfDay(ts: number): number {
   const d = new Date(ts);
   d.setUTCHours(0, 0, 0, 0);
   return d.getTime();
+}
+
+// ── Ramadan Calendar ──────────────────────────────────────────────────────────
+// Approximate Ramadan start dates (Gregorian) per year. Based on global crescent
+// moon sightings. Extend this table when new years are confirmed.
+const RAMADAN_STARTS: Record<number, [number, number]> = {
+  // [month (1-12), day]
+  2019: [5,  5],
+  2020: [4, 24],
+  2021: [4, 13],
+  2022: [4,  2],
+  2023: [3, 23],
+  2024: [3, 11],
+  2025: [3,  1],
+  2026: [2, 18],
+  2027: [2,  8],
+  2028: [1, 28],
+  2029: [1, 17],
+  2030: [1,  6],
+};
+const RAMADAN_DAYS = 29; // use 29 as minimum; some years are 30 — safe to use 30
+
+function getRamadanRange(year: number): { start: number; end: number } | null {
+  const entry = RAMADAN_STARTS[year];
+  if (!entry) return null;
+  const [month, day] = entry;
+  const start = Date.UTC(year, month - 1, day);
+  const end = start + (RAMADAN_DAYS + 1) * 86_400_000; // +1 day safety buffer for 30-day months
+  return { start, end };
+}
+
+/** Returns all Ramadan day timestamps that fall within [cycleStart, cycleEnd]. */
+function ramadanDaysInRange(
+  cycleStart: number,
+  cycleEnd: number,
+): { date: number; year: number }[] {
+  const results: { date: number; year: number }[] = [];
+  // Check the Ramadan for the year of the cycle start and the year after
+  // (a cycle could straddle a year boundary in January)
+  const years = new Set([
+    new Date(cycleStart).getUTCFullYear(),
+    new Date(cycleEnd).getUTCFullYear(),
+  ]);
+  for (const year of years) {
+    const range = getRamadanRange(year);
+    if (!range) continue;
+    let d = range.start;
+    while (d <= range.end) {
+      if (d >= cycleStart && d <= cycleEnd) {
+        results.push({ date: d, year });
+      }
+      d += 86_400_000;
+    }
+  }
+  return results;
+}
+
+/** Upsert qadaa rows for every Ramadan day that falls inside the given cycle. */
+async function syncQadaaForCycle(
+  ctx: MutationCtx,
+  userId: Id<"users">,
+  cycleStart: number,
+  cycleEnd: number,
+): Promise<void> {
+  const days = ramadanDaysInRange(cycleStart, cycleEnd);
+  const now = Date.now();
+  for (const { date, year } of days) {
+    const existing = await ctx.db
+      .query("sawmQadaa")
+      .withIndex("userId_ramadanDate", (q) =>
+        q.eq("userId", userId).eq("ramadanDate", date),
+      )
+      .first();
+    if (!existing) {
+      await ctx.db.insert("sawmQadaa", {
+        userId,
+        ramadanDate: date,
+        ramadanYear: year,
+        createdAt: now,
+      });
+    }
+  }
 }
 
 /** Returns null if unauthenticated or not female. Used in read-only queries (no error thrown). */
@@ -50,6 +134,9 @@ export const updateSettings = mutation({
     avgPeriodLength: v.optional(v.number()),
     notifications: v.optional(v.boolean()),
     reminderDays: v.optional(v.number()),
+    qadaaDaysPerWeek: v.optional(v.number()),
+    qadaaPreferredDays: v.optional(v.array(v.number())),
+    qadaaReminderEnabled: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
     const user = await requireFemaleUser(ctx);
@@ -65,6 +152,9 @@ export const updateSettings = mutation({
       if (args.avgPeriodLength !== undefined) patch.avgPeriodLength = args.avgPeriodLength;
       if (args.notifications !== undefined) patch.notifications = args.notifications;
       if (args.reminderDays !== undefined) patch.reminderDays = args.reminderDays;
+      if (args.qadaaDaysPerWeek !== undefined) patch.qadaaDaysPerWeek = args.qadaaDaysPerWeek;
+      if (args.qadaaPreferredDays !== undefined) patch.qadaaPreferredDays = args.qadaaPreferredDays;
+      if (args.qadaaReminderEnabled !== undefined) patch.qadaaReminderEnabled = args.qadaaReminderEnabled;
       await ctx.db.patch(existing._id, patch);
     } else {
       await ctx.db.insert("periodSettings", {
@@ -73,6 +163,9 @@ export const updateSettings = mutation({
         avgPeriodLength: args.avgPeriodLength ?? 5,
         notifications: args.notifications ?? false,
         reminderDays: args.reminderDays ?? 2,
+        qadaaDaysPerWeek: args.qadaaDaysPerWeek,
+        qadaaPreferredDays: args.qadaaPreferredDays,
+        qadaaReminderEnabled: args.qadaaReminderEnabled,
         updatedAt: now,
       });
     }
@@ -229,11 +322,9 @@ export const startCycle = mutation({
 
     for (const c of openCycles) {
       if (c.endDate === undefined) {
-        // Close it one day before the new start
-        await ctx.db.patch(c._id, {
-          endDate: startDate - 86400000,
-          updatedAt: now,
-        });
+        const autoEndDate = startDate - 86400000;
+        await ctx.db.patch(c._id, { endDate: autoEndDate, updatedAt: now });
+        await syncQadaaForCycle(ctx, user._id, c.startDate, autoEndDate);
       }
     }
 
@@ -279,6 +370,7 @@ export const endCycle = mutation({
     }
     const endDate = startOfDay(args.endDate ?? Date.now());
     await ctx.db.patch(args.cycleId, { endDate, updatedAt: Date.now() });
+    await syncQadaaForCycle(ctx, user._id, cycle.startDate, endDate);
   },
 });
 
@@ -343,5 +435,94 @@ export const getAnalytics = query({
       moodCounts,
       lastPeriodStart: cycles[0]?.startDate ?? null,
     };
+  },
+});
+
+// ── Sawm Qadaa ────────────────────────────────────────────────────────────────
+
+export const getQadaaSummary = query({
+  args: {},
+  handler: async (ctx) => {
+    const user = await getFemaleUser(ctx);
+    if (!user) return null;
+
+    const rows = await ctx.db
+      .query("sawmQadaa")
+      .withIndex("userId", (q) => q.eq("userId", user._id))
+      .collect();
+
+    const totalOwed = rows.filter((r) => r.completedAt === undefined).length;
+    const totalCompleted = rows.filter((r) => r.completedAt !== undefined).length;
+
+    // Group owed by year
+    const byYear: Record<number, { owed: number; completed: number; dates: number[] }> = {};
+    for (const r of rows) {
+      if (!byYear[r.ramadanYear]) {
+        byYear[r.ramadanYear] = { owed: 0, completed: 0, dates: [] };
+      }
+      if (r.completedAt === undefined) {
+        byYear[r.ramadanYear].owed++;
+        byYear[r.ramadanYear].dates.push(r.ramadanDate);
+      } else {
+        byYear[r.ramadanYear].completed++;
+      }
+    }
+
+    return { totalOwed, totalCompleted, byYear, rows };
+  },
+});
+
+export const markQadaaCompleted = mutation({
+  args: { qadaaId: v.id("sawmQadaa") },
+  handler: async (ctx, args) => {
+    const user = await requireFemaleUser(ctx);
+    const row = await ctx.db.get(args.qadaaId);
+    if (!row || row.userId !== user._id) {
+      throw new ConvexError("Record not found.");
+    }
+    if (row.completedAt !== undefined) return; // already marked
+    await ctx.db.patch(args.qadaaId, { completedAt: Date.now() });
+  },
+});
+
+export const unmarkQadaaCompleted = mutation({
+  args: { qadaaId: v.id("sawmQadaa") },
+  handler: async (ctx, args) => {
+    const user = await requireFemaleUser(ctx);
+    const row = await ctx.db.get(args.qadaaId);
+    if (!row || row.userId !== user._id) {
+      throw new ConvexError("Record not found.");
+    }
+    await ctx.db.patch(args.qadaaId, { completedAt: undefined });
+  },
+});
+
+/** Scan all past completed cycles and insert qadaa rows for any Ramadan overlap
+ *  not yet recorded. Safe to call multiple times — upsert logic skips duplicates. */
+export const backfillQadaaFromHistory = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const user = await requireFemaleUser(ctx);
+    const cycles = await ctx.db
+      .query("periodCycles")
+      .withIndex("userId", (q) => q.eq("userId", user._id))
+      .collect();
+
+    let inserted = 0;
+    for (const cycle of cycles) {
+      if (cycle.endDate === undefined) continue; // skip open cycles
+      const before = await ctx.db
+        .query("sawmQadaa")
+        .withIndex("userId", (q) => q.eq("userId", user._id))
+        .collect();
+      const beforeCount = before.length;
+      await syncQadaaForCycle(ctx, user._id, cycle.startDate, cycle.endDate);
+      const after = await ctx.db
+        .query("sawmQadaa")
+        .withIndex("userId", (q) => q.eq("userId", user._id))
+        .collect();
+      inserted += after.length - beforeCount;
+    }
+    return { inserted };
   },
 });
