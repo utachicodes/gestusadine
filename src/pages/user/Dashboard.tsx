@@ -13,16 +13,11 @@ type LanguageCode = "fr" | "en";
 interface DailyData {
   gregorianDate: string;
   hijriDate: string;
-  ayah: {
-    reference: string;
-    arabic: string;
-    translation: string;
-  };
-  dua: {
-    arabic: string;
-    translation: string;
-  };
+  ayah: { reference: string; arabic: string; translation: string };
+  hadith: { arabic: string; translation: string; source: string };
+  dua: { arabic: string; translation: string };
   fact: string;
+  action: string;
 }
 
 const getCurrentDate = () => {
@@ -46,36 +41,12 @@ const getCurrentDateFormatted = (format: 'US' | 'EU' | 'ISO') => {
 
 const MOCK_DAILY: DailyData = {
   gregorianDate: getCurrentDate(),
-  hijriDate: "25 Jumādā al-Thānī 1447",
-  ayah: {
-    reference: "Al-Baqarah 2:286",
-    arabic: "لَا يُكَلِّفُ ٱللَّهُ نَفْسًا إِلَّا وُسْعَهَا",
-    translation: "Allah does not burden a soul beyond what it can bear.",
-  },
-  dua: {
-    arabic: "رَبِّ زِدْنِي عِلْمًا",
-    translation: "My Lord, increase me in knowledge.",
-  },
-  fact: "The five daily prayers were made obligatory during the Night Journey (al-Isrāʾ wal-Miʿrāj).",
-};
-
-const MOCK_DAILY_BY_LANG: Record<LanguageCode, DailyData> = {
-  en: MOCK_DAILY,
-  fr: {
-    gregorianDate: getCurrentDateFormatted('US'),
-    hijriDate: "25 Jumādā al-Thānī 1447",
-    ayah: {
-      reference: "Al-Baqara 2:286",
-      arabic: "لَا يُكَلِّفُ ٱللَّهُ نَفْسًا إِلَّا وُسْعَهَا",
-      translation:
-        "Allah n'impose à aucune âme une charge supérieure à sa capacité.",
-    },
-    dua: {
-      arabic: "رَبِّ زِدْنِي عِلْمًا",
-      translation: "Seigneur, augmente-moi en science.",
-    },
-    fact: "Les cinq prières obligatoires rythment la journée du musulman, de l’aube à la nuit.",
-  },
+  hijriDate: "-",
+  ayah: { reference: "Al-Baqarah 2:286", arabic: "لا يكلف الله نفسا الا وسعها", translation: "Allah does not burden a soul beyond what it can bear." },
+  hadith: { arabic: "انما الاعمال بالنيات", translation: "Actions are but by intentions.", source: "Sahih al-Bukhari 1" },
+  dua: { arabic: "رب زدني علما", translation: "My Lord, increase me in knowledge." },
+  fact: "The five daily prayers were made obligatory during the Night Journey.",
+  action: "Take a moment to remember Allah with sincerity and share something beneficial with someone today.",
 };
 
 const Dashboard: React.FC = () => {
@@ -122,20 +93,19 @@ const Dashboard: React.FC = () => {
           console.error("Error fetching Hijri date:", err);
         }
 
-        // Map API response to DailyData format
-        const mappedData: DailyData = {
+        setDaily({
           gregorianDate: data.gregorianDate,
           hijriDate,
           ayah: data.ayah,
+          hadith: data.hadith,
           dua: data.dua,
           fact: data.fact,
-        };
-        setDaily(mappedData);
+          action: data.action,
+        });
       } catch (err) {
         console.error('Error fetching daily content:', err);
         setError('Failed to load daily content');
-        // Fallback to mock data
-        setDaily(MOCK_DAILY_BY_LANG[language]);
+        setDaily(MOCK_DAILY);
       } finally {
         setLoadingDaily(false);
       }
@@ -332,16 +302,15 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
 
-        {/* Reminder Modal/Expanded */}
+        {/* Reminder Modal */}
         {showReminder && (
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setShowReminder(false)}>
             <div className="islamic-card p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-semibold text-foreground">{t('dashboard.todays_reminder')}</h2>
-                <button
-                  onClick={() => setShowReminder(false)}
-                  className="text-muted-foreground hover:text-foreground"
-                >
+                <h2 className="text-2xl font-semibold text-foreground">
+                  {language === 'fr' ? "Rappel du jour" : "Today's Reminder"}
+                </h2>
+                <button onClick={() => setShowReminder(false)} className="text-muted-foreground hover:text-foreground">
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
@@ -350,22 +319,26 @@ const Dashboard: React.FC = () => {
               <div className="space-y-6">
                 {/* Daily Action */}
                 <div className="p-4 bg-accent/5 rounded-lg border border-accent/20">
-                  <p className="text-sm font-semibold text-muted-foreground mb-2">{t('dashboard.todays_action')}</p>
+                  <p className="text-sm font-semibold text-muted-foreground mb-2">
+                    {language === 'fr' ? "Action du jour" : "Today's Action"}
+                  </p>
                   <p className="text-base text-foreground/90 leading-relaxed">
-                    {t('dashboard.action_text')}
+                    {daily?.action ?? (loadingDaily ? "…" : "—")}
                   </p>
                 </div>
 
                 {/* Hadith */}
                 <div className="p-4 bg-secondary/5 rounded-lg border border-secondary/20">
-                  <p className="text-sm font-semibold text-muted-foreground mb-2">{t('dashboard.hadith_of_the_day')}</p>
+                  <p className="text-sm font-semibold text-muted-foreground mb-2">
+                    {language === 'fr' ? "Hadith du jour" : "Hadith of the Day"}
+                  </p>
                   <p className="font-arabic text-lg text-foreground mb-3 text-right leading-relaxed">
-                    {t('dashboard.hadith_text')}
+                    {daily?.hadith.arabic ?? (loadingDaily ? "…" : "—")}
                   </p>
                   <p className="text-sm text-muted-foreground leading-relaxed mb-2">
-                    {t('dashboard.hadith_translation')}
+                    {daily?.hadith.translation ?? ""}
                   </p>
-                  <p className="text-xs text-muted-foreground">{t('dashboard.source_authentic_hadith')}</p>
+                  <p className="text-xs text-muted-foreground/60">{daily?.hadith.source ?? ""}</p>
                 </div>
               </div>
             </div>

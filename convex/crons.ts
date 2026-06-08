@@ -10,4 +10,11 @@ crons.daily(
   internal.quizScheduler.generateDailyQuiz,
 );
 
+// Generate daily spiritual content (ayah, hadith, dua, fact, action) at midnight UTC
+crons.daily(
+  "generate daily content",
+  { hourUTC: 0, minuteUTC: 5 },
+  internal.dailyScheduler.generateDailyContent,
+);
+
 export default crons;
