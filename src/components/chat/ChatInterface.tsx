@@ -360,7 +360,7 @@ export const ChatInterface = () => {
                 onChange={(e) => setInput(e.target.value)}
                 placeholder={tr({ en: 'Ask a question...', fr: 'Posez une question...' })}
                 rows={1}
-                className="flex-1 bg-transparent border-0 focus:ring-0 resize-none py-1 text-sm text-foreground placeholder:text-muted-foreground min-h-[24px] max-h-[200px] outline-none"
+                className="flex-1 bg-transparent border-0 focus:ring-0 resize-none py-1 text-base text-foreground placeholder:text-muted-foreground min-h-[24px] max-h-[200px] outline-none"
                 disabled={isLoading}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' && !e.shiftKey) {

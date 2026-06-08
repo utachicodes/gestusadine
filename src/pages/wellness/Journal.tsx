@@ -242,14 +242,14 @@ export default function Journal() {
               value={editorTitle}
               onChange={(e) => { setEditorTitle(e.target.value); setIsDirty(true); }}
               placeholder={tr({ en: 'Title (optional)', fr: 'Titre (facultatif)' })}
-              className="w-full px-4 py-2.5 rounded-xl border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all placeholder:text-muted-foreground/50"
+              className="w-full px-4 py-2.5 rounded-xl border border-border bg-background text-foreground text-base focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all placeholder:text-muted-foreground/50"
             />
             <textarea
               value={editorContent}
               onChange={(e) => { setEditorContent(e.target.value); setIsDirty(true); }}
               placeholder={tr({ en: 'Write your thoughts…', fr: 'Écrivez vos pensées…' })}
               rows={10}
-              className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all resize-none placeholder:text-muted-foreground/50"
+              className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground text-base focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all resize-none placeholder:text-muted-foreground/50"
             />
 
             {/* Mood */}
@@ -300,7 +300,7 @@ export default function Journal() {
                   onChange={(e) => setTagInput(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addTag())}
                   placeholder={tr({ en: 'Add tag…', fr: 'Ajouter une étiquette…' })}
-                  className="flex-1 px-3 py-2 rounded-xl border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all placeholder:text-muted-foreground/50"
+                  className="flex-1 px-3 py-2 rounded-xl border border-border bg-background text-foreground text-base focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all placeholder:text-muted-foreground/50"
                 />
                 <button onClick={addTag} className="px-3 py-2 rounded-xl bg-muted/40 border border-border text-muted-foreground hover:text-foreground transition-colors">
                   <Tag className="w-4 h-4" />
