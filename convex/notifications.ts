@@ -216,6 +216,66 @@ export const saveSettings = mutation({
   },
 });
 
+export const scheduleForToday = action({
+  args: {},
+  handler: async (ctx) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) throw new Error("Not authenticated.");
+
+    const settings = await ctx.runQuery(internal.notifications._getSettingsForUser, { userId });
+    if (!settings) return;
+
+    const subs = await ctx.runQuery(internal.notifications._getSubscriptionsForUser, { userId });
+    if (subs.length === 0) return;
+
+    const now = Date.now();
+
+    // Prayer times
+    if (settings.prayerEnabled && settings.latitude && settings.longitude && settings.timezone) {
+      const times = getPrayerTimesUtc(
+        settings.latitude,
+        settings.longitude,
+        settings.timezone,
+        settings.calculationMethod ?? "MuslimWorldLeague"
+      );
+      const prayers = [
+        { key: "fajr",    enabled: settings.fajrEnabled    !== false, label: "Fajr" },
+        { key: "dhuhr",   enabled: settings.dhuhrEnabled   !== false, label: "Dhuhr" },
+        { key: "asr",     enabled: settings.asrEnabled     !== false, label: "Asr" },
+        { key: "maghrib", enabled: settings.maghribEnabled !== false, label: "Maghrib" },
+        { key: "isha",    enabled: settings.ishaEnabled    !== false, label: "Isha" },
+      ];
+      for (const p of prayers) {
+        if (!p.enabled) continue;
+        const t = times[p.key as keyof typeof times];
+        if (t > now) {
+          await ctx.scheduler.runAt(t, internal.notifications.deliverPrayerPush, {
+            userId,
+            prayerName: p.key,
+            prayerLabel: p.label,
+          });
+        }
+      }
+    }
+
+    // Quran reminder
+    if (settings.quranEnabled && settings.quranTime && settings.timezone) {
+      const t = getReminderTimeTodayUtc(settings.quranTime, settings.timezone);
+      if (t !== null) {
+        await ctx.scheduler.runAt(t, internal.notifications.deliverQuranReminder, { userId });
+      }
+    }
+
+    // Daily content reminder
+    if (settings.dailyContentEnabled && settings.timezone) {
+      const t = getReminderTimeTodayUtc(settings.dailyContentTime ?? "08:00", settings.timezone);
+      if (t !== null) {
+        await ctx.scheduler.runAt(t, internal.notifications.deliverDailyContentReminder, { userId });
+      }
+    }
+  },
+});
+
 export const sendTestNotification = action({
   args: {},
   handler: async (ctx) => {
