@@ -1,69 +1,34 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import { format, isToday, isSameDay } from 'date-fns';
-import { motion, AnimatePresence } from 'framer-motion';
-import {
-  BookOpen, Plus, Search, Calendar, BarChart2,
-  Flame, ChevronLeft, ChevronRight, Trash2, Edit3, X, Check,
-  Sun,
-} from 'lucide-react';
+import { BookOpen, Flame, BarChart2, Calendar, ChevronLeft, ChevronRight, Trash2, Edit3, X, Search, Tag } from 'lucide-react';
 import { toast } from 'sonner';
 import { PageHeader } from '@/components/layout/PageHeader';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useTr } from '@/lib/i18n';
 import type { Id } from '../../../convex/_generated/dataModel';
 
 // ── Mood config ───────────────────────────────────────────────────────────────
 
 const MOODS = [
-  { key: 'grateful', emoji: '🤲', label: 'Grateful', labelFr: 'Reconnaissant', color: 'bg-emerald-100 text-emerald-800 border-emerald-200' },
-  { key: 'happy', emoji: '😊', label: 'Happy', labelFr: 'Heureux', color: 'bg-yellow-100 text-yellow-800 border-yellow-200' },
-  { key: 'calm', emoji: '🧘', label: 'Calm', labelFr: 'Calme', color: 'bg-blue-100 text-blue-800 border-blue-200' },
-  { key: 'hopeful', emoji: '✨', label: 'Hopeful', labelFr: 'Plein d\'espoir', color: 'bg-purple-100 text-purple-800 border-purple-200' },
-  { key: 'tired', emoji: '😴', label: 'Tired', labelFr: 'Fatigué', color: 'bg-stone-100 text-stone-600 border-stone-200' },
-  { key: 'anxious', emoji: '😟', label: 'Anxious', labelFr: 'Anxieux', color: 'bg-orange-100 text-orange-800 border-orange-200' },
-  { key: 'sad', emoji: '😔', label: 'Sad', labelFr: 'Triste', color: 'bg-slate-100 text-slate-700 border-slate-200' },
-  { key: 'angry', emoji: '😤', label: 'Frustrated', labelFr: 'Frustré', color: 'bg-red-100 text-red-800 border-red-200' },
+  { key: 'grateful', emoji: '🤲', en: 'Grateful', fr: 'Reconnaissant' },
+  { key: 'happy',    emoji: '😊', en: 'Happy',    fr: 'Heureux' },
+  { key: 'calm',     emoji: '🧘', en: 'Calm',     fr: 'Calme' },
+  { key: 'hopeful',  emoji: '✨', en: 'Hopeful',  fr: "Plein d'espoir" },
+  { key: 'tired',    emoji: '😴', en: 'Tired',    fr: 'Fatigué' },
+  { key: 'anxious',  emoji: '😟', en: 'Anxious',  fr: 'Anxieux' },
+  { key: 'sad',      emoji: '😔', en: 'Sad',      fr: 'Triste' },
+  { key: 'angry',    emoji: '😤', en: 'Frustrated', fr: 'Frustré' },
 ] as const;
 
 type MoodKey = (typeof MOODS)[number]['key'];
 
 const TEMPLATES = [
-  {
-    key: 'free',
-    label: 'Free write',
-    labelFr: 'Écriture libre',
-    icon: '✏️',
-    prompt: '',
-  },
-  {
-    key: 'gratitude',
-    label: 'Gratitude',
-    labelFr: 'Gratitude',
-    icon: '🤲',
-    prompt: `Today I am grateful for:\n1. \n2. \n3. \n\nA blessing I noticed today:\n\nA dua I want to make:\n`,
-  },
-  {
-    key: 'reflection',
-    label: 'Reflection',
-    labelFr: 'Réflexion',
-    icon: '🌙',
-    prompt: `What I did today:\n\nWhat went well:\n\nWhat I want to improve:\n\nLesson I learned:\n`,
-  },
-  {
-    key: 'daily',
-    label: 'Daily check-in',
-    labelFr: 'Bilan quotidien',
-    icon: '☀️',
-    prompt: `Mood today: \n\nMy intention for the day:\n\nWhat I want to accomplish:\n\nOne thing I am looking forward to:\n`,
-  },
+  { key: 'free',       en: 'Free write',      fr: 'Écriture libre',  icon: '✏️', prompt: '' },
+  { key: 'gratitude',  en: 'Gratitude',       fr: 'Gratitude',       icon: '🤲', prompt: "Today I am grateful for:\n1. \n2. \n3. \n\nA blessing I noticed:\n\nA dua I want to make:\n" },
+  { key: 'reflection', en: 'Reflection',      fr: 'Réflexion',       icon: '🌙', prompt: "What I did today:\n\nWhat went well:\n\nWhat I want to improve:\n\nLesson I learned:\n" },
+  { key: 'daily',      en: 'Daily check-in',  fr: 'Bilan quotidien', icon: '☀️', prompt: "Mood today: \n\nMy intention for the day:\n\nWhat I want to accomplish:\n\nOne thing I look forward to:\n" },
 ] as const;
-
-// ── Helpers ───────────────────────────────────────────────────────────────────
-
-function getMood(key: string | undefined) {
-  return MOODS.find((m) => m.key === key);
-}
 
 function startOfDayUTC(date: Date): number {
   const d = new Date(date);
@@ -71,56 +36,37 @@ function startOfDayUTC(date: Date): number {
   return d.getTime();
 }
 
-// ── Sub-components ────────────────────────────────────────────────────────────
-
-const MoodPicker = ({ value, onChange, language }: {
-  value: string | undefined;
-  onChange: (mood: string | undefined) => void;
-  language: string;
-}) => (
-  <div className="flex flex-wrap gap-2">
-    {MOODS.map((m) => (
-      <button
-        key={m.key}
-        type="button"
-        onClick={() => onChange(value === m.key ? undefined : m.key)}
-        className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-xs font-medium transition-all ${
-          value === m.key
-            ? m.color + ' border-current shadow-sm scale-105'
-            : 'bg-white border-stone-200 text-stone-500 hover:border-stone-300'
-        }`}
-        title={language === 'fr' ? m.labelFr : m.label}
-      >
-        <span className="text-sm">{m.emoji}</span>
-        <span className="hidden sm:inline">{language === 'fr' ? m.labelFr : m.label}</span>
-      </button>
-    ))}
-  </div>
-);
-
-// ── Main component ────────────────────────────────────────────────────────────
+// ── Tabs ──────────────────────────────────────────────────────────────────────
 
 type Tab = 'today' | 'entries' | 'calendar' | 'stats';
 
+const TABS: { id: Tab; en: string; fr: string; icon: React.ReactNode }[] = [
+  { id: 'today',    en: 'Today',   fr: "Aujourd'hui", icon: <Edit3 className="w-3.5 h-3.5" /> },
+  { id: 'entries',  en: 'Entries', fr: 'Entrées',     icon: <BookOpen className="w-3.5 h-3.5" /> },
+  { id: 'calendar', en: 'Calendar',fr: 'Calendrier',  icon: <Calendar className="w-3.5 h-3.5" /> },
+  { id: 'stats',    en: 'Stats',   fr: 'Statistiques',icon: <BarChart2 className="w-3.5 h-3.5" /> },
+];
+
+// ── Main component ────────────────────────────────────────────────────────────
+
 export default function Journal() {
-  const { language } = useLanguage();
+  const tr = useTr();
   const [tab, setTab] = useState<Tab>('today');
   const [calendarMonth, setCalendarMonth] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
   // Editor state
   const [editorTitle, setEditorTitle] = useState('');
   const [editorContent, setEditorContent] = useState('');
-  const [editorMood, setEditorMood] = useState<string | undefined>(undefined);
+  const [editorMood, setEditorMood] = useState<string | undefined>();
   const [editorTags, setEditorTags] = useState<string[]>([]);
   const [editorTemplate, setEditorTemplate] = useState('free');
   const [tagInput, setTagInput] = useState('');
-  const [isEditing, setIsEditing] = useState(false);
   const [editingId, setEditingId] = useState<Id<'journalEntries'> | null>(null);
   const [isDirty, setIsDirty] = useState(false);
 
-  // Convex
+  // Queries
   const todayEntry = useQuery(api.journal.getTodayEntry);
   const allEntries = useQuery(api.journal.getEntries, { limit: 100 });
   const stats = useQuery(api.journal.getStats);
@@ -128,16 +74,14 @@ export default function Journal() {
     fromDate: startOfDayUTC(new Date(calendarMonth.getFullYear(), calendarMonth.getMonth(), 1)),
     toDate: startOfDayUTC(new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + 1, 0)),
   });
-  const selectedDateEntry = useQuery(api.journal.getEntryByDate, {
-    date: startOfDayUTC(selectedDate),
-  });
+  const selectedDateEntry = useQuery(api.journal.getEntryByDate, { date: startOfDayUTC(selectedDate) });
 
   const createEntry = useMutation(api.journal.createEntry);
   const updateEntry = useMutation(api.journal.updateEntry);
   const deleteEntry = useMutation(api.journal.deleteEntry);
 
-  // Initialize editor with today's entry if it exists
-  React.useEffect(() => {
+  // Sync editor from today's entry on mount
+  useEffect(() => {
     if (tab === 'today' && todayEntry !== undefined && !isDirty) {
       if (todayEntry) {
         setEditorTitle(todayEntry.title ?? '');
@@ -157,272 +101,167 @@ export default function Journal() {
     }
   }, [todayEntry, tab, isDirty]);
 
-  const handleTemplateChange = (templateKey: string) => {
-    const tpl = TEMPLATES.find((t) => t.key === templateKey);
-    if (!tpl) return;
-    setEditorTemplate(templateKey);
-    if (!editorContent.trim() || editorContent === TEMPLATES.find(t => t.key === editorTemplate)?.prompt) {
-      setEditorContent(tpl.prompt);
-    }
-    setIsDirty(true);
-  };
-
   const handleSave = async () => {
-    if (!editorContent.trim()) {
-      toast.error(language === 'fr' ? 'Contenu vide.' : 'Entry cannot be empty.');
-      return;
-    }
+    if (!editorContent.trim()) { toast.error(tr({ en: 'Write something first.', fr: 'Écrivez quelque chose d\'abord.' })); return; }
     try {
-      await createEntry({
-        title: editorTitle.trim() || undefined,
-        content: editorContent,
-        mood: editorMood,
-        tags: editorTags,
-        template: editorTemplate,
-      });
+      if (editingId) {
+        await updateEntry({ id: editingId, title: editorTitle || undefined, content: editorContent, mood: editorMood, tags: editorTags });
+      } else {
+        await createEntry({ title: editorTitle || undefined, content: editorContent, mood: editorMood, tags: editorTags, template: editorTemplate });
+      }
+      toast.success(tr({ en: 'Entry saved.', fr: 'Entrée enregistrée.' }));
       setIsDirty(false);
-      toast.success(language === 'fr' ? 'Entrée sauvegardée.' : 'Entry saved.');
     } catch {
-      toast.error(language === 'fr' ? 'Erreur lors de la sauvegarde.' : 'Failed to save entry.');
+      toast.error(tr({ en: 'Could not save.', fr: 'Impossible d\'enregistrer.' }));
     }
   };
 
   const handleDelete = async (id: Id<'journalEntries'>) => {
     try {
       await deleteEntry({ id });
-      toast.success(language === 'fr' ? 'Entrée supprimée.' : 'Entry deleted.');
-      if (editingId === id) {
-        setIsEditing(false);
-        setEditorContent('');
-        setEditorTitle('');
-        setEditorMood(undefined);
-        setEditorTags([]);
-        setEditingId(null);
-        setIsDirty(false);
-      }
+      toast.success(tr({ en: 'Entry deleted.', fr: 'Entrée supprimée.' }));
+      if (editingId === id) { setEditorTitle(''); setEditorContent(''); setEditorMood(undefined); setEditorTags([]); setEditingId(null); setIsDirty(false); }
     } catch {
-      toast.error(language === 'fr' ? 'Erreur lors de la suppression.' : 'Failed to delete entry.');
+      toast.error(tr({ en: 'Could not delete.', fr: 'Impossible de supprimer.' }));
     }
   };
 
-  const openEntryEditor = (entry: NonNullable<typeof allEntries>[number]) => {
-    setEditorTitle(entry.title ?? '');
-    setEditorContent(entry.content);
-    setEditorMood(entry.mood);
-    setEditorTags(entry.tags ?? []);
-    setEditorTemplate(entry.template ?? 'free');
-    setEditingId(entry._id);
-    setIsEditing(true);
-    setIsDirty(false);
-  };
-
-  const closeEditor = () => {
-    setIsEditing(false);
-    setEditingId(null);
-    setIsDirty(false);
-  };
-
-  const handleUpdateEntry = async () => {
-    if (!editingId || !editorContent.trim()) return;
-    try {
-      await updateEntry({
-        id: editingId,
-        title: editorTitle.trim() || undefined,
-        content: editorContent,
-        mood: editorMood,
-        tags: editorTags,
-      });
-      setIsDirty(false);
-      toast.success(language === 'fr' ? 'Mis à jour.' : 'Updated.');
-      closeEditor();
-    } catch {
-      toast.error(language === 'fr' ? 'Erreur.' : 'Failed to update.');
-    }
+  const applyTemplate = (key: string) => {
+    const t = TEMPLATES.find((t) => t.key === key);
+    if (!t) return;
+    setEditorTemplate(key);
+    if (!isDirty && t.prompt) { setEditorContent(t.prompt); }
   };
 
   const addTag = () => {
-    const t = tagInput.trim().toLowerCase().replace(/\s+/g, '-');
-    if (t && !editorTags.includes(t) && editorTags.length < 8) {
-      setEditorTags([...editorTags, t]);
+    const tag = tagInput.trim().toLowerCase();
+    if (tag && !editorTags.includes(tag) && editorTags.length < 20) {
+      setEditorTags([...editorTags, tag]);
+      setTagInput('');
       setIsDirty(true);
     }
-    setTagInput('');
   };
 
-  const removeTag = (tag: string) => {
-    setEditorTags(editorTags.filter((t) => t !== tag));
-    setIsDirty(true);
-  };
-
-  const filteredEntries = useMemo(() => {
-    if (!allEntries) return [];
+  const filteredEntries = (allEntries ?? []).filter((e) => {
+    if (!searchQuery) return true;
     const q = searchQuery.toLowerCase();
-    if (!q) return allEntries;
-    return allEntries.filter(
-      (e) =>
-        e.content.toLowerCase().includes(q) ||
-        (e.title ?? '').toLowerCase().includes(q) ||
-        (e.tags ?? []).some((t) => t.includes(q))
-    );
-  }, [allEntries, searchQuery]);
+    return (e.title ?? '').toLowerCase().includes(q) || e.content.toLowerCase().includes(q);
+  });
 
-  // Calendar helpers
-  const calendarDayHasEntry = (date: Date) => {
-    const ts = startOfDayUTC(date);
-    return entryDates?.some((ed) => ed.date === ts) ?? false;
-  };
+  const getMoodEntry = (key?: string | null) => MOODS.find((m) => m.key === key);
 
-  const calendarDayMood = (date: Date) => {
-    const ts = startOfDayUTC(date);
-    return entryDates?.find((ed) => ed.date === ts)?.mood;
-  };
-
-  const buildCalendarWeeks = () => {
-    const year = calendarMonth.getFullYear();
-    const month = calendarMonth.getMonth();
-    const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0);
-    const startDow = firstDay.getDay();
-    const weeks: (Date | null)[][] = [];
-    let week: (Date | null)[] = Array(startDow).fill(null);
-
-    for (let d = 1; d <= lastDay.getDate(); d++) {
-      week.push(new Date(year, month, d));
-      if (week.length === 7) { weeks.push(week); week = []; }
-    }
-    if (week.length) {
-      while (week.length < 7) week.push(null);
-      weeks.push(week);
-    }
-    return weeks;
-  };
-
-  const tabs: { key: Tab; label: string; labelFr: string; icon: React.ReactNode }[] = [
-    { key: 'today', label: 'Today', labelFr: "Aujourd'hui", icon: <Sun className="w-4 h-4" /> },
-    { key: 'entries', label: 'Entries', labelFr: 'Entrées', icon: <BookOpen className="w-4 h-4" /> },
-    { key: 'calendar', label: 'Calendar', labelFr: 'Calendrier', icon: <Calendar className="w-4 h-4" /> },
-    { key: 'stats', label: 'Stats', labelFr: 'Statistiques', icon: <BarChart2 className="w-4 h-4" /> },
-  ];
+  // Calendar grid
+  const calYear = calendarMonth.getFullYear();
+  const calMon = calendarMonth.getMonth();
+  const firstDay = new Date(calYear, calMon, 1).getDay();
+  const daysInMonth = new Date(calYear, calMon + 1, 0).getDate();
+  const entryDateMap = new Map((entryDates ?? []).map((e) => [e.date, e.mood]));
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-6 space-y-6" data-tour="journal">
+    <div className="container py-8 md:py-10 space-y-6 max-w-5xl">
       <PageHeader
-        title={language === 'fr' ? 'Journal' : 'Journal'}
-        subtitle={language === 'fr' ? 'Réflexion quotidienne & bien-être' : 'Daily reflection & wellbeing'}
+        eyebrow={tr({ en: 'Wellness', fr: 'Bien-être' })}
+        title={tr({ en: 'Journal', fr: 'Journal' })}
+        subtitle={tr({
+          en: 'Reflect, record, and track your inner journey every day.',
+          fr: 'Réfléchissez, notez et suivez votre cheminement intérieur chaque jour.',
+        })}
       />
 
-      {/* Streak banner */}
-      {stats && stats.streak > 0 && (
-        <div className="flex items-center gap-3 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
-          <Flame className="w-5 h-5 text-amber-500" />
-          <p className="text-sm font-medium text-amber-800">
-            {stats.streak}{' '}
-            {language === 'fr'
-              ? `jour${stats.streak > 1 ? 's' : ''} de suite — continuez !`
-              : `day${stats.streak > 1 ? 's' : ''} streak — keep it up!`}
-          </p>
-        </div>
-      )}
-
       {/* Tab bar */}
-      <div className="flex gap-1 bg-stone-100 p-1 rounded-xl">
-        {tabs.map((t) => (
+      <div className="flex gap-1 border-b border-border">
+        {TABS.map((t) => (
           <button
-            key={t.key}
-            type="button"
-            onClick={() => { setTab(t.key); setIsEditing(false); }}
-            className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-2 rounded-lg text-xs sm:text-sm font-medium transition-all ${
-              tab === t.key
-                ? 'bg-white shadow-sm text-stone-900'
-                : 'text-stone-500 hover:text-stone-700'
+            key={t.id}
+            onClick={() => setTab(t.id)}
+            className={`flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors ${
+              tab === t.id
+                ? 'border-primary text-primary'
+                : 'border-transparent text-muted-foreground hover:text-foreground'
             }`}
           >
             {t.icon}
-            <span className="hidden sm:inline">{language === 'fr' ? t.labelFr : t.label}</span>
+            <span className="hidden sm:inline">{tr({ en: t.en, fr: t.fr })}</span>
           </button>
         ))}
       </div>
 
-      <AnimatePresence mode="wait">
-        {/* ── TODAY ── */}
-        {tab === 'today' && !isEditing && (
-          <motion.div
-            key="today"
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.2 }}
-            className="space-y-4"
-          >
-            <div className="flex items-center justify-between">
-              <p className="text-stone-500 text-sm">{format(new Date(), 'EEEE, MMMM d')}</p>
-              {todayEntry && (
-                <span className="text-xs text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-full px-2.5 py-0.5">
-                  {language === 'fr' ? 'Sauvegardé' : 'Saved'}
-                </span>
-              )}
+      {/* ── TODAY ───────────────────────────────────────────────────────── */}
+      {tab === 'today' && (
+        <div className="space-y-4">
+          {/* Template picker */}
+          <div className="islamic-card p-4 sm:p-5">
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground mb-3">
+              {tr({ en: 'Template', fr: 'Modèle' })}
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {TEMPLATES.map((t) => (
+                <button
+                  key={t.key}
+                  onClick={() => applyTemplate(t.key)}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-sm font-medium transition-all ${
+                    editorTemplate === t.key
+                      ? 'border-primary bg-primary/10 text-primary'
+                      : 'border-border bg-muted/30 text-muted-foreground hover:border-primary/40 hover:text-foreground'
+                  }`}
+                >
+                  <span>{t.icon}</span>
+                  {tr({ en: t.en, fr: t.fr })}
+                </button>
+              ))}
             </div>
+          </div>
 
-            {/* Template picker */}
+          {/* Editor */}
+          <div className="islamic-card p-4 sm:p-6 space-y-4">
+            <input
+              type="text"
+              value={editorTitle}
+              onChange={(e) => { setEditorTitle(e.target.value); setIsDirty(true); }}
+              placeholder={tr({ en: 'Title (optional)', fr: 'Titre (facultatif)' })}
+              className="w-full px-4 py-2.5 rounded-xl border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all placeholder:text-muted-foreground/50"
+            />
+            <textarea
+              value={editorContent}
+              onChange={(e) => { setEditorContent(e.target.value); setIsDirty(true); }}
+              placeholder={tr({ en: 'Write your thoughts…', fr: 'Écrivez vos pensées…' })}
+              rows={10}
+              className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all resize-none placeholder:text-muted-foreground/50"
+            />
+
+            {/* Mood */}
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wide text-stone-400 mb-2">
-                {language === 'fr' ? 'Modèle' : 'Template'}
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground mb-2">
+                {tr({ en: 'Mood', fr: 'Humeur' })}
               </p>
-              <div className="flex gap-2 flex-wrap">
-                {TEMPLATES.map((tpl) => (
+              <div className="flex flex-wrap gap-2">
+                {MOODS.map((m) => (
                   <button
-                    key={tpl.key}
-                    type="button"
-                    onClick={() => handleTemplateChange(tpl.key)}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-medium transition-all ${
-                      editorTemplate === tpl.key
-                        ? 'bg-emerald-50 border-emerald-300 text-emerald-800'
-                        : 'bg-white border-stone-200 text-stone-600 hover:border-stone-300'
+                    key={m.key}
+                    onClick={() => { setEditorMood(editorMood === m.key ? undefined : m.key); setIsDirty(true); }}
+                    className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border text-xs font-medium transition-all ${
+                      editorMood === m.key
+                        ? 'border-primary bg-primary/10 text-primary'
+                        : 'border-border bg-muted/30 text-muted-foreground hover:border-primary/40'
                     }`}
                   >
-                    <span>{tpl.icon}</span>
-                    {language === 'fr' ? tpl.labelFr : tpl.label}
+                    <span>{m.emoji}</span>
+                    <span className="hidden sm:inline">{tr({ en: m.en, fr: m.fr })}</span>
                   </button>
                 ))}
               </div>
             </div>
 
-            {/* Title */}
-            <input
-              type="text"
-              placeholder={language === 'fr' ? 'Titre (optionnel)' : 'Title (optional)'}
-              value={editorTitle}
-              onChange={(e) => { setEditorTitle(e.target.value); setIsDirty(true); }}
-              className="w-full text-xl font-semibold bg-transparent border-0 outline-none text-stone-900 placeholder-stone-300"
-            />
-
-            {/* Content */}
-            <textarea
-              placeholder={language === 'fr' ? 'Commencez à écrire...' : 'Start writing...'}
-              value={editorContent}
-              onChange={(e) => { setEditorContent(e.target.value); setIsDirty(true); }}
-              rows={12}
-              className="w-full resize-none bg-white/60 border border-stone-200 rounded-xl p-4 text-sm text-stone-800 placeholder-stone-300 focus:outline-none focus:ring-2 focus:ring-emerald-700/10 focus:border-emerald-700 transition leading-relaxed"
-            />
-
-            {/* Mood */}
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-wide text-stone-400 mb-2">
-                {language === 'fr' ? 'Humeur' : 'Mood'}
-              </p>
-              <MoodPicker value={editorMood} onChange={(m) => { setEditorMood(m); setIsDirty(true); }} language={language} />
-            </div>
-
             {/* Tags */}
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wide text-stone-400 mb-2">
-                {language === 'fr' ? 'Étiquettes' : 'Tags'}
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground mb-2">
+                {tr({ en: 'Tags', fr: 'Étiquettes' })}
               </p>
-              <div className="flex flex-wrap gap-2 mb-2">
+              <div className="flex flex-wrap gap-1.5 mb-2">
                 {editorTags.map((tag) => (
-                  <span key={tag} className="flex items-center gap-1 bg-stone-100 text-stone-600 text-xs px-2 py-1 rounded-full border border-stone-200">
+                  <span key={tag} className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-accent/50 text-primary text-xs font-medium">
                     #{tag}
-                    <button type="button" onClick={() => removeTag(tag)} className="hover:text-red-500 transition-colors">
+                    <button onClick={() => { setEditorTags(editorTags.filter((t) => t !== tag)); setIsDirty(true); }}>
                       <X className="w-3 h-3" />
                     </button>
                   </span>
@@ -431,336 +270,287 @@ export default function Journal() {
               <div className="flex gap-2">
                 <input
                   type="text"
-                  placeholder={language === 'fr' ? 'Ajouter une étiquette...' : 'Add a tag...'}
                   value={tagInput}
                   onChange={(e) => setTagInput(e.target.value)}
-                  onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addTag(); } }}
-                  className="flex-1 text-sm rounded-lg border border-stone-200 bg-white/70 px-3 py-1.5 focus:outline-none focus:border-emerald-600 transition"
+                  onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addTag())}
+                  placeholder={tr({ en: 'Add tag…', fr: 'Ajouter une étiquette…' })}
+                  className="flex-1 px-3 py-2 rounded-xl border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all placeholder:text-muted-foreground/50"
                 />
-                <button
-                  type="button"
-                  onClick={addTag}
-                  className="px-3 py-1.5 rounded-lg bg-stone-100 text-stone-600 text-sm hover:bg-stone-200 transition"
-                >
-                  <Plus className="w-4 h-4" />
+                <button onClick={addTag} className="px-3 py-2 rounded-xl bg-muted/40 border border-border text-muted-foreground hover:text-foreground transition-colors">
+                  <Tag className="w-4 h-4" />
                 </button>
               </div>
             </div>
 
-            <button
-              type="button"
-              onClick={handleSave}
-              className="w-full py-3 rounded-xl bg-emerald-900 text-[#FAF7F0] text-sm font-semibold hover:bg-emerald-800 transition-colors flex items-center justify-center gap-2"
-            >
-              <Check className="w-4 h-4" />
-              {todayEntry
-                ? (language === 'fr' ? 'Mettre à jour' : 'Update entry')
-                : (language === 'fr' ? 'Sauvegarder' : 'Save entry')}
+            <button onClick={handleSave} className="btn-islamic w-full sm:w-auto">
+              {editingId
+                ? tr({ en: 'Update entry', fr: "Mettre à jour l'entrée" })
+                : tr({ en: 'Save entry', fr: "Enregistrer l'entrée" })}
             </button>
-          </motion.div>
-        )}
+          </div>
+        </div>
+      )}
 
-        {/* ── ENTRIES ── */}
-        {tab === 'entries' && !isEditing && (
-          <motion.div
-            key="entries"
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.2 }}
-            className="space-y-4"
-          >
-            {/* Search */}
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
-              <input
-                type="text"
-                placeholder={language === 'fr' ? 'Rechercher dans mes entrées...' : 'Search entries...'}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-stone-200 bg-white/70 text-sm focus:outline-none focus:border-emerald-600 transition"
-              />
-            </div>
-
-            {filteredEntries.length === 0 ? (
-              <div className="text-center py-16 text-stone-400">
-                <BookOpen className="w-10 h-10 mx-auto mb-3 opacity-30" />
-                <p className="font-medium">{language === 'fr' ? 'Aucune entrée pour l\'instant.' : 'No entries yet.'}</p>
-                <p className="text-sm mt-1">
-                  {language === 'fr' ? 'Commencez à écrire dans l\'onglet Aujourd\'hui.' : 'Start writing in the Today tab.'}
-                </p>
-              </div>
-            ) : (
-              <div className="space-y-3">
-                {filteredEntries.map((entry) => {
-                  const mood = getMood(entry.mood);
-                  return (
-                    <div
-                      key={entry._id}
-                      className="bg-white/80 border border-stone-200 rounded-xl p-4 hover:shadow-sm transition-shadow"
-                    >
-                      <div className="flex items-start justify-between gap-3 mb-2">
-                        <div className="flex-1 min-w-0">
-                          {entry.title && (
-                            <p className="font-semibold text-stone-900 text-sm truncate">{entry.title}</p>
-                          )}
-                          <p className="text-xs text-stone-400 mt-0.5">
-                            {format(new Date(entry.entryDate), 'EEEE, MMMM d, yyyy')}
-                          </p>
-                        </div>
-                        <div className="flex items-center gap-1.5 flex-shrink-0">
-                          {mood && <span className="text-lg" title={mood.label}>{mood.emoji}</span>}
-                          <button
-                            type="button"
-                            onClick={() => openEntryEditor(entry)}
-                            className="p-1.5 rounded-lg text-stone-400 hover:bg-stone-100 hover:text-stone-700 transition-colors"
-                          >
-                            <Edit3 className="w-3.5 h-3.5" />
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => handleDelete(entry._id)}
-                            className="p-1.5 rounded-lg text-stone-400 hover:bg-red-50 hover:text-red-500 transition-colors"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
-                        </div>
-                      </div>
-                      <p className="text-sm text-stone-600 line-clamp-2 leading-relaxed">
-                        {entry.content}
-                      </p>
-                      {entry.tags && entry.tags.length > 0 && (
-                        <div className="flex flex-wrap gap-1.5 mt-2">
-                          {entry.tags.map((tag) => (
-                            <span key={tag} className="text-[11px] text-stone-500 bg-stone-100 px-2 py-0.5 rounded-full">
-                              #{tag}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </motion.div>
-        )}
-
-        {/* ── Editing overlay ── */}
-        {isEditing && (
-          <motion.div
-            key="editing"
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="space-y-4"
-          >
-            <div className="flex items-center justify-between">
-              <button type="button" onClick={closeEditor} className="flex items-center gap-1.5 text-sm text-stone-500 hover:text-stone-800 transition-colors">
-                <ChevronLeft className="w-4 h-4" /> {language === 'fr' ? 'Retour' : 'Back'}
-              </button>
-              {editingId && (
-                <button type="button" onClick={() => handleDelete(editingId)} className="flex items-center gap-1.5 text-sm text-red-500 hover:text-red-700 transition-colors">
-                  <Trash2 className="w-3.5 h-3.5" /> {language === 'fr' ? 'Supprimer' : 'Delete'}
-                </button>
-              )}
-            </div>
+      {/* ── ENTRIES ─────────────────────────────────────────────────────── */}
+      {tab === 'entries' && (
+        <div className="space-y-4">
+          {/* Search */}
+          <div className="relative">
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <input
               type="text"
-              placeholder={language === 'fr' ? 'Titre (optionnel)' : 'Title (optional)'}
-              value={editorTitle}
-              onChange={(e) => { setEditorTitle(e.target.value); setIsDirty(true); }}
-              className="w-full text-xl font-semibold bg-transparent border-0 outline-none text-stone-900 placeholder-stone-300"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder={tr({ en: 'Search entries…', fr: 'Rechercher des entrées…' })}
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all placeholder:text-muted-foreground/50"
             />
-            <textarea
-              value={editorContent}
-              onChange={(e) => { setEditorContent(e.target.value); setIsDirty(true); }}
-              rows={12}
-              className="w-full resize-none bg-white/60 border border-stone-200 rounded-xl p-4 text-sm text-stone-800 focus:outline-none focus:ring-2 focus:ring-emerald-700/10 focus:border-emerald-700 transition leading-relaxed"
-            />
-            <MoodPicker value={editorMood} onChange={(m) => { setEditorMood(m); setIsDirty(true); }} language={language} />
-            <button
-              type="button"
-              onClick={handleUpdateEntry}
-              className="w-full py-3 rounded-xl bg-emerald-900 text-[#FAF7F0] text-sm font-semibold hover:bg-emerald-800 transition-colors"
-            >
-              {language === 'fr' ? 'Sauvegarder les modifications' : 'Save changes'}
-            </button>
-          </motion.div>
-        )}
+          </div>
 
-        {/* ── CALENDAR ── */}
-        {tab === 'calendar' && (
-          <motion.div
-            key="calendar"
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.2 }}
-            className="space-y-4"
-          >
-            {/* Month navigation */}
-            <div className="flex items-center justify-between">
-              <button type="button" onClick={() => setCalendarMonth(new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() - 1, 1))} className="p-2 rounded-lg hover:bg-stone-100 transition-colors">
+          {filteredEntries.length === 0 ? (
+            <div className="islamic-card p-8 text-center">
+              <BookOpen className="w-8 h-8 text-muted-foreground mx-auto mb-3" />
+              <p className="text-sm text-muted-foreground">
+                {searchQuery
+                  ? tr({ en: 'No entries match your search.', fr: 'Aucune entrée ne correspond.' })
+                  : tr({ en: 'No entries yet. Start writing today!', fr: "Pas encore d'entrées. Commencez aujourd'hui !" })}
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {filteredEntries.map((entry) => {
+                const mood = getMoodEntry(entry.mood);
+                return (
+                  <div key={entry._id} className="islamic-card p-4 sm:p-5">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2 mb-1 flex-wrap">
+                          <p className="text-xs text-muted-foreground">
+                            {format(new Date(entry.entryDate), 'dd MMM yyyy')}
+                          </p>
+                          {mood && <span className="text-sm">{mood.emoji}</span>}
+                          {isToday(new Date(entry.entryDate)) && (
+                            <span className="text-xs font-medium text-primary px-2 py-0.5 rounded-full bg-primary/10">
+                              {tr({ en: 'Today', fr: "Aujourd'hui" })}
+                            </span>
+                          )}
+                        </div>
+                        {entry.title && (
+                          <p className="text-sm font-semibold text-foreground mb-1">{entry.title}</p>
+                        )}
+                        <p className="text-sm text-muted-foreground line-clamp-2">{entry.content}</p>
+                        {(entry.tags ?? []).length > 0 && (
+                          <div className="flex flex-wrap gap-1 mt-2">
+                            {(entry.tags ?? []).map((tag) => (
+                              <span key={tag} className="text-xs px-2 py-0.5 rounded-full bg-accent/50 text-primary">#{tag}</span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-1 flex-shrink-0">
+                        <button
+                          onClick={() => {
+                            setEditorTitle(entry.title ?? '');
+                            setEditorContent(entry.content);
+                            setEditorMood(entry.mood);
+                            setEditorTags(entry.tags ?? []);
+                            setEditorTemplate(entry.template ?? 'free');
+                            setEditingId(entry._id);
+                            setIsDirty(false);
+                            setTab('today');
+                          }}
+                          className="p-2 rounded-xl hover:bg-muted/50 text-muted-foreground hover:text-foreground transition-colors"
+                        >
+                          <Edit3 className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(entry._id)}
+                          className="p-2 rounded-xl hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ── CALENDAR ────────────────────────────────────────────────────── */}
+      {tab === 'calendar' && (
+        <div className="grid lg:grid-cols-3 gap-4">
+          <div className="lg:col-span-2 islamic-card p-4 sm:p-5">
+            {/* Month nav */}
+            <div className="flex items-center justify-between mb-4">
+              <button
+                onClick={() => setCalendarMonth(new Date(calYear, calMon - 1, 1))}
+                className="p-2 rounded-xl hover:bg-muted/50 text-muted-foreground hover:text-foreground transition-colors"
+              >
                 <ChevronLeft className="w-4 h-4" />
               </button>
-              <p className="font-semibold text-stone-800">{format(calendarMonth, 'MMMM yyyy')}</p>
-              <button type="button" onClick={() => setCalendarMonth(new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + 1, 1))} className="p-2 rounded-lg hover:bg-stone-100 transition-colors">
+              <h2 className="text-sm font-semibold text-foreground">
+                {format(calendarMonth, 'MMMM yyyy')}
+              </h2>
+              <button
+                onClick={() => setCalendarMonth(new Date(calYear, calMon + 1, 1))}
+                className="p-2 rounded-xl hover:bg-muted/50 text-muted-foreground hover:text-foreground transition-colors"
+              >
                 <ChevronRight className="w-4 h-4" />
               </button>
             </div>
 
-            {/* Day headers */}
-            <div className="grid grid-cols-7 gap-1 text-center">
-              {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d, i) => (
-                <div key={i} className="text-[11px] font-semibold text-stone-400 uppercase py-1">{d}</div>
+            {/* Day names */}
+            <div className="grid grid-cols-7 gap-1 mb-2">
+              {['S','M','T','W','T','F','S'].map((d, i) => (
+                <div key={i} className="text-center text-[10px] font-semibold text-muted-foreground py-1">{d}</div>
               ))}
-              {buildCalendarWeeks().flatMap((week, wi) =>
-                week.map((date, di) => {
-                  if (!date) return <div key={`${wi}-${di}`} />;
-                  const hasEntry = calendarDayHasEntry(date);
-                  const mood = calendarDayMood(date);
-                  const moodConfig = getMood(mood);
-                  const today = isToday(date);
-                  const isSelected = isSameDay(date, selectedDate);
-                  return (
-                    <button
-                      key={`${wi}-${di}`}
-                      type="button"
-                      onClick={() => { setSelectedDate(date); }}
-                      className={`relative aspect-square flex flex-col items-center justify-center rounded-xl text-sm transition-all ${
-                        isSelected ? 'bg-emerald-900 text-white shadow-sm' :
-                        today ? 'bg-emerald-50 text-emerald-900 font-bold' :
-                        'hover:bg-stone-100 text-stone-700'
-                      }`}
-                    >
-                      <span className="text-xs leading-none">{date.getDate()}</span>
-                      {hasEntry && (
-                        <span className={`mt-0.5 text-[10px] leading-none ${isSelected ? 'opacity-80' : ''}`}>
-                          {moodConfig?.emoji ?? '•'}
-                        </span>
-                      )}
-                    </button>
-                  );
-                })
-              )}
             </div>
 
-            {/* Selected day entry preview */}
-            {selectedDateEntry !== undefined && (
-              <div className="mt-2 bg-white/80 border border-stone-200 rounded-xl p-4">
-                <p className="text-xs font-semibold text-stone-400 uppercase mb-2">
-                  {format(selectedDate, 'MMMM d, yyyy')}
-                </p>
-                {selectedDateEntry ? (
-                  <>
-                    {selectedDateEntry.title && (
-                      <p className="font-semibold text-stone-900 mb-1">{selectedDateEntry.title}</p>
+            {/* Day cells */}
+            <div className="grid grid-cols-7 gap-1">
+              {Array.from({ length: firstDay }).map((_, i) => <div key={`blank-${i}`} />)}
+              {Array.from({ length: daysInMonth }).map((_, i) => {
+                const dayDate = new Date(calYear, calMon, i + 1);
+                const dayTs = startOfDayUTC(dayDate);
+                const mood = entryDateMap.get(dayTs);
+                const hasEntry = mood !== undefined;
+                const isSelected = isSameDay(dayDate, selectedDate);
+                const isT = isToday(dayDate);
+                const moodMeta = getMoodEntry(mood);
+                return (
+                  <button
+                    key={i}
+                    onClick={() => setSelectedDate(dayDate)}
+                    className={`relative flex flex-col items-center justify-center rounded-xl aspect-square text-xs font-medium transition-all ${
+                      isSelected
+                        ? 'bg-primary text-primary-foreground'
+                        : isT
+                        ? 'bg-primary/10 text-primary'
+                        : hasEntry
+                        ? 'bg-accent/40 text-foreground hover:bg-accent/60'
+                        : 'text-muted-foreground hover:bg-muted/40'
+                    }`}
+                  >
+                    <span>{i + 1}</span>
+                    {hasEntry && !isSelected && moodMeta && (
+                      <span className="text-[10px] leading-none">{moodMeta.emoji}</span>
                     )}
-                    <p className="text-sm text-stone-600 line-clamp-4 leading-relaxed">
-                      {selectedDateEntry.content}
-                    </p>
-                    <button
-                      type="button"
-                      onClick={() => openEntryEditor(selectedDateEntry)}
-                      className="mt-3 text-xs text-emerald-700 font-medium hover:underline"
-                    >
-                      {language === 'fr' ? 'Modifier l\'entrée' : 'Edit entry'} →
-                    </button>
-                  </>
-                ) : (
-                  <p className="text-sm text-stone-400 italic">
-                    {language === 'fr' ? 'Aucune entrée ce jour-là.' : 'No entry for this day.'}
-                  </p>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Selected day entry preview */}
+          <div className="islamic-card p-4 sm:p-5">
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground mb-3">
+              {format(selectedDate, 'dd MMM yyyy')}
+            </p>
+            {selectedDateEntry === undefined ? (
+              <p className="text-sm text-muted-foreground">{tr({ en: 'Loading…', fr: 'Chargement…' })}</p>
+            ) : selectedDateEntry ? (
+              <div className="space-y-2">
+                {selectedDateEntry.title && (
+                  <p className="text-sm font-semibold text-foreground">{selectedDateEntry.title}</p>
+                )}
+                {selectedDateEntry.mood && (
+                  <p className="text-lg">{getMoodEntry(selectedDateEntry.mood)?.emoji}</p>
+                )}
+                <p className="text-sm text-muted-foreground whitespace-pre-line line-clamp-8">{selectedDateEntry.content}</p>
+                {(selectedDateEntry.tags ?? []).length > 0 && (
+                  <div className="flex flex-wrap gap-1 pt-1">
+                    {(selectedDateEntry.tags ?? []).map((tag) => (
+                      <span key={tag} className="text-xs px-2 py-0.5 rounded-full bg-accent/50 text-primary">#{tag}</span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="text-center py-4">
+                <p className="text-sm text-muted-foreground mb-3">
+                  {tr({ en: 'No entry for this day.', fr: 'Pas d\'entrée pour ce jour.' })}
+                </p>
+                {isToday(selectedDate) && (
+                  <button onClick={() => setTab('today')} className="btn-islamic text-sm">
+                    {tr({ en: 'Write today\'s entry', fr: "Écrire l'entrée d'aujourd'hui" })}
+                  </button>
                 )}
               </div>
             )}
-          </motion.div>
-        )}
+          </div>
+        </div>
+      )}
 
-        {/* ── STATS ── */}
-        {tab === 'stats' && (
-          <motion.div
-            key="stats"
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.2 }}
-            className="space-y-4"
-          >
-            <div className="grid grid-cols-3 gap-3">
-              <div className="bg-white/80 border border-stone-200 rounded-xl p-4 text-center">
-                <p className="text-2xl font-bold text-emerald-800">{stats?.total ?? 0}</p>
-                <p className="text-xs text-stone-500 mt-0.5">{language === 'fr' ? 'Entrées' : 'Entries'}</p>
+      {/* ── STATS ───────────────────────────────────────────────────────── */}
+      {tab === 'stats' && (
+        <div className="space-y-4">
+          {/* Summary cards */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+            {[
+              { icon: <BookOpen className="w-4 h-4 sm:w-5 sm:h-5" />, label: tr({ en: 'Total entries', fr: 'Total entrées' }), value: stats?.total ?? 0, sub: tr({ en: 'journal entries', fr: 'entrées de journal' }) },
+              { icon: <Flame className="w-4 h-4 sm:w-5 sm:h-5" />,   label: tr({ en: 'Streak', fr: 'Série' }),         value: stats?.streak ?? 0, sub: tr({ en: 'consecutive days', fr: 'jours consécutifs' }) },
+              { icon: <BarChart2 className="w-4 h-4 sm:w-5 sm:h-5" />,label: tr({ en: 'Moods', fr: 'Humeurs' }),       value: Object.keys(stats?.moodCounts ?? {}).length, sub: tr({ en: 'types recorded', fr: 'types enregistrés' }) },
+              { icon: <Tag className="w-4 h-4 sm:w-5 sm:h-5" />,     label: tr({ en: 'Tags', fr: 'Étiquettes' }),      value: Object.keys(stats?.tagCounts ?? {}).length, sub: tr({ en: 'unique tags', fr: 'étiquettes uniques' }) },
+            ].map(({ icon, label, value, sub }) => (
+              <div key={label} className="islamic-card p-3 sm:p-4 flex items-center justify-between gap-2">
+                <div className="min-w-0">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground mb-1 truncate">{label}</p>
+                  <p className="text-xl sm:text-2xl font-bold text-foreground leading-none">{value}</p>
+                  <p className="text-xs text-muted-foreground mt-1 truncate">{sub}</p>
+                </div>
+                <div className="flex-shrink-0 p-2 sm:p-2.5 rounded-xl bg-accent/50 text-primary">{icon}</div>
               </div>
-              <div className="bg-white/80 border border-stone-200 rounded-xl p-4 text-center">
-                <p className="text-2xl font-bold text-amber-600">{stats?.streak ?? 0}</p>
-                <p className="text-xs text-stone-500 mt-0.5">{language === 'fr' ? 'Jours de suite' : 'Day streak'}</p>
-              </div>
-              <div className="bg-white/80 border border-stone-200 rounded-xl p-4 text-center">
-                <p className="text-2xl font-bold text-purple-700">
-                  {stats ? Object.keys(stats.tagCounts).length : 0}
-                </p>
-                <p className="text-xs text-stone-500 mt-0.5">{language === 'fr' ? 'Étiquettes' : 'Tags used'}</p>
+            ))}
+          </div>
+
+          {/* Mood distribution */}
+          {Object.keys(stats?.moodCounts ?? {}).length > 0 && (
+            <div className="islamic-card p-4 sm:p-5">
+              <h2 className="text-sm font-semibold text-foreground mb-4">
+                {tr({ en: 'Mood distribution', fr: 'Répartition des humeurs' })}
+              </h2>
+              <div className="space-y-2.5">
+                {MOODS.filter((m) => (stats?.moodCounts ?? {})[m.key]).map((m) => {
+                  const count = (stats?.moodCounts ?? {})[m.key] ?? 0;
+                  const total = stats?.total ?? 1;
+                  const pct = Math.round((count / total) * 100);
+                  return (
+                    <div key={m.key} className="flex items-center gap-3">
+                      <span className="text-base w-6 text-center">{m.emoji}</span>
+                      <div className="flex-1 h-2.5 rounded-full bg-muted/40 overflow-hidden">
+                        <div className="h-full rounded-full bg-primary/70 transition-all duration-300" style={{ width: `${pct}%` }} />
+                      </div>
+                      <span className="text-xs font-medium text-muted-foreground w-8 text-right">{count}</span>
+                    </div>
+                  );
+                })}
               </div>
             </div>
+          )}
 
-            {/* Mood distribution */}
-            {stats && Object.keys(stats.moodCounts).length > 0 && (
-              <div className="bg-white/80 border border-stone-200 rounded-xl p-4">
-                <p className="text-sm font-semibold text-stone-700 mb-3">
-                  {language === 'fr' ? 'Distribution des humeurs' : 'Mood distribution'}
-                </p>
-                <div className="space-y-2">
-                  {MOODS.filter((m) => stats.moodCounts[m.key]).map((m) => {
-                    const count = stats.moodCounts[m.key] ?? 0;
-                    const maxCount = Math.max(...Object.values(stats.moodCounts));
-                    const pct = maxCount > 0 ? Math.round((count / maxCount) * 100) : 0;
-                    return (
-                      <div key={m.key} className="flex items-center gap-2">
-                        <span className="text-sm w-6">{m.emoji}</span>
-                        <div className="flex-1 h-2 bg-stone-100 rounded-full overflow-hidden">
-                          <div className="h-full bg-emerald-500 rounded-full transition-all" style={{ width: `${pct}%` }} />
-                        </div>
-                        <span className="text-xs text-stone-500 w-6 text-right">{count}</span>
-                      </div>
-                    );
-                  })}
-                </div>
+          {/* Top tags */}
+          {Object.keys(stats?.tagCounts ?? {}).length > 0 && (
+            <div className="islamic-card p-4 sm:p-5">
+              <h2 className="text-sm font-semibold text-foreground mb-4">
+                {tr({ en: 'Top tags', fr: 'Étiquettes populaires' })}
+              </h2>
+              <div className="flex flex-wrap gap-2">
+                {Object.entries(stats?.tagCounts ?? {})
+                  .sort(([, a], [, b]) => b - a)
+                  .slice(0, 20)
+                  .map(([tag, count]) => (
+                    <span key={tag} className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-accent/50 text-primary text-sm font-medium">
+                      #{tag}
+                      <span className="text-xs text-primary/70 ml-1">{count}</span>
+                    </span>
+                  ))}
               </div>
-            )}
-
-            {/* Top tags */}
-            {stats && Object.keys(stats.tagCounts).length > 0 && (
-              <div className="bg-white/80 border border-stone-200 rounded-xl p-4">
-                <p className="text-sm font-semibold text-stone-700 mb-3">
-                  {language === 'fr' ? 'Étiquettes populaires' : 'Popular tags'}
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {Object.entries(stats.tagCounts)
-                    .sort((a, b) => b[1] - a[1])
-                    .slice(0, 12)
-                    .map(([tag, count]) => (
-                      <span key={tag} className="flex items-center gap-1 bg-stone-100 border border-stone-200 text-stone-600 text-xs px-2.5 py-1 rounded-full">
-                        #{tag}
-                        <span className="text-stone-400 ml-1">{count}</span>
-                      </span>
-                    ))}
-                </div>
-              </div>
-            )}
-
-            {stats?.total === 0 && (
-              <div className="text-center py-12 text-stone-400">
-                <BarChart2 className="w-10 h-10 mx-auto mb-3 opacity-30" />
-                <p className="font-medium">{language === 'fr' ? 'Pas encore de données.' : 'No data yet.'}</p>
-                <p className="text-sm mt-1">{language === 'fr' ? 'Écrivez quelques entrées pour voir vos statistiques.' : 'Write a few entries to see your stats.'}</p>
-              </div>
-            )}
-          </motion.div>
-        )}
-      </AnimatePresence>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
