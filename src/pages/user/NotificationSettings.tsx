@@ -109,6 +109,8 @@ const NotificationSettings: React.FC = () => {
   const saveSettings = useMutation((api as any).notifications.saveSettings);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const sendTestNotification = useAction((api as any).notifications.sendTestNotification);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const scheduleForToday = useAction((api as any).notifications.scheduleForToday);
 
   // Permission state
   const [permission, setPermission] = useState<PermissionState>("default");
@@ -249,6 +251,9 @@ const NotificationSettings: React.FC = () => {
         dailyContentEnabled: settings.dailyContentEnabled,
         dailyContentTime:   settings.dailyContentTime,
       });
+      // Immediately schedule any remaining notifications for today so the user
+      // doesn't have to wait until the 00:10 UTC cron.
+      try { await scheduleForToday({}); } catch { /* silent — no subscription yet is fine */ }
       toast.success(tr("notifications.saved"));
     } catch (err) {
       console.error(err);
