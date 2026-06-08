@@ -56,7 +56,16 @@ export const recordSurahRead = mutation({
       .unique();
     const { streak, lastReadDate } = bumpStreak(rec);
     const current = rec?.completedSurahs ?? [];
-    const completedSurahs = current.includes(surah) ? current : [...current, surah];
+    const isNew = !current.includes(surah);
+    const completedSurahs = isNew ? [...current, surah] : current;
+
+    // XP: +15 for a brand-new surah, +5 for re-reading on a new day
+    const today = startOfDay(Date.now());
+    const alreadyReadToday = (rec?.lastReadDate ?? 0) >= today;
+    const xpEarned = isNew ? 15 : alreadyReadToday ? 0 : 5;
+    if (xpEarned > 0) {
+      await ctx.db.patch(user._id, { xp: (user.xp ?? 0) + xpEarned });
+    }
 
     if (rec) {
       await ctx.db.patch(rec._id, { completedSurahs, streak, lastReadDate, updatedAt: Date.now() });
