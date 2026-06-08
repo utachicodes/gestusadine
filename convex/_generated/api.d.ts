@@ -23,6 +23,7 @@ import type * as journal from "../journal.js";
 import type * as library from "../library.js";
 import type * as llm from "../llm.js";
 import type * as naboopay from "../naboopay.js";
+import type * as notifications from "../notifications.js";
 import type * as periodTracker from "../periodTracker.js";
 import type * as posthog from "../posthog.js";
 import type * as prayers from "../prayers.js";
@@ -40,6 +41,7 @@ import type * as stats from "../stats.js";
 import type * as subscription from "../subscription.js";
 import type * as users from "../users.js";
 import type * as videos from "../videos.js";
+import type * as webPush from "../webPush.js";
 
 import type {
   ApiFromModules,
@@ -63,6 +65,7 @@ declare const fullApi: ApiFromModules<{
   library: typeof library;
   llm: typeof llm;
   naboopay: typeof naboopay;
+  notifications: typeof notifications;
   periodTracker: typeof periodTracker;
   posthog: typeof posthog;
   prayers: typeof prayers;
@@ -80,6 +83,7 @@ declare const fullApi: ApiFromModules<{
   subscription: typeof subscription;
   users: typeof users;
   videos: typeof videos;
+  webPush: typeof webPush;
 }>;
 
 /**

@@ -49,6 +49,7 @@ import SurahView from "./pages/quran/SurahView";
 import PrayerTimes from "./pages/tools/PrayerTimes";
 import HijriCalendar from "./pages/tools/HijriCalendar";
 import ZakatCalculator from "./pages/tools/ZakatCalculator";
+import NotificationSettings from "./pages/user/NotificationSettings";
 
 import { ThemeProvider } from "@/contexts/ThemeContext";
 
@@ -182,6 +183,16 @@ const App = () => {
                             <ProtectedRoute>
                               <DashboardLayout>
                                 <PrayerTimes />
+                              </DashboardLayout>
+                            </ProtectedRoute>
+                          }
+                        />
+                        <Route
+                          path="/notifications"
+                          element={
+                            <ProtectedRoute>
+                              <DashboardLayout>
+                                <NotificationSettings />
                               </DashboardLayout>
                             </ProtectedRoute>
                           }

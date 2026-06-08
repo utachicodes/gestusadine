@@ -372,6 +372,37 @@ const schema = defineSchema({
     reminderDays: v.number(), // days before expected period to remind
     updatedAt: v.number(),
   }).index("userId", ["userId"]),
+
+  // ── PWA Push Notifications ────────────────────────────────────────────────
+
+  // One row per browser/device subscription per user.
+  pushSubscriptions: defineTable({
+    userId: v.id("users"),
+    endpoint: v.string(),
+    p256dh: v.string(),
+    auth: v.string(),
+  })
+    .index("userId", ["userId"])
+    .index("endpoint", ["endpoint"]),
+
+  // One row per user — which push notifications they want and when.
+  notificationSettings: defineTable({
+    userId: v.id("users"),
+    prayerEnabled: v.optional(v.boolean()),
+    fajrEnabled: v.optional(v.boolean()),
+    dhuhrEnabled: v.optional(v.boolean()),
+    asrEnabled: v.optional(v.boolean()),
+    maghribEnabled: v.optional(v.boolean()),
+    ishaEnabled: v.optional(v.boolean()),
+    quranEnabled: v.optional(v.boolean()),
+    quranTime: v.optional(v.string()),
+    dailyContentEnabled: v.optional(v.boolean()),
+    dailyContentTime: v.optional(v.string()),
+    latitude: v.optional(v.number()),
+    longitude: v.optional(v.number()),
+    timezone: v.optional(v.string()),
+    calculationMethod: v.optional(v.string()),
+  }).index("userId", ["userId"]),
 });
 
 export default schema;
