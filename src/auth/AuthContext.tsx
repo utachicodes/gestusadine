@@ -5,6 +5,17 @@ import { api } from "../../convex/_generated/api";
 import type { Doc } from "../../convex/_generated/dataModel";
 import { UserRole } from "./rbac";
 
+// Strip raw Convex server error strings — users should never see "[CONVEX A(...)]".
+// ConvexErrors carry the developer message in .data; generic server errors get a
+// safe fallback so implementation details don't leak to the UI.
+function userMessage(err: unknown, fallback: string): string {
+  if (!err || typeof err !== "object") return fallback;
+  const e = err as Record<string, unknown>;
+  if (typeof e.data === "string" && e.data) return e.data;
+  if (typeof e.message === "string" && !e.message.startsWith("[CONVEX")) return e.message;
+  return fallback;
+}
+
 export type SubscriptionTier = 'free' | 'student' | 'pro';
 export type Gender = 'male' | 'female';
 
@@ -120,8 +131,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     try {
       await signIn("password", { email, password, flow: "signIn" });
-    } catch {
-      throw new Error("Invalid email or password.");
+    } catch (err) {
+      throw new Error(userMessage(err, "Invalid email or password."));
     }
   }, [signIn, convex]);
 
@@ -155,8 +166,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         gender: gender ?? undefined,
         flow: "signUp",
       } as any);
-    } catch (err: any) {
-      return { error: new Error(err?.message ?? "Sign up failed. Please try again.") };
+    } catch (err) {
+      return { error: new Error(userMessage(err, "Sign up failed. Please try again.")) };
     }
 
     // Signup succeeded — user is now authenticated, redirect them straight in.
