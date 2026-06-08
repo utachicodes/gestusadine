@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { RankDisplay } from "@/components/gamification/RankDisplay";
 import { useProfileStats } from "@/data/profile";
-import { useConvex } from "convex/react";
+import { useConvex, useMutation, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 
 type LanguageCode = "fr" | "en";
@@ -82,6 +82,14 @@ const Dashboard: React.FC = () => {
   const { language, t } = useLanguage();
   const convex = useConvex();
   const stats = useProfileStats();
+  const subscription = useQuery(api.subscription.getMySubscription);
+  const recordActivity = useMutation(api.gamification.recordDailyActivity);
+  const isFree = subscription?.tier === 'free';
+
+  React.useEffect(() => {
+    recordActivity().catch(() => {});
+  }, [recordActivity]);
+
   const [loadingDaily, setLoadingDaily] = React.useState(true);
   const [daily, setDaily] = React.useState<DailyData | null>(null);
   const [error, setError] = React.useState<string | null>(null);
@@ -191,11 +199,11 @@ const Dashboard: React.FC = () => {
         </header>
 
         {/* At-a-glance stats (reference-inspired) */}
-        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 flex-shrink-0">
+        <div className={`grid gap-4 grid-cols-1 sm:grid-cols-2 ${!isFree ? 'lg:grid-cols-3' : ''} flex-shrink-0`}>
           {[
             { icon: Trophy, label: language === 'fr' ? 'Rang' : 'Rank', value: stats.rank, sub: `${stats.totalXp.toLocaleString()} XP` },
             { icon: Flame, label: language === 'fr' ? "Jours d'affilée" : 'Day streak', value: stats.streak, sub: language === 'fr' ? 'en cours' : 'in a row' },
-            { icon: Target, label: 'Quiz', value: stats.quizzesTaken, sub: `${stats.perfectScores} ${language === 'fr' ? 'parfaits' : 'perfect'}` },
+            ...(!isFree ? [{ icon: Target, label: 'Quiz', value: stats.quizzesTaken, sub: `${stats.perfectScores} ${language === 'fr' ? 'parfaits' : 'perfect'}` }] : []),
           ].map(({ icon: Icon, label, value, sub }) => (
             <div key={label} className="islamic-card p-3 sm:p-4 flex flex-row items-center justify-between gap-2 sm:gap-3">
               <div className="flex-1 min-w-0 overflow-hidden">
