@@ -211,7 +211,8 @@ export default function PeriodTracker() {
   const logMap = new Map((logsInRange ?? []).map((l) => [l.date, l]));
 
   return (
-    <div className="container py-8 md:py-10 space-y-6 max-w-5xl">
+    <div className="flex-1">
+    <section className="container py-8 md:py-10 space-y-6">
       <PageHeader
         eyebrow={tr({ en: 'Wellness', fr: 'Bien-être' })}
         title={tr({ en: 'Cycle Tracker', fr: 'Suivi du cycle' })}
@@ -411,7 +412,7 @@ export default function PeriodTracker() {
                   }`}
                 >
                   <span>{m.emoji}</span>
-                  <span className="hidden sm:inline">{tr({ en: m.en, fr: m.fr })}</span>
+                  <span>{tr({ en: m.en, fr: m.fr })}</span>
                 </button>
               ))}
             </div>
@@ -702,6 +703,7 @@ export default function PeriodTracker() {
           </button>
         </div>
       )}
+    </section>
     </div>
   );
 }
