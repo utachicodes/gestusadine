@@ -29,7 +29,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
   }, [location.pathname]);
 
   return (
-    <div className="relative isolate flex h-screen bg-background overflow-hidden">
+    <div className="relative isolate flex h-[100dvh] bg-background overflow-hidden">
       {/* ---------------------------------------------------------------------
           Layered ambient background. Sits at z-0 (above the base cream) while
           the app chrome is lifted to z-10, so the shading actually shows
@@ -71,7 +71,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
       {/* Main column */}
       <div className="relative z-10 flex-1 flex flex-col min-w-0 overflow-hidden">
         <DashboardTopbar onOpenMobileSidebar={() => setMobileOpen(true)} />
-        <main className="flex-1 overflow-y-auto custom-scrollbar pb-safe">{children}</main>
+        <main className="flex-1 overflow-y-auto overscroll-contain custom-scrollbar pb-safe">{children}</main>
       </div>
     </div>
   );

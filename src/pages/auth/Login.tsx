@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, ChevronLeft, UserPlus, LogIn, Eye, EyeOff, User, Users } from 'lucide-react';
 
 const inputClass =
-  'w-full rounded-lg border border-stone-300 bg-white/70 px-4 py-2.5 text-sm text-stone-900 placeholder-stone-400 focus:border-emerald-700 focus:ring-2 focus:ring-emerald-700/10 outline-none transition';
+  'w-full rounded-lg border border-stone-300 bg-white/70 px-4 py-2.5 text-base text-stone-900 placeholder-stone-400 focus:border-emerald-700 focus:ring-2 focus:ring-emerald-700/10 outline-none transition';
 const labelClass = 'block text-sm font-medium text-stone-600 mb-1.5';
 
 type Mode = 'signin' | 'signup';
@@ -136,7 +136,13 @@ const Login = () => {
   };
 
   return (
-    <div className="relative min-h-screen w-full bg-[#FAF7F0] flex items-center justify-center px-4 py-16">
+    <div
+      className="relative min-h-screen w-full bg-[#FAF7F0] flex items-center justify-center px-4"
+      style={{
+        paddingTop: 'calc(4rem + env(safe-area-inset-top, 0px))',
+        paddingBottom: 'calc(4rem + env(safe-area-inset-bottom, 0px))',
+      }}
+    >
       <div className="relative w-full max-w-sm">
 
         <Link

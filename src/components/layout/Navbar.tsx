@@ -26,6 +26,7 @@ const Navbar = () => {
           ? 'bg-background/90 backdrop-blur-md border-b border-border/70'
           : 'bg-transparent border-b border-transparent'
       }`}
+      style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}
     >
       <div className="container mx-auto px-6 h-16 flex items-center justify-between">
         <Link to="/" className="flex items-center group">

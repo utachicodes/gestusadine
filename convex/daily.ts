@@ -7,11 +7,13 @@ export const list = query({
     contentType: v.optional(v.union(v.literal("ayah"), v.literal("hadith"), v.literal("dua"), v.literal("fact"))),
   },
   handler: async (ctx, args) => {
-    let q = ctx.db.query("dailyContent");
     if (args.contentType) {
-      q = q.withIndex("date", (idx) => idx.eq("date", Date.now()));
+      return ctx.db.query("dailyContent")
+        .withIndex("date", (idx) => idx.eq("date", Date.now()))
+        .order("desc")
+        .take(50);
     }
-    return q.order("desc").take(50);
+    return ctx.db.query("dailyContent").order("desc").take(50);
   },
 });
 
@@ -35,10 +37,11 @@ export const create = mutation({
     date: v.number(),
   },
   handler: async (ctx, args) => {
-    await requireStaff(ctx);
+    const user = await requireStaff(ctx);
     return ctx.db.insert("dailyContent", {
       ...args,
       createdAt: Date.now(),
+      createdBy: user._id,
     });
   },
 });
