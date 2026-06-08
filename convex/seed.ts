@@ -33,27 +33,51 @@ export const createAdmin = mutation({
       );
     }
 
+    // If user doc already exists, just promote it.
     const existing = await ctx.db
       .query("users")
       .withIndex("email", (q) => q.eq("email", args.email))
       .unique();
 
     if (existing) {
-      // Account exists but has no admin role yet — promote it.
       await ctx.db.patch(existing._id, { role: "admin" });
       return { success: true, userId: existing._id, promoted: true };
     }
 
+    // Clean up any stale authAccounts entry for this email that points to a
+    // deleted user. Without this, createAccount calls createOrUpdateUser with
+    // existingUserId pointing to a ghost row and returns { user: null }.
+    const staleAccount = await ctx.db
+      .query("authAccounts")
+      .filter((q) =>
+        q.and(
+          q.eq(q.field("provider"), "password"),
+          q.eq(q.field("providerAccountId"), args.email),
+        ),
+      )
+      .first();
+
+    if (staleAccount) {
+      // Verify the linked user really doesn't exist before deleting.
+      const linkedUser = await ctx.db.get(staleAccount.userId as any);
+      if (!linkedUser) {
+        await ctx.db.delete(staleAccount._id);
+      }
+    }
+
+    // Create the auth account + user document via Convex Auth.
+    const displayName = args.name ?? args.email.split("@")[0];
     const { user } = await createAccount(ctx, {
       provider: "password",
       account: { id: args.email, secret: args.password },
-      profile: {
-        email: args.email,
-        name: args.name ?? args.email.split("@")[0],
-      },
+      profile: { email: args.email, name: displayName },
     });
 
+    if (!user) {
+      throw new ConvexError("Failed to create admin account — please try again.");
+    }
+
     await ctx.db.patch(user._id, { role: "admin" });
-    return { success: true, userId: user._id, promoted: false };
+    return { success: true, userId: user._id };
   },
 });
