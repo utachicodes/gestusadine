@@ -107,6 +107,8 @@ const NotificationSettings: React.FC = () => {
   const saveSubscription = useMutation((api as any).notifications.saveSubscription);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const saveSettings = useMutation((api as any).notifications.saveSettings);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const sendTestNotification = useAction((api as any).notifications.sendTestNotification);
 
   // Permission state
   const [permission, setPermission] = useState<PermissionState>("default");
@@ -118,6 +120,7 @@ const NotificationSettings: React.FC = () => {
   const [subscribing, setSubscribing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [locating, setLocating] = useState(false);
+  const [testing, setTesting] = useState(false);
 
   // ── on mount: read current permission + prefill from saved settings ──
 
@@ -255,6 +258,22 @@ const NotificationSettings: React.FC = () => {
     }
   }
 
+  // ── test push ──
+
+  async function handleTestPush() {
+    setTesting(true);
+    try {
+      await sendTestNotification({});
+      toast.success(tr("notifications.testSent"));
+    } catch (err: any) {
+      toast.error(err?.message?.includes("No push subscription")
+        ? tr("notifications.noSubscription")
+        : tr("notifications.testError"));
+    } finally {
+      setTesting(false);
+    }
+  }
+
   // ── i18n helper ──
 
   const strings: Record<string, { en: string; fr: string }> = {
@@ -293,8 +312,12 @@ const NotificationSettings: React.FC = () => {
     "notifications.geoUnsupported":{ en: "Geolocation not supported.", fr: "Géolocalisation non prise en charge." },
     "notifications.locationDetected": { en: "Location detected.", fr: "Localisation détectée." },
     "notifications.locationError":    { en: "Could not detect location.", fr: "Impossible de détecter la localisation." },
-    "notifications.saved":     { en: "Settings saved.", fr: "Paramètres enregistrés." },
-    "notifications.saveError": { en: "Failed to save settings.", fr: "Erreur lors de l'enregistrement." },
+    "notifications.saved":          { en: "Settings saved.", fr: "Paramètres enregistrés." },
+    "notifications.saveError":      { en: "Failed to save settings.", fr: "Erreur lors de l'enregistrement." },
+    "notifications.testSent":       { en: "Test notification sent! Check your device.", fr: "Notification test envoyée ! Vérifiez votre appareil." },
+    "notifications.testError":      { en: "Failed to send test notification.", fr: "Impossible d'envoyer la notification test." },
+    "notifications.noSubscription": { en: "Enable push notifications first.", fr: "Activez d'abord les notifications push." },
+    "notifications.testBtn":        { en: "Send test notification", fr: "Envoyer une notification test" },
   };
 
   function tr(key: string): string {
@@ -358,9 +381,21 @@ const NotificationSettings: React.FC = () => {
         )}
 
         {permission === "granted" ? (
-          <div className="flex items-center gap-2 text-sm text-emerald-700">
-            <CheckCircle2 className="w-4 h-4" />
-            {tr("push.enabled")}
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2 text-sm text-emerald-700">
+              <CheckCircle2 className="w-4 h-4" />
+              {tr("push.enabled")}
+            </div>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={handleTestPush}
+              disabled={testing}
+              className="text-xs"
+            >
+              {testing ? <Loader2 className="w-3 h-3 animate-spin mr-1" /> : null}
+              {tr("notifications.testBtn")}
+            </Button>
           </div>
         ) : permission !== "denied" ? (
           <Button
