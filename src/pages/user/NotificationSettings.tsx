@@ -129,15 +129,26 @@ const NotificationSettings: React.FC = () => {
 
   useEffect(() => {
     if (!savedSettings) return;
-    // Merge saved settings over defaults so missing keys are safe.
-    setSettings((prev) => ({
-      prayers: { ...prev.prayers, ...(savedSettings.prayers ?? {}) },
-      prayerLocation: { ...prev.prayerLocation, ...(savedSettings.prayerLocation ?? {}) },
-      quranReminderEnabled: savedSettings.quranReminderEnabled ?? false,
-      quranReminderTime: savedSettings.quranReminderTime ?? "06:00",
-      dailyContentEnabled: savedSettings.dailyContentEnabled ?? false,
-      dailyContentTime: savedSettings.dailyContentTime ?? "08:00",
-    }));
+    // Map flat DB fields back to nested local state shape.
+    const s = savedSettings as Record<string, unknown>;
+    setSettings({
+      prayers: {
+        fajr:    !!(s.fajrEnabled),
+        dhuhr:   !!(s.dhuhrEnabled),
+        asr:     !!(s.asrEnabled),
+        maghrib: !!(s.maghribEnabled),
+        isha:    !!(s.ishaEnabled),
+      },
+      prayerLocation: {
+        lat:      s.latitude != null ? String(s.latitude) : "",
+        lng:      s.longitude != null ? String(s.longitude) : "",
+        timezone: typeof s.timezone === "string" ? s.timezone : "Africa/Dakar",
+      },
+      quranReminderEnabled: !!(s.quranEnabled),
+      quranReminderTime:    typeof s.quranTime === "string" ? s.quranTime : "06:00",
+      dailyContentEnabled:  !!(s.dailyContentEnabled),
+      dailyContentTime:     typeof s.dailyContentTime === "string" ? s.dailyContentTime : "08:00",
+    });
   }, [savedSettings]);
 
   // ── push subscription ──
@@ -217,7 +228,24 @@ const NotificationSettings: React.FC = () => {
   async function handleSave() {
     setSaving(true);
     try {
-      await saveSettings(settings);
+      const anyPrayer = Object.values(settings.prayers).some(Boolean);
+      const lat = settings.prayerLocation.lat ? parseFloat(settings.prayerLocation.lat) : undefined;
+      const lng = settings.prayerLocation.lng ? parseFloat(settings.prayerLocation.lng) : undefined;
+      await saveSettings({
+        prayerEnabled:      anyPrayer,
+        fajrEnabled:        settings.prayers.fajr,
+        dhuhrEnabled:       settings.prayers.dhuhr,
+        asrEnabled:         settings.prayers.asr,
+        maghribEnabled:     settings.prayers.maghrib,
+        ishaEnabled:        settings.prayers.isha,
+        latitude:           lat,
+        longitude:          lng,
+        timezone:           settings.prayerLocation.timezone || undefined,
+        quranEnabled:       settings.quranReminderEnabled,
+        quranTime:          settings.quranReminderTime,
+        dailyContentEnabled: settings.dailyContentEnabled,
+        dailyContentTime:   settings.dailyContentTime,
+      });
       toast.success(tr("notifications.saved"));
     } catch (err) {
       console.error(err);
