@@ -72,11 +72,11 @@ function startOfDayUTC(date: Date): number {
 type Tab = 'overview' | 'log' | 'calendar' | 'analytics' | 'settings';
 
 const TABS: { id: Tab; en: string; fr: string; icon: React.ReactNode }[] = [
-  { id: 'overview',  en: 'Overview',  fr: 'Aperçu',      icon: <Heart className="w-3.5 h-3.5" /> },
-  { id: 'log',       en: 'Log',       fr: 'Journal',     icon: <Droplets className="w-3.5 h-3.5" /> },
-  { id: 'calendar',  en: 'Calendar',  fr: 'Calendrier',  icon: <Calendar className="w-3.5 h-3.5" /> },
-  { id: 'analytics', en: 'Analytics', fr: 'Analyses',    icon: <BarChart2 className="w-3.5 h-3.5" /> },
-  { id: 'settings',  en: 'Settings',  fr: 'Paramètres',  icon: <Settings className="w-3.5 h-3.5" /> },
+  { id: 'overview',  en: 'Overview', fr: 'Aperçu',   icon: <Heart className="w-3.5 h-3.5" /> },
+  { id: 'log',       en: 'Log',      fr: 'Journal',  icon: <Droplets className="w-3.5 h-3.5" /> },
+  { id: 'calendar',  en: 'Calendar', fr: 'Calendar', icon: <Calendar className="w-3.5 h-3.5" /> },
+  { id: 'analytics', en: 'Analytics',fr: 'Analytics',icon: <BarChart2 className="w-3.5 h-3.5" /> },
+  { id: 'settings',  en: 'Settings', fr: 'Settings', icon: <Settings className="w-3.5 h-3.5" /> },
 ];
 
 // ── Main component ────────────────────────────────────────────────────────────
@@ -221,20 +221,20 @@ export default function PeriodTracker() {
         })}
       />
 
-      {/* Tab bar */}
-      <div className="flex gap-1 border-b border-border overflow-x-auto">
+      {/* Tab bar — scrollable so all 5 labels stay visible on narrow screens */}
+      <div className="flex gap-1 border-b border-border overflow-x-auto scrollbar-none">
         {TABS.map((t) => (
           <button
             key={t.id}
             onClick={() => setTab(t.id)}
-            className={`flex items-center gap-1.5 px-3 sm:px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors whitespace-nowrap ${
+            className={`flex items-center gap-1.5 px-3 sm:px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors whitespace-nowrap flex-shrink-0 ${
               tab === t.id
                 ? 'border-primary text-primary'
                 : 'border-transparent text-muted-foreground hover:text-foreground'
             }`}
           >
             {t.icon}
-            <span className="hidden sm:inline">{tr({ en: t.en, fr: t.fr })}</span>
+            <span>{tr({ en: t.en, fr: t.fr })}</span>
           </button>
         ))}
       </div>
@@ -527,7 +527,7 @@ export default function PeriodTracker() {
               return (
                 <div
                   key={i}
-                  className={`flex flex-col items-center justify-center rounded-xl aspect-square text-xs font-medium ${cellColor} ${isT ? 'ring-2 ring-primary/30' : ''}`}
+                  className={`flex flex-col items-center justify-center rounded-xl min-h-[40px] sm:aspect-square text-xs font-medium ${cellColor} ${isT ? 'ring-2 ring-primary/30' : ''}`}
                 >
                   <span>{i + 1}</span>
                   {flow && flow !== 'none' && <span className="text-[8px]">🩸</span>}
@@ -582,22 +582,25 @@ export default function PeriodTracker() {
                   <h2 className="text-sm font-semibold text-foreground mb-4">
                     {tr({ en: 'Cycle lengths', fr: 'Durées des cycles' })}
                   </h2>
-                  <div className="flex items-end gap-2 h-24">
-                    {analytics.cycleLengths.map((len, i) => {
-                      const max = Math.max(...analytics.cycleLengths, 35);
-                      const pct = (len / max) * 100;
-                      return (
-                        <div key={i} className="flex-1 flex flex-col items-center gap-1">
-                          <span className="text-[10px] text-muted-foreground">{len}d</span>
-                          <div className="w-full rounded-sm bg-muted/40 overflow-hidden" style={{ height: 56 }}>
-                            <div
-                              className="w-full bg-primary/70 rounded-sm"
-                              style={{ height: `${pct}%`, marginTop: `${100 - pct}%` }}
-                            />
+                  {/* Horizontally scrollable so bars don't squish on mobile */}
+                  <div className="overflow-x-auto">
+                    <div className="flex items-end gap-2 h-24" style={{ minWidth: analytics.cycleLengths.length * 48 }}>
+                      {analytics.cycleLengths.map((len, i) => {
+                        const max = Math.max(...analytics.cycleLengths, 35);
+                        const pct = (len / max) * 100;
+                        return (
+                          <div key={i} className="flex flex-col items-center gap-1 w-10 flex-shrink-0">
+                            <span className="text-[10px] text-muted-foreground">{len}d</span>
+                            <div className="w-full rounded-sm bg-muted/40 overflow-hidden" style={{ height: 56 }}>
+                              <div
+                                className="w-full bg-primary/70 rounded-sm"
+                                style={{ height: `${pct}%`, marginTop: `${100 - pct}%` }}
+                              />
+                            </div>
                           </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
               )}
@@ -675,9 +678,12 @@ export default function PeriodTracker() {
             </div>
             <button
               onClick={() => setSettingNotifs(!settingNotifs)}
-              className={`relative w-11 h-6 rounded-full transition-colors ${settingNotifs ? 'bg-primary' : 'bg-muted'}`}
+              className="p-1.5 -m-1.5 rounded-xl transition-colors hover:bg-muted/40"
+              aria-pressed={settingNotifs}
             >
-              <span className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-all ${settingNotifs ? 'left-6' : 'left-1'}`} />
+              <span className={`relative flex items-center w-11 h-6 rounded-full transition-colors ${settingNotifs ? 'bg-primary' : 'bg-muted'}`}>
+                <span className={`absolute w-4 h-4 bg-white rounded-full shadow transition-all ${settingNotifs ? 'left-6' : 'left-1'}`} />
+              </span>
             </button>
           </div>
 

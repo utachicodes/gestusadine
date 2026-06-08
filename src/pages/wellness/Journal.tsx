@@ -41,10 +41,10 @@ function startOfDayUTC(date: Date): number {
 type Tab = 'today' | 'entries' | 'calendar' | 'stats';
 
 const TABS: { id: Tab; en: string; fr: string; icon: React.ReactNode }[] = [
-  { id: 'today',    en: 'Today',   fr: "Aujourd'hui", icon: <Edit3 className="w-3.5 h-3.5" /> },
-  { id: 'entries',  en: 'Entries', fr: 'Entrées',     icon: <BookOpen className="w-3.5 h-3.5" /> },
-  { id: 'calendar', en: 'Calendar',fr: 'Calendrier',  icon: <Calendar className="w-3.5 h-3.5" /> },
-  { id: 'stats',    en: 'Stats',   fr: 'Statistiques',icon: <BarChart2 className="w-3.5 h-3.5" /> },
+  { id: 'today',    en: 'Today',    fr: "Aujourd'hui", icon: <Edit3 className="w-3.5 h-3.5" /> },
+  { id: 'entries',  en: 'Entries',  fr: 'Entrées',     icon: <BookOpen className="w-3.5 h-3.5" /> },
+  { id: 'calendar', en: 'Calendar', fr: 'Calendar',    icon: <Calendar className="w-3.5 h-3.5" /> },
+  { id: 'stats',    en: 'Stats',    fr: 'Stats',       icon: <BarChart2 className="w-3.5 h-3.5" /> },
 ];
 
 // ── Main component ────────────────────────────────────────────────────────────
@@ -168,20 +168,20 @@ export default function Journal() {
         })}
       />
 
-      {/* Tab bar */}
-      <div className="flex gap-1 border-b border-border">
+      {/* Tab bar — scrollable so labels stay visible on any screen width */}
+      <div className="flex gap-1 border-b border-border overflow-x-auto scrollbar-none">
         {TABS.map((t) => (
           <button
             key={t.id}
             onClick={() => setTab(t.id)}
-            className={`flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors ${
+            className={`flex items-center gap-1.5 px-3 sm:px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors whitespace-nowrap flex-shrink-0 ${
               tab === t.id
                 ? 'border-primary text-primary'
                 : 'border-transparent text-muted-foreground hover:text-foreground'
             }`}
           >
             {t.icon}
-            <span className="hidden sm:inline">{tr({ en: t.en, fr: t.fr })}</span>
+            <span>{tr({ en: t.en, fr: t.fr })}</span>
           </button>
         ))}
       </div>
@@ -423,7 +423,7 @@ export default function Journal() {
                   <button
                     key={i}
                     onClick={() => setSelectedDate(dayDate)}
-                    className={`relative flex flex-col items-center justify-center rounded-xl aspect-square text-xs font-medium transition-all ${
+                    className={`relative flex flex-col items-center justify-center rounded-xl min-h-[40px] sm:aspect-square text-xs font-medium transition-all ${
                       isSelected
                         ? 'bg-primary text-primary-foreground'
                         : isT
