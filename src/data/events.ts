@@ -20,8 +20,10 @@ export function useEvents(): Event[] {
 
 export function useEventRegistrations() {
   const registerMut = useMutation(api.events.register);
+  const myRegs = useQuery(api.events.myRegistrations) ?? [];
+  const registeredIds = new Set<string>(myRegs.map((id) => id as string));
   const register = (eventId: string) => {
     registerMut({ eventId: eventId as any });
   };
-  return { registeredIds: new Set<string>(), register };
+  return { registeredIds, register };
 }

@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Users, Check, Send, Heart, Lock } from 'lucide-react';
 import { toast } from 'sonner';
-import { useCircleById, useCirclePosts, useJoinedCircles, CirclePost } from '@/data/community';
+import { useMutation } from 'convex/react';
+import { api } from '../../../convex/_generated/api';
+import { useCircleById, useCirclePosts, useJoinedCircles } from '@/data/community';
 import { useAuth } from '@/auth/AuthContext';
 import { useSubscription } from '@/data/subscription';
 import { CIRCLE_ICONS, CIRCLE_ACCENTS } from './circleVisuals';
@@ -10,7 +12,7 @@ import { useTr } from '@/lib/i18n';
 
 type Tr = ReturnType<typeof useTr>;
 
-const timeAgo = (iso: string, tr: Tr) => {
+const timeAgo = (iso: string | number, tr: Tr) => {
   const diff = Date.now() - Date.parse(iso);
   const mins = Math.round(diff / 60000);
   if (mins < 1) return tr({ en: 'just now', fr: 'à l’instant' });
@@ -31,7 +33,8 @@ const CircleDetail = () => {
   const navigate = useNavigate();
   const tr = useTr();
   const canParticipate = can('community.participate');
-  const [localPosts, setLocalPosts] = useState<CirclePost[]>([]);
+  const createPost = useMutation(api.community.createPost);
+  const [posting, setPosting] = useState(false);
   const [draft, setDraft] = useState('');
 
   if (!circle) {
@@ -48,7 +51,7 @@ const CircleDetail = () => {
   const Icon = CIRCLE_ICONS[circle.iconKey];
   const accent = CIRCLE_ACCENTS[circle.accent];
   const isJoined = joined.has(circle.id);
-  const posts = [...localPosts, ...seedPosts];
+  const posts = seedPosts;
 
   const handleJoin = () => {
     if (!isJoined) {
@@ -71,21 +74,25 @@ const CircleDetail = () => {
       : tr({ en: `You joined ${circle.name}.`, fr: `Vous avez rejoint ${circle.name}.` }));
   };
 
-  const handlePost = (e: React.FormEvent) => {
+  const handlePost = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!canParticipate) {
       navigate('/pricing');
       return;
     }
     const body = draft.trim();
-    if (!body) return;
-    // Optimistic local post; swap for useMutation(api.community.post) later.
-    setLocalPosts((prev) => [
-      { id: `local-${Date.now()}`, circleId: circle.id, author: 'You', body, createdAt: new Date().toISOString(), likes: 0 },
-      ...prev,
-    ]);
+    if (!body || posting) return;
+    setPosting(true);
     setDraft('');
-    toast(tr({ en: 'Posted to the circle.', fr: 'Publié dans le cercle.' }));
+    try {
+      await createPost({ circleId: circle.id as any, content: body });
+      toast(tr({ en: 'Posted to the circle.', fr: 'Publié dans le cercle.' }));
+    } catch {
+      setDraft(body);
+      toast.error(tr({ en: 'Failed to post. Please try again.', fr: 'Échec de la publication. Réessayez.' }));
+    } finally {
+      setPosting(false);
+    }
   };
 
   return (
@@ -139,15 +146,15 @@ const CircleDetail = () => {
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
               placeholder={tr({ en: `Share a question or insight with ${circle.name}…`, fr: `Partagez une question ou une réflexion avec ${circle.name}…` })}
-              className="w-full min-h-[90px] p-3 rounded-xl border border-warm-sand bg-warm-sand/20 text-deep-green placeholder:text-deep-green/30 resize-none focus:outline-none focus:ring-2 focus:ring-warm-gold/20 focus:border-warm-gold/50 transition-all text-sm"
+              className="w-full min-h-[90px] p-3 rounded-xl border border-warm-sand bg-warm-sand/20 text-deep-green placeholder:text-deep-green/30 resize-none focus:outline-none focus:ring-2 focus:ring-warm-gold/20 focus:border-warm-gold/50 transition-all text-base"
             />
             <div className="flex justify-end mt-3">
               <button
                 type="submit"
-                disabled={!draft.trim()}
+                disabled={!draft.trim() || posting}
                 className="btn-gold inline-flex items-center gap-2 text-sm disabled:opacity-40 disabled:cursor-not-allowed"
               >
-                <Send className="w-4 h-4" /> {tr({ en: 'Post', fr: 'Publier' })}
+                <Send className="w-4 h-4" /> {posting ? tr({ en: 'Posting…', fr: 'Publication…' }) : tr({ en: 'Post', fr: 'Publier' })}
               </button>
             </div>
           </form>
