@@ -1,4 +1,4 @@
-import { mutation, internalMutation, internalQuery, query, internalAction } from "./_generated/server";
+import { mutation, internalMutation, internalQuery, query, internalAction, action } from "./_generated/server";
 import { v } from "convex/values";
 import { internal } from "./_generated/api";
 import { getCurrentUserOrThrow } from "./authz";
@@ -210,6 +210,32 @@ export const saveSettings = mutation({
       await ctx.db.insert("notificationSettings", {
         userId: user._id,
         ...args,
+      });
+    }
+  },
+});
+
+export const sendTestNotification = action({
+  args: {},
+  handler: async (ctx) => {
+    const user = await getCurrentUserOrThrow(ctx);
+    const subs = await ctx.runQuery(
+      internal.notifications._getSubscriptionsForUser,
+      { userId: user._id }
+    );
+    if (subs.length === 0) {
+      throw new Error("No push subscription found. Enable push notifications first.");
+    }
+    for (const sub of subs) {
+      await ctx.runAction(internal.webPush.sendPush, {
+        endpoint: sub.endpoint,
+        p256dh: sub.p256dh,
+        auth: sub.auth,
+        title: "GëstuSaDine — Test",
+        body: "Push notifications are working correctly.",
+        icon: "/app-icon.png",
+        tag: "test",
+        url: "/settings",
       });
     }
   },
