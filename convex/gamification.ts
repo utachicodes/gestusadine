@@ -107,15 +107,17 @@ export const recordDailyActivity = mutation({
     const now = Date.now();
     const today = new Date(now).setHours(0, 0, 0, 0);
     const lastActive = user.lastActiveDate ?? 0;
-    const yesterday = today - 86_400_000;
 
+    // Already recorded today — do nothing. This prevents re-awarding XP
+    // every time the dashboard mounts.
+    if (lastActive >= today) return;
+
+    const yesterday = today - 86_400_000;
     let streak = user.streak ?? 0;
-    if (lastActive < today) {
-      if (lastActive >= yesterday) {
-        streak += 1;
-      } else {
-        streak = 1;
-      }
+    if (lastActive >= yesterday) {
+      streak += 1;
+    } else {
+      streak = 1;
     }
 
     await ctx.db.patch(user._id, {
