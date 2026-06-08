@@ -103,3 +103,44 @@ export const checkEmailExists = query({
     return user !== null;
   },
 });
+
+// Call this before signIn("password", { flow: "signUp" }) to:
+// 1. Confirm the email is not already in use.
+// 2. Scrub any stale authAccounts entry whose linked user was deleted —
+//    those cause a TypeError crash inside the Convex Auth library that
+//    surfaces as a generic "Server Error" to the client.
+export const prepareSignup = mutation({
+  args: { email: v.string() },
+  handler: async (ctx, args) => {
+    const email = args.email.toLowerCase().trim();
+
+    const existing = await ctx.db
+      .query("users")
+      .withIndex("email", (q) => q.eq("email", email))
+      .first();
+
+    if (existing) {
+      throw new ConvexError("An account with this email already exists.");
+    }
+
+    // Find any orphaned authAccount for this email (password provider).
+    const staleAccount = await ctx.db
+      .query("authAccounts")
+      .filter((q) =>
+        q.and(
+          q.eq(q.field("provider"), "password"),
+          q.eq(q.field("providerAccountId"), email),
+        ),
+      )
+      .first();
+
+    if (staleAccount) {
+      const linkedUser = await ctx.db.get(staleAccount.userId as any);
+      if (!linkedUser) {
+        await ctx.db.delete(staleAccount._id);
+      } else {
+        throw new ConvexError("An account with this email already exists.");
+      }
+    }
+  },
+});

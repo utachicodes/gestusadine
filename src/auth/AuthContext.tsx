@@ -153,9 +153,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return { error: new Error("Please enter your full name.") };
     }
 
-    const exists = await convex.query(api.users.checkEmailExists, { email: trimmedEmail });
-    if (exists) {
-      return { error: new Error("An account with this email already exists.") };
+    // Check for existing account AND clean up any stale authAccounts entries
+    // that would cause a crash inside Convex Auth (TypeError on null user).
+    try {
+      await convex.mutation(api.users.prepareSignup, { email: trimmedEmail });
+    } catch (err) {
+      return { error: new Error(userMessage(err, "Sign up failed. Please try again.")) };
     }
 
     try {
