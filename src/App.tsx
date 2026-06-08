@@ -49,7 +49,6 @@ import SurahView from "./pages/quran/SurahView";
 import PrayerTimes from "./pages/tools/PrayerTimes";
 import HijriCalendar from "./pages/tools/HijriCalendar";
 import ZakatCalculator from "./pages/tools/ZakatCalculator";
-
 import { ThemeProvider } from "@/contexts/ThemeContext";
 
 const queryClient = new QueryClient();

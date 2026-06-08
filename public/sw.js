@@ -1,4 +1,4 @@
-const CACHE = 'gsd-v2';
+const CACHE = 'gsd-v3';
 
 // Only cache immutable static assets (hashed filenames from the Vite build).
 const STATIC_EXTENSIONS = ['.js', '.css', '.woff2', '.woff', '.ttf', '.png', '.svg', '.ico'];
@@ -7,6 +7,44 @@ function isStaticAsset(url) {
   const path = new URL(url).pathname;
   return STATIC_EXTENSIONS.some((ext) => path.endsWith(ext));
 }
+
+// ── Push notifications ───────────────────────────────────────────────────────
+
+self.addEventListener('push', (event) => {
+  let data = {};
+  try { data = event.data ? event.data.json() : {}; } catch {}
+
+  const title = data.title || 'GëStuSaDine';
+  const options = {
+    body: data.body || '',
+    icon: data.icon || '/logo.png',
+    badge: '/logo.png',
+    tag: data.tag || 'default',
+    data: { url: data.url || '/dashboard' },
+    dir: 'ltr',
+    requireInteraction: false,
+  };
+
+  event.waitUntil(self.registration.showNotification(title, options));
+});
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const url = event.notification.data?.url || '/dashboard';
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((windowClients) => {
+      for (const client of windowClients) {
+        if (client.url.includes(self.location.origin) && 'focus' in client) {
+          client.navigate(url);
+          return client.focus();
+        }
+      }
+      return clients.openWindow(url);
+    })
+  );
+});
+
+// ── Install / activate / fetch ───────────────────────────────────────────────
 
 self.addEventListener('install', () => self.skipWaiting());
 

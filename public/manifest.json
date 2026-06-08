@@ -10,7 +10,7 @@
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "/logofinal.png",
+      "src": "/app-icon.png",
       "sizes": "any",
       "type": "image/png",
       "purpose": "any"

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useSubscription } from "@/data/subscription";
@@ -13,7 +12,8 @@ import { useTr, type Loc } from "@/lib/i18n";
 import { ThemeCustomizer } from "@/components/settings/ThemeCustomizer";
 import { CreditUsageWidget } from "@/components/subscription/CreditUsageWidget";
 import { resetOnboardingTutorial } from "@/components/onboarding/OnboardingTutorial";
-import { Globe, Palette, Bell, CreditCard, Crown, FlaskConical, PlayCircle, User, Users } from "lucide-react";
+import { Globe, Palette, CreditCard, Crown, FlaskConical, PlayCircle, User, Users } from "lucide-react";
+import NotificationSettings from "./NotificationSettings";
 import { toast } from "sonner";
 
 const DEV_TIERS: { value: SubscriptionTier; label: Loc }[] = [
@@ -29,7 +29,6 @@ const Settings: React.FC = () => {
   const { setSubscriptionTier, profile } = useAuth();
   const updateGender = useMutation(api.users.updateGender);
   const tr = useTr();
-  const [notifications, setNotifications] = useState(true);
   const [showCustomizer, setShowCustomizer] = useState(false);
 
   const handleGenderChange = async (g: Gender) => {
@@ -111,23 +110,6 @@ const Settings: React.FC = () => {
                   <p className="text-xs text-muted-foreground mt-1">{lang.toUpperCase()}</p>
                 </button>
               ))}
-            </div>
-          </Card>
-
-          <Card className="p-6 space-y-6">
-            <div>
-              <h2 className="text-xl font-semibold text-foreground mb-1 flex items-center gap-2">
-                <Bell className="w-5 h-5 text-primary" />
-                {tr({ en: 'Notifications', fr: 'Notifications' })}
-              </h2>
-              <p className="text-sm text-muted-foreground">{tr({ en: 'Manage notification preferences', fr: 'Gérez vos préférences de notification' })}</p>
-            </div>
-            <div className="flex items-center justify-between">
-              <div>
-                <Label htmlFor="notifications" className="text-base font-medium">{tr({ en: 'Push Notifications', fr: 'Notifications push' })}</Label>
-                <p className="text-xs text-muted-foreground mt-1">{tr({ en: 'Receive prayer reminders and updates', fr: 'Recevez des rappels de prière et des mises à jour' })}</p>
-              </div>
-              <Switch id="notifications" checked={notifications} onCheckedChange={setNotifications} />
             </div>
           </Card>
 
@@ -251,6 +233,17 @@ const Settings: React.FC = () => {
               {tr({ en: 'Restart Tutorial', fr: 'Relancer le tutoriel' })}
             </Button>
           </Card>
+        </div>
+
+        {/* Push notification settings */}
+        <div>
+          <h2 className="text-xl font-semibold text-foreground mb-1">
+            {tr({ en: 'Notifications', fr: 'Notifications' })}
+          </h2>
+          <p className="text-sm text-muted-foreground mb-4">
+            {tr({ en: 'Prayer reminders, Quran alerts, and daily content on your device', fr: 'Rappels de prière, alertes Coran et contenu quotidien sur votre appareil' })}
+          </p>
+          <NotificationSettings />
         </div>
       </section>
     </div>
