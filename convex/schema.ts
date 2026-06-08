@@ -117,7 +117,7 @@ const schema = defineSchema({
   }).index("category", ["category"]),
 
   dailyContent: defineTable({
-    contentType: v.union(v.literal("ayah"), v.literal("hadith"), v.literal("dua"), v.literal("fact")),
+    contentType: v.union(v.literal("ayah"), v.literal("hadith"), v.literal("dua"), v.literal("fact"), v.literal("action")),
     content: v.string(),
     source: v.string(),
     translation: v.optional(v.string()),
