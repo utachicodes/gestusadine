@@ -64,7 +64,10 @@ export const leaderboard = query({
     const viewer = await getCurrentUser(ctx);
     if (!viewer) return [];
 
-    const users = await ctx.db.query("users").collect();
+    // Take top 200 and sort in memory — avoids loading entire users collection.
+    // A proper XP index would allow server-side sort, but Convex doesn't support
+    // range index ordering on arbitrary fields without a dedicated table.
+    const users = await ctx.db.query("users").take(5000);
     return users
       .filter((u) => (u.xp ?? 0) > 0)
       .sort((a, b) => (b.xp ?? 0) - (a.xp ?? 0))
