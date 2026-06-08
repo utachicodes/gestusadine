@@ -6,7 +6,6 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { PageHeader } from "@/components/layout/PageHeader";
 import { useAuth } from "@/auth/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { toast } from "sonner";
@@ -306,12 +305,7 @@ const NotificationSettings: React.FC = () => {
   // ─────────────────────────────────────────────────────────────────────────────
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-6 space-y-6">
-      <PageHeader
-        eyebrow={language === "fr" ? "Compte" : "Account"}
-        title={tr("page.title")}
-        subtitle={tr("page.subtitle")}
-      />
+    <div className="space-y-6">
 
       {/* ── Push permission card ── */}
       <Card className="p-6 space-y-4">
