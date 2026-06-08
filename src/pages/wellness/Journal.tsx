@@ -158,7 +158,8 @@ export default function Journal() {
   const entryDateMap = new Map((entryDates ?? []).map((e) => [e.date, e.mood]));
 
   return (
-    <div className="container py-8 md:py-10 space-y-6 max-w-5xl">
+    <div className="flex-1">
+    <section className="container py-8 md:py-10 space-y-6">
       <PageHeader
         eyebrow={tr({ en: 'Wellness', fr: 'Bien-être' })}
         title={tr({ en: 'Journal', fr: 'Journal' })}
@@ -551,6 +552,7 @@ export default function Journal() {
           )}
         </div>
       )}
+    </section>
     </div>
   );
 }
