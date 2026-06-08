@@ -1,7 +1,11 @@
 import { action, mutation, query } from "./_generated/server";
-import { v } from "convex/values";
+import { v, ConvexError } from "convex/values";
 import { internal } from "./_generated/api";
-import { getCurrentUserOrThrow } from "./authz";
+import { requireStaff } from "./authz";
+
+const MAX_TITLE_LEN = 500;
+const MAX_CONTENT_LEN = 500_000; // 500 KB of plain text
+const MAX_SOURCE_LEN = 500;
 
 export const upsertDocument = action({
   args: {
@@ -12,7 +16,14 @@ export const upsertDocument = action({
     storageId: v.optional(v.id("_storage")),
   },
   handler: async (ctx, args) => {
-    const user = await getCurrentUserOrThrow(ctx as any);
+    const user = await requireStaff(ctx as any);
+
+    if (args.title.length > MAX_TITLE_LEN)
+      throw new ConvexError(`Title must be ${MAX_TITLE_LEN} characters or fewer.`);
+    if (args.content.length > MAX_CONTENT_LEN)
+      throw new ConvexError(`Content must be ${MAX_CONTENT_LEN} characters or fewer.`);
+    if (args.source.length > MAX_SOURCE_LEN)
+      throw new ConvexError(`Source must be ${MAX_SOURCE_LEN} characters or fewer.`);
 
     const docId = await ctx.runMutation(internal.ragInternal.insertDocument, {
       title: args.title,

@@ -196,7 +196,7 @@ export const postsWithAuthors = query({
         const author = p.authorId ? await ctx.db.get(p.authorId) : null;
         return {
           ...p,
-          authorName: author?.fullName ?? author?.email?.split("@")[0] ?? "Anonymous",
+          authorName: author?.fullName ?? "Anonymous",
         };
       })
     );

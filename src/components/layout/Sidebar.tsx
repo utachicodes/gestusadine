@@ -201,7 +201,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggleCollapsed, 
       </nav>
 
       {/* Account footer */}
-      <div className="border-t border-sidebar-border p-3 space-y-1">
+      <div className="border-t border-sidebar-border p-3 pb-safe space-y-1">
         {/* Sign out */}
         {collapsed ? (
           <Tooltip delayDuration={0}>

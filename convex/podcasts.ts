@@ -31,7 +31,7 @@ export const create = mutation({
     guestName: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const user = await getCurrentUserOrThrow(ctx);
+    const user = await requireStaff(ctx);
     return ctx.db.insert("podcasts", {
       ...args,
       plays: 0,

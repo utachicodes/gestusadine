@@ -1,0 +1,19 @@
+{
+  "name": "GëstuSaDine",
+  "short_name": "GëstuSaDine",
+  "description": "Islamic knowledge and wellness platform",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#faf7f0",
+  "theme_color": "#065f46",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/logofinal.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

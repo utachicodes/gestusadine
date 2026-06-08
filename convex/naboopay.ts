@@ -142,6 +142,19 @@ export const confirmPayment = internalMutation({
     const tier = (meta?.tier as string) ?? "student";
     const amount = (meta?.amount as number) ?? TIER_PRICES[tier]?.amount ?? 0;
 
+    // Idempotency guard — reject replayed webhooks for the same orderId.
+    const alreadyConfirmed = await ctx.db
+      .query("userActivity")
+      .filter((q) =>
+        q.and(
+          q.eq(q.field("activityType"), "payment_completed"),
+          q.eq(q.field("metadata.orderId"), args.orderId),
+        ),
+      )
+      .first();
+
+    if (alreadyConfirmed) return { success: true, userId, idempotent: true };
+
     await ctx.db.patch(userId, { subscriptionTier: tier as any });
     await ctx.db.insert("userActivity", {
       userId,

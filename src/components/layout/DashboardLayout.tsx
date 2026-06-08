@@ -71,7 +71,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
       {/* Main column */}
       <div className="relative z-10 flex-1 flex flex-col min-w-0 overflow-hidden">
         <DashboardTopbar onOpenMobileSidebar={() => setMobileOpen(true)} />
-        <main className="flex-1 overflow-y-auto custom-scrollbar">{children}</main>
+        <main className="flex-1 overflow-y-auto custom-scrollbar pb-safe">{children}</main>
       </div>
     </div>
   );

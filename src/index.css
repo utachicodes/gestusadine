@@ -4,6 +4,15 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  /* iPhone notch / Dynamic Island safe areas */
+  .pt-safe { padding-top: env(safe-area-inset-top, 0px); }
+  .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
+  .pl-safe { padding-left: env(safe-area-inset-left, 0px); }
+  .pr-safe { padding-right: env(safe-area-inset-right, 0px); }
+  .min-h-safe-top { min-height: env(safe-area-inset-top, 0px); }
+}
+
 @layer base {
   /* ===========================================================================
      LIGHT theme — default. Emerald/Teal brand on a clean slate-white surface.
