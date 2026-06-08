@@ -48,31 +48,31 @@ const TALL: Space[] = [
 
 const WIDE: Space[] = [
   {
-    n: '04',
-    title: { en: 'Circles', fr: 'Cercles' },
+    n: ‘04’,
+    title: { en: ‘Events’, fr: ‘Événements’ },
     desc: {
-      en: 'Moderated community circles on fiqh, Qur’an, family, and youth.',
-      fr: 'Des cercles communautaires modérés sur le fiqh, le Coran, la famille et la jeunesse.',
+      en: ‘Lectures, circles, and community programs across Senegal and online.’,
+      fr: ‘Conférences, cercles et programmes communautaires au Sénégal et en ligne.’,
     },
-    to: '/community',
+    to: ‘/events’,
   },
   {
-    n: '05',
-    title: { en: 'Daily Guidance', fr: 'Guidance quotidienne' },
+    n: ‘05’,
+    title: { en: ‘Daily Guidance’, fr: ‘Guidance quotidienne’ },
     desc: {
-      en: 'A daily ayah, dua, and prayer times to anchor your day.',
-      fr: 'Un verset, une invocation et les horaires de prière chaque jour.',
+      en: ‘A daily ayah, dua, and prayer times to anchor your day.’,
+      fr: ‘Un verset, une invocation et les horaires de prière chaque jour.’,
     },
-    to: '/dashboard',
+    to: ‘/dashboard’,
   },
   {
-    n: '06',
-    title: { en: 'Podcasts', fr: 'Podcasts' },
+    n: ‘06’,
+    title: { en: ‘Prayer Times’, fr: ‘Horaires de prière’ },
     desc: {
-      en: 'Long-form conversations with scholars from the region and beyond.',
-      fr: 'Des conversations approfondies avec des savants de la région et d’ailleurs.',
+      en: ‘Accurate prayer times for any city, with Hijri calendar and Qibla direction.’,
+      fr: ‘Horaires de prière précis pour toute ville, avec calendrier hégirien et direction de la Qibla.’,
     },
-    to: '/podcasts',
+    to: ‘/prayer-times’,
   },
 ];
 

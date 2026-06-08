@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
-  MessageSquare, BookOpen, GraduationCap, Users, Sunrise, Headphones, ArrowUpRight,
+  MessageSquare, BookOpen, GraduationCap, Calendar, Sunrise, Clock, ArrowUpRight,
   type LucideIcon,
 } from 'lucide-react';
 import { useTr, type Loc } from '@/lib/i18n';
@@ -29,22 +29,22 @@ const FEATURES: { icon: LucideIcon; title: Loc; desc: Loc; to: string }[] = [
     to: '/classes',
   },
   {
-    icon: Users,
-    title: { en: 'Circles', fr: 'Cercles' },
-    desc: { en: 'Moderated community circles on fiqh, Qur’an, family, and youth.', fr: 'Des cercles communautaires modérés sur le fiqh, le Coran, la famille et la jeunesse.' },
-    to: '/community',
+    icon: Calendar,
+    title: { en: ‘Events’, fr: ‘Événements’ },
+    desc: { en: ‘Lectures, circles, and community programs across Senegal and online.’, fr: ‘Conférences, cercles et programmes communautaires au Sénégal et en ligne.’ },
+    to: ‘/events’,
   },
   {
     icon: Sunrise,
-    title: { en: 'Daily Guidance', fr: 'Guidance quotidienne' },
-    desc: { en: 'A daily ayah, dua, and prayer times to anchor your day.', fr: 'Un verset, une invocation et les horaires de prière chaque jour.' },
-    to: '/dashboard',
+    title: { en: ‘Daily Guidance’, fr: ‘Guidance quotidienne’ },
+    desc: { en: ‘A daily ayah, dua, and prayer times to anchor your day.’, fr: ‘Un verset, une invocation et les horaires de prière chaque jour.’ },
+    to: ‘/dashboard’,
   },
   {
-    icon: Headphones,
-    title: { en: 'Podcasts', fr: 'Podcasts' },
-    desc: { en: 'Long-form conversations with scholars from the region and beyond.', fr: 'Des conversations approfondies avec des savants de la région et d’ailleurs.' },
-    to: '/podcasts',
+    icon: Clock,
+    title: { en: ‘Prayer Times’, fr: ‘Horaires de prière’ },
+    desc: { en: ‘Accurate prayer times for any city, with Hijri calendar and Qibla direction.’, fr: ‘Horaires de prière précis pour toute ville, avec calendrier hégirien et direction de la Qibla.’ },
+    to: ‘/prayer-times’,
   },
 ];
 
