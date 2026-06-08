@@ -1,7 +1,7 @@
 import { action, mutation, query } from "./_generated/server";
 import { v, ConvexError } from "convex/values";
 import { internal } from "./_generated/api";
-import { requireStaff } from "./authz";
+import { getCurrentUserOrThrow, requireStaff } from "./authz";
 
 const MAX_TITLE_LEN = 500;
 const MAX_CONTENT_LEN = 500_000; // 500 KB of plain text
@@ -193,13 +193,13 @@ export const search = action({
 export const listDocuments = query({
   args: { category: v.optional(v.string()) },
   handler: async (ctx, args) => {
-    let q = ctx.db.query("ragDocuments");
     if (args.category) {
-      q = q.withIndex("category", (idx: any) =>
-        idx.eq("category", args.category!)
-      );
+      return ctx.db.query("ragDocuments")
+        .withIndex("category", (idx) => idx.eq("category", args.category!))
+        .order("desc")
+        .take(50);
     }
-    return q.order("desc").take(50);
+    return ctx.db.query("ragDocuments").order("desc").take(50);
   },
 });
 

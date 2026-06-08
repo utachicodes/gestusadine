@@ -7,11 +7,13 @@ export const list = query({
     category: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    let q = ctx.db.query("libraryBooks");
     if (args.category) {
-      q = q.withIndex("category", (idx) => idx.eq("category", args.category!));
+      return ctx.db.query("libraryBooks")
+        .withIndex("category", (idx) => idx.eq("category", args.category!))
+        .order("desc")
+        .take(50);
     }
-    return q.order("desc").take(50);
+    return ctx.db.query("libraryBooks").order("desc").take(50);
   },
 });
 

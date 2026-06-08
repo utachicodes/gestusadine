@@ -166,7 +166,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggleCollapsed, 
       style={{ backgroundColor: theme.colors.sidebar, borderColor: theme.colors.border }}
     >
       {/* Logo + collapse toggle */}
-      <div className={`flex items-center h-16 border-b border-sidebar-border ${collapsed ? 'justify-center px-2' : 'justify-between px-4'}`}>
+      <div className={`flex items-center min-h-[4rem] pt-safe border-b border-sidebar-border ${collapsed ? 'justify-center px-2' : 'justify-between px-4'}`}>
         {!collapsed && (
           <Link to="/dashboard" onClick={onNavigate} className="flex items-center hover:opacity-80 transition-opacity">
             <img src="/logofinal.png" alt="GëstuSaDine" className="h-7 w-auto object-contain brightness-0 dark:brightness-0 dark:invert" />
@@ -183,7 +183,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggleCollapsed, 
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto overflow-x-hidden py-4 px-3 space-y-5 custom-scrollbar">
+      <nav className="flex-1 overflow-y-auto overflow-x-hidden overscroll-contain py-4 px-3 space-y-5 custom-scrollbar">
         {visibleSections.map((section) => (
           <div key={section.label.en} className="space-y-1">
             {collapsed ? (
