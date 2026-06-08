@@ -143,7 +143,7 @@ export const DashboardTopbar: React.FC<DashboardTopbarProps> = ({ onOpenMobileSi
   const displayName = profile?.full_name || user?.displayName || (user?.email ? user.email.split('@')[0] : 'User');
 
   return (
-    <header className="sticky top-0 z-30 flex items-center gap-3 h-16 px-4 md:px-6 border-b border-border bg-background/80 backdrop-blur-xl">
+    <header className="sticky top-0 z-30 flex items-center gap-3 min-h-[4rem] pt-safe px-4 md:px-6 border-b border-border bg-background/80 backdrop-blur-xl">
       {/* Mobile menu */}
       <button
         type="button"
