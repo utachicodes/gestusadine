@@ -341,7 +341,7 @@ export const deliverPrayerPush = internalAction({
         auth: sub.auth,
         title: `${prayerLabel} — وقت الصلاة`,
         body: `It's time for ${prayerLabel} prayer. May Allah accept your worship.`,
-        icon: "/logo.png",
+        icon: "/app-icon.png",
         tag: `prayer-${prayerName}`,
         url: "/prayer-times",
       });
@@ -372,7 +372,7 @@ export const deliverQuranReminder = internalAction({
         auth: sub.auth,
         title: "Quran Reading — تلاوة القرآن",
         body: "Time for your daily Quran reading. Even a few verses bring great reward.",
-        icon: "/logo.png",
+        icon: "/app-icon.png",
         tag: "quran-reminder",
         url: "/quran",
       });
@@ -403,7 +403,7 @@ export const deliverDailyContentReminder = internalAction({
         auth: sub.auth,
         title: "Daily Islamic Content — المحتوى اليومي",
         body: "Your daily reminder of wisdom, knowledge and reflection is ready.",
-        icon: "/logo.png",
+        icon: "/app-icon.png",
         tag: "daily-content",
         url: "/dashboard",
       });

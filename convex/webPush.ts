@@ -27,8 +27,8 @@ export const sendPush = internalAction({
     const payload = JSON.stringify({
       title: args.title,
       body: args.body,
-      icon: args.icon ?? "/logo.png",
-      badge: "/logo.png",
+      icon: args.icon ?? "/app-icon.png",
+      badge: "/app-icon.png",
       tag: args.tag ?? "default",
       url: args.url ?? "/dashboard",
     });

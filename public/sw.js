@@ -17,8 +17,8 @@ self.addEventListener('push', (event) => {
   const title = data.title || 'GëStuSaDine';
   const options = {
     body: data.body || '',
-    icon: data.icon || '/logo.png',
-    badge: '/logo.png',
+    icon: data.icon || '/app-icon.png',
+    badge: '/app-icon.png',
     tag: data.tag || 'default',
     data: { url: data.url || '/dashboard' },
     dir: 'ltr',
