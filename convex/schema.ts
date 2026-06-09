@@ -22,6 +22,9 @@ const schema = defineSchema({
     lastActiveDate: v.optional(v.number()),
     gender: v.optional(v.union(v.literal("male"), v.literal("female"))),
     onboardingCompleted: v.optional(v.boolean()),
+    abuseWarnings: v.optional(v.number()),
+    abuseLastAt: v.optional(v.number()),
+    abuseFlagged: v.optional(v.boolean()),
   })
     .index("email", ["email"])
     .index("phone", ["phone"]),
