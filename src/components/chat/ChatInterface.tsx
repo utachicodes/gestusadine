@@ -158,7 +158,12 @@ export const ChatInterface = () => {
     setInput('');
     setIsLoading(true);
 
-    const madhab = localStorage.getItem('GëstuSaDine-madhab') || '';
+    const VALID_MADHABS = ['general', 'hanafi', 'maliki', 'shafii', 'hanbali'] as const;
+    type Madhab = typeof VALID_MADHABS[number];
+    const rawMadhab = localStorage.getItem('GëstuSaDine-madhab') ?? '';
+    const madhab: Madhab | undefined = (VALID_MADHABS as readonly string[]).includes(rawMadhab)
+      ? rawMadhab as Madhab
+      : undefined;
 
     try {
       // The system prompt, methodology and guardrails are built server-side.
