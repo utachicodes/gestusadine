@@ -100,34 +100,42 @@ export const generate = action({
         const warnings = (user.abuseWarnings ?? 0) + 1;
         console.warn("[council] jailbreak attempt", { userId: user._id, warnings });
 
+        const lang = (args.language || "en").toLowerCase();
+
         // Strike 3 — delete the account immediately.
         if (warnings >= 3) {
           await ctx.runMutation(internal.llm.deleteAbusiveAccount, { userId: user._id });
-          const lang = (args.language || "en").toLowerCase();
           if (lang.startsWith("fr")) {
             throw new ConvexError("Votre compte a été supprimé suite à plusieurs tentatives de contournement des règles de la plateforme.");
           }
           throw new ConvexError("Your account has been deleted due to repeated attempts to bypass platform rules.");
         }
 
-        // Strike 2 — final warning.
+        // Always persist the updated count.
         await ctx.runMutation(internal.llm.recordAbuseWarning, {
           userId: user._id,
           warnings,
           flagged: false,
         });
 
-        const lang = (args.language || "en").toLowerCase();
-        if (lang.startsWith("fr")) {
-          return `⚠️ **Avertissement final (${warnings}/3) :** Des tentatives répétées de contournement ont été détectées sur votre compte. **Une prochaine tentative entraînera la suppression définitive de votre compte.** Je suis ici uniquement pour les questions islamiques.`;
+        // Strike 2 — final warning.
+        if (warnings === 2) {
+          if (lang.startsWith("fr")) {
+            return `⚠️ **Avertissement final :** Vous avez déjà tenté de contourner les règles. **Une prochaine tentative entraînera la suppression définitive de votre compte.** Je suis ici uniquement pour les questions islamiques.`;
+          }
+          return `⚠️ **Final warning:** You have already attempted to bypass the rules. **One more attempt will permanently delete your account.** I'm here for Islamic questions only.`;
         }
-        return `⚠️ **Final warning (${warnings}/3):** Repeated override attempts have been detected on your account. **One more attempt will permanently delete your account.** I'm here for Islamic questions only.`;
+
+        // Strike 1 — silent redirect.
+        return lang.startsWith("fr")
+          ? "Je suis ici uniquement pour les questions islamiques. Comment puis-je vous aider avec votre deen ?"
+          : "I'm here for Islamic questions only. How can I help you with your deen?";
       }
-      // Not authenticated or user not found — silent redirect.
+      // Unauthenticated — silent redirect.
       const lang = (args.language || "en").toLowerCase();
       return lang.startsWith("fr")
-        ? "Je suis ici uniquement pour les questions islamiques. Comment puis-je vous aider avec votre deen ?"
-        : "I'm here for Islamic questions only. How can I help you with your deen?";
+        ? "Je suis ici uniquement pour les questions islamiques."
+        : "I'm here for Islamic questions only.";
     }
 
     // Pure greetings/pleasantries get a quick reply — no model call, and NOT
