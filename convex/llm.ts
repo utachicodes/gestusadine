@@ -8,6 +8,7 @@ import {
   RAG_HEADER,
   RAG_FOOTER,
 } from "./prompts";
+import { validateCouncilOutput } from "./outputFilter";
 
 const FANAR_BASE = "https://api.fanar.qa/v1";
 const FANAR_MODEL = "Fanar";
@@ -130,7 +131,16 @@ export const generate = action({
       throw new ConvexError("The assistant couldn't generate a response. Please try rephrasing your question.");
     }
 
-    // Only a successful answer is charged against the quota.
+    // Server-side output filter — runs before the response reaches any client.
+    // If any safety check fails, return a safe fallback instead of the raw output.
+    const filterResult = validateCouncilOutput(content);
+    if (!filterResult.safe) {
+      console.warn("[council] output filtered", { category: filterResult.category });
+      // Filtered responses are NOT charged against the quota.
+      return filterResult.fallback ?? "I wasn't able to generate a proper response. Please try again.";
+    }
+
+    // Only a successful, safe answer is charged against the quota.
     await ctx.runMutation(internal.subscription.incrementCouncilUsage);
     return content;
   },
