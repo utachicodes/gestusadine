@@ -24,6 +24,7 @@ import type * as library from "../library.js";
 import type * as llm from "../llm.js";
 import type * as naboopay from "../naboopay.js";
 import type * as notifications from "../notifications.js";
+import type * as outputFilter from "../outputFilter.js";
 import type * as periodTracker from "../periodTracker.js";
 import type * as posthog from "../posthog.js";
 import type * as prayers from "../prayers.js";
@@ -66,6 +67,7 @@ declare const fullApi: ApiFromModules<{
   llm: typeof llm;
   naboopay: typeof naboopay;
   notifications: typeof notifications;
+  outputFilter: typeof outputFilter;
   periodTracker: typeof periodTracker;
   posthog: typeof posthog;
   prayers: typeof prayers;
