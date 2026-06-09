@@ -82,7 +82,7 @@ export const generate = action({
 
     // ── Abuse / jailbreak detection ───────────────────────────────────────────
     // Detect override/jailbreak attempts server-side. Track per-user count.
-    // After 3 strikes: warning. After 5: account is flagged for admin review.
+    // Strike 1: silent redirect. Strike 2: final warning. Strike 3: delete account.
     const JAILBREAK_PATTERNS = [
       /\b(ignore|disregard|skip|forget|override|bypass|break|violate)\s+(all\s+)?(previous|above|your|the|any)\s+(instructions?|prompt|rules?|guidelines?|filter)\b/i,
       /\b(reveal|show|print|output|repeat|leak|expose|tell\s+me)\s+(your|the|me|us)\s*(system\s*prompt|instructions?|prompt|rules?|guidelines?|configuration)\b/i,
@@ -95,33 +95,35 @@ export const generate = action({
     const isJailbreakAttempt = JAILBREAK_PATTERNS.some((p) => p.test(userText));
 
     if (isJailbreakAttempt) {
-      // Load the user record to update and check their abuse count.
       const user = await ctx.runQuery(api.users.currentUser);
       if (user) {
         const warnings = (user.abuseWarnings ?? 0) + 1;
-        const patch: Record<string, unknown> = {
-          abuseWarnings: warnings,
-          abuseLastAt: Date.now(),
-        };
-        // Flag for admin review after 5 attempts.
-        if (warnings >= 5) patch.abuseFlagged = true;
+        console.warn("[council] jailbreak attempt", { userId: user._id, warnings });
+
+        // Strike 3 — delete the account immediately.
+        if (warnings >= 3) {
+          await ctx.runMutation(internal.llm.deleteAbusiveAccount, { userId: user._id });
+          const lang = (args.language || "en").toLowerCase();
+          if (lang.startsWith("fr")) {
+            throw new ConvexError("Votre compte a été supprimé suite à plusieurs tentatives de contournement des règles de la plateforme.");
+          }
+          throw new ConvexError("Your account has been deleted due to repeated attempts to bypass platform rules.");
+        }
+
+        // Strike 2 — final warning.
         await ctx.runMutation(internal.llm.recordAbuseWarning, {
           userId: user._id,
           warnings,
-          flagged: warnings >= 5,
+          flagged: false,
         });
 
-        console.warn("[council] jailbreak attempt", { userId: user._id, warnings });
-
-        if (warnings >= 3) {
-          const lang = (args.language || "en").toLowerCase();
-          if (lang.startsWith("fr")) {
-            return `⚠️ **Avertissement (${warnings}/5) :** Plusieurs tentatives de contournement ont été détectées sur votre compte. Si ce comportement continue, votre accès à l'assistant pourra être suspendu par un administrateur. Je suis ici uniquement pour les questions islamiques — comment puis-je vous aider avec votre deen ?`;
-          }
-          return `⚠️ **Warning (${warnings}/5):** Multiple override attempts have been detected on your account. If this continues, an administrator may suspend your access to the assistant. I'm here for Islamic questions only — how can I help you with your deen?`;
+        const lang = (args.language || "en").toLowerCase();
+        if (lang.startsWith("fr")) {
+          return `⚠️ **Avertissement final (${warnings}/3) :** Des tentatives répétées de contournement ont été détectées sur votre compte. **Une prochaine tentative entraînera la suppression définitive de votre compte.** Je suis ici uniquement pour les questions islamiques.`;
         }
+        return `⚠️ **Final warning (${warnings}/3):** Repeated override attempts have been detected on your account. **One more attempt will permanently delete your account.** I'm here for Islamic questions only.`;
       }
-      // First/second attempt — silent redirect.
+      // Not authenticated or user not found — silent redirect.
       const lang = (args.language || "en").toLowerCase();
       return lang.startsWith("fr")
         ? "Je suis ici uniquement pour les questions islamiques. Comment puis-je vous aider avec votre deen ?"
@@ -236,11 +238,10 @@ export const testModel = action({
   },
 });
 
-// Internal — records an abuse warning on the user record.
-// Kept internal so it cannot be called directly by clients.
+// Internal — increments the abuse warning counter on the user record.
 export const recordAbuseWarning = internalMutation({
   args: {
-    userId:  v.id("users"),
+    userId:   v.id("users"),
     warnings: v.number(),
     flagged:  v.boolean(),
   },
@@ -251,5 +252,40 @@ export const recordAbuseWarning = internalMutation({
     };
     if (args.flagged) patch.abuseFlagged = true;
     await ctx.db.patch(args.userId as Id<"users">, patch);
+  },
+});
+
+// Internal — permanently deletes a user account and all their associated data
+// after the 3rd jailbreak strike.
+export const deleteAbusiveAccount = internalMutation({
+  args: { userId: v.id("users") },
+  handler: async (ctx, args) => {
+    const id = args.userId as Id<"users">;
+    console.warn("[council] deleting abusive account", { userId: id });
+
+    // Delete all user-owned records across every table.
+    const tables = [
+      "journalEntries",
+      "periodLogs",
+      "periodCycles",
+      "periodSettings",
+      "sawmQadaa",
+      "quizAttempts",
+      "subscriptionUsage",
+      "userActivity",
+    ] as const;
+
+    for (const table of tables) {
+      const rows = await ctx.db
+        .query(table)
+        .withIndex("userId", (q) => q.eq("userId", id))
+        .collect();
+      for (const row of rows) {
+        await ctx.db.delete(row._id);
+      }
+    }
+
+    // Finally delete the user record itself.
+    await ctx.db.delete(id);
   },
 });
