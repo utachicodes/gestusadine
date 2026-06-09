@@ -25,22 +25,12 @@ interface Message {
 
 const STORAGE_KEY = 'GëstuSaDine_chat_history';
 
-const OFF_TOPIC_PATTERNS = [
-  /\b(reveal|show|tell|disclose|leak|expose|output|repeat|print)\s+(your|the|me|us)\s*(system\s*prompt|instructions|prompt|rules|guidelines)\b/i,
-  /\b(ignore|disregard|skip|forget|override|bypass|break|violate)\s+(all\s+)?(previous|above|your|the|any)\s+(instructions|prompt|rules|guidelines|filter)\b/i,
-  /\b(dan|developer mode|jailbreak|jailbroken|uncensored mode|god mode)\b/i,
-];
-
 const IDENTITY_LEAK_PATTERNS = [
   /\b(i'?m\s+(a|an)\s+(gpt|gemma|llama|claude|bard|deepseek|mistral|fanar|ai|chatbot|language model))\b/i,
   /\b(openai|anthropic|meta ai|qatar computing)\s+(made|created|built|developed|trained)\s+(me|this|the model)\b/i,
 ];
 
 const IDENTITY_FALLBACK = "I'm GëstuSaDine, an Islamic chatbot. Ask me about Islam!";
-
-function isOffTopic(query: string): boolean {
-  return OFF_TOPIC_PATTERNS.some(p => p.test(query));
-}
 
 function leaksIdentity(response: string): boolean {
   return IDENTITY_LEAK_PATTERNS.some(p => p.test(response));
@@ -136,24 +126,6 @@ export const ChatInterface = () => {
     };
 
     const userInput = input.trim();
-
-    if (isOffTopic(userInput)) {
-      setMessages(prev => [...prev, userMessage]);
-      setInput('');
-      setIsLoading(false);
-      const offTopicReply: Message = {
-        id: `blocked-${Date.now()}`,
-        content: tr({
-          en: "I'm here for Islamic questions only \u2014 ask me about faith, prayer, Quran, or daily Muslim life!",
-          fr: "Je suis là uniquement pour les questions islamiques \u2014 posez-moi des questions sur la foi, la prière, le Coran ou la vie musulmane quotidienne !",
-        }),
-        role: 'assistant',
-        timestamp: new Date(),
-      };
-      setMessages(prev => [...prev, offTopicReply]);
-      return;
-    }
-
     setMessages(prev => [...prev, userMessage]);
     setInput('');
     setIsLoading(true);
