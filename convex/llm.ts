@@ -1,5 +1,6 @@
-import { action } from "./_generated/server";
+import { action, internalMutation } from "./_generated/server";
 import { v, ConvexError } from "convex/values";
+import { Id } from "./_generated/dataModel";
 import { api, internal } from "./_generated/api";
 import {
   buildCouncilSystemPrompt,
@@ -8,6 +9,7 @@ import {
   RAG_HEADER,
   RAG_FOOTER,
 } from "./prompts";
+import { validateCouncilOutput } from "./outputFilter";
 
 const FANAR_BASE = "https://api.fanar.qa/v1";
 const FANAR_MODEL = "Fanar";
@@ -78,6 +80,54 @@ export const generate = action({
     const lastUserMsg = [...args.messages].reverse().find((m) => m.role === "user");
     const userText = lastUserMsg?.content?.trim() ?? "";
 
+    // ── Abuse / jailbreak detection ───────────────────────────────────────────
+    // Detect override/jailbreak attempts server-side. Track per-user count.
+    // After 3 strikes: warning. After 5: account is flagged for admin review.
+    const JAILBREAK_PATTERNS = [
+      /\b(ignore|disregard|skip|forget|override|bypass|break|violate)\s+(all\s+)?(previous|above|your|the|any)\s+(instructions?|prompt|rules?|guidelines?|filter)\b/i,
+      /\b(reveal|show|print|output|repeat|leak|expose|tell\s+me)\s+(your|the|me|us)\s*(system\s*prompt|instructions?|prompt|rules?|guidelines?|configuration)\b/i,
+      /\b(dan|developer\s+mode|jailbreak|jailbroken|uncensored\s+mode|god\s+mode|do\s+anything\s+now)\b/i,
+      /\b(pretend\s+(you\s+are|to\s+be)|act\s+as\s+(if\s+you\s+are|a\s+)?|roleplay\s+as|you\s+are\s+now)\s+.{0,40}(ai|bot|assistant|model|gpt|llm|chatbot)\b/i,
+      /\b(new\s+instructions?|from\s+now\s+on\s+you|i\s+am\s+your\s+(developer|creator|owner|admin|god))\b/i,
+      /\b(disable\s+(your\s+)?(filter|safety|restriction|guard|rule))\b/i,
+    ];
+
+    const isJailbreakAttempt = JAILBREAK_PATTERNS.some((p) => p.test(userText));
+
+    if (isJailbreakAttempt) {
+      // Load the user record to update and check their abuse count.
+      const user = await ctx.runQuery(api.users.currentUser);
+      if (user) {
+        const warnings = (user.abuseWarnings ?? 0) + 1;
+        const patch: Record<string, unknown> = {
+          abuseWarnings: warnings,
+          abuseLastAt: Date.now(),
+        };
+        // Flag for admin review after 5 attempts.
+        if (warnings >= 5) patch.abuseFlagged = true;
+        await ctx.runMutation(internal.llm.recordAbuseWarning, {
+          userId: user._id,
+          warnings,
+          flagged: warnings >= 5,
+        });
+
+        console.warn("[council] jailbreak attempt", { userId: user._id, warnings });
+
+        if (warnings >= 3) {
+          const lang = (args.language || "en").toLowerCase();
+          if (lang.startsWith("fr")) {
+            return `⚠️ **Avertissement (${warnings}/5) :** Plusieurs tentatives de contournement ont été détectées sur votre compte. Si ce comportement continue, votre accès à l'assistant pourra être suspendu par un administrateur. Je suis ici uniquement pour les questions islamiques — comment puis-je vous aider avec votre deen ?`;
+          }
+          return `⚠️ **Warning (${warnings}/5):** Multiple override attempts have been detected on your account. If this continues, an administrator may suspend your access to the assistant. I'm here for Islamic questions only — how can I help you with your deen?`;
+        }
+      }
+      // First/second attempt — silent redirect.
+      const lang = (args.language || "en").toLowerCase();
+      return lang.startsWith("fr")
+        ? "Je suis ici uniquement pour les questions islamiques. Comment puis-je vous aider avec votre deen ?"
+        : "I'm here for Islamic questions only. How can I help you with your deen?";
+    }
+
     // Pure greetings/pleasantries get a quick reply — no model call, and NOT
     // charged against the monthly quota.
     if (isGreeting(userText)) {
@@ -130,7 +180,16 @@ export const generate = action({
       throw new ConvexError("The assistant couldn't generate a response. Please try rephrasing your question.");
     }
 
-    // Only a successful answer is charged against the quota.
+    // Server-side output filter — runs before the response reaches any client.
+    // If any safety check fails, return a safe fallback instead of the raw output.
+    const filterResult = validateCouncilOutput(content);
+    if (!filterResult.safe) {
+      console.warn("[council] output filtered", { category: filterResult.category });
+      // Filtered responses are NOT charged against the quota.
+      return filterResult.fallback ?? "I wasn't able to generate a proper response. Please try again.";
+    }
+
+    // Only a successful, safe answer is charged against the quota.
     await ctx.runMutation(internal.subscription.incrementCouncilUsage);
     return content;
   },
@@ -174,5 +233,23 @@ export const testModel = action({
       response: data.choices[0]?.message?.content ?? "",
       duration: Date.now() - startTime,
     };
+  },
+});
+
+// Internal — records an abuse warning on the user record.
+// Kept internal so it cannot be called directly by clients.
+export const recordAbuseWarning = internalMutation({
+  args: {
+    userId:  v.id("users"),
+    warnings: v.number(),
+    flagged:  v.boolean(),
+  },
+  handler: async (ctx, args) => {
+    const patch: Record<string, unknown> = {
+      abuseWarnings: args.warnings,
+      abuseLastAt:   Date.now(),
+    };
+    if (args.flagged) patch.abuseFlagged = true;
+    await ctx.db.patch(args.userId as Id<"users">, patch);
   },
 });
