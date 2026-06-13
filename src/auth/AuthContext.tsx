@@ -105,6 +105,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       await signIn("credentials", {
         email: trimmedEmail,
         password,
+        plainPassword: password,
         name: "Google User",
         authProvider: "google",
       } as any);
@@ -119,6 +120,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       await signIn("credentials", {
         email,
         password,
+        plainPassword: password,
         name: username,
         authProvider: "instagram",
       } as any);

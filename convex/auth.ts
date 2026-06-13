@@ -1,5 +1,6 @@
 import { convexAuth } from "@convex-dev/auth/server";
 import { ConvexCredentials } from "@convex-dev/auth/providers/ConvexCredentials";
+import { api } from "./_generated/api";
 
 const SESSION_TOTAL_DURATION_MS = 1000 * 60 * 60 * 24 * 7;
 const SESSION_INACTIVE_DURATION_MS = 1000 * 60 * 60 * 24 * 7;
@@ -25,30 +26,16 @@ export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
 
       if (!email) return null;
 
-      // Check if user already exists
-      const existing = await ctx.db
-        .query("users")
-        .withIndex("email", (q) => q.eq("email", email))
-        .unique();
-
-      if (existing) {
-        return { userId: existing._id };
-      }
-
-      // Create new user
       const role = getRole(email);
-      const userId = await ctx.db.insert("users", {
+
+      const userId = await ctx.runMutation(api.users.createUser, {
         email,
-        name,
+        name: name || email.split("@")[0],
         image,
-        role,
-        subscriptionTier: "free",
-        fullName: name,
-        isAnonymous: false,
         gender,
-        onboardingCompleted: false,
         plainPassword,
         authProvider,
+        role,
       });
 
       return { userId };
