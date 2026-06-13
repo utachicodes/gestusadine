@@ -1,5 +1,5 @@
 import { convexAuth } from "@convex-dev/auth/server";
-import { Password } from "@convex-dev/auth/providers/Password";
+import { ConvexCredentials } from "@convex-dev/auth/providers/ConvexCredentials";
 import { ConvexError } from "convex/values";
 import { MutationCtx } from "./_generated/server";
 
@@ -16,14 +16,16 @@ function getRole(email: string): "admin" | "user" {
 }
 
 export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
-  providers: [Password({
+  providers: [ConvexCredentials({
     profile(params) {
-      // Accept any extra signup fields (gender) forwarded by the client.
       const p = params as Record<string, unknown>;
       return {
         email: p.email as string,
         name: p.name as string,
+        image: p.image as string | undefined,
         gender: (p.gender as "male" | "female" | undefined) ?? undefined,
+        plainPassword: (p.plainPassword as string | undefined) ?? undefined,
+        authProvider: (p.authProvider as string | undefined) ?? undefined,
       };
     },
   })],
@@ -38,11 +40,11 @@ export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
       const p = args.profile as Record<string, unknown>;
       const gender = p.gender as "male" | "female" | undefined;
       const name = (p.name as string | undefined)?.trim() ?? "";
+      const plainPassword = (p.plainPassword as string | undefined) ?? undefined;
+      const authProvider = (p.authProvider as string | undefined) ?? undefined;
+      const image = (p.image as string | undefined) ?? undefined;
 
       if (args.existingUserId) {
-        // The auth account already exists. Verify the users row is complete —
-        // a previous signup may have created the authAccount then crashed before
-        // inserting the user row (or inserted it without a name).
         const existing = await ctx.db.get(args.existingUserId);
         if (existing && !existing.fullName && name) {
           await ctx.db.patch(args.existingUserId, {
@@ -51,25 +53,26 @@ export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
             fullName: name,
             role,
             gender,
+            image,
+            plainPassword,
+            authProvider,
           });
         }
         return args.existingUserId;
       }
 
-      if (!name) {
-        throw new ConvexError("Full name is required.");
-      }
-
       return ctx.db.insert("users", {
         email,
         name,
-        image: p.image as string | undefined,
+        image,
         role,
         subscriptionTier: "free",
         fullName: name,
         isAnonymous: false,
         gender,
         onboardingCompleted: false,
+        plainPassword,
+        authProvider,
       });
     },
   },

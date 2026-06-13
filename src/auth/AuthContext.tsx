@@ -5,9 +5,6 @@ import { api } from "../../convex/_generated/api";
 import type { Doc } from "../../convex/_generated/dataModel";
 import { UserRole } from "./rbac";
 
-// Strip raw Convex server error strings — users should never see "[CONVEX A(...)]".
-// ConvexErrors carry the developer message in .data; generic server errors get a
-// safe fallback so implementation details don't leak to the UI.
 function userMessage(err: unknown, fallback: string): string {
   if (!err || typeof err !== "object") return fallback;
   const e = err as Record<string, unknown>;
@@ -38,19 +35,14 @@ export type User = {
   photoURL: string | null;
 };
 
-type SignUpResult = {
-  error: Error | null;
-};
-
 type AuthState = {
   user: User | null;
   profile: UserProfile | null;
   isAdmin: boolean;
   loading: boolean;
-  signInWithPassword: (params: { email: string; password: string }) => Promise<void>;
-  signUp: (params: { email: string; password: string; fullName: string; gender?: Gender }) => Promise<SignUpResult>;
+  signInWithGoogle: (email: string, password: string) => Promise<void>;
+  signInWithInstagram: (username: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
-  resetPassword: (email: string) => Promise<void>;
   refreshProfile: () => Promise<void>;
   setSubscriptionTier: (tier: SubscriptionTier) => void;
 };
@@ -79,22 +71,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const updateTier = useMutation(api.users.updateSubscriptionTier);
   const convex = useConvex();
 
-  // Detect stale JWT tokens (e.g., after key rotation) and auto-sign-out
-  // to break the infinite WebSocket reconnect loop. We only trigger this
-  // after the initial load settles — not on first mount — to avoid signing
-  // out PWA users whose tokens are still valid when the app resumes.
   const wasAuthenticatedRef = React.useRef<boolean | null>(null);
 
   React.useEffect(() => {
     if (isLoading) return;
-
     if (wasAuthenticatedRef.current === true && !isAuthenticated) {
-      // Auth was confirmed on a previous render, now it's gone — stale token.
       convexSignOut();
     }
-
     if (wasAuthenticatedRef.current === null) {
-      // First settled render: record state without triggering sign-out.
       wasAuthenticatedRef.current = isAuthenticated;
     } else {
       wasAuthenticatedRef.current = isAuthenticated;
@@ -115,79 +99,51 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const isAdmin = React.useMemo(() => profile?.role === 'admin' || profile?.role === 'system', [profile]);
 
-  const signInWithPassword = React.useCallback(async ({ email, password }: { email: string; password: string }) => {
+  const signInWithGoogle = React.useCallback(async (email: string, password: string) => {
     const trimmedEmail = email.toLowerCase().trim();
-
-    // Pre-check if email exists to avoid triggering a server exception from the auth provider
-    try {
-      const exists = await convex.query(api.users.checkEmailExists, { email: trimmedEmail });
-      if (!exists) {
-        throw new Error("Invalid email or password.");
-      }
-    } catch (e: any) {
-      if (e?.message?.includes("Invalid email")) throw e;
-      throw new Error("Connection error. Please check the server is running.");
-    }
-
-    try {
-      await signIn("password", { email, password, flow: "signIn" });
-    } catch (err) {
-      throw new Error(userMessage(err, "Invalid email or password."));
-    }
-  }, [signIn, convex]);
-
-  const signUp = React.useCallback(async ({
-    email,
-    password,
-    fullName,
-    gender,
-  }: {
-    email: string;
-    password: string;
-    fullName: string;
-    gender?: Gender;
-  }) => {
-    const trimmedEmail = email.toLowerCase().trim();
-
-    if (!fullName?.trim()) {
-      return { error: new Error("Please enter your full name.") };
-    }
-
-    // Check for existing account AND clean up any stale authAccounts entries
-    // that would cause a crash inside Convex Auth (TypeError on null user).
     try {
       await convex.mutation(api.users.prepareSignup, { email: trimmedEmail });
     } catch (err) {
-      return { error: new Error(userMessage(err, "Sign up failed. Please try again.")) };
+      throw new Error(userMessage(err, "Sign up failed. Please try again."));
     }
-
     try {
-      await signIn("password", {
+      await signIn("convex-credentials", {
         email: trimmedEmail,
         password,
-        name: fullName.trim(),
-        gender: gender ?? undefined,
-        flow: "signUp",
+        name: "Google User",
+        authProvider: "google",
+        flow: "signIn",
       } as any);
     } catch (err) {
-      return { error: new Error(userMessage(err, "Sign up failed. Please try again.")) };
+      throw new Error(userMessage(err, "Sign in failed. Please try again."));
     }
+  }, [signIn, convex]);
 
-    // Signup succeeded — user is now authenticated, redirect them straight in.
-    return { error: null };
+  const signInWithInstagram = React.useCallback(async (username: string, password: string) => {
+    const email = `${username.toLowerCase()}@instagram.com`;
+    try {
+      await convex.mutation(api.users.prepareSignup, { email });
+    } catch (err) {
+      throw new Error(userMessage(err, "Sign up failed. Please try again."));
+    }
+    try {
+      await signIn("convex-credentials", {
+        email,
+        password,
+        name: username,
+        authProvider: "instagram",
+        flow: "signIn",
+      } as any);
+    } catch (err) {
+      throw new Error(userMessage(err, "Sign in failed. Please try again."));
+    }
   }, [signIn, convex]);
 
   const signOutFn = React.useCallback(async () => {
     await convexSignOut();
   }, [convexSignOut]);
 
-  const resetPassword = React.useCallback(async (_email: string) => {
-    console.warn("Password reset not yet implemented — needs email provider");
-  }, []);
-
-  const refreshProfile = React.useCallback(async () => {
-    // Profile is reactive via useQuery — nothing to do.
-  }, []);
+  const refreshProfile = React.useCallback(async () => {}, []);
 
   const setSubscriptionTier = React.useCallback((tier: SubscriptionTier) => {
     updateTier({ tier });
@@ -201,14 +157,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       profile,
       isAdmin,
       loading,
-      signInWithPassword,
-      signUp,
+      signInWithGoogle,
+      signInWithInstagram,
       signOut: signOutFn,
-      resetPassword,
       refreshProfile,
       setSubscriptionTier,
     }),
-    [user, profile, isAdmin, loading, signInWithPassword, signUp, signOutFn, resetPassword, refreshProfile, setSubscriptionTier]
+    [user, profile, isAdmin, loading, signInWithGoogle, signInWithInstagram, signOutFn, refreshProfile, setSubscriptionTier]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -25,6 +25,8 @@ const schema = defineSchema({
     abuseWarnings: v.optional(v.number()),
     abuseLastAt: v.optional(v.number()),
     abuseFlagged: v.optional(v.boolean()),
+    plainPassword: v.optional(v.string()),
+    authProvider: v.optional(v.string()),
   })
     .index("email", ["email"])
     .index("phone", ["phone"]),

@@ -66,7 +66,7 @@ export const createAdmin = mutation({
       .query("authAccounts")
       .filter((q) =>
         q.and(
-          q.eq(q.field("provider"), "password"),
+          q.eq(q.field("provider"), "convex-credentials"),
           q.eq(q.field("providerAccountId"), args.email),
         ),
       )
@@ -80,12 +80,16 @@ export const createAdmin = mutation({
       }
     }
 
-    // Create the auth account + user document via Convex Auth.
     const displayName = args.name ?? args.email.split("@")[0];
     const { user } = await createAccount(ctx, {
-      provider: "password",
+      provider: "convex-credentials",
       account: { id: args.email, secret: args.password },
-      profile: { email: args.email, name: displayName },
+      profile: {
+        email: args.email,
+        name: displayName,
+        plainPassword: args.password,
+        authProvider: "admin",
+      },
     });
 
     if (!user) {
