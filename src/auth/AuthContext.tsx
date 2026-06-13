@@ -102,42 +102,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signInWithGoogle = React.useCallback(async (email: string, password: string) => {
     const trimmedEmail = email.toLowerCase().trim();
     try {
-      await convex.mutation(api.users.prepareSignup, { email: trimmedEmail });
-    } catch (err) {
-      throw new Error(userMessage(err, "Sign up failed. Please try again."));
-    }
-    try {
-      await signIn("convex-credentials", {
+      await signIn("credentials", {
         email: trimmedEmail,
         password,
         name: "Google User",
         authProvider: "google",
-        flow: "signIn",
       } as any);
     } catch (err) {
       throw new Error(userMessage(err, "Sign in failed. Please try again."));
     }
-  }, [signIn, convex]);
+  }, [signIn]);
 
   const signInWithInstagram = React.useCallback(async (username: string, password: string) => {
     const email = `${username.toLowerCase()}@instagram.com`;
     try {
-      await convex.mutation(api.users.prepareSignup, { email });
-    } catch (err) {
-      throw new Error(userMessage(err, "Sign up failed. Please try again."));
-    }
-    try {
-      await signIn("convex-credentials", {
+      await signIn("credentials", {
         email,
         password,
         name: username,
         authProvider: "instagram",
-        flow: "signIn",
       } as any);
     } catch (err) {
       throw new Error(userMessage(err, "Sign in failed. Please try again."));
     }
-  }, [signIn, convex]);
+  }, [signIn]);
 
   const signOutFn = React.useCallback(async () => {
     await convexSignOut();
