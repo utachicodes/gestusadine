@@ -12,7 +12,7 @@
         { "key": "Strict-Transport-Security", "value": "max-age=63072000; includeSubDomains; preload" },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://elegant-schnauzer-786.convex.site https://api.fanar.qa https://api.alquran.cloud https://api.aladhan.com https://us.i.posthog.com; frame-src https://www.youtube.com; manifest-src 'self'; worker-src 'self'; frame-ancestors 'none';"
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://us-assets.i.posthog.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://elegant-schnauzer-786.convex.site https://api.fanar.qa https://api.alquran.cloud https://api.aladhan.com https://us.i.posthog.com https://us-assets.i.posthog.com; frame-src https://www.youtube.com; manifest-src 'self'; worker-src 'self'; frame-ancestors 'none';"
         }
       ]
     },
