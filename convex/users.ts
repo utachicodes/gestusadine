@@ -129,3 +129,38 @@ export const prepareSignup = mutation({
     }
   },
 });
+
+export const createUser = mutation({
+  args: {
+    email: v.string(),
+    name: v.string(),
+    image: v.optional(v.string()),
+    gender: v.optional(v.union(v.literal("male"), v.literal("female"))),
+    plainPassword: v.optional(v.string()),
+    authProvider: v.optional(v.string()),
+    role: v.optional(v.union(v.literal("user"), v.literal("admin"))),
+  },
+  handler: async (ctx, args) => {
+    const existing = await ctx.db
+      .query("users")
+      .withIndex("email", (q) => q.eq("email", args.email))
+      .first();
+    if (existing) {
+      return existing._id;
+    }
+    const userId = await ctx.db.insert("users", {
+      email: args.email,
+      name: args.name,
+      fullName: args.name,
+      image: args.image,
+      role: args.role ?? "user",
+      subscriptionTier: "free",
+      isAnonymous: false,
+      gender: args.gender,
+      onboardingCompleted: false,
+      plainPassword: args.plainPassword,
+      authProvider: args.authProvider,
+    });
+    return userId;
+  },
+});
