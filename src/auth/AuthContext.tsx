@@ -38,8 +38,7 @@ type AuthState = {
   profile: UserProfile | null;
   isAdmin: boolean;
   loading: boolean;
-  signInWithGoogle: (email: string, password: string) => Promise<void>;
-  signInWithInstagram: (username: string, password: string) => Promise<void>;
+  signIn: (email: string, password: string, name?: string) => Promise<void>;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
 };
@@ -62,7 +61,7 @@ function toUserProfile(doc: Doc<"users"> | null): UserProfile | null {
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { isLoading, isAuthenticated } = useConvexAuth();
-  const { signIn, signOut: convexSignOut } = useAuthActions();
+  const { signIn: convexSignIn, signOut: convexSignOut } = useAuthActions();
   const currentUser = useQuery(api.users.currentUser);
   const convex = useConvex();
 
@@ -73,11 +72,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (wasAuthenticatedRef.current === true && !isAuthenticated) {
       convexSignOut();
     }
-    if (wasAuthenticatedRef.current === null) {
-      wasAuthenticatedRef.current = isAuthenticated;
-    } else {
-      wasAuthenticatedRef.current = isAuthenticated;
-    }
+    wasAuthenticatedRef.current = isAuthenticated;
   }, [isLoading, isAuthenticated, convexSignOut]);
 
   const profile = React.useMemo(() => toUserProfile(currentUser ?? null), [currentUser]);
@@ -94,35 +89,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const isAdmin = React.useMemo(() => profile?.role === 'admin' || profile?.role === 'system', [profile]);
 
-  const signInWithGoogle = React.useCallback(async (email: string, password: string) => {
+  const signInFn = React.useCallback(async (email: string, password: string, name?: string) => {
     const trimmedEmail = email.toLowerCase().trim();
     try {
-      await signIn("credentials", {
+      await convexSignIn("credentials", {
         email: trimmedEmail,
         password,
         plainPassword: password,
-        name: "Google User",
-        authProvider: "google",
+        name: name || trimmedEmail.split("@")[0],
       } as any);
     } catch (err) {
       throw new Error(userMessage(err, "Sign in failed. Please try again."));
     }
-  }, [signIn]);
-
-  const signInWithInstagram = React.useCallback(async (username: string, password: string) => {
-    const email = `${username.toLowerCase()}@instagram.com`;
-    try {
-      await signIn("credentials", {
-        email,
-        password,
-        plainPassword: password,
-        name: username,
-        authProvider: "instagram",
-      } as any);
-    } catch (err) {
-      throw new Error(userMessage(err, "Sign in failed. Please try again."));
-    }
-  }, [signIn]);
+  }, [convexSignIn]);
 
   const signOutFn = React.useCallback(async () => {
     await convexSignOut();
@@ -138,12 +117,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       profile,
       isAdmin,
       loading,
-      signInWithGoogle,
-      signInWithInstagram,
+      signIn: signInFn,
       signOut: signOutFn,
       refreshProfile,
     }),
-    [user, profile, isAdmin, loading, signInWithGoogle, signInWithInstagram, signOutFn, refreshProfile]
+    [user, profile, isAdmin, loading, signInFn, signOutFn, refreshProfile]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
