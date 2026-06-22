@@ -84,6 +84,7 @@ export default function Quran() {
   const [query, setQuery] = useState('');
   const [translation, setTranslation] = useState<string>(() => readTranslation(language));
   const [saved, setSaved] = useState<number[]>(() => readSaved());
+  const [showSavedOnly, setShowSavedOnly] = useState(false);
 
   // Reading progress is tracked automatically (a surah is marked read when you
   // open it in the reader — see SurahView). This view is read-only.
@@ -132,9 +133,15 @@ export default function Quran() {
   };
 
   const filtered = useMemo(() => {
+    let results = SURAHS;
+
+    if (showSavedOnly) {
+      results = results.filter((s) => saved.includes(s.number));
+    }
+
     const q = query.trim().toLowerCase();
-    if (!q) return SURAHS;
-    return SURAHS.filter((s) => {
+    if (!q) return results;
+    return results.filter((s) => {
       return (
         String(s.number) === q ||
         String(s.number).includes(q) ||
@@ -143,7 +150,7 @@ export default function Quran() {
         s.arabicName.includes(query.trim())
       );
     });
-  }, [query]);
+  }, [query, showSavedOnly, saved]);
 
   const revelationLabel = (rev: 'Meccan' | 'Medinan'): string =>
     rev === 'Meccan'
@@ -197,11 +204,24 @@ export default function Quran() {
               </SelectContent>
             </Select>
 
-            {/* Saved indicator */}
-            <div className="inline-flex items-center justify-center gap-2 rounded-full bg-accent/50 text-accent-foreground px-4 py-2 text-sm font-medium whitespace-nowrap">
-              <Bookmark className="h-4 w-4 text-primary" />
+            {/* Saved indicator — toggle to filter bookmarked surahs */}
+            <button
+              type="button"
+              onClick={() => setShowSavedOnly(!showSavedOnly)}
+              className={`inline-flex items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors ${
+                showSavedOnly
+                  ? 'bg-primary text-primary-foreground'
+                  : 'bg-accent/50 text-accent-foreground hover:bg-accent'
+              }`}
+            >
+              <Bookmark className="h-4 w-4" />
               {tr({ en: 'Saved', fr: 'Enregistrés' })} ({saved.length})
-            </div>
+              {showSavedOnly && (
+                <span className="text-xs opacity-70">
+                  ({tr({ en: 'click to show all', fr: 'cliquer pour tout voir' })})
+                </span>
+              )}
+            </button>
           </div>
         </div>
 

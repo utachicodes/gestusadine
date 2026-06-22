@@ -3,6 +3,7 @@ import { Sun, MoonStar, Trophy, Flame, Target, X, FlaskConical } from "lucide-re
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { RankDisplay } from "@/components/gamification/RankDisplay";
+import { DailyGoals } from "@/components/gamification/DailyGoals";
 import { useProfileStats } from "@/data/profile";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
@@ -239,9 +240,10 @@ const Dashboard: React.FC = () => {
             </div>
           </div>
 
-          {/* Rank */}
-          <div className="flex flex-col min-h-0">
+          {/* Rank + Daily Goals */}
+          <div className="flex flex-col gap-3 min-h-0">
             <RankDisplay currentRank={stats.rank} currentPoints={stats.totalXp} streak={stats.streak} />
+            <DailyGoals streak={stats.streak} />
           </div>
 
           {/* Dua */}
