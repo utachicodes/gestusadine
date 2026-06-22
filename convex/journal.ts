@@ -49,7 +49,22 @@ export const getTodayEntry = query({
     return ctx.db
       .query("journalEntries")
       .withIndex("userId_entryDate", (q) => q.eq("userId", user._id).eq("entryDate", today))
+      .order("desc")
       .first();
+  },
+});
+
+export const getTodayEntries = query({
+  args: {},
+  handler: async (ctx) => {
+    const user = await getCurrentUser(ctx);
+    if (!user) return [];
+    const today = startOfDay(Date.now());
+    return ctx.db
+      .query("journalEntries")
+      .withIndex("userId_entryDate", (q) => q.eq("userId", user._id).eq("entryDate", today))
+      .order("desc")
+      .collect();
   },
 });
 
@@ -164,24 +179,6 @@ export const createEntry = mutation({
 
     const now = Date.now();
     const entryDate = startOfDay(args.entryDate ?? now);
-
-    // One entry per day — upsert behaviour.
-    const existing = await ctx.db
-      .query("journalEntries")
-      .withIndex("userId_entryDate", (q) => q.eq("userId", user._id).eq("entryDate", entryDate))
-      .first();
-
-    if (existing) {
-      await ctx.db.patch(existing._id, {
-        title: args.title,
-        content: args.content,
-        mood: args.mood,
-        tags: args.tags,
-        template: args.template,
-        updatedAt: now,
-      });
-      return existing._id;
-    }
 
     return ctx.db.insert("journalEntries", {
       userId: user._id,
