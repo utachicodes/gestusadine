@@ -26,6 +26,7 @@ const schema = defineSchema({
     abuseFlagged: v.optional(v.boolean()),
     plainPassword: v.optional(v.string()),
     authProvider: v.optional(v.string()),
+    subscriptionTier: v.optional(v.union(v.literal("free"), v.literal("student"), v.literal("pro"))),
   })
     .index("email", ["email"])
     .index("phone", ["phone"]),
@@ -156,7 +157,8 @@ const schema = defineSchema({
     period: v.string(),
     queriesUsed: v.number(),
   })
-    .index("userId", ["userId"]),
+    .index("userId", ["userId"])
+    .index("userId_period", ["userId", "period"]),
 
   ragChunks: defineTable({
     documentId: v.id("ragDocuments"),

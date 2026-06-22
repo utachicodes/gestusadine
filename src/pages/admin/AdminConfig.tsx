@@ -1,4 +1,5 @@
 import * as React from "react";
+import { logger } from "@/lib/logger";
 import { Settings, Save, RefreshCw, CheckCircle, XCircle, Loader2, TestTube } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -73,7 +74,7 @@ const AdminConfig: React.FC = () => {
         enabled: agent.enabled ?? true,
       });
     } catch (e: any) {
-      console.error("Failed to save agent:", e);
+      logger.error("Failed to save agent:", { error: e });
     }
   };
 

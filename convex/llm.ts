@@ -269,7 +269,6 @@ export const deleteAbusiveAccount = internalMutation({
   args: { userId: v.id("users") },
   handler: async (ctx, args) => {
     const id = args.userId as Id<"users">;
-    console.warn("[council] deleting abusive account", { userId: id });
 
     // Delete all user-owned records across every table.
     const tables = [
@@ -281,6 +280,17 @@ export const deleteAbusiveAccount = internalMutation({
       "quizAttempts",
       "subscriptionUsage",
       "userActivity",
+      "conversations",
+      "messages",
+      "prayerLogs",
+      "quranProgress",
+      "userThemes",
+      "circleMembers",
+      "circlePosts",
+      "userPoints",
+      "pushSubscriptions",
+      "notificationSettings",
+      "mediaProgress",
     ] as const;
 
     for (const table of tables) {

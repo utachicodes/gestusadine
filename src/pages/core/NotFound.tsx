@@ -1,5 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { logger } from "@/lib/logger";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { motion } from "framer-motion";
 import { Compass, Home, ArrowLeft } from "lucide-react";
@@ -19,9 +20,9 @@ const NotFound = () => {
   );
 
   useEffect(() => {
-    console.error(
+    logger.error(
       "404 Error: User attempted to access non-existent route:",
-      location.pathname
+      { path: location.pathname }
     );
   }, [location.pathname]);
 

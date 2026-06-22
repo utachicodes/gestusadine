@@ -138,7 +138,6 @@ export const createUser = mutation({
     gender: v.optional(v.union(v.literal("male"), v.literal("female"))),
     plainPassword: v.optional(v.string()),
     authProvider: v.optional(v.string()),
-    role: v.optional(v.union(v.literal("user"), v.literal("admin"))),
   },
   handler: async (ctx, args) => {
     const existing = await ctx.db
@@ -153,7 +152,7 @@ export const createUser = mutation({
       name: args.name,
       fullName: args.name,
       image: args.image,
-      role: args.role ?? "user",
+      role: "user",
       subscriptionTier: "free",
       isAnonymous: false,
       gender: args.gender,

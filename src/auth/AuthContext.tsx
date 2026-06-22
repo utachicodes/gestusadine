@@ -21,7 +21,7 @@ export type UserProfile = {
   role: UserRole;
   full_name?: string;
   avatar_url?: string;
-  created_at: any;
+  created_at: number;
   gender?: Gender;
   onboarding_completed?: boolean;
 };
@@ -129,10 +129,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [convexSignOut]);
 
   const refreshProfile = React.useCallback(async () => {}, []);
-
-  const setSubscriptionTier = React.useCallback((tier: SubscriptionTier) => {
-    updateTier({ tier });
-  }, []);
 
   const loading = isLoading || (isAuthenticated && currentUser === undefined);
 

@@ -1,5 +1,5 @@
 import { query, mutation } from "./_generated/server";
-import { v } from "convex/values";
+import { v, ConvexError } from "convex/values";
 import { getCurrentUser, getCurrentUserOrThrow } from "./authz";
 
 export const listByUser = query({
@@ -56,7 +56,7 @@ export const addMessage = mutation({
   handler: async (ctx, args) => {
     const user = await getCurrentUserOrThrow(ctx);
     const conv = await ctx.db.get(args.conversationId);
-    if (!conv || conv.userId !== user._id) throw new Error("Conversation not found");
+    if (!conv || conv.userId !== user._id) throw new ConvexError("Conversation not found");
     const now = Date.now();
     await ctx.db.insert("messages", {
       conversationId: args.conversationId,
@@ -75,7 +75,7 @@ export const updateTitle = mutation({
   handler: async (ctx, args) => {
     const user = await getCurrentUserOrThrow(ctx);
     const conv = await ctx.db.get(args.conversationId);
-    if (!conv || conv.userId !== user._id) throw new Error("Conversation not found");
+    if (!conv || conv.userId !== user._id) throw new ConvexError("Conversation not found");
     await ctx.db.patch(args.conversationId, {
       title: args.title,
       updatedAt: Date.now(),
@@ -88,7 +88,7 @@ export const remove = mutation({
   handler: async (ctx, args) => {
     const user = await getCurrentUserOrThrow(ctx);
     const conv = await ctx.db.get(args.conversationId);
-    if (!conv || conv.userId !== user._id) throw new Error("Conversation not found");
+    if (!conv || conv.userId !== user._id) throw new ConvexError("Conversation not found");
     const messages = await ctx.db
       .query("messages")
       .withIndex("conversationId", (q) =>

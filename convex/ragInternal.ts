@@ -16,17 +16,6 @@ export const insertDocument = internalMutation({
   },
 });
 
-export const insertChunk = internalMutation({
-  args: {
-    documentId: v.id("ragDocuments"),
-    content: v.string(),
-    category: v.string(),
-  },
-  handler: async (ctx, args) => {
-    return ctx.db.insert("ragChunks", args);
-  },
-});
-
 export const insertChunkBatch = internalMutation({
   args: {
     chunks: v.array(
@@ -58,19 +47,5 @@ export const listChunks = internalQuery({
       );
     }
     return q.collect();
-  },
-});
-
-export const deleteDocument = internalMutation({
-  args: { id: v.id("ragDocuments") },
-  handler: async (ctx, args) => {
-    const chunks = await ctx.db
-      .query("ragChunks")
-      .withIndex("documentId", (q) => q.eq("documentId", args.id))
-      .collect();
-    for (const chunk of chunks) {
-      await ctx.db.delete(chunk._id);
-    }
-    await ctx.db.delete(args.id);
   },
 });
