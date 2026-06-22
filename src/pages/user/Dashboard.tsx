@@ -144,20 +144,25 @@ const Dashboard: React.FC = () => {
         {/* At-a-glance stats (reference-inspired) */}
         <div className={`grid gap-4 grid-cols-1 sm:grid-cols-2 ${!isFree ? 'lg:grid-cols-3' : ''} flex-shrink-0`}>
           {[
-            { icon: Trophy, label: language === 'fr' ? 'Rang' : 'Rank', value: stats.rank, sub: `${stats.totalXp.toLocaleString()} XP` },
-            { icon: Flame, label: language === 'fr' ? "Jours d'affilée" : 'Day streak', value: stats.streak, sub: language === 'fr' ? 'en cours' : 'in a row' },
-            ...(!isFree ? [{ icon: Target, label: 'Quiz', value: stats.quizzesTaken, sub: `${stats.perfectScores} ${language === 'fr' ? 'parfaits' : 'perfect'}` }] : []),
-          ].map(({ icon: Icon, label, value, sub }) => (
-            <div key={label} className="islamic-card p-3 sm:p-4 flex flex-row items-center justify-between gap-2 sm:gap-3">
+            { icon: Trophy, label: language === 'fr' ? 'Rang' : 'Rank', value: stats.rank, sub: `${stats.totalXp.toLocaleString()} XP`, color: 'text-amber-500', bg: 'bg-amber-500/10' },
+            { icon: Flame, label: language === 'fr' ? "Jours d'affilée" : 'Day streak', value: stats.streak, sub: language === 'fr' ? 'en cours' : 'in a row', color: 'text-orange-500', bg: 'bg-orange-500/10' },
+            ...(!isFree ? [{ icon: Target, label: 'Quiz', value: stats.quizzesTaken, sub: `${stats.perfectScores} ${language === 'fr' ? 'parfaits' : 'perfect'}`, color: 'text-emerald-500', bg: 'bg-emerald-500/10' }] : []),
+          ].map(({ icon: Icon, label, value, sub, color, bg }) => (
+            <motion.div
+              key={label}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="islamic-card p-3 sm:p-4 flex flex-row items-center justify-between gap-2 sm:gap-3"
+            >
               <div className="flex-1 min-w-0 overflow-hidden">
                 <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground mb-1 truncate">{label}</p>
                 <p className="text-xl sm:text-2xl font-bold text-foreground leading-none truncate">{value}</p>
                 <p className="text-xs text-muted-foreground mt-1 truncate">{sub}</p>
               </div>
-              <div className="flex-shrink-0 p-2 sm:p-2.5 rounded-xl bg-accent/50 text-primary">
-                <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
+              <div className={`flex-shrink-0 p-2 sm:p-2.5 rounded-xl ${bg}`}>
+                <Icon className={`w-4 h-4 sm:w-5 sm:h-5 ${color}`} />
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
 
@@ -236,7 +241,7 @@ const Dashboard: React.FC = () => {
 
           {/* Rank */}
           <div className="flex flex-col min-h-0">
-            <RankDisplay currentRank={stats.rank} currentPoints={stats.totalXp} />
+            <RankDisplay currentRank={stats.rank} currentPoints={stats.totalXp} streak={stats.streak} />
           </div>
 
           {/* Dua */}
