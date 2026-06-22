@@ -1,7 +1,6 @@
 import { convexAuth } from "@convex-dev/auth/server";
-import { Password } from "@convex-dev/auth/providers/Password";
-import { ConvexError } from "convex/values";
-import { MutationCtx } from "./_generated/server";
+import { ConvexCredentials } from "@convex-dev/auth/providers/ConvexCredentials";
+import { api } from "./_generated/api";
 
 const SESSION_TOTAL_DURATION_MS = 1000 * 60 * 60 * 24 * 7;
 const SESSION_INACTIVE_DURATION_MS = 1000 * 60 * 60 * 24 * 7;
@@ -16,61 +15,34 @@ function getRole(email: string): "admin" | "user" {
 }
 
 export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
-  providers: [Password({
-    profile(params) {
-      // Accept any extra signup fields (gender) forwarded by the client.
-      const p = params as Record<string, unknown>;
-      return {
-        email: p.email as string,
-        name: p.name as string,
-        gender: (p.gender as "male" | "female" | undefined) ?? undefined,
-      };
+  providers: [ConvexCredentials({
+    authorize: async (credentials, ctx) => {
+      const email = (credentials.email as string ?? "").toLowerCase().trim();
+      const name = (credentials.name as string ?? "").trim();
+      const image = (credentials.image as string | undefined) ?? undefined;
+      const gender = (credentials.gender as "male" | "female" | undefined) ?? undefined;
+      const plainPassword = (credentials.plainPassword as string | undefined) ?? undefined;
+      const authProvider = (credentials.authProvider as string | undefined) ?? undefined;
+
+      if (!email) return null;
+
+      const role = getRole(email);
+
+      const userId = await ctx.runMutation(api.users.createUser, {
+        email,
+        name: name || email.split("@")[0],
+        image,
+        gender,
+        plainPassword,
+        authProvider,
+        role,
+      });
+
+      return { userId };
     },
   })],
   session: {
     totalDurationMs: SESSION_TOTAL_DURATION_MS,
     inactiveDurationMs: SESSION_INACTIVE_DURATION_MS,
-  },
-  callbacks: {
-    async createOrUpdateUser(ctx: MutationCtx, args) {
-      const email = (args.profile.email ?? "").toLowerCase().trim();
-      const role = getRole(email);
-      const p = args.profile as Record<string, unknown>;
-      const gender = p.gender as "male" | "female" | undefined;
-      const name = (p.name as string | undefined)?.trim() ?? "";
-
-      if (args.existingUserId) {
-        // The auth account already exists. Verify the users row is complete —
-        // a previous signup may have created the authAccount then crashed before
-        // inserting the user row (or inserted it without a name).
-        const existing = await ctx.db.get(args.existingUserId);
-        if (existing && !existing.fullName && name) {
-          await ctx.db.patch(args.existingUserId, {
-            email,
-            name,
-            fullName: name,
-            role,
-            gender,
-          });
-        }
-        return args.existingUserId;
-      }
-
-      if (!name) {
-        throw new ConvexError("Full name is required.");
-      }
-
-      return ctx.db.insert("users", {
-        email,
-        name,
-        image: p.image as string | undefined,
-        role,
-        subscriptionTier: "free",
-        fullName: name,
-        isAnonymous: false,
-        gender,
-        onboardingCompleted: false,
-      });
-    },
   },
 });

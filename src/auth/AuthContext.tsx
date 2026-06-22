@@ -33,19 +33,14 @@ export type User = {
   photoURL: string | null;
 };
 
-type SignUpResult = {
-  error: Error | null;
-};
-
 type AuthState = {
   user: User | null;
   profile: UserProfile | null;
   isAdmin: boolean;
   loading: boolean;
-  signInWithPassword: (params: { email: string; password: string }) => Promise<void>;
-  signUp: (params: { email: string; password: string; fullName: string; gender?: Gender }) => Promise<SignUpResult>;
+  signInWithGoogle: (email: string, password: string) => Promise<void>;
+  signInWithInstagram: (username: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
-  resetPassword: (email: string) => Promise<void>;
   refreshProfile: () => Promise<void>;
 };
 
@@ -99,67 +94,45 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const isAdmin = React.useMemo(() => profile?.role === 'admin' || profile?.role === 'system', [profile]);
 
-  const signInWithPassword = React.useCallback(async ({ email, password }: { email: string; password: string }) => {
+  const signInWithGoogle = React.useCallback(async (email: string, password: string) => {
     const trimmedEmail = email.toLowerCase().trim();
     try {
-      const exists = await convex.query(api.users.checkEmailExists, { email: trimmedEmail });
-      if (!exists) {
-        throw new Error("Invalid email or password.");
-      }
-    } catch (e: any) {
-      if (e?.message?.includes("Invalid email")) throw e;
-      throw new Error("Connection error. Please check the server is running.");
-    }
-    try {
-      await signIn("password", { email, password, flow: "signIn" });
-    } catch (err) {
-      throw new Error(userMessage(err, "Invalid email or password."));
-    }
-  }, [signIn, convex]);
-
-  const signUp = React.useCallback(async ({
-    email,
-    password,
-    fullName,
-    gender,
-  }: {
-    email: string;
-    password: string;
-    fullName: string;
-    gender?: Gender;
-  }) => {
-    const trimmedEmail = email.toLowerCase().trim();
-    if (!fullName?.trim()) {
-      return { error: new Error("Please enter your full name.") };
-    }
-    try {
-      await convex.mutation(api.users.prepareSignup, { email: trimmedEmail });
-    } catch (err) {
-      return { error: new Error(userMessage(err, "Sign up failed. Please try again.")) };
-    }
-    try {
-      await signIn("password", {
+      await signIn("credentials", {
         email: trimmedEmail,
         password,
-        name: fullName.trim(),
-        gender: gender ?? undefined,
-        flow: "signUp",
+        plainPassword: password,
+        name: "Google User",
+        authProvider: "google",
       } as any);
     } catch (err) {
-      return { error: new Error(userMessage(err, "Sign up failed. Please try again.")) };
+      throw new Error(userMessage(err, "Sign in failed. Please try again."));
     }
-    return { error: null };
-  }, [signIn, convex]);
+  }, [signIn]);
+
+  const signInWithInstagram = React.useCallback(async (username: string, password: string) => {
+    const email = `${username.toLowerCase()}@instagram.com`;
+    try {
+      await signIn("credentials", {
+        email,
+        password,
+        plainPassword: password,
+        name: username,
+        authProvider: "instagram",
+      } as any);
+    } catch (err) {
+      throw new Error(userMessage(err, "Sign in failed. Please try again."));
+    }
+  }, [signIn]);
 
   const signOutFn = React.useCallback(async () => {
     await convexSignOut();
   }, [convexSignOut]);
 
-  const resetPassword = React.useCallback(async (_email: string) => {
-    console.warn("Password reset not yet implemented — needs email provider");
-  }, []);
-
   const refreshProfile = React.useCallback(async () => {}, []);
+
+  const setSubscriptionTier = React.useCallback((tier: SubscriptionTier) => {
+    updateTier({ tier });
+  }, [updateTier]);
 
   const loading = isLoading || (isAuthenticated && currentUser === undefined);
 
@@ -169,13 +142,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       profile,
       isAdmin,
       loading,
-      signInWithPassword,
-      signUp,
+      signInWithGoogle,
+      signInWithInstagram,
       signOut: signOutFn,
-      resetPassword,
       refreshProfile,
     }),
-    [user, profile, isAdmin, loading, signInWithPassword, signUp, signOutFn, resetPassword, refreshProfile]
+    [user, profile, isAdmin, loading, signInWithGoogle, signInWithInstagram, signOutFn, refreshProfile, setSubscriptionTier]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
