@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useConvexAuth, useAuthActions } from "@convex-dev/auth/react";
-import { useQuery, useMutation, useConvex } from "convex/react";
+import { useQuery, useConvex } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import type { Doc } from "../../convex/_generated/dataModel";
 import { UserRole } from "./rbac";
@@ -13,14 +13,12 @@ function userMessage(err: unknown, fallback: string): string {
   return fallback;
 }
 
-export type SubscriptionTier = 'free' | 'student' | 'pro';
 export type Gender = 'male' | 'female';
 
 export type UserProfile = {
   id: string;
   email: string;
   role: UserRole;
-  subscription_tier: SubscriptionTier;
   full_name?: string;
   avatar_url?: string;
   created_at: any;
@@ -44,7 +42,6 @@ type AuthState = {
   signInWithInstagram: (username: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
-  setSubscriptionTier: (tier: SubscriptionTier) => void;
 };
 
 const AuthContext = React.createContext<AuthState | undefined>(undefined);
@@ -55,7 +52,6 @@ function toUserProfile(doc: Doc<"users"> | null): UserProfile | null {
     id: doc._id,
     email: doc.email ?? "",
     role: (doc.role ?? "user") as UserRole,
-    subscription_tier: (doc.subscriptionTier ?? "free") as SubscriptionTier,
     full_name: doc.fullName ?? undefined,
     avatar_url: doc.avatarUrl ?? undefined,
     created_at: doc._creationTime,
@@ -68,7 +64,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { isLoading, isAuthenticated } = useConvexAuth();
   const { signIn, signOut: convexSignOut } = useAuthActions();
   const currentUser = useQuery(api.users.currentUser);
-  const updateTier = useMutation(api.users.updateSubscriptionTier);
   const convex = useConvex();
 
   const wasAuthenticatedRef = React.useRef<boolean | null>(null);
@@ -151,7 +146,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       signInWithInstagram,
       signOut: signOutFn,
       refreshProfile,
-      setSubscriptionTier,
     }),
     [user, profile, isAdmin, loading, signInWithGoogle, signInWithInstagram, signOutFn, refreshProfile, setSubscriptionTier]
   );

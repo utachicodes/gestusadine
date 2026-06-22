@@ -2,31 +2,22 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useSubscription } from "@/data/subscription";
-import { useAuth, type SubscriptionTier, type Gender } from "@/auth/AuthContext";
+import { useAuth, type Gender } from "@/auth/AuthContext";
 import { useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
-import { useTr, type Loc } from "@/lib/i18n";
+import { useTr } from "@/lib/i18n";
 import { ThemeCustomizer } from "@/components/settings/ThemeCustomizer";
 import { CreditUsageWidget } from "@/components/subscription/CreditUsageWidget";
 import { resetOnboardingTutorial } from "@/components/onboarding/OnboardingTutorial";
-import { Globe, Palette, CreditCard, Crown, FlaskConical, PlayCircle, User, Users } from "lucide-react";
+import { Globe, Palette, PlayCircle, User, Users } from "lucide-react";
 import NotificationSettings from "./NotificationSettings";
 import { toast } from "sonner";
-
-const DEV_TIERS: { value: SubscriptionTier; label: Loc }[] = [
-  { value: 'free', label: { en: 'Seeker (Free)', fr: 'Chercheur (Gratuit)' } },
-  { value: 'student', label: { en: 'Student', fr: 'Étudiant' } },
-  { value: 'pro', label: { en: 'Pro', fr: 'Pro' } },
-];
 
 const Settings: React.FC = () => {
   const navigate = useNavigate();
   const { language, setLanguage } = useLanguage();
-  const { tier: userTier, canCustomizeTheme } = useSubscription();
-  const { setSubscriptionTier, profile } = useAuth();
+  const { profile } = useAuth();
   const updateGender = useMutation(api.users.updateGender);
   const tr = useTr();
   const [showCustomizer, setShowCustomizer] = useState(false);
@@ -113,67 +104,6 @@ const Settings: React.FC = () => {
             </div>
           </Card>
 
-          <Card className="p-6 space-y-6">
-            <div>
-              <h2 className="text-xl font-semibold text-foreground mb-1 flex items-center gap-2">
-                <CreditCard className="w-5 h-5 text-primary" />
-                {tr({ en: 'Subscription', fr: 'Abonnement' })}
-              </h2>
-              <p className="text-sm text-muted-foreground">{tr({ en: 'Manage your subscription plan', fr: 'Gérez votre abonnement' })}</p>
-            </div>
-            <div className="p-4 bg-gradient-to-br from-primary/10 to-accent/10 rounded-lg border border-primary/20">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-muted-foreground">{tr({ en: 'Current Plan', fr: 'Offre actuelle' })}</span>
-                {userTier !== 'free' && <Crown className="w-5 h-5 text-islamic-gold" />}
-              </div>
-              <p className="text-2xl font-bold text-foreground capitalize mb-3">
-                {userTier} {tr({ en: 'Tier', fr: 'Offre' })}
-              </p>
-              <p className="text-sm text-muted-foreground mb-3">
-                {userTier === 'free'
-                  ? tr({ en: 'Upgrade to unlock premium features!', fr: 'Passez à une offre supérieure pour débloquer plus !' })
-                  : tr({ en: 'Thank you for being a premium member!', fr: 'Merci d’être membre premium !' })}
-              </p>
-              <Button className="w-full btn-islamic" onClick={() => navigate('/pricing')}>
-                {userTier === 'free'
-                  ? tr({ en: 'Upgrade Plan', fr: 'Améliorer l’offre' })
-                  : tr({ en: 'Manage Subscription', fr: 'Gérer l’abonnement' })}
-              </Button>
-            </div>
-
-            {/* Live Council usage for the current tier */}
-            <CreditUsageWidget />
-
-            {/* DEV-ONLY: flip tiers to test paywalls. Removed when real billing lands. */}
-            {import.meta.env.DEV && (
-              <div className="p-4 rounded-lg border border-dashed border-amber-400/60 bg-amber-50/50">
-                <div className="flex items-center gap-2 mb-3">
-                  <FlaskConical className="w-4 h-4 text-amber-600" />
-                  <span className="text-xs font-bold uppercase tracking-widest text-amber-700">
-                    {tr({ en: 'Dev · Switch tier', fr: 'Dev · Changer d’offre' })}
-                  </span>
-                </div>
-                <div className="grid grid-cols-3 gap-2">
-                  {DEV_TIERS.map((t) => (
-                    <button
-                      key={t.value}
-                      onClick={() => setSubscriptionTier(t.value)}
-                      className={`px-2 py-2 rounded-lg text-xs font-semibold border-2 transition-all ${
-                        userTier === t.value
-                          ? 'border-emerald-700 bg-emerald-700/10 text-emerald-800'
-                          : 'border-border text-muted-foreground hover:border-emerald-700/50'
-                      }`}
-                    >
-                      {tr(t.label)}
-                    </button>
-                  ))}
-                </div>
-                <p className="text-[11px] text-amber-700/70 mt-2">
-                  {tr({ en: 'Changes apply instantly  watch the paywalls engage.', fr: 'Les changements s’appliquent immédiatement  observez les paywalls.' })}
-                </p>
-              </div>
-            )}
-          </Card>
           {/* Gender / Profile section */}
           {profile && profile.id !== 'hardcoded-admin' && (
             <Card className="p-6 space-y-4">

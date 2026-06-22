@@ -1,4 +1,4 @@
-﻿import * as React from "react";
+import * as React from "react";
 import { useTr, type Loc } from "@/lib/i18n";
 import PrayerTracker from "./PrayerTracker";
 import {
@@ -392,7 +392,49 @@ const PrayerTimes: React.FC = () => {
           </p>
         </header>
 
-        {/* Daily prayer tracker — placed first so it's visible without scrolling */}
+        {/* Next Prayer Hero — placed right after header for visibility */}
+        {!loading && !error && timings && (
+          <div className="islamic-card overflow-hidden">
+            <div className="relative bg-gradient-to-br from-primary/10 via-accent/10 to-secondary p-6 md:p-8 flex flex-col md:flex-row items-center gap-6 md:gap-10">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -translate-y-20 translate-x-20 pointer-events-none" />
+              <div className="text-center md:text-left">
+                <SectionLabel>
+                  {tr({ en: "Next Prayer", fr: "Prochaine prière" })}
+                </SectionLabel>
+                <p className="text-4xl md:text-5xl font-bold text-foreground mb-1">
+                  {nextPrayer
+                    ? tr(prayerNameMap[nextPrayer.name])
+                    : "—"}
+                </p>
+                <p className="text-muted-foreground text-sm">
+                  {tr({ en: "at", fr: "à" })}{" "}
+                  <span className="font-semibold text-foreground">
+                    {nextPrayer ? to12h(nextPrayer.hhmm) : "—"}
+                  </span>
+                </p>
+              </div>
+
+              {/* Divider */}
+              <div className="hidden md:block w-px h-20 bg-border" />
+              <div className="h-px w-24 md:hidden bg-border" />
+
+              {/* Countdown */}
+              <div className="text-center">
+                <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-1 font-semibold">
+                  {tr({ en: "Time remaining", fr: "Temps restant" })}
+                </p>
+                <p className="font-mono text-4xl md:text-5xl font-bold text-primary tabular-nums leading-none tracking-tight">
+                  {countdownStr}
+                </p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {tr({ en: "HH : MM : SS", fr: "HH : MM : SS" })}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Daily prayer tracker — below the live countdown */}
         <PrayerTracker embedded />
 
         {/* Controls card */}
@@ -502,46 +544,6 @@ const PrayerTimes: React.FC = () => {
         {/* Main content — only when data is ready */}
         {!loading && !error && timings && (
           <>
-            {/* Next Prayer Hero */}
-            <div className="islamic-card overflow-hidden">
-              <div className="relative bg-gradient-to-br from-primary/10 via-accent/10 to-secondary p-6 md:p-8 flex flex-col md:flex-row items-center gap-6 md:gap-10">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -translate-y-20 translate-x-20 pointer-events-none" />
-                <div className="text-center md:text-left">
-                  <SectionLabel>
-                    {tr({ en: "Next Prayer", fr: "Prochaine prière" })}
-                  </SectionLabel>
-                  <p className="text-4xl md:text-5xl font-bold text-foreground mb-1">
-                    {nextPrayer
-                      ? tr(prayerNameMap[nextPrayer.name])
-                      : "—"}
-                  </p>
-                  <p className="text-muted-foreground text-sm">
-                    {tr({ en: "at", fr: "à" })}{" "}
-                    <span className="font-semibold text-foreground">
-                      {nextPrayer ? to12h(nextPrayer.hhmm) : "—"}
-                    </span>
-                  </p>
-                </div>
-
-                {/* Divider */}
-                <div className="hidden md:block w-px h-20 bg-border" />
-                <div className="h-px w-24 md:hidden bg-border" />
-
-                {/* Countdown */}
-                <div className="text-center">
-                  <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-1 font-semibold">
-                    {tr({ en: "Time remaining", fr: "Temps restant" })}
-                  </p>
-                  <p className="font-mono text-4xl md:text-5xl font-bold text-primary tabular-nums leading-none tracking-tight">
-                    {countdownStr}
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    {tr({ en: "HH : MM : SS", fr: "HH : MM : SS" })}
-                  </p>
-                </div>
-              </div>
-            </div>
-
             {/* Two-column grid for the two lists */}
             <div className="grid gap-6 lg:grid-cols-2">
               {/* Fardh Prayers */}

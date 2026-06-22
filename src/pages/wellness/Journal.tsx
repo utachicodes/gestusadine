@@ -86,7 +86,7 @@ export default function Journal() {
   const [isDirty, setIsDirty] = useState(false);
 
   // Queries
-  const todayEntry = useQuery(api.journal.getTodayEntry);
+  const todayEntries = useQuery(api.journal.getTodayEntries);
   const allEntries = useQuery(api.journal.getEntries, { limit: 100 });
   const stats = useQuery(api.journal.getStats);
   const entryDates = useQuery(api.journal.getEntryDates, {
@@ -99,16 +99,17 @@ export default function Journal() {
   const updateEntry = useMutation(api.journal.updateEntry);
   const deleteEntry = useMutation(api.journal.deleteEntry);
 
-  // Sync editor from today's entry on mount
+  // Sync editor from today's latest entry on mount
   useEffect(() => {
-    if (tab === 'today' && todayEntry !== undefined && !isDirty) {
-      if (todayEntry) {
-        setEditorTitle(todayEntry.title ?? '');
-        setEditorContent(todayEntry.content);
-        setEditorMood(todayEntry.mood);
-        setEditorTags(todayEntry.tags ?? []);
-        setEditorTemplate(todayEntry.template ?? 'free');
-        setEditingId(todayEntry._id);
+    if (tab === 'today' && todayEntries !== undefined && !isDirty) {
+      const latest = todayEntries?.[0] ?? null;
+      if (latest) {
+        setEditorTitle(latest.title ?? '');
+        setEditorContent(latest.content);
+        setEditorMood(latest.mood);
+        setEditorTags(latest.tags ?? []);
+        setEditorTemplate(latest.template ?? 'free');
+        setEditingId(latest._id);
       } else {
         setEditorTitle('');
         setEditorContent('');
@@ -118,7 +119,7 @@ export default function Journal() {
         setEditingId(null);
       }
     }
-  }, [todayEntry, tab, isDirty]);
+  }, [todayEntries, tab, isDirty]);
 
   const handleSave = async () => {
     if (!editorContent.trim()) { toast.error(tr({ en: 'Write something first.', fr: 'Écrivez quelque chose d\'abord.' })); return; }
@@ -126,9 +127,16 @@ export default function Journal() {
       if (editingId) {
         await updateEntry({ id: editingId, title: editorTitle || undefined, content: editorContent, mood: editorMood, tags: editorTags });
       } else {
-        await createEntry({ title: editorTitle || undefined, content: editorContent, mood: editorMood, tags: editorTags, template: editorTemplate });
+        await createEntry({ title: editorTitle || undefined, content: editorContent, mood: editorMood, tags: editorTags, template: editorTemplate === 'free' ? undefined : editorTemplate });
       }
       toast.success(tr({ en: 'Entry saved.', fr: 'Entrée enregistrée.' }));
+      // Reset editor for a new entry
+      setEditorTitle('');
+      setEditorContent('');
+      setEditorMood(undefined);
+      setEditorTags([]);
+      setEditorTemplate('free');
+      setEditingId(null);
       setIsDirty(false);
     } catch {
       toast.error(tr({ en: 'Could not save.', fr: 'Impossible d\'enregistrer.' }));
@@ -148,8 +156,12 @@ export default function Journal() {
   const applyTemplate = (key: string) => {
     const t = TEMPLATES.find((t) => t.key === key);
     if (!t) return;
-    setEditorTemplate(key);
-    if (!isDirty && t.prompt) { setEditorContent(t.prompt); }
+    if (key === 'free') {
+      setEditorTemplate('free');
+    } else {
+      setEditorTemplate(key);
+      if (!isDirty && t.prompt) { setEditorContent(t.prompt); }
+    }
   };
 
   const addTag = () => {
@@ -209,6 +221,63 @@ export default function Journal() {
       {/* ── TODAY ───────────────────────────────────────────────────────── */}
       {tab === 'today' && (
         <div className="space-y-4">
+          {/* Today's entries list (if any) */}
+          {todayEntries && todayEntries.length > 0 && (
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                  {tr({ en: 'Today\'s entries', fr: "Entrées d'aujourd'hui" })} ({todayEntries.length})
+                </p>
+                <button
+                  onClick={() => {
+                    setEditorTitle('');
+                    setEditorContent('');
+                    setEditorMood(undefined);
+                    setEditorTags([]);
+                    setEditorTemplate('free');
+                    setEditingId(null);
+                    setIsDirty(false);
+                  }}
+                  className="text-xs font-medium text-primary hover:text-primary/80 transition-colors"
+                >
+                  + {tr({ en: 'New entry', fr: 'Nouvelle entrée' })}
+                </button>
+              </div>
+              {todayEntries.map((entry) => (
+                <div
+                  key={entry._id}
+                  onClick={() => {
+                    setEditorTitle(entry.title ?? '');
+                    setEditorContent(entry.content);
+                    setEditorMood(entry.mood);
+                    setEditorTags(entry.tags ?? []);
+                    setEditorTemplate(entry.template ?? 'free');
+                    setEditingId(entry._id);
+                    setIsDirty(false);
+                  }}
+                  className={`islamic-card p-3 cursor-pointer transition-all ${
+                    editingId === entry._id
+                      ? 'border-primary/40 bg-primary/5'
+                      : 'hover:border-border/60'
+                  }`}
+                >
+                  <div className="flex items-center gap-2 mb-1">
+                    {entry.mood && (() => {
+                      const moodDef = getMoodDef(entry.mood);
+                      if (!moodDef) return null;
+                      const Icon = moodDef.icon;
+                      return <Icon className="w-3.5 h-3.5 text-muted-foreground" />;
+                    })()}
+                    {entry.title && (
+                      <p className="text-sm font-semibold text-foreground truncate">{entry.title}</p>
+                    )}
+                  </div>
+                  <p className="text-xs text-muted-foreground line-clamp-1">{entry.content}</p>
+                </div>
+              ))}
+            </div>
+          )}
+
           {/* Template picker */}
           <div className="islamic-card p-4 sm:p-5">
             <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground mb-3">

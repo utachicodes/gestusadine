@@ -73,7 +73,7 @@ export const ChatInterface = () => {
   const { language, t } = useLanguage();
   const tr = useTr();
   const navigate = useNavigate();
-  const { canAskCouncil, councilRemaining, usage } = useSubscription();
+  const { canAskCouncil, hourlyRemaining, dailyRemaining, hourlyLimit, dailyLimit } = useSubscription();
   const generate = useAction(api.llm.generate);
 
   useEffect(() => {
@@ -305,28 +305,15 @@ export const ChatInterface = () => {
       {/* Input area */}
       <div className="border-t border-border/60 bg-background">
         <div className="max-w-3xl mx-auto w-full px-4 py-4">
-          {usage.chat_credits_limit === -1 ? (
-            <div className="mb-3 flex items-center justify-center rounded-xl border border-border bg-muted/50 px-4 py-2 text-xs font-medium text-muted-foreground">
-              {tr({ en: 'Unlimited questions', fr: 'Questions illimitées' })}
-            </div>
-          ) : (
-            <div className={`mb-3 flex items-center justify-between rounded-xl border px-4 py-2 text-xs font-medium ${
-              canAskCouncil ? 'border-border bg-muted/50 text-muted-foreground' : 'border-amber-200 bg-amber-50 text-amber-800'
-            }`}>
-              <span>
-                {canAskCouncil
-                  ? tr({ en: `${councilRemaining} / ${usage.chat_credits_limit} questions remaining`, fr: `${councilRemaining} / ${usage.chat_credits_limit} questions restantes` })
-                  : tr({ en: 'Monthly limit reached.', fr: 'Limite mensuelle atteinte.' })}
-              </span>
-              <button
-                type="button"
-                onClick={() => navigate('/pricing')}
-                className="ml-3 rounded-lg bg-primary px-2.5 py-1 text-xs font-semibold text-primary-foreground"
-              >
-                {tr({ en: 'Upgrade', fr: 'Améliorer' })}
-              </button>
-            </div>
-          )}
+          <div className={`mb-3 flex items-center justify-between rounded-xl border px-4 py-2 text-xs font-medium ${
+            canAskCouncil ? 'border-border bg-muted/50 text-muted-foreground' : 'border-amber-200 bg-amber-50 text-amber-800'
+          }`}>
+            <span>
+              {canAskCouncil
+                ? tr({ en: `${hourlyRemaining}/${hourlyLimit} this hour · ${dailyRemaining}/${dailyLimit} today`, fr: `${hourlyRemaining}/${hourlyLimit} cette heure · ${dailyRemaining}/${dailyLimit} aujourd'hui` })
+                : tr({ en: 'Rate limit reached. Please wait a moment.', fr: 'Limite atteinte. Veuillez patienter.' })}
+            </span>
+          </div>
 
           <form onSubmit={handleSubmit} className="relative">
             <div className={`flex items-end gap-2 rounded-2xl border bg-muted/30 px-4 py-3 transition-colors ${
