@@ -34,7 +34,6 @@ const FAQ             = lazy(() => import("./pages/core/FAQ"));
 const Privacy         = lazy(() => import("./pages/core/Privacy"));
 const Terms           = lazy(() => import("./pages/core/Terms"));
 const DataCompliance  = lazy(() => import("./pages/core/DataCompliance"));
-const Pricing         = lazy(() => import("./pages/core/Pricing"));
 
 const ChatInterface   = lazy(() => import("./components/chat/ChatInterface").then(m => ({ default: m.ChatInterface })));
 const Quran           = lazy(() => import("./pages/quran/Quran"));
@@ -92,7 +91,6 @@ const App = () => {
                         <Route path="/privacy"          element={<AppShell><Privacy /></AppShell>} />
                         <Route path="/terms"            element={<AppShell><Terms /></AppShell>} />
                         <Route path="/data-compliance"  element={<AppShell><DataCompliance /></AppShell>} />
-                        <Route path="/pricing" element={<AppShell><Pricing /></AppShell>} />
                         <Route path="/login"   element={<Login />} />
 
                         {/* ── Authenticated ── */}

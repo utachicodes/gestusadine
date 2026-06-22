@@ -1,76 +1,24 @@
 import { useMemo } from "react";
-import { useAuth, type SubscriptionTier } from "@/auth/AuthContext";
 import { api } from "../../convex/_generated/api";
 import { useQuery } from "convex/react";
 
-export type Feature =
-  | "council.access"
-  | "council.specialized"
-  | "library.premium"
-  | "courses.access"
-  | "community.participate"
-  | "theme.customize"
-  | "pro.console"
-  | "pro.privateKb"
-  | "support.priority";
-
-const STUDENT_FEATURES: Feature[] = [
-  "council.access",
-  "council.specialized",
-  "library.premium",
-  "courses.access",
-  "community.participate",
-];
-
-const FEATURE_MATRIX: Record<SubscriptionTier, Feature[]> = {
-  free: ["council.access"],
-  student: STUDENT_FEATURES,
-  pro: [...STUDENT_FEATURES, "theme.customize", "pro.console", "pro.privateKb", "support.priority"],
-};
-
-const TIER_RANK: Record<SubscriptionTier, number> = { free: 0, student: 1, pro: 2 };
-
-export function tierRank(tier: SubscriptionTier): number {
-  return TIER_RANK[tier] ?? 0;
-}
-
-export function tierHasFeature(tier: SubscriptionTier, feature: Feature): boolean {
-  return FEATURE_MATRIX[tier]?.includes(feature) ?? false;
-}
-
 export function useSubscription() {
-  const { profile, isAdmin } = useAuth();
   const sub = useQuery(api.subscription.getMySubscription);
 
-  const tier: SubscriptionTier = isAdmin
-    ? "pro"
-    : (profile?.subscription_tier ?? "free");
-
   return useMemo(() => {
-    const limit = sub?.limit ?? 5;
-    const unlimited = sub?.unlimited ?? false;
-    const used = sub?.used ?? 0;
-    const remaining = sub?.remaining ?? Infinity;
-
-    const usage = {
-      chat_credits_used: used,
-      chat_credits_limit: limit,
-      percentage_used: unlimited ? 0 : Math.min(100, Math.round((used / limit) * 100)),
-      period_end: sub?.period ?? "",
-      fair_use: sub?.fairUse ?? false,
-    };
-
-    const can = (feature: Feature) => tierHasFeature(tier, feature);
-    const meetsTier = (required: SubscriptionTier) => tierRank(tier) >= tierRank(required);
+    const hourlyUsed = sub?.hourlyUsed ?? 0;
+    const hourlyLimit = sub?.hourlyLimit ?? 5;
+    const dailyUsed = sub?.dailyUsed ?? 0;
+    const dailyLimit = sub?.dailyLimit ?? 20;
 
     return {
-      tier,
-      usage,
-      can,
-      meetsTier,
-      councilRemaining: remaining,
+      hourlyUsed,
+      hourlyLimit,
+      hourlyRemaining: sub?.hourlyRemaining ?? 5,
+      dailyUsed,
+      dailyLimit,
+      dailyRemaining: sub?.dailyRemaining ?? 20,
       canAskCouncil: sub?.canAskCouncil ?? true,
-      canCustomizeTheme: can("theme.customize"),
     };
-  }, [tier, sub]);
+  }, [sub]);
 }

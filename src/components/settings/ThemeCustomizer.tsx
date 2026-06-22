@@ -2,8 +2,7 @@ import { useState } from 'react';
 import { Button } from '../ui/button';
 import { Label } from '../ui/label';
 import { toast } from 'sonner';
-import { Palette, Sparkles, RotateCcw, Lightbulb } from 'lucide-react';
-import { useSubscription } from '@/data/subscription';
+import { Palette, RotateCcw } from 'lucide-react';
 import { useTheme } from '@/contexts/ThemeContext';
 import type { ThemeColors } from '@/types/theme';
 import { DEFAULT_LIGHT } from '@/types/theme';
@@ -28,7 +27,6 @@ const COLOR_ORDER: ColorKey[] = ['background', 'text', 'panel', 'sidebar', 'bord
 
 export function ThemeCustomizer({ onThemeChange }: ThemeCustomizerProps) {
     const tr = useTr();
-    const { canCustomizeTheme: hasAccess } = useSubscription();
     const { theme, updateColors, reset } = useTheme();
     const [draft, setDraft] = useState<ThemeColors>(theme.colors);
 

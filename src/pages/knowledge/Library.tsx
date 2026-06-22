@@ -15,7 +15,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { useSubscription } from "@/data/subscription";
 import {
   Select,
   SelectContent,
@@ -35,7 +34,6 @@ export default function Library() {
   const { t } = useLanguage();
   const tr = useTr();
   const navigate = useNavigate();
-  const { can } = useSubscription();
   const books = useQuery(api.library.list) ?? [];
   const updateBook = useMutation(api.library.update);
 
@@ -60,13 +58,6 @@ export default function Library() {
   }, [books, searchQuery, selectedCategory, selectedLanguage, selectedFormat]);
 
   const handleDownload = async (book: any) => {
-    if (book.premium && !can('library.premium')) {
-      toast.error(tr({ en: 'This title is part of the Student archives.', fr: 'Ce titre fait partie des archives Étudiant.' }), {
-        description: tr({ en: 'Upgrade your plan to download premium titles.', fr: 'Passez à une offre supérieure pour télécharger les titres premium.' }),
-      });
-      navigate('/pricing');
-      return;
-    }
     try {
       await updateBook({ id: book._id, downloads: (book.downloads || 0) + 1 });
       window.open(book.fileUrl, '_blank');
@@ -186,7 +177,7 @@ export default function Library() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredBooks.map((book: any) => {
-              const isLocked = !!book.premium && !can('library.premium');
+              const isLocked = false;
               return (
               <Card key={book._id} className="islamic-card hover:shadow-xl transition-all duration-300 hover:scale-[1.02] group border-none">
                 <CardHeader>
