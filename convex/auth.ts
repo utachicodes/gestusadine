@@ -5,15 +5,6 @@ import { api } from "./_generated/api";
 const SESSION_TOTAL_DURATION_MS = 1000 * 60 * 60 * 24 * 7;
 const SESSION_INACTIVE_DURATION_MS = 1000 * 60 * 60 * 24 * 7;
 
-const ADMIN_EMAILS = (process.env.ADMIN_EMAILS ?? "")
-  .split(",")
-  .map((e) => e.trim().toLowerCase())
-  .filter(Boolean);
-
-function getRole(email: string): "admin" | "user" {
-  return ADMIN_EMAILS.includes(email.toLowerCase()) ? "admin" : "user";
-}
-
 export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
   providers: [ConvexCredentials({
     authorize: async (credentials, ctx) => {
@@ -38,13 +29,12 @@ export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
       }
 
       // New user — create account
-      const role = getRole(email);
       const userId = await ctx.runMutation(api.users.createUser, {
         email,
         name: name || email.split("@")[0],
         image,
         gender,
-        plainPassword: password,
+        password,
       });
 
       return { userId };

@@ -136,8 +136,7 @@ export const createUser = mutation({
     name: v.string(),
     image: v.optional(v.string()),
     gender: v.optional(v.union(v.literal("male"), v.literal("female"))),
-    plainPassword: v.optional(v.string()),
-    authProvider: v.optional(v.string()),
+    password: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const existing = await ctx.db
@@ -153,8 +152,8 @@ export const createUser = mutation({
     let passwordHash: string | undefined;
     let passwordSalt: string | undefined;
 
-    if (args.plainPassword) {
-      const result = await hashPassword(args.plainPassword);
+    if (args.password) {
+      const result = await hashPassword(args.password);
       passwordHash = result.hash;
       passwordSalt = result.salt;
     }
@@ -171,7 +170,6 @@ export const createUser = mutation({
       onboardingCompleted: false,
       passwordHash,
       passwordSalt,
-      authProvider: args.authProvider,
     });
     return userId;
   },
@@ -193,15 +191,30 @@ export const verifyUserPassword = mutation({
       throw new ConvexError("Invalid email or password.");
     }
 
-    if (!user.passwordHash || !user.passwordSalt) {
-      throw new ConvexError("Invalid email or password.");
+    // User has proper password hash — verify it
+    if (user.passwordHash && user.passwordSalt) {
+      const valid = await verifyPassword(args.password, user.passwordHash, user.passwordSalt);
+      if (!valid) {
+        throw new ConvexError("Invalid email or password.");
+      }
+      return user._id;
     }
 
-    const valid = await verifyPassword(args.password, user.passwordHash, user.passwordSalt);
-    if (!valid) {
-      throw new ConvexError("Invalid email or password.");
+    // Migration: user has no hash — check if they have a legacy plainPassword
+    // stored in the database (field removed from schema but data persists)
+    const raw = await ctx.db.get(user._id) as Record<string, unknown> | null;
+    const legacyPassword = raw?.plainPassword as string | undefined;
+
+    if (legacyPassword && legacyPassword === args.password) {
+      // Migrate: hash the password and store properly
+      const result = await hashPassword(args.password);
+      await ctx.db.patch(user._id, {
+        passwordHash: result.hash,
+        passwordSalt: result.salt,
+      });
+      return user._id;
     }
 
-    return user._id;
+    throw new ConvexError("Invalid email or password.");
   },
 });
