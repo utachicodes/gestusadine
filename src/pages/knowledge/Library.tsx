@@ -34,7 +34,8 @@ export default function Library() {
   const { t } = useLanguage();
   const tr = useTr();
   const navigate = useNavigate();
-  const books = useQuery(api.library.list) ?? [];
+  const rawBooks = useQuery(api.library.list);
+  const books = useMemo(() => rawBooks ?? [], [rawBooks]);
   const updateBook = useMutation(api.library.update);
 
   const [searchQuery, setSearchQuery] = useState("");

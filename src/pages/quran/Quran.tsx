@@ -19,6 +19,7 @@ import { api } from '../../../convex/_generated/api';
 const TOTAL_VERSES = 6236;
 
 /** Translation editions offered across the Quran reader (alquran.cloud, no key). */
+// eslint-disable-next-line react-refresh/only-export-components
 export const TRANSLATION_EDITIONS: {
   id: string;
   label: string;

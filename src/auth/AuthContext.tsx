@@ -132,7 +132,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const setSubscriptionTier = React.useCallback((tier: SubscriptionTier) => {
     updateTier({ tier });
-  }, [updateTier]);
+  }, []);
 
   const loading = isLoading || (isAuthenticated && currentUser === undefined);
 
@@ -147,7 +147,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       signOut: signOutFn,
       refreshProfile,
     }),
-    [user, profile, isAdmin, loading, signInWithGoogle, signInWithInstagram, signOutFn, refreshProfile, setSubscriptionTier]
+    [user, profile, isAdmin, loading, signInWithGoogle, signInWithInstagram, signOutFn, refreshProfile]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

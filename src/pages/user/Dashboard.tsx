@@ -81,7 +81,7 @@ const Dashboard: React.FC = () => {
         if (hijri) setHijriDate(`${hijri.day} ${hijri.month?.en} ${hijri.year}`);
       })
       .catch(() => {});
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   const daily: DailyData | null = dailyRaw
     ? { ...dailyRaw, hijriDate }
