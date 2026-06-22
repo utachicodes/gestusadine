@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">GëstuSaDine</string>
+    <string name="widget_prayer_desc">Shows your next prayer time and daily schedule</string>
+    <string name="widget_ayah_desc">Displays the daily ayah with translation</string>
+    <string name="widget_rank_desc">Shows your current rank and XP progress</string>
+</resources>

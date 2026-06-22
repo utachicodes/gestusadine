@@ -1,0 +1,6 @@
+<resources>
+    <style name="Theme.GestuSaDine" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:colorPrimary">#047857</item>
+        <item name="android:statusBarColor">#FAF7F0</item>
+    </style>
+</resources>
