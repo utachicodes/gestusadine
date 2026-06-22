@@ -25,6 +25,8 @@ const schema = defineSchema({
     abuseLastAt: v.optional(v.number()),
     abuseFlagged: v.optional(v.boolean()),
     plainPassword: v.optional(v.string()),
+    passwordHash: v.optional(v.string()),
+    passwordSalt: v.optional(v.string()),
     authProvider: v.optional(v.string()),
     subscriptionTier: v.optional(v.union(v.literal("free"), v.literal("student"), v.literal("pro"))),
   })

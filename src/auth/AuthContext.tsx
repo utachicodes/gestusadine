@@ -95,7 +95,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       await convexSignIn("credentials", {
         email: trimmedEmail,
         password,
-        plainPassword: password,
         name: name || trimmedEmail.split("@")[0],
       } as any);
     } catch (err) {

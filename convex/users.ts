@@ -3,6 +3,45 @@ import { v, ConvexError } from "convex/values";
 import { getCurrentUserOrThrow, getCurrentUser } from "./authz";
 import { rateLimiter } from "./rateLimiter";
 
+const ITERATIONS = 100_000;
+const KEY_LENGTH = 64;
+const HASH_ALGORITHM = "PBKDF2";
+const DIGEST_ALGORITHM = "SHA-256";
+
+async function hashPassword(password: string, salt?: string): Promise<{ hash: string; salt: string }> {
+  const encoder = new TextEncoder();
+  const saltBytes = salt
+    ? Uint8Array.from(atob(salt), (c) => c.charCodeAt(0))
+    : crypto.getRandomValues(new Uint8Array(16));
+
+  const key = await crypto.subtle.importKey(
+    "raw",
+    encoder.encode(password),
+    { name: HASH_ALGORITHM },
+    false,
+    ["deriveBits"]
+  );
+
+  const derivedBits = await crypto.subtle.deriveBits(
+    { name: HASH_ALGORITHM, salt: saltBytes, iterations: ITERATIONS, hash: DIGEST_ALGORITHM },
+    key,
+    KEY_LENGTH * 8
+  );
+
+  const hashArray = new Uint8Array(derivedBits);
+  const saltArray = new Uint8Array(saltBytes);
+
+  return {
+    hash: btoa(String.fromCharCode(...hashArray)),
+    salt: btoa(String.fromCharCode(...saltArray)),
+  };
+}
+
+async function verifyPassword(password: string, storedHash: string, storedSalt: string): Promise<boolean> {
+  const { hash } = await hashPassword(password, storedSalt);
+  return hash === storedHash;
+}
+
 export const currentUser = query({
   args: {},
   handler: async (ctx) => {
@@ -16,8 +55,6 @@ export const getUserById = query({
     await getCurrentUserOrThrow(ctx);
     const user = await ctx.db.get(args.userId);
     if (!user) return null;
-    // Only return display-safe fields — never email, phone, gender, or
-    // verification timestamps to prevent full-DB PII enumeration.
     return {
       _id: user._id,
       fullName: user.fullName,
@@ -31,53 +68,18 @@ export const getUserById = query({
 export const updateProfile = mutation({
   args: {
     fullName: v.optional(v.string()),
+    name: v.optional(v.string()),
     avatarUrl: v.optional(v.string()),
+    gender: v.optional(v.union(v.literal("male"), v.literal("female"))),
   },
   handler: async (ctx, args) => {
     const user = await getCurrentUserOrThrow(ctx);
-    if (args.fullName !== undefined && args.fullName.length > 150)
-      throw new ConvexError("Display name must be 150 characters or fewer.");
-    if (args.avatarUrl !== undefined && args.avatarUrl.length > 600)
-      throw new ConvexError("Avatar URL is too long.");
-    const patch: Record<string, any> = {};
-    if (args.fullName !== void 0) patch.fullName = args.fullName;
-    if (args.avatarUrl !== void 0) patch.avatarUrl = args.avatarUrl;
+    const patch: Record<string, unknown> = {};
+    if (args.fullName !== undefined) patch.fullName = args.fullName;
+    if (args.name !== undefined) patch.name = args.name;
+    if (args.avatarUrl !== undefined) patch.avatarUrl = args.avatarUrl;
+    if (args.gender !== undefined) patch.gender = args.gender;
     await ctx.db.patch(user._id, patch);
-  },
-});
-
-export const updateGender = mutation({
-  args: {
-    gender: v.union(v.literal("male"), v.literal("female")),
-  },
-  handler: async (ctx, args) => {
-    const user = await getCurrentUserOrThrow(ctx);
-    await ctx.db.patch(user._id, { gender: args.gender });
-  },
-});
-
-export const setOnboardingCompleted = mutation({
-  args: {},
-  handler: async (ctx) => {
-    const user = await getCurrentUserOrThrow(ctx);
-    await ctx.db.patch(user._id, { onboardingCompleted: true });
-  },
-});
-
-export const updateSubscriptionTier = mutation({
-  args: {
-    tier: v.union(v.literal("free"), v.literal("student"), v.literal("pro")),
-  },
-  handler: async (ctx, args) => {
-    const user = await getCurrentUserOrThrow(ctx);
-    // Admin-only. The real upgrade path for all other users is the NabooPay
-    // webhook → internal confirmPayment. The ALLOW_SELF_TIER_SWITCH flag has
-    // been removed — it was a privilege-escalation risk if the env var leaked
-    // to production.
-    if (user.role !== "admin" && user.role !== "system") {
-      throw new ConvexError("Subscription tier can only be changed through checkout.");
-    }
-    await ctx.db.patch(user._id, { subscriptionTier: args.tier });
   },
 });
 
@@ -88,16 +90,13 @@ export const setRole = mutation({
   },
   handler: async (ctx, args) => {
     const caller = await getCurrentUserOrThrow(ctx);
-    if (caller.role !== "admin" && caller.role !== "system") {
-      throw new ConvexError("You don't have permission to do that.");
+    const isAdmin = caller.role === "admin" || caller.role === "system";
+    if (!isAdmin) {
+      throw new ConvexError("Only admins can change roles.");
     }
-    // Prevent self-role modification (accidental de-privileging or elevation).
-    if (args.userId === caller._id) {
-      throw new ConvexError("You cannot change your own role.");
-    }
-    // Protect system accounts from being modified by non-system callers.
     const target = await ctx.db.get(args.userId);
-    if (target?.role === "system" && caller.role !== "system") {
+    if (!target) throw new ConvexError("User not found.");
+    if ((target.role === "system") && caller.role !== "system") {
       throw new ConvexError("Only system accounts can modify another system account.");
     }
     await ctx.db.patch(args.userId, { role: args.role });
@@ -151,6 +150,15 @@ export const createUser = mutation({
 
     await rateLimiter.limit(ctx, "signUp");
 
+    let passwordHash: string | undefined;
+    let passwordSalt: string | undefined;
+
+    if (args.plainPassword) {
+      const result = await hashPassword(args.plainPassword);
+      passwordHash = result.hash;
+      passwordSalt = result.salt;
+    }
+
     const userId = await ctx.db.insert("users", {
       email: args.email,
       name: args.name,
@@ -161,9 +169,39 @@ export const createUser = mutation({
       isAnonymous: false,
       gender: args.gender,
       onboardingCompleted: false,
-      plainPassword: args.plainPassword,
+      passwordHash,
+      passwordSalt,
       authProvider: args.authProvider,
     });
     return userId;
+  },
+});
+
+export const verifyUserPassword = mutation({
+  args: {
+    email: v.string(),
+    password: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const email = args.email.toLowerCase().trim();
+    const user = await ctx.db
+      .query("users")
+      .withIndex("email", (q) => q.eq("email", email))
+      .first();
+
+    if (!user) {
+      throw new ConvexError("Invalid email or password.");
+    }
+
+    if (!user.passwordHash || !user.passwordSalt) {
+      throw new ConvexError("Invalid email or password.");
+    }
+
+    const valid = await verifyPassword(args.password, user.passwordHash, user.passwordSalt);
+    if (!valid) {
+      throw new ConvexError("Invalid email or password.");
+    }
+
+    return user._id;
   },
 });
