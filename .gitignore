@@ -1,20 +1,22 @@
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
+# Dependencies
+node_modules/
 
-node_modules
-dist
-dist-ssr
+# Build output
+dist/
+dist-ssr/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Convex
+.convex/
 
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
-.idea
+.idea/
 .DS_Store
 *.suo
 *.ntvs*
@@ -22,15 +24,29 @@ dist-ssr
 *.sln
 *.sw?
 
-# Environment variables
-.env
-.env.local
-backend/.env.local
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-# Generated build / lint logs (do not commit)
+# Generated build / lint logs
 *.tsbuildinfo
 build_log.txt
 eslint_report.json
 lint_*.txt
 tsc_errors.txt
-videos_lint.txt
+
+# OS files
+Thumbs.db
+Desktop.ini
+
+# Test coverage
+coverage/
+
+# Misc
+*.tgz
+.vercel/

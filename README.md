@@ -1,7 +1,7 @@
 <div align="center">
   <img src="public/logofinal.png" alt="GëstuSaDine" width="120" />
   <h1>GëstuSaDine</h1>
-  <p><em>A full-stack Islamic knowledge platform for West Africa</em></p>
+  <p><em>A full-stack Islamic knowledge platform</em></p>
 </div>
 
 GëstuSaDine combines an AI Islamic-knowledge assistant ("the Council") with education, community, and commerce features. It is a **React single-page app backed entirely by [Convex](https://convex.dev)** — auth, database, serverless functions, file storage, and retrieval all run on one platform. The AI is powered by the **[Fanar](https://fanar.qa) API** and follows a strict scholarly methodology (see [METHODOLOGY.md](./METHODOLOGY.md)).
@@ -46,7 +46,6 @@ graph TD
 - **Community** — circles, membership, and posts.
 - **Gamification** — XP, ranks (Talib → Murid → Bahith → Alim → Faqih), daily streaks, and daily quizzes.
 - **Tools** — Hijri calendar, Zakat calculator.
-- **Shop & subscriptions** — NabooPay checkout (Wave / Orange Money, XOF) with webhook-driven tier upgrades.
 
 ---
 
@@ -58,21 +57,19 @@ graph TD
 | Backend | **Convex** — auth, database, serverless functions, file storage, HTTP routes |
 | Auth | Convex Auth (`@convex-dev/auth`), Password provider; admins via `ADMIN_EMAILS` |
 | AI | Fanar API (OpenAI-compatible chat completions) + keyword/synonym RAG over uploaded sources |
-| Payments | NabooPay (Wave, Orange Money) — currency XOF |
 | i18n | French / English / Arabic (`src/contexts/LanguageContext.tsx`) |
 | Hosting | Frontend on Vercel; backend on Convex |
 
 ---
 
-## Subscription tiers
+## Rate limits
 
-Enforced server-side in [convex/subscription.ts](convex/subscription.ts). Admins always act as the top tier.
+The Council (AI chatbot) is rate-limited server-side:
 
-| Tier | Price (XOF/mo) | Monthly Council questions |
-| :--- | :--- | :--- |
-| Free | 0 | 15 |
-| Student | 5,000 | 500 |
-| Pro | Contact | Unlimited |
+| Limit | Window |
+| :--- | :--- |
+| 5 questions | Per hour |
+| 20 questions | Per day |
 
 Simple greetings are not counted against the quota.
 
@@ -87,14 +84,19 @@ Simple greetings are not counted against the quota.
 
 ### Local development
 ```bash
+# Clone the repo
+git clone https://github.com/utachicodes/gestusadine.git
+cd gestusadine
+
+# Install dependencies
 npm install
 
-# Run frontend (Vite, port 3000) + Convex together
-npm run dev:full
+# Set up environment variables
+cp .env.example .env.local
+# Edit .env.local with your Convex URL
 
-# …or individually
-npm run dev:frontend   # Vite only
-npm run dev:convex     # npx convex dev (watches convex/)
+# Run frontend (Vite) + Convex together
+npm run dev:full
 ```
 
 ### Other scripts
@@ -114,27 +116,29 @@ Frontend variables live in `.env.local`; server variables are set on the Convex 
 | :--- | :--- | :--- |
 | `VITE_CONVEX_URL` | `.env.local` / Vercel | Convex deployment URL |
 | `AUTH_SECRET` | Convex | Convex Auth secret |
-| `JWT_PRIVATE_KEY` | Convex | RSA private key for JWT signing |
-| `JWKS` | Convex | JWKS key set (required by Convex Auth) |
 | `ADMIN_EMAILS` | Convex | Comma-separated admin emails |
 | `FANAR_API_KEY` | Convex | Fanar API key for the AI chat |
-| `NABOOPAY_API_KEY` | Convex | NabooPay payments |
-| `NABOOPAY_WEBHOOK_SECRET` | Convex | NabooPay webhook signature secret |
 
 ---
 
 ## Deployment
 
-- **Backend (Convex):** `npx convex deploy` pushes `convex/` (schema, functions, HTTP routes) to the production deployment.
-- **Frontend (Vercel):** `npm run build` and deploy `dist/`. Set `VITE_CONVEX_URL` in the Vercel project.
+Production deployment is handled by maintainers. See [DEPLOYMENT.md](./DEPLOYMENT.md) for details.
+
+**Contributors:** you only need `npm run dev:full` locally. No deployment needed.
 
 ---
 
+## Contributing
+
+We welcome contributions! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
+
 ## Documentation
 
+- [DEPLOYMENT.md](./DEPLOYMENT.md) — step-by-step deployment guide.
 - [METHODOLOGY.md](./METHODOLOGY.md) — how the AI answers (the canonical methodology the Council follows).
-- [CLAUDE.md](./CLAUDE.md) — architecture notes and conventions for contributors.
+- [CONTRIBUTING.md](./CONTRIBUTING.md) — how to contribute.
 
 ## License
 
-MIT.
+MIT — see [LICENSE](./LICENSE).
