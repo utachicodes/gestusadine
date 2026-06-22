@@ -137,6 +137,9 @@ export const search = action({
     topK: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new ConvexError("Please sign in to use search.");
+
     const topK = args.topK ?? 5;
     const qNorm = normalize(args.query);
     const qWords = qNorm
@@ -193,6 +196,7 @@ export const search = action({
 export const listDocuments = query({
   args: { category: v.optional(v.string()) },
   handler: async (ctx, args) => {
+    await getCurrentUserOrThrow(ctx);
     if (args.category) {
       return ctx.db.query("ragDocuments")
         .withIndex("category", (idx) => idx.eq("category", args.category!))
@@ -206,6 +210,7 @@ export const listDocuments = query({
 export const getDocumentById = query({
   args: { id: v.id("ragDocuments") },
   handler: async (ctx, args) => {
+    await getCurrentUserOrThrow(ctx);
     return ctx.db.get(args.id);
   },
 });
@@ -221,7 +226,7 @@ export const deleteDocument = mutation({
     const isAdmin = user.role === "admin" || user.role === "system";
     const isOwner = doc.uploadedBy !== undefined && doc.uploadedBy === user._id;
     if (!isAdmin && !isOwner) {
-      throw new Error("You do not have permission to delete this document.");
+      throw new ConvexError("You do not have permission to delete this document.");
     }
 
     const chunks = await ctx.db

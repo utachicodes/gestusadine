@@ -49,11 +49,7 @@ const TEMPLATES: TemplateDef[] = [
   { key: 'daily',      icon: Sun,       en: 'Daily check-in',  fr: 'Bilan quotidien', prompt: "Mood today: \n\nMy intention for the day:\n\nWhat I want to accomplish:\n\nOne thing I look forward to:\n" },
 ];
 
-function startOfDayUTC(date: Date): number {
-  const d = new Date(date);
-  d.setUTCHours(0, 0, 0, 0);
-  return d.getTime();
-}
+import { startOfDayUTC } from "@/lib/utils";
 
 // ── Tabs ──────────────────────────────────────────────────────────────────────
 

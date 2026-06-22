@@ -1,5 +1,6 @@
 import * as React from "react";
 import { useState, useMemo } from "react";
+import { logger } from "@/lib/logger";
 import {
   BookOpen,
   Download,
@@ -66,7 +67,7 @@ export default function Library() {
         description: tr({ en: `Format: ${book.format.toUpperCase()} | Size: ${book.fileSizeMb || "?"} MB`, fr: `Format : ${book.format.toUpperCase()} | Taille : ${book.fileSizeMb || "?"} Mo` })
       });
     } catch (error: any) {
-      console.error('Download error:', error);
+      logger.error('Download error:', { error });
       toast.error(tr({ en: 'Failed to download book', fr: 'Échec du téléchargement du livre' }));
     }
   };

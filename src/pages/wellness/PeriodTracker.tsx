@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useQuery, useMutation } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import { format, isToday } from 'date-fns';
+import { startOfDayUTC } from '@/lib/utils';
 import {
   Heart, Calendar, BarChart2, Settings, ChevronLeft, ChevronRight,
   Droplets, Activity, Info, Check, Sparkles, Moon,
@@ -470,12 +471,6 @@ function getCyclePhase(day: number, avgCycleLen: number): string {
   if (day < ovDay - 1) return 'follicular';
   if (day <= ovDay + 1) return 'ovulation';
   return 'luteal';
-}
-
-function startOfDayUTC(date: Date): number {
-  const d = new Date(date);
-  d.setUTCHours(0, 0, 0, 0);
-  return d.getTime();
 }
 
 // ── Tabs ──────────────────────────────────────────────────────────────────────

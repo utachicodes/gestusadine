@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useQuery, useMutation, useAction } from "convex/react";
 import { api } from "../../../convex/_generated/api";
+import { logger } from "@/lib/logger";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
@@ -187,7 +188,7 @@ const NotificationSettings: React.FC = () => {
 
       toast.success(tr("notifications.subscribed"));
     } catch (err) {
-      console.error(err);
+      logger.error("Failed to subscribe to notifications", { error: err });
       toast.error(tr("notifications.subscribeError"));
     } finally {
       setSubscribing(false);
@@ -250,7 +251,7 @@ const NotificationSettings: React.FC = () => {
       try { await scheduleForToday({}); } catch { /* silent — no subscription yet is fine */ }
       toast.success(tr("notifications.saved"));
     } catch (err) {
-      console.error(err);
+      logger.error("Failed to save notification settings", { error: err });
       toast.error(tr("notifications.saveError"));
     } finally {
       setSaving(false);

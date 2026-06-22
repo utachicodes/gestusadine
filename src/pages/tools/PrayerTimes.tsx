@@ -1,4 +1,5 @@
 import * as React from "react";
+import { logger } from "@/lib/logger";
 import { useTr, type Loc } from "@/lib/i18n";
 import PrayerTracker from "./PrayerTracker";
 import {
@@ -209,7 +210,7 @@ const PrayerTimes: React.FC = () => {
         });
         setTimings(cleaned);
       } catch (e) {
-        console.error("Prayer times fetch failed:", e);
+        logger.error("Prayer times fetch failed:", { error: e });
         setError(
           tr({
             en: "Could not load prayer times. Please check your connection and try again.",
