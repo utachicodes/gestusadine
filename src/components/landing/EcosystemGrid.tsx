@@ -20,7 +20,7 @@ const FEATURED: Space = {
   title: { en: 'The Council', fr: 'Le Conseil' },
   desc: {
     en: 'Ask anything and receive a consensus answer drawn from authenticated sources, scholarly opinion, and established methodology  with references you can open and read.',
-    fr: 'Posez n’importe quelle question et recevez une réponse de consensus, issue de sources authentifiées, d’avis savants et d’une méthodologie établie  avec des références consultables.',
+    fr: `Posez n'importe quelle question et recevez une réponse de consensus, issue de sources authentifiées, d'avis savants et d'une méthodologie établie  avec des références consultables.`,
   },
   to: '/chat',
 };
@@ -30,8 +30,8 @@ const TALL: Space[] = [
     n: '02',
     title: { en: 'Living Library', fr: 'Bibliothèque vivante' },
     desc: {
-      en: 'Read and download works across Qur’an, hadith, fiqh, and aqeedah.',
-      fr: 'Lisez et téléchargez des ouvrages sur le Coran, le hadith, le fiqh et l’aqida.',
+      en: `Read and download works across Qur'an, hadith, fiqh, and aqeedah.`,
+      fr: `Lisez et téléchargez des ouvrages sur le Coran, le hadith, le fiqh et l'aqida.`,
     },
     to: '/library',
   },
@@ -40,7 +40,7 @@ const TALL: Space[] = [
     title: { en: 'Courses', fr: 'Cours' },
     desc: {
       en: 'Structured lessons from the fundamentals to deeper study, at your own pace.',
-      fr: 'Des leçons structurées, des fondements à l’étude approfondie, à votre rythme.',
+      fr: `Des leçons structurées, des fondements à l'étude approfondie, à votre rythme.`,
     },
     to: '/classes',
   },
@@ -48,31 +48,31 @@ const TALL: Space[] = [
 
 const WIDE: Space[] = [
   {
-    n: ‘04’,
-    title: { en: ‘Events’, fr: ‘Événements’ },
+    n: '04',
+    title: { en: 'Events', fr: 'Événements' },
     desc: {
-      en: ‘Lectures, circles, and community programs across Senegal and online.’,
-      fr: ‘Conférences, cercles et programmes communautaires au Sénégal et en ligne.’,
+      en: 'Lectures, circles, and community programs across Senegal and online.',
+      fr: 'Conférences, cercles et programmes communautaires au Sénégal et en ligne.',
     },
-    to: ‘/events’,
+    to: '/events',
   },
   {
-    n: ‘05’,
-    title: { en: ‘Daily Guidance’, fr: ‘Guidance quotidienne’ },
+    n: '05',
+    title: { en: 'Daily Guidance', fr: 'Guidance quotidienne' },
     desc: {
-      en: ‘A daily ayah, dua, and prayer times to anchor your day.’,
-      fr: ‘Un verset, une invocation et les horaires de prière chaque jour.’,
+      en: 'A daily ayah, dua, and prayer times to anchor your day.',
+      fr: 'Un verset, une invocation et les horaires de prière chaque jour.',
     },
-    to: ‘/dashboard’,
+    to: '/dashboard',
   },
   {
-    n: ‘06’,
-    title: { en: ‘Prayer Times’, fr: ‘Horaires de prière’ },
+    n: '06',
+    title: { en: 'Prayer Times', fr: 'Horaires de prière' },
     desc: {
-      en: ‘Accurate prayer times for any city, with Hijri calendar and Qibla direction.’,
-      fr: ‘Horaires de prière précis pour toute ville, avec calendrier hégirien et direction de la Qibla.’,
+      en: 'Accurate prayer times for any city, with Hijri calendar and Qibla direction.',
+      fr: 'Horaires de prière précis pour toute ville, avec calendrier hégirien et direction de la Qibla.',
     },
-    to: ‘/prayer-times’,
+    to: '/prayer-times',
   },
 ];
 
@@ -119,7 +119,7 @@ const SpaceCard = ({
           <div className="mb-5 flex items-center gap-3">
             <span className="h-px w-8 bg-emerald-800/40" />
             <span className="text-[10px] font-semibold uppercase tracking-[0.28em] text-emerald-800/70">
-              {tr({ en: 'Where most begin', fr: 'Là où l’on commence' })}
+              {tr({ en: 'Where most begin', fr: `Là où l'on commence` })}
             </span>
           </div>
         )}
@@ -157,7 +157,7 @@ const EcosystemGrid = () => {
           className="max-w-2xl"
         >
           <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.3em] text-emerald-800/70">
-            {tr({ en: 'The ecosystem', fr: 'L’écosystème' })}
+            {tr({ en: 'The ecosystem', fr: `L'écosystème` })}
           </p>
           <h2 className="text-4xl leading-tight text-stone-900 sm:text-5xl">
             {tr({ en: 'One place for the whole of your seeking.', fr: 'Un seul lieu pour toute votre quête.' })}
