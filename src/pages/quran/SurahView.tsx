@@ -170,11 +170,18 @@ export default function SurahView() {
 
         const arabicAyahs = byEdition.get(ARABIC_EDITION) ?? [];
         const translationAyahs = byEdition.get(translation) ?? [];
-        const combined: Ayah[] = arabicAyahs.map((arabicAyah, index) => ({
-          numberInSurah: arabicAyah.numberInSurah,
-          arabic: arabicAyah.text,
-          translation: translationAyahs[index]?.text ?? '',
-        }));
+
+        // When we display our own Bismillah header (surahs 2-8, 10-114), the
+        // API also returns it as ayah 1. Filter it out to avoid duplication.
+        const skipFirst = surahNumber !== 1 && surahNumber !== 9 && arabicAyahs.length > 0 && arabicAyahs[0].numberInSurah === 1;
+
+        const combined: Ayah[] = arabicAyahs
+          .slice(skipFirst ? 1 : 0)
+          .map((arabicAyah, index) => ({
+            numberInSurah: arabicAyah.numberInSurah,
+            arabic: arabicAyah.text,
+            translation: translationAyahs[(skipFirst ? index + 1 : index)]?.text ?? '',
+          }));
 
         setAyahs(combined);
         setLoading(false);

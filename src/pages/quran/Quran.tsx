@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from 'convex/react';
-import { Search, BookOpen, Bookmark, CheckCircle2, Flame } from 'lucide-react';
+import { Search, BookOpen, Bookmark, CheckCircle2, Flame, Play } from 'lucide-react';
 import { useTr, type Loc } from '@/lib/i18n';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Input } from '@/components/ui/input';
@@ -234,9 +234,26 @@ export default function Quran() {
               <p className="text-[11px] text-muted-foreground mt-1">{tr({ en: 'days', fr: 'jours' })}</p>
             </div>
           </div>
-          <div className="h-2.5 rounded-full bg-muted/50 overflow-hidden">
+          <div className="h-2.5 rounded-full bg-muted/50 overflow-hidden mb-4">
             <div className="h-full bg-primary rounded-full transition-all duration-500" style={{ width: `${readPercent}%` }} />
           </div>
+          {/* Continue reading button */}
+          {progress?.completedSurahs && progress.completedSurahs.length > 0 && (
+            <button
+              onClick={() => {
+                const lastSurah = Math.max(...progress.completedSurahs);
+                const nextSurah = lastSurah < 114 ? lastSurah + 1 : 1;
+                navigate(`/quran/${nextSurah}`);
+              }}
+              className="btn-islamic w-full sm:w-auto"
+            >
+              <Play className="h-4 w-4" />
+              {tr({
+                en: `Continue reading — Surah ${Math.min((Math.max(...progress.completedSurahs) + 1), 114)}`,
+                fr: `Continuer la lecture — Sourate ${Math.min((Math.max(...progress.completedSurahs) + 1), 114)}`,
+              })}
+            </button>
+          )}
         </div>
 
         {/* Result count */}
