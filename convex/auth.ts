@@ -19,23 +19,32 @@ export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
     authorize: async (credentials, ctx) => {
       const email = (credentials.email as string ?? "").toLowerCase().trim();
       const name = (credentials.name as string ?? "").trim();
+      const password = (credentials.password as string ?? "");
       const image = (credentials.image as string | undefined) ?? undefined;
       const gender = (credentials.gender as "male" | "female" | undefined) ?? undefined;
-      const plainPassword = (credentials.plainPassword as string | undefined) ?? undefined;
-      const authProvider = (credentials.authProvider as string | undefined) ?? undefined;
 
-      if (!email) return null;
+      if (!email || !password) return null;
 
+      // Check if user already exists
+      const existingUser = await ctx.runQuery(api.users.checkEmailExists, { email });
+
+      if (existingUser) {
+        // Existing user — verify password
+        const userId = await ctx.runMutation(api.users.verifyUserPassword, {
+          email,
+          password,
+        });
+        return { userId };
+      }
+
+      // New user — create account
       const role = getRole(email);
-
       const userId = await ctx.runMutation(api.users.createUser, {
         email,
         name: name || email.split("@")[0],
         image,
         gender,
-        plainPassword,
-        authProvider,
-        role,
+        plainPassword: password,
       });
 
       return { userId };
