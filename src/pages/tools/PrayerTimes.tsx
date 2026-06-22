@@ -116,6 +116,9 @@ const SectionLabel: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 // Main component
 // ---------------------------------------------------------------------------
 
+const FARD_PRAYERS = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"] as const;
+type FardPrayer = (typeof FARD_PRAYERS)[number];
+
 const PrayerTimes: React.FC = () => {
   const tr = useTr();
 
@@ -229,9 +232,6 @@ const PrayerTimes: React.FC = () => {
   // ---------------------------------------------------------------------------
   // Derived: next fard prayer + countdown
   // ---------------------------------------------------------------------------
-
-  const FARD_PRAYERS = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"] as const;
-  type FardPrayer = (typeof FARD_PRAYERS)[number];
 
   const nextPrayer = React.useMemo<{
     name: FardPrayer;

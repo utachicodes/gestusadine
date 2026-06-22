@@ -30,7 +30,7 @@ const DEFAULT_AGENTS = [
 
 const AdminConfig: React.FC = () => {
   const tr = useTr();
-  const savedAgents = useQuery(api.config.list) ?? [];
+  const savedAgents = useQuery(api.config.list);
   const upsertAgent = useMutation(api.config.upsert);
 
   const [agents, setAgents] = React.useState<Record<string, any>>({});
@@ -38,13 +38,13 @@ const AdminConfig: React.FC = () => {
   const [testing, setTesting] = React.useState<string | null>(null);
 
   React.useEffect(() => {
-    if (savedAgents.length > 0) {
+    if (savedAgents && savedAgents.length > 0) {
       const map: Record<string, any> = {};
       for (const a of savedAgents as any[]) {
         map[a.agentId] = a;
       }
       setAgents(map);
-    } else {
+    } else if (savedAgents) {
       const map: Record<string, any> = {};
       for (const a of DEFAULT_AGENTS) {
         map[a.agentId] = { ...a };

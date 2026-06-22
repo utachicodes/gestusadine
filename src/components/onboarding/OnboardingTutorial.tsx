@@ -415,6 +415,7 @@ export function OnboardingTutorial() {
 }
 
 /** Call this from Settings to let users restart the tutorial */
+// eslint-disable-next-line react-refresh/only-export-components
 export function resetOnboardingTutorial() {
   localStorage.removeItem(LS_KEY);
 }

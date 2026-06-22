@@ -99,17 +99,11 @@ const NotificationSettings: React.FC = () => {
   const { profile } = useAuth();
 
   // Convex hooks — the modules are not yet in generated types, so we cast.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const getVapidPublicKey = useAction((api as any).webPush.getVapidPublicKey);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const savedSettings = useQuery((api as any).notifications.getMySettings);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const saveSubscription = useMutation((api as any).notifications.saveSubscription);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const saveSettings = useMutation((api as any).notifications.saveSettings);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const sendTestNotification = useAction((api as any).notifications.sendTestNotification);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const scheduleForToday = useAction((api as any).notifications.scheduleForToday);
 
   // Permission state
