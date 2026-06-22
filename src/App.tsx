@@ -19,6 +19,7 @@ import AppShell from "./components/layout/AppShell";
 
 // ── Core (eagerly loaded — hit on every cold visit) ──────────────────────────
 import Login from "./pages/auth/Login";
+import Signup from "./pages/auth/Signup";
 import Index from "./pages/core/Index";
 import NotFound from "./pages/core/NotFound";
 
@@ -92,6 +93,7 @@ const App = () => {
                         <Route path="/terms"            element={<AppShell><Terms /></AppShell>} />
                         <Route path="/data-compliance"  element={<AppShell><DataCompliance /></AppShell>} />
                         <Route path="/login"   element={<Login />} />
+                        <Route path="/signup"  element={<Signup />} />
 
                         {/* ── Authenticated ── */}
                         <Route path="/dashboard"    element={<ProtectedRoute><DashboardLayout><Dashboard /></DashboardLayout></ProtectedRoute>} />

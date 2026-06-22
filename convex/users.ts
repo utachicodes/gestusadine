@@ -1,6 +1,7 @@
 import { query, mutation } from "./_generated/server";
 import { v, ConvexError } from "convex/values";
 import { getCurrentUserOrThrow, getCurrentUser } from "./authz";
+import { rateLimiter } from "./rateLimiter";
 
 export const currentUser = query({
   args: {},
@@ -147,6 +148,9 @@ export const createUser = mutation({
     if (existing) {
       return existing._id;
     }
+
+    await rateLimiter.limit(ctx, "signUp");
+
     const userId = await ctx.db.insert("users", {
       email: args.email,
       name: args.name,
