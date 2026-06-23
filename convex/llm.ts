@@ -2,14 +2,10 @@ import { action, internalMutation } from "./_generated/server";
 import { v, ConvexError } from "convex/values";
 import { Id } from "./_generated/dataModel";
 import { api, internal } from "./_generated/api";
-import {
-  buildCouncilSystemPrompt,
-  isGreeting,
-  greetingReply,
-  RAG_HEADER,
-  RAG_FOOTER,
-} from "./prompts";
+import { buildCouncilSystemPrompt, RAG_HEADER, RAG_FOOTER } from "./prompts";
 import { validateCouncilOutput } from "./outputFilter";
+import { classifyIntent } from "./intentClassifier";
+import { dispatchTool } from "./tools";
 
 const FANAR_BASE = "https://api.fanar.qa/v1";
 const FANAR_MODEL = "Fanar";
@@ -29,29 +25,74 @@ async function fanarFetch(
   });
   if (!res.ok) {
     const err = await res.text().catch(() => "");
-    // Full provider detail goes to Convex server logs only — never the client.
     console.error("[fanar] request failed", { status: res.status, detail: err.slice(0, 500) });
     if (res.status === 429) {
       throw new ConvexError("The assistant is busy right now. Please wait a moment and try again.");
     }
-    // Auth / server errors are infrastructure problems — keep the cause opaque.
     throw new ConvexError("The assistant is temporarily unavailable. Please try again later.");
   }
   return res.json();
 }
 
+/**
+ * Normalize RAG results into citation-tagged references.
+ * Each source gets a [CITE:N] tag so the LLM can reference them precisely.
+ */
+function normalizeCitations(
+  results: any[],
+): { context: string; citations: string } {
+  if (results.length === 0) return { context: "", citations: "" };
+
+  const contextLines = results.map(
+    (r, i) => `[CITE:${i + 1}] ${r.category ? `(${r.category}) ` : ""}${r.content}`
+  );
+  const citationList = results
+    .map((r, i) => `[CITE:${i + 1}] ${r.source ?? r.category ?? "Islamic source"}`)
+    .join("\n");
+
+  return {
+    context:
+      RAG_HEADER + contextLines.join("\n\n") + RAG_FOOTER,
+    citations: citationList,
+  };
+}
+
+/**
+ * Search the duas database for a matching dua.
+ */
+async function searchDua(
+  ctx: any,
+  query: string,
+): Promise<string | null> {
+  try {
+    const results = await ctx.runQuery(api.duas.searchDuas, { query });
+    if (!results || results.length === 0) return null;
+
+    const dua = results[0];
+    const lang = "en";
+    let response = `**${dua.title[lang] ?? dua.title.en}**\n\n`;
+    response += `**Arabic:** ${dua.arabicText}\n\n`;
+    if (dua.transliteration) {
+      response += `**Transliteration:** ${dua.transliteration}\n\n`;
+    }
+    response += `**Translation:** ${dua.translation[lang] ?? dua.translation.en}\n\n`;
+    if (dua.source) {
+      response += `*Source: ${dua.source}*`;
+    }
+    return response;
+  } catch {
+    return null;
+  }
+}
+
 export const generate = action({
   args: {
-    // The client supplies ONLY the conversation + display preferences. The
-    // system prompt, methodology, guardrails, model and sampling are all set
-    // server-side and cannot be overridden by the caller.
     messages: v.array(
       v.object({
         role: v.union(v.literal("user"), v.literal("assistant")),
         content: v.string(),
       })
     ),
-    // Whitelisted literals only — prevents prompt injection via these fields.
     language: v.optional(v.union(v.literal("en"), v.literal("fr"), v.literal("ar"))),
     madhab: v.optional(v.union(
       v.literal("general"),
@@ -62,12 +103,11 @@ export const generate = action({
     )),
   },
   handler: async (ctx, args) => {
-    // The chat action must not be anonymously callable — otherwise the Fanar
-    // budget and per-tier quota can be bypassed by calling it directly.
+    // ── Auth check ────────────────────────────────────────────────────────────
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new ConvexError("Please sign in to use the assistant.");
 
-    // Hard caps: max 50 turns, each message max 4 000 chars.
+    // ── Input validation ──────────────────────────────────────────────────────
     if (args.messages.length > 50) {
       throw new ConvexError("Conversation is too long. Please start a new one.");
     }
@@ -80,9 +120,7 @@ export const generate = action({
     const lastUserMsg = [...args.messages].reverse().find((m) => m.role === "user");
     const userText = lastUserMsg?.content?.trim() ?? "";
 
-    // ── Abuse / jailbreak detection ───────────────────────────────────────────
-    // Detect override/jailbreak attempts server-side. Track per-user count.
-    // Strike 1: silent redirect. Strike 2: final warning. Strike 3: delete account.
+    // ── Jailbreak detection ───────────────────────────────────────────────────
     const JAILBREAK_PATTERNS = [
       /\b(ignore|disregard|skip|forget|override|bypass|break|violate)\s+(all\s+)?(previous|above|your|the|any)\s+(instructions?|prompt|rules?|guidelines?|filter)\b/i,
       /\b(reveal|show|print|output|repeat|leak|expose|tell\s+me)\s+(your|the|me|us)\s*(system\s*prompt|instructions?|prompt|rules?|guidelines?|configuration)\b/i,
@@ -102,7 +140,6 @@ export const generate = action({
 
         const lang = (args.language || "en").toLowerCase();
 
-        // Strike 3 — delete the account immediately.
         if (warnings >= 3) {
           await ctx.runMutation(internal.llm.deleteAbusiveAccount, { userId: user._id });
           if (lang.startsWith("fr")) {
@@ -111,14 +148,12 @@ export const generate = action({
           throw new ConvexError("Your account has been deleted due to repeated attempts to bypass platform rules.");
         }
 
-        // Always persist the updated count.
         await ctx.runMutation(internal.llm.recordAbuseWarning, {
           userId: user._id,
           warnings,
           flagged: false,
         });
 
-        // Strike 2 — final warning.
         if (warnings === 2) {
           if (lang.startsWith("fr")) {
             return `⚠️ **Avertissement final :** Vous avez déjà tenté de contourner les règles. **Une prochaine tentative entraînera la suppression définitive de votre compte.** Je suis ici uniquement pour les questions islamiques.`;
@@ -126,26 +161,39 @@ export const generate = action({
           return `⚠️ **Final warning:** You have already attempted to bypass the rules. **One more attempt will permanently delete your account.** I'm here for Islamic questions only.`;
         }
 
-        // Strike 1 — silent redirect.
         return lang.startsWith("fr")
           ? "Je suis ici uniquement pour les questions islamiques. Comment puis-je vous aider avec votre deen ?"
           : "I'm here for Islamic questions only. How can I help you with your deen?";
       }
-      // Unauthenticated — silent redirect.
       const lang = (args.language || "en").toLowerCase();
       return lang.startsWith("fr")
         ? "Je suis ici uniquement pour les questions islamiques."
         : "I'm here for Islamic questions only.";
     }
 
-    // Pure greetings/pleasantries get a quick reply — no model call, and NOT
-    // charged against the monthly quota.
-    if (isGreeting(userText)) {
-      return greetingReply(args.language);
+    // ── Intent classification ─────────────────────────────────────────────────
+    const classification = classifyIntent(userText);
+    const toolResponse = dispatchTool(classification.intent, args.language, args.madhab);
+
+    console.log("[council] intent classified", {
+      intent: classification.intent,
+      confidence: classification.confidence,
+      requiresRetrieval: classification.requiresRetrieval,
+    });
+
+    // ── Direct tool responses (no LLM call needed, no quota charged) ─────────
+    if (toolResponse.kind === "direct") {
+      return toolResponse.content;
     }
 
-    // Enforce the per-tier quota on the SERVER, before doing any work. This
-    // closes the client-side counting bypass and the race window.
+    // ── Dua lookup — try database first before LLM ───────────────────────────
+    if (classification.intent === "dua_lookup") {
+      const duaResult = await searchDua(ctx, userText);
+      if (duaResult) return duaResult;
+      // Fall through to LLM with RAG if no dua found in database
+    }
+
+    // ── Quota enforcement ─────────────────────────────────────────────────────
     await ctx.runQuery(internal.subscription.checkCouncilQuota);
 
     const apiKey = process.env.FANAR_API_KEY;
@@ -154,35 +202,34 @@ export const generate = action({
       throw new ConvexError("The assistant is temporarily unavailable. Please try again later.");
     }
 
-    // RAG retrieval (best-effort). Retrieved text is framed as untrusted data.
+    // ── RAG retrieval (for intents that need it) ─────────────────────────────
     let ragContext = "";
-    if (userText) {
+    let citationBlock = "";
+
+    if (classification.requiresRetrieval && userText) {
       try {
         const results = (await ctx.runAction(api.rag.search, {
           query: userText,
           topK: 8,
         })) as any[];
-        if (results.length > 0) {
-          ragContext =
-            RAG_HEADER +
-            results
-              .map((r, i) => `[${i + 1}] ${r.category ? `(${r.category}) ` : ""}${r.content}`)
-              .join("\n\n") +
-            RAG_FOOTER;
-        }
+
+        const normalized = normalizeCitations(results);
+        ragContext = normalized.context;
+        citationBlock = normalized.citations;
       } catch {
         // RAG search failed — proceed without context.
       }
     }
 
-    const systemPrompt =
-      buildCouncilSystemPrompt({ language: args.language, madhab: args.madhab }) + ragContext;
+    // ── Build system prompt ───────────────────────────────────────────────────
+    const systemPrompt = toolResponse.systemPrompt + ragContext;
 
+    // ── Call Fanar LLM ────────────────────────────────────────────────────────
     const data = await fanarFetch("/chat/completions", apiKey, {
       model: FANAR_MODEL,
       messages: [{ role: "system", content: systemPrompt }, ...args.messages],
       temperature: 0.3,
-      max_tokens: 800,
+      max_tokens: 1200,
     });
 
     const content = data.choices?.[0]?.message?.content;
@@ -190,18 +237,22 @@ export const generate = action({
       throw new ConvexError("The assistant couldn't generate a response. Please try rephrasing your question.");
     }
 
-    // Server-side output filter — runs before the response reaches any client.
-    // If any safety check fails, return a safe fallback instead of the raw output.
+    // ── Output filter ─────────────────────────────────────────────────────────
     const filterResult = validateCouncilOutput(content);
     if (!filterResult.safe) {
       console.warn("[council] output filtered", { category: filterResult.category });
-      // Filtered responses are NOT charged against the quota.
       return filterResult.fallback ?? "I wasn't able to generate a proper response. Please try again.";
     }
 
-    // Only a successful, safe answer is charged against the quota.
+    // ── Append citations if present ───────────────────────────────────────────
+    let finalResponse = content;
+    if (citationBlock) {
+      finalResponse += `\n\n---\n**Sources:**\n${citationBlock}`;
+    }
+
+    // ── Charge quota ──────────────────────────────────────────────────────────
     await ctx.runMutation(internal.subscription.incrementCouncilUsage);
-    return content;
+    return finalResponse;
   },
 });
 
@@ -211,8 +262,6 @@ export const testModel = action({
     temperature: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
-    // Admin-only diagnostic — gate it so it can't be used to probe models or
-    // burn the Fanar budget anonymously.
     const me = await ctx.runQuery(api.users.currentUser);
     if (!me || (me.role !== "admin" && me.role !== "system")) {
       throw new ConvexError("Not authorized.");
@@ -246,7 +295,6 @@ export const testModel = action({
   },
 });
 
-// Internal — increments the abuse warning counter on the user record.
 export const recordAbuseWarning = internalMutation({
   args: {
     userId:   v.id("users"),
@@ -263,14 +311,11 @@ export const recordAbuseWarning = internalMutation({
   },
 });
 
-// Internal — permanently deletes a user account and all their associated data
-// after the 3rd jailbreak strike.
 export const deleteAbusiveAccount = internalMutation({
   args: { userId: v.id("users") },
   handler: async (ctx, args) => {
     const id = args.userId as Id<"users">;
 
-    // Delete all user-owned records across every table.
     const tables = [
       "journalEntries",
       "periodLogs",
@@ -303,7 +348,6 @@ export const deleteAbusiveAccount = internalMutation({
       }
     }
 
-    // Finally delete the user record itself.
     await ctx.db.delete(id);
   },
 });
