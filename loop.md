@@ -1,11 +1,13 @@
 # Daily Loop
 
 Run this checklist silently on startup (9 AM). No user prompts needed.
-When complete, post a daily report summary.
+Post midday report at 2 PM. Post final daily report at 2 AM.
 
 ---
 
-## 1. Health Check
+## Phase 1 — Morning (9 AM)
+
+### 1. Health Check
 
 - [ ] `git pull origin main` — sync latest
 - [ ] `npx tsc --noEmit` — type check
@@ -17,7 +19,7 @@ When complete, post a daily report summary.
 
 If anything fails → fix it, commit, push, merge, deploy.
 
-## 2. GitHub Triage
+### 2. GitHub Triage
 
 - [ ] `gh issue list --state open` — check new issues
 - [ ] `gh pr list --state open` — check open PRs
@@ -26,33 +28,96 @@ If anything fails → fix it, commit, push, merge, deploy.
 - [ ] Review and merge any ready PRs (lint+build+tests pass)
 - [ ] If CI failed on main → investigate and fix
 
-## 3. Bug Sweep
+### 3. Bug Sweep
 
 - [ ] Check Convex function logs for errors (last 24h)
 - [ ] Search codebase for `TODO`, `FIXME`, `HACK` comments
 - [ ] Check for unused imports or dead code
 - [ ] Fix any bugs found → commit, push, merge
 
-## 4. Research
+---
 
-Spend 15 minutes researching one topic from this queue.
-Rotate through topics. Pick the next one not yet covered.
+## Phase 2 — Midday (2 PM)
 
-- [ ] Claude Code best practices and new features
-- [ ] Convex best practices (schema design, query optimization)
-- [ ] React 19 / Vite 7 new capabilities
-- [ ] Islamic QA system architecture patterns
-- [ ] RAG optimization techniques
-- [ ] PWA performance optimization
-- [ ] Accessibility (WCAG) audit improvements
-- [ ] Security hardening patterns
-- [ ] Testing strategies (unit, integration, E2E)
-- [ ] CI/CD pipeline improvements
+### 4. Market Research — ArXiv & Industry
 
-If research yields actionable improvements → implement them.
-Document findings in `notes.md`.
+Spend 30 minutes scanning for new papers and ideas relevant to GëstuSaDine.
 
-## 5. Code Quality
+**Search queries to rotate through:**
+- `arxiv.org/search/?query=islamic+qa+retrieval+augmented&searchtype=all`
+- `arxiv.org/search/?query=religious+qa+hallucination+grounding&searchtype=all`
+- `arxiv.org/search/?query=multilingual+rag+arabic+english&searchtype=all`
+- `arxiv.org/search/?query=tool+augmented+llm+agent+architecture&searchtype=all`
+- `arxiv.org/search/?query=llm+safety+jailbreak+detection&searchtype=all`
+- `arxiv.org/search/?query=convex+serverless+database&searchtype=all`
+- `arxiv.org/search/?query=pwa+notification+engagement&searchtype=all`
+- `arxiv.org/search/?query=islamic+fiqh+ruling+automation&searchtype=all`
+- `arxiv.org/search/?query=quran+hadith+verification+ai&searchtype=all`
+- `arxiv.org/search/?query=multi+agent+routing+intent+classification&searchtype=all`
+
+**What to look for:**
+- New RAG techniques that could improve our retrieval
+- Better intent classification methods
+- Citation verification approaches
+- Arabic NLP advances
+- Islamic QA benchmarks we should test against
+- Safety/alignment techniques for religious AI
+- Novel tool-use architectures
+
+**Output:**
+- Save findings to `reports/research/YYYY-MM-DD.md`
+- If a paper has a concrete idea we can implement → create an issue with `gh issue create`
+- If an idea is immediately actionable → implement it
+
+### 5. Competitive Analysis
+
+- [ ] Check Fanar API changelog/updates (fanar.qa)
+- [ ] Check Convex changelog (github.com/get-convex/convex-js)
+- [ ] Check shadcn/ui new components
+- [ ] Check Lucide icons new additions
+- [ ] Scan Product Hunt / Hacker News for Islamic tech or prayer apps
+- [ ] Note any features competitors have that we should consider
+
+### 6. Midday Report
+
+Write to `reports/midday-YYYY-MM-DD.md`:
+
+```
+# Midday Report — YYYY-MM-DD (2 PM)
+
+## Morning Summary
+- Health: passing/failing
+- Bugs fixed: <list>
+- PRs merged: <list>
+
+## Research Findings
+- Papers reviewed: <count>
+- Key papers:
+  - <title> — <one-line summary> — <relevance to GëstuSaDine>
+  - <title> — <one-line summary> — <relevance>
+- Actionable ideas:
+  - <idea 1>
+  - <idea 2>
+
+## Competitive Intel
+- <notable updates from Fanar, Convex, competitors>
+
+## Afternoon Plan
+- <what to work on next>
+```
+
+---
+
+## Phase 3 — Afternoon/Evening
+
+### 7. Implement Research Findings
+
+- [ ] Review morning research notes
+- [ ] Implement any quick wins (estimated < 1 hour)
+- [ ] Create issues for larger ideas
+- [ ] Update architecture docs if new patterns adopted
+
+### 8. Code Quality
 
 - [ ] Run full test suite — aim for 100% pass rate
 - [ ] Check for console.log statements that shouldn't be in production
@@ -60,15 +125,19 @@ Document findings in `notes.md`.
 - [ ] Check for hardcoded values that should be environment variables
 - [ ] Review recent commits for code smells
 
-## 6. Documentation
+### 9. Documentation
 
 - [ ] Update CHANGELOG.md if any changes were made today
 - [ ] Verify README.md is accurate
 - [ ] Check CONTRIBUTING.md for completeness
 
-## 7. Daily Report
+---
 
-Write report to `reports/YYYY-MM-DD.md` with:
+## Phase 4 — End of Day (2 AM)
+
+### 10. Daily Report
+
+Write to `reports/YYYY-MM-DD.md`:
 
 ```
 # Daily Report — YYYY-MM-DD
@@ -87,9 +156,14 @@ Write report to `reports/YYYY-MM-DD.md` with:
 - <list of bugs found and fixed>
 
 ## Research Done
-- <topic researched>
-- <key findings>
-- <actionable items>
+- Papers reviewed: <count>
+- Key findings:
+  - <finding 1>
+  - <finding 2>
+- Ideas created as issues: <count>
+
+## Competitive Intel
+- <notable updates>
 
 ## Open Issues
 - <any unresolved issues>
@@ -97,6 +171,8 @@ Write report to `reports/YYYY-MM-DD.md` with:
 ## Tomorrow's Priorities
 - <what needs attention next>
 ```
+
+---
 
 ## Rules
 
@@ -106,3 +182,5 @@ Write report to `reports/YYYY-MM-DD.md` with:
 - Always create new branches for features
 - Merge only when CI passes
 - If unsure about a change, leave a note in the report rather than making it
+- Research findings must include source URLs
+- Never skip the midday report — it's how I stay informed
