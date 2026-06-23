@@ -10,7 +10,8 @@ import { useTr } from "@/lib/i18n";
 import { ThemeCustomizer } from "@/components/settings/ThemeCustomizer";
 import { CreditUsageWidget } from "@/components/subscription/CreditUsageWidget";
 import { resetOnboardingTutorial } from "@/components/onboarding/OnboardingTutorial";
-import { Globe, Palette, PlayCircle, User, Users } from "lucide-react";
+import { Globe, Palette, PlayCircle, User, Users, Crown } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import NotificationSettings from "./NotificationSettings";
 import { toast } from "sonner";
 
@@ -21,6 +22,7 @@ const Settings: React.FC = () => {
   const updateGender = useMutation(api.users.updateGender);
   const tr = useTr();
   const [showCustomizer, setShowCustomizer] = useState(false);
+  const canCustomizeTheme = profile?.role === 'admin' || profile?.role === 'system';
 
   const handleGenderChange = async (g: Gender) => {
     try {
