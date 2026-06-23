@@ -14,20 +14,22 @@
 
 GëstuSaDine combines an AI Islamic-knowledge assistant ("the Council") with education, community, and daily spiritual tools. Built with **React + Convex** — auth, database, serverless functions, file storage, and retrieval all run on one platform. The AI is powered by the **[Fanar](https://fanar.qa) API** and follows a strict scholarly methodology (see [METHODOLOGY.md](./METHODOLOGY.md)).
 
+> **Note:** The Council AI is currently offline while qualified scholars verify its responses for Islamic authenticity. The feature will return once verification is complete.
+
 ## Highlights
 
 - **Server-authoritative AI** — methodology enforced server-side, not in prompts the user can override
 - **Zero backend server** — every query, mutation, action, and webhook is a Convex function
 - **Chat memory** — persistent conversations per user, stored in Convex DB
 - **Rate limiting** — server-side quotas (5/hour, 20/day) with jailbreak detection
-- **104+ tests** — Vitest suite covering output filtering, citations, Hijri calendar, prompts, and utilities
+- **185 tests** — Vitest suite covering output filtering, citations, Hijri calendar, prompts, and utilities
 - **Clean CI** — lint, test, and build pass on every PR
 
 ## Features
 
 | Feature | Description |
 |---------|-------------|
-| **The Council** | Islamic Q&A with hierarchy of evidence (Quran → Hadith → scholarly consensus), four-madhhab respect, citation verification, and a strict "I don't know" rule |
+| **The Council** | Islamic Q&A with hierarchy of evidence (Quran → Hadith → scholarly consensus), four-madhhab respect, citation verification, and a strict "I don't know" rule *(currently under scholarly review)* |
 | **Quran** | Full surah reader with multiple translations, bookmarks, reading progress, and streaks |
 | **Prayer Times** | Accurate daily times by location with five-prayer tracker, streaks, and push notifications |
 | **Chat Memory** | Persistent conversations — create, switch, and delete past chats |
@@ -38,7 +40,7 @@ GëstuSaDine combines an AI Islamic-knowledge assistant ("the Council") with edu
 | **Community** | Circles, membership, and posts |
 | **Gamification** | XP, ranks (Talib → Murid → Bahith → Alim → Faqih), daily streaks, quizzes |
 | **Journal** | Personal journal with mood tracking, gratitude, and reflection templates |
-| **Period Tracker** | Cycle tracking with qadaa fasting scheduler |
+| **Period Tracker** | Cycle tracking with qadaa fasting scheduler *(available to female users)* |
 | **Tools** | Hijri calendar, Zakat calculator |
 
 ## Architecture
@@ -113,7 +115,7 @@ npm run dev:full
 npm run dev:full      # Frontend + Convex together
 npm run build         # Production build
 npm run lint          # ESLint (0 errors, 0 warnings)
-npm test              # Vitest (104 tests)
+npm test              # Vitest (185 tests)
 ```
 
 ## Rate Limits
