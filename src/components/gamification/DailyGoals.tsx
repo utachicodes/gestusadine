@@ -20,7 +20,7 @@ export const DailyGoals: React.FC<DailyGoalsProps> = ({ streak }) => {
   const tr = useTr();
 
   const quranProgress = useQuery(api.quranProgress.get);
-  const todayPrayers = useQuery(api.prayers.getTodayLogs);
+  const todayPrayers = useQuery(api.prayers.getToday);
   const todayJournal = useQuery(api.journal.getTodayEntries);
 
   const today = new Date().toISOString().split('T')[0];
