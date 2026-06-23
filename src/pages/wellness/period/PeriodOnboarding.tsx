@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 export const PERIOD_ONBOARDING_KEY = 'period_onboarding_v1';
 
-export const CYCLE_LENGTH_OPTIONS = [
+const CYCLE_LENGTH_OPTIONS = [
   { label: { en: 'Less than 21 days', fr: 'Moins de 21 jours' }, value: 20 },
   { label: { en: '21 – 25 days', fr: '21 – 25 jours' }, value: 23 },
   { label: { en: '26 – 30 days', fr: '26 – 30 jours' }, value: 28, common: true },
@@ -13,7 +13,7 @@ export const CYCLE_LENGTH_OPTIONS = [
   { label: { en: 'Irregular / not sure', fr: 'Irrégulier / je ne sais pas' }, value: 28 },
 ];
 
-export const PERIOD_LENGTH_OPTIONS = [
+const PERIOD_LENGTH_OPTIONS = [
   { label: { en: '1 – 3 days', fr: '1 – 3 jours' }, value: 2 },
   { label: { en: '4 – 5 days', fr: '4 – 5 jours' }, value: 5, common: true },
   { label: { en: '6 – 7 days', fr: '6 – 7 jours' }, value: 6 },
@@ -21,7 +21,7 @@ export const PERIOD_LENGTH_OPTIONS = [
   { label: { en: "I'm not sure", fr: 'Je ne sais pas' }, value: 5 },
 ];
 
-export const CONTRACEPTION_OPTIONS = [
+const CONTRACEPTION_OPTIONS = [
   { key: 'none',     label: { en: 'None', fr: 'Aucune' }, icon: 'none' as const },
   { key: 'pill',     label: { en: 'Birth control pill', fr: 'Pilule contraceptive' }, icon: 'pill' as const },
   { key: 'iud',      label: { en: 'IUD', fr: 'Stérilet (DIU)' }, icon: 'iud' as const },
