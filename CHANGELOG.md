@@ -15,7 +15,7 @@ All notable changes to GëstuSaDine are documented here.
 ### Changed
 - Removed localStorage-based chat history (`STORAGE_KEY = 'GëstuSaDine_chat_history'`). All chat data now lives in the Convex database, tied to the authenticated user.
 - **Emojis replaced with Lucide icons** — All emoji characters removed from UI in favour of Lucide icon components: period tracker symptoms, moods, contraception options, and theme customizer upgrade prompt.
-- **AI chatbot re-enabled with multi-agent routing** — The Council now uses intent-aware routing (based on Fanar-Sadiq architecture) instead of a single RAG pipeline. Queries are classified into 9 intent types and routed to specialized handlers: direct tool responses for prayer times, calendar, zakat, and inheritance; database lookup for du'as; and RAG-grounded LLM for fiqh rulings and general Islamic knowledge.
+- **AI chatbot routing architecture** — Added multi-agent intent routing based on Fanar-Sadiq (Abbas et al., 2026). New files: `convex/intentClassifier.ts` (9 intent types), `convex/tools.ts` (tool dispatcher). The chatbot UI remains disabled pending scholarly review, but the backend routing is ready for activation.
 
 ### Fixed
 - **Lint errors** — Resolved all 3 CI-blocking errors:
