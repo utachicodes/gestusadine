@@ -137,7 +137,7 @@ function handleInheritanceCalculation(language?: string): DirectResponse {
 
 // ── Fiqh ruling prompt builder ─────────────────────────────────────────────────
 
-function buildFiqhPrompt(language?: string, madhab?: string): LLMRequired {
+function buildFiqhPrompt(language?: string, madhab?: string, confidence?: number): LLMRequired {
   const lang = (language || "en").toLowerCase();
   const langName = lang.startsWith("fr") ? "French" : lang.startsWith("ar") ? "Arabic" : "English";
 
@@ -172,12 +172,21 @@ Use [CITE:N] tags for each source. After the response, list all citations:
     systemPrompt += `\nThe user follows the ${madhab} school. Foreground that school's position.`;
   }
 
+  // Low-confidence abstention injection
+  if (typeof confidence === "number" && confidence < 0.6) {
+    systemPrompt += `\n\n# LOW CONFIDENCE — extra caution required
+The system is not fully certain about this query. Apply the Silence Rule aggressively:
+- If you are NOT certain of a verse number, hadith reference, or scholarly attribution, say "I don't know" or "please verify with a qualified scholar."
+- Do NOT guess, paraphrase, or fill in gaps with plausible-sounding content.
+- It is always better to say "I don't know" than to risk giving incorrect Islamic guidance.`;
+  }
+
   return { kind: "llm", systemPrompt, useRag: true };
 }
 
 // ── General Islamic knowledge prompt builder ───────────────────────────────────
 
-function buildGeneralIslamicPrompt(language?: string, madhab?: string): LLMRequired {
+function buildGeneralIslamicPrompt(language?: string, madhab?: string, confidence?: number): LLMRequired {
   const lang = (language || "en").toLowerCase();
   const langName = lang.startsWith("fr") ? "French" : lang.startsWith("ar") ? "Arabic" : "English";
 
@@ -194,7 +203,13 @@ Use [CITE:N] tags for each source. After the response, list all citations:
 [CITE:1] Source name — reference
 [CITE:2] Source name — reference
 
-Reply in ${langName}.`;
+Reply in ${langName}.` + (typeof confidence === "number" && confidence < 0.6
+    ? `\n\n# LOW CONFIDENCE — extra caution required
+The system is not fully certain about this query. Apply the Silence Rule aggressively:
+- If you are NOT certain of a verse number, hadith reference, or scholarly attribution, say "I don't know" or "please verify with a qualified scholar."
+- Do NOT guess, paraphrase, or fill in gaps with plausible-sounding content.
+- It is always better to say "I don't know" than to risk giving incorrect Islamic guidance.`
+    : "");
 
   return { kind: "llm", systemPrompt, useRag: true };
 }
@@ -205,6 +220,7 @@ export function dispatchTool(
   intent: IntentType,
   language?: string,
   madhab?: string,
+  confidence?: number,
 ): ToolResponse {
   switch (intent) {
     case "greeting":
@@ -218,13 +234,13 @@ export function dispatchTool(
     case "inheritance_calculation":
       return handleInheritanceCalculation(language);
     case "fiqh_ruling":
-      return buildFiqhPrompt(language, madhab);
+      return buildFiqhPrompt(language, madhab, confidence);
     case "quran_retrieval":
-      return buildGeneralIslamicPrompt(language, madhab);
+      return buildGeneralIslamicPrompt(language, madhab, confidence);
     case "dua_lookup":
-      return buildGeneralIslamicPrompt(language, madhab);
+      return buildGeneralIslamicPrompt(language, madhab, confidence);
     case "general_islamic":
     default:
-      return buildGeneralIslamicPrompt(language, madhab);
+      return buildGeneralIslamicPrompt(language, madhab, confidence);
   }
 }
