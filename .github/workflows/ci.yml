@@ -19,6 +19,9 @@ jobs:
 
       - run: npm ci
 
+      - name: Type check
+        run: npx tsc --noEmit
+
       - name: Lint
         run: npm run lint
 
