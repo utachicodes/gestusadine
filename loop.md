@@ -10,12 +10,10 @@ Post midday report at 2 PM. Post final daily report at 2 AM.
 ### 1. Health Check
 
 - [ ] `git pull origin main` — sync latest
-- [ ] `npx tsc --noEmit` — type check
 - [ ] `npm run lint` — lint check
-- [ ] `npm test -- --run` — test suite
+- [ ] `npm test` — test suite
 - [ ] `npm run build` — production build
-- [ ] Check Convex dashboard for runtime errors in last 24h
-- [ ] Check Vercel deployment status (latest prod build passing?)
+- [ ] Check deployment status (latest prod build passing?)
 
 If anything fails → fix it, commit, push, merge, deploy.
 
@@ -30,7 +28,6 @@ If anything fails → fix it, commit, push, merge, deploy.
 
 ### 3. Bug Sweep
 
-- [ ] Check Convex function logs for errors (last 24h)
 - [ ] Search codebase for `TODO`, `FIXME`, `HACK` comments
 - [ ] Check for unused imports or dead code
 - [ ] Fix any bugs found → commit, push, merge
@@ -39,138 +36,96 @@ If anything fails → fix it, commit, push, merge, deploy.
 
 ## Phase 2 — Midday (2 PM)
 
-### 4. Market Research — ArXiv & Industry
+### 4. Market Research
 
-Spend 30 minutes scanning for new papers and ideas relevant to GëstuSaDine.
-
-**Search queries to rotate through:**
-- `arxiv.org/search/?query=islamic+qa+retrieval+augmented&searchtype=all`
-- `arxiv.org/search/?query=religious+qa+hallucination+grounding&searchtype=all`
-- `arxiv.org/search/?query=multilingual+rag+arabic+english&searchtype=all`
-- `arxiv.org/search/?query=tool+augmented+llm+agent+architecture&searchtype=all`
-- `arxiv.org/search/?query=llm+safety+jailbreak+detection&searchtype=all`
-- `arxiv.org/search/?query=convex+serverless+database&searchtype=all`
-- `arxiv.org/search/?query=pwa+notification+engagement&searchtype=all`
-- `arxiv.org/search/?query=islamic+fiqh+ruling+automation&searchtype=all`
-- `arxiv.org/search/?query=quran+hadith+verification+ai&searchtype=all`
-- `arxiv.org/search/?query=multi+agent+routing+intent+classification&searchtype=all`
-
-**What to look for:**
-- New RAG techniques that could improve our retrieval
-- Better intent classification methods
-- Citation verification approaches
-- Arabic NLP advances
-- Islamic QA benchmarks we should test against
-- Safety/alignment techniques for religious AI
-- Novel tool-use architectures
+Spend 30 minutes scanning for new ideas relevant to this project.
 
 **Output:**
 - Save findings to `reports/research/YYYY-MM-DD.md`
-- If a paper has a concrete idea we can implement → create an issue with `gh issue create`
 - If an idea is immediately actionable → implement it
 
-### 5. Competitive Analysis
-
-- [ ] Check Fanar API changelog/updates (fanar.qa)
-- [ ] Check Convex changelog (github.com/get-convex/convex-js)
-- [ ] Check shadcn/ui new components
-- [ ] Check Lucide icons new additions
-- [ ] Scan Product Hunt / Hacker News for Islamic tech or prayer apps
-- [ ] Note any features competitors have that we should consider
-
-### 6. Midday Report
+### 5. Midday Report
 
 Write to `reports/midday-YYYY-MM-DD.md`:
 
 ```
-# Midday Report — YYYY-MM-DD (2 PM)
+MIDDAY REPORT - YYYY-MM-DD (2 PM)
 
-## Morning Summary
-- Health: passing/failing
-- Bugs fixed: <list>
-- PRs merged: <list>
+MORNING SUMMARY
+  Health: passing/failing
+  Bugs fixed: <list>
+  PRs merged: <list>
 
-## Research Findings
-- Papers reviewed: <count>
-- Key papers:
-  - <title> — <one-line summary> — <relevance to GëstuSaDine>
-  - <title> — <one-line summary> — <relevance>
-- Actionable ideas:
-  - <idea 1>
-  - <idea 2>
+RESEARCH FINDINGS
+  Papers reviewed: <count>
+  Key findings:
+    - <finding 1>
+    - <finding 2>
 
-## Competitive Intel
-- <notable updates from Fanar, Convex, competitors>
-
-## Afternoon Plan
-- <what to work on next>
+AFTERNOON PLAN
+  - <what to work on next>
 ```
+
+**Deliver report:**
+- Send via Gmail: `node scripts/report-helpers.mjs send-email "$REPORT_EMAIL" "Project Name Midday Report — YYYY-MM-DD" "reports/midday-YYYY-MM-DD.md"`
+- Write to Google Docs: `node scripts/report-helpers.mjs append-doc "$VITE_GOOGLE_REPORTS_DOC_ID" "reports/midday-YYYY-MM-DD.md"`
 
 ---
 
 ## Phase 3 — Afternoon/Evening
 
-### 7. Implement Research Findings
-
-- [ ] Review morning research notes
-- [ ] Implement any quick wins (estimated < 1 hour)
-- [ ] Create issues for larger ideas
-- [ ] Update architecture docs if new patterns adopted
-
-### 8. Code Quality
+### 6. Code Quality
 
 - [ ] Run full test suite — aim for 100% pass rate
 - [ ] Check for console.log statements that shouldn't be in production
-- [ ] Verify all Convex API calls in frontend match exported functions
 - [ ] Check for hardcoded values that should be environment variables
 - [ ] Review recent commits for code smells
 
-### 9. Documentation
+### 7. Documentation
 
 - [ ] Update CHANGELOG.md if any changes were made today
 - [ ] Verify README.md is accurate
-- [ ] Check CONTRIBUTING.md for completeness
 
 ---
 
 ## Phase 4 — End of Day (2 AM)
 
-### 10. Daily Report
+### 8. Daily Report
 
 Write to `reports/YYYY-MM-DD.md`:
 
 ```
-# Daily Report — YYYY-MM-DD
+DAILY REPORT - YYYY-MM-DD
 
-## Status
-- Branch: main
-- Last commit: <hash> <message>
-- Tests: X/Y passing
-- Build: passing/failing
-- Lint: clean/errors
+STATUS
+  Branch: main
+  Last commit: <hash> <message>
+  Tests: X/Y passing
+  Build: passing/failing
+  Lint: clean/errors
 
-## Changes Made
-- <list of commits and what they do>
+CHANGES MADE
+  - <list of commits and what they do>
 
-## Bugs Fixed
-- <list of bugs found and fixed>
+BUGS FIXED
+  - <list of bugs found and fixed>
 
-## Research Done
-- Papers reviewed: <count>
-- Key findings:
-  - <finding 1>
-  - <finding 2>
-- Ideas created as issues: <count>
+RESEARCH DONE
+  Papers reviewed: <count>
+  Key findings:
+    - <finding 1>
+    - <finding 2>
 
-## Competitive Intel
-- <notable updates>
+OPEN ISSUES
+  - <any unresolved issues>
 
-## Open Issues
-- <any unresolved issues>
-
-## Tomorrow's Priorities
-- <what needs attention next>
+TOMORROW'S PRIORITIES
+  - <what needs attention next>
 ```
+
+**Deliver report:**
+- Send via Gmail: `node scripts/report-helpers.mjs send-email "$REPORT_EMAIL" "Project Name Daily Report — YYYY-MM-DD" "reports/YYYY-MM-DD.md"`
+- Write to Google Docs: `node scripts/report-helpers.mjs append-doc "$VITE_GOOGLE_REPORTS_DOC_ID" "reports/YYYY-MM-DD.md"`
 
 ---
 
@@ -182,5 +137,4 @@ Write to `reports/YYYY-MM-DD.md`:
 - Always create new branches for features
 - Merge only when CI passes
 - If unsure about a change, leave a note in the report rather than making it
-- Research findings must include source URLs
 - Never skip the midday report — it's how I stay informed
