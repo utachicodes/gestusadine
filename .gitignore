@@ -50,3 +50,4 @@ coverage/
 # Misc
 *.tgz
 .vercel/
+.mcp.json
