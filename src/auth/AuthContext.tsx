@@ -38,7 +38,7 @@ type AuthState = {
   profile: UserProfile | null;
   isAdmin: boolean;
   loading: boolean;
-  signIn: (email: string, password: string, name?: string) => Promise<void>;
+  signIn: (email: string, password: string, name?: string, gender?: Gender) => Promise<void>;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
 };
@@ -89,13 +89,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const isAdmin = React.useMemo(() => profile?.role === 'admin' || profile?.role === 'system', [profile]);
 
-  const signInFn = React.useCallback(async (email: string, password: string, name?: string) => {
+  const signInFn = React.useCallback(async (email: string, password: string, name?: string, gender?: Gender) => {
     const trimmedEmail = email.toLowerCase().trim();
     try {
       await convexSignIn("credentials", {
         email: trimmedEmail,
         password,
         name: name || trimmedEmail.split("@")[0],
+        gender,
       } as any);
     } catch (err) {
       throw new Error(userMessage(err, "Sign in failed. Please try again."));

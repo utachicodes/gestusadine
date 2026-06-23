@@ -74,7 +74,7 @@ export function ThemeCustomizer({ onThemeChange }: ThemeCustomizerProps) {
             {!hasAccess && (
                 <div className="mb-4 p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg">
                     <p className="text-sm text-amber-800 dark:text-amber-200">
-                        🎨 {tr({ en: 'Upgrade to a paid plan to unlock custom theme colors and make the platform truly yours!', fr: 'Passez à une formule payante pour débloquer les couleurs personnalisées et faire de la plateforme la vôtre !' })}
+                    {tr({ en: 'Upgrade to a paid plan to unlock custom theme colors and make the platform truly yours!', fr: 'Passez à une formule payante pour débloquer les couleurs personnalisées et faire de la plateforme la vôtre !' })}
                     </p>
                 </div>
             )}
