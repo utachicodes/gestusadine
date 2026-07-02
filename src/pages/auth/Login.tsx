@@ -5,6 +5,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, Eye, EyeOff, ArrowRight, Mail, Lock, User, Users } from 'lucide-react';
 import type { Gender } from '@/auth/AuthContext';
+import SocialAuthButtons from '@/components/auth/SocialAuthButtons';
 
 const inputClass =
   'w-full rounded-lg border border-stone-300 bg-white/70 px-4 py-2.5 text-base text-stone-900 placeholder-stone-400 focus:border-emerald-700 focus:ring-2 focus:ring-emerald-700/10 outline-none transition';
@@ -315,6 +316,15 @@ const Login = () => {
             )}
           </motion.form>
         </AnimatePresence>
+
+        {step !== 'gender' && (
+          <div className="mt-6">
+            <SocialAuthButtons
+              onSuccess={() => setPendingRedirect(upgradeTier ? `/dashboard?upgrade=${upgradeTier}` : from)}
+              onError={(msg) => setError(msg)}
+            />
+          </div>
+        )}
 
         <p className="text-center text-xs text-stone-400 mt-8 leading-relaxed">
           {language === 'fr'

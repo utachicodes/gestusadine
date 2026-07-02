@@ -1,6 +1,27 @@
 import * as React from "react";
 import { logger } from "@/lib/logger";
-import { useTr, type Loc } from "@/lib/i18n";
+import { useTr } from "@/lib/i18n";
+import {
+  stripTimeSuffix,
+  to12h,
+  addMinutes,
+  DEFAULT_LAT,
+  DEFAULT_LNG,
+  DEFAULT_LOCATION_EN,
+  DEFAULT_LOCATION_FR,
+  LS_METHOD_KEY,
+  LS_SCHOOL_KEY,
+  CALC_METHODS,
+  SCHOOLS,
+  FARD_PRAYERS,
+  type Loc,
+  type AladhanTimings,
+  type AladhanResponse,
+  type FardPrayer,
+} from "./prayer/prayerHelpers";
+import IconChip from "./prayer/IconChip";
+import SectionLabel from "./prayer/SectionLabel";
+import NaflRow from "./prayer/NaflRow";
 import PrayerTracker from "./PrayerTracker";
 import {
   Clock,
@@ -14,111 +35,8 @@ import {
 } from "lucide-react";
 
 // ---------------------------------------------------------------------------
-// Types
-// ---------------------------------------------------------------------------
-
-interface AladhanTimings {
-  Fajr: string;
-  Sunrise: string;
-  Dhuhr: string;
-  Asr: string;
-  Sunset: string;
-  Maghrib: string;
-  Isha: string;
-  Imsak: string;
-  Midnight: string;
-  Firstthird: string;
-  Lastthird: string;
-}
-
-interface AladhanResponse {
-  data: {
-    timings: AladhanTimings;
-  };
-}
-
-// ---------------------------------------------------------------------------
-// Constants
-// ---------------------------------------------------------------------------
-
-const DEFAULT_LAT = 14.4228;
-const DEFAULT_LNG = -16.9646;
-const DEFAULT_LOCATION_EN = "Mbour, Senegal";
-const DEFAULT_LOCATION_FR = "Mbour, Sénégal";
-
-const LS_METHOD_KEY = "prayerTimes_method";
-const LS_SCHOOL_KEY = "prayerTimes_school";
-
-const CALC_METHODS: { value: number; label: Loc }[] = [
-  { value: 3, label: { en: "Muslim World League", fr: "Ligue mondiale islamique" } },
-  { value: 2, label: { en: "ISNA (North America)", fr: "ISNA (Amérique du Nord)" } },
-  { value: 5, label: { en: "Egyptian General Authority", fr: "Autorité générale d'Égypte" } },
-  { value: 1, label: { en: "Karachi (HanafiUO)", fr: "Karachi (HanafiUO)" } },
-  { value: 4, label: { en: "Umm al-Qura (Mecca)", fr: "Umm al-Qura (La Mecque)" } },
-  { value: 12, label: { en: "UOIF (France)", fr: "UOIF (France)" } },
-];
-
-const SCHOOLS: { value: number; label: Loc }[] = [
-  { value: 0, label: { en: "Standard (Shafi'i / Maliki / Hanbali)", fr: "Standard (Shafi'i / Maliki / Hanbali)" } },
-  { value: 1, label: { en: "Hanafi", fr: "Hanafi" } },
-];
-
-// ---------------------------------------------------------------------------
-// Time helpers
-// ---------------------------------------------------------------------------
-
-/** Strip anything after/including a space in an API time string ("05:19 (GMT)" ΓåÆ "05:19") */
-function stripTimeSuffix(raw: string): string {
-  return raw.slice(0, 5);
-}
-
-/** Parse "HH:MM" into total minutes from midnight */
-function toMinutes(hhmm: string): number {
-  const [h, m] = hhmm.split(":").map(Number);
-  return h * 60 + m;
-}
-
-/** Add `delta` minutes to an "HH:MM" string; wraps at 24h */
-function addMinutes(hhmm: string, delta: number): string {
-  const total = (toMinutes(hhmm) + delta + 1440) % 1440;
-  const h = Math.floor(total / 60);
-  const m = total % 60;
-  return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
-}
-
-/** Format "HH:MM" (24h) ΓåÆ "h:mm AM/PM" */
-function to12h(hhmm: string): string {
-  const [hStr, mStr] = hhmm.split(":");
-  let h = parseInt(hStr, 10);
-  const m = mStr;
-  const suffix = h < 12 ? "AM" : "PM";
-  if (h === 0) h = 12;
-  else if (h > 12) h -= 12;
-  return `${h}:${m} ${suffix}`;
-}
-
-// ---------------------------------------------------------------------------
-// Sub-components
-// ---------------------------------------------------------------------------
-
-const IconChip: React.FC<{ icon: React.ReactNode }> = ({ icon }) => (
-  <span className="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-accent/50 text-primary flex-shrink-0">
-    {icon}
-  </span>
-);
-
-const SectionLabel: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <p className="text-xs uppercase tracking-[0.22em] text-muted-foreground mb-2">
-    {children}
-  </p>
-);
-
-// ---------------------------------------------------------------------------
 // Main component
 // ---------------------------------------------------------------------------
-
-const FARD_PRAYERS = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"] as const;
-type FardPrayer = (typeof FARD_PRAYERS)[number];
 
 const PrayerTimes: React.FC = () => {
   const tr = useTr();
@@ -244,7 +162,8 @@ const PrayerTimes: React.FC = () => {
     const nowSecs = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
 
     for (const p of FARD_PRAYERS) {
-      const t = toMinutes(timings[p]);
+      const [h, m] = timings[p].split(":").map(Number);
+      const t = h * 60 + m;
       if (t > nowMins) {
         const targetSecs = t * 60;
         return {
@@ -255,7 +174,8 @@ const PrayerTimes: React.FC = () => {
       }
     }
     // All passed ΓåÆ Fajr tomorrow
-    const fajrMins = toMinutes(timings.Fajr);
+    const [fh, fm] = timings.Fajr.split(":").map(Number);
+    const fajrMins = fh * 60 + fm;
     const minutesUntilMidnight = 1440 - nowMins;
     const secsUntilFajrTomorrow =
       (minutesUntilMidnight + fajrMins) * 60 - now.getSeconds();
@@ -674,57 +594,4 @@ const PrayerTimes: React.FC = () => {
   );
 };
 
-// ---------------------------------------------------------------------------
-// NaflRow helper component
-// ---------------------------------------------------------------------------
-
-interface NaflRowProps {
-  icon: React.ReactNode;
-  title: string;
-  subtitle: string;
-  time: string;
-  highlight?: "destructive";
-}
-
-const NaflRow: React.FC<NaflRowProps> = ({ icon, title, subtitle, time, highlight }) => {
-  const isDestructive = highlight === "destructive";
-  return (
-    <div
-      className={`flex items-center justify-between py-2 px-3 rounded-xl ${
-        isDestructive ? "bg-destructive/5 border border-destructive/20" : "hover:bg-secondary/50"
-      }`}
-    >
-      <div className="flex items-center gap-3 min-w-0">
-        <span
-          className={`inline-flex items-center justify-center w-8 h-8 rounded-lg flex-shrink-0 ${
-            isDestructive
-              ? "bg-destructive/10 text-destructive"
-              : "bg-accent/50 text-primary"
-          }`}
-        >
-          {icon}
-        </span>
-        <div className="min-w-0">
-          <p
-            className={`text-sm font-semibold truncate ${
-              isDestructive ? "text-destructive" : "text-foreground"
-            }`}
-          >
-            {title}
-          </p>
-          <p className="text-xs text-muted-foreground truncate">{subtitle}</p>
-        </div>
-      </div>
-      <span
-        className={`text-sm font-bold tabular-nums flex-shrink-0 ml-3 ${
-          isDestructive ? "text-destructive" : "text-foreground"
-        }`}
-      >
-        {time}
-      </span>
-    </div>
-  );
-};
-
 export default PrayerTimes;
-

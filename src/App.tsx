@@ -47,6 +47,8 @@ const Library         = lazy(() => import("./pages/knowledge/Library"));
 const Classes         = lazy(() => import("./pages/knowledge/Classes"));
 const Journal         = lazy(() => import("./pages/wellness/Journal"));
 const PeriodTracker   = lazy(() => import("./pages/wellness/PeriodTracker"));
+const Duas            = lazy(() => import("./pages/islamic/Duas"));
+const Azkar           = lazy(() => import("./pages/islamic/Azkar"));
 
 // ── Admin (lazy — regular users never load these) ────────────────────────────
 const AdminDashboard  = lazy(() => import("./pages/admin/Dashboard").then(m => ({ default: m.AdminDashboard })));
@@ -111,6 +113,8 @@ const App = () => {
                         <Route path="/library"      element={<ProtectedRoute><DashboardLayout><Library /></DashboardLayout></ProtectedRoute>} />
                         <Route path="/journal"      element={<ProtectedRoute><DashboardLayout><Journal /></DashboardLayout></ProtectedRoute>} />
                         <Route path="/period-tracker" element={<ProtectedRoute><DashboardLayout><PeriodTracker /></DashboardLayout></ProtectedRoute>} />
+                        <Route path="/duas"        element={<ProtectedRoute><DashboardLayout><Duas /></DashboardLayout></ProtectedRoute>} />
+                        <Route path="/azkar"       element={<ProtectedRoute><DashboardLayout><Azkar /></DashboardLayout></ProtectedRoute>} />
                         <Route path="/classes"      element={<ProtectedRoute><AccessGuard requiredTier="student"><DashboardLayout><Classes /></DashboardLayout></AccessGuard></ProtectedRoute>} />
 
                         {/* ── Admin ── */}

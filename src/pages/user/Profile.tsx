@@ -14,7 +14,15 @@ import { toast } from 'sonner';
 import { useProfileStats, ConsistencyDay } from '@/data/profile';
 import { useTr } from '@/lib/i18n';
 
-const StatCard = ({ icon: Icon, label, value, subtext, delay }: any) => (
+interface StatCardProps {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  value: string | number;
+  subtext?: string;
+  delay: number;
+}
+
+const StatCard = ({ icon: Icon, label, value, subtext, delay }: StatCardProps) => (
     <div
         className="islamic-card p-6 flex items-center gap-4 animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-backwards"
         style={{ animationDelay: `${delay}ms` }}

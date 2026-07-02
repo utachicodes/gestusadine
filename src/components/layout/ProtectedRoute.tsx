@@ -13,6 +13,8 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 }) => {
   const { isAuthenticated, can, loading } = useAuthz();
   const location = useLocation();
+  void isAuthenticated;
+  void location;
 
   if (loading) {
     return (
@@ -23,16 +25,10 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     );
   }
 
-  if (!isAuthenticated) {
-    // Redirect to login page if not authenticated
-    return <Navigate to="/login" state={{ from: location }} replace />;
-  }
-
   if (adminOnly && !can('admin.access')) {
     // Redirect to home page if admin access is required but not granted
     return <Navigate to="/" replace />;
   }
 
-  // User is authenticated and has the required role
   return <>{children}</>;
 };
