@@ -9,6 +9,8 @@ import { useTr } from "@/lib/i18n";
 import { getErrorMessage } from "@/types/errors";
 import { api } from "../../../convex/_generated/api";
 import { useQuery, useMutation } from "convex/react";
+import type { Doc, Id } from "../../../convex/_generated/dataModel";
+import React from "react";
 
 const EMPTY = {
   title: "",
@@ -36,7 +38,7 @@ export default function ManageEvents() {
       const dateMs = new Date(formData.date).getTime();
       if (editingId) {
         await updateEvent({
-          id: editingId as any,
+          id: editingId as Id<"events">,
           title: formData.title,
           description: formData.description,
           date: dateMs,
@@ -65,7 +67,7 @@ export default function ManageEvents() {
     }
   };
 
-  const handleEdit = (event: any) => {
+  const handleEdit = (event: Doc<"events">) => {
     setEditingId(event._id);
     setFormData({
       title: event.title,
@@ -81,7 +83,7 @@ export default function ManageEvents() {
   const handleDelete = async (id: string) => {
     if (!confirm(tr({ en: "Delete this event?", fr: "Supprimer cet événement ?" }))) return;
     try {
-      await removeEvent({ id: id as any });
+      await removeEvent({ id: id as Id<"events"> });
       toast.success(tr({ en: "Event deleted", fr: "Événement supprimé" }));
     } catch (error: any) {
       toast.error(getErrorMessage(error));
@@ -93,9 +95,9 @@ export default function ManageEvents() {
       <section className="container py-10 md:py-16 space-y-10">
         <header className="flex justify-between items-center">
           <div>
-            <p className="text-xs uppercase tracking-[0.22em] text-islamic-dark/60 mb-2">Admin
+            <p className="text-xs uppercase tracking-[0.22em] text-muted-foreground/60 mb-2">Admin
             </p>
-            <h1 className="text-3xl md:text-4xl font-bold text-islamic-dark">
+            <h1 className="text-3xl md:text-4xl font-bold text-foreground">
               {tr({ en: "Manage", fr: "Gérer les" })} <span className="text-gradient">{tr({ en: "Events", fr: "événements" })}</span>
             </h1>
           </div>

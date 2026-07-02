@@ -7,6 +7,16 @@ import { useNavigate } from "react-router-dom";
 import { useTr } from "@/lib/i18n";
 import { api } from "../../../convex/_generated/api";
 import { useQuery, useAction } from "convex/react";
+import type { Doc } from "../../../convex/_generated/dataModel";
+
+interface PostHogStats {
+  activeUsers7d: number;
+  activeUsers30d: number;
+  pageViews7d: number;
+  pageViews30d: number;
+  errors7d: number;
+  errors30d: number;
+}
 
 export const AdminDashboard = () => {
   const { isAdmin } = useAuth();
@@ -14,19 +24,12 @@ export const AdminDashboard = () => {
   const tr = useTr();
   const stats = useQuery(api.stats.dashboard, {});
   const fetchPostHogStats = useAction(api.posthog.fetchPostHogStats);
-  const [phStats, setPhStats] = useState<{
-    activeUsers7d: number;
-    activeUsers30d: number;
-    pageViews7d: number;
-    pageViews30d: number;
-    errors7d: number;
-    errors30d: number;
-  } | null>(null);
+  const [phStats, setPhStats] = useState<PostHogStats | null>(null);
   const [phLoading, setPhLoading] = useState(true);
 
   useEffect(() => {
     fetchPostHogStats().then((result) => {
-      setPhStats(result as any);
+      setPhStats(result as PostHogStats);
       setPhLoading(false);
     }).catch(() => setPhLoading(false));
   }, [fetchPostHogStats]);
@@ -37,11 +40,11 @@ export const AdminDashboard = () => {
   }
 
   const statCards = [
-    { title: { en: "Total Users", fr: "Utilisateurs" }, value: stats?.totalUsers ?? 0, icon: Users, color: "text-islamic-primary-green", bgColor: "bg-islamic-primary-green/10" },
-    { title: { en: "Active Users", fr: "Utilisateurs actifs" }, value: stats?.activeUsers ?? 0, icon: Activity, color: "text-islamic-primary-teal", bgColor: "bg-islamic-primary-teal/10" },
-    { title: { en: "Total Queries", fr: "Questions totales" }, value: stats?.totalQueries ?? 0, icon: MessageSquare, color: "text-islamic-primary-gold", bgColor: "bg-islamic-primary-gold/10" },
-    { title: { en: "Today's Queries", fr: "Questions du jour" }, value: stats?.todayQueries ?? 0, icon: Activity, color: "text-islamic-primary-green", bgColor: "bg-islamic-primary-green/10" },
-    { title: { en: "Documents", fr: "Documents" }, value: stats?.totalDocuments ?? 0, icon: FileText, color: "text-islamic-primary-teal", bgColor: "bg-islamic-primary-teal/10" },
+    { title: { en: "Total Users", fr: "Utilisateurs" }, value: stats?.totalUsers ?? 0, icon: Users, color: "text-primary", bgColor: "bg-primary/10" },
+    { title: { en: "Active Users", fr: "Utilisateurs actifs" }, value: stats?.activeUsers ?? 0, icon: Activity, color: "text-primary", bgColor: "bg-primary/10" },
+    { title: { en: "Total Queries", fr: "Questions totales" }, value: stats?.totalQueries ?? 0, icon: MessageSquare, color: "text-primary", bgColor: "bg-primary/10" },
+    { title: { en: "Today's Queries", fr: "Questions du jour" }, value: stats?.todayQueries ?? 0, icon: Activity, color: "text-primary", bgColor: "bg-primary/10" },
+    { title: { en: "Documents", fr: "Documents" }, value: stats?.totalDocuments ?? 0, icon: FileText, color: "text-primary", bgColor: "bg-primary/10" },
   ];
 
   const actions = [
@@ -143,7 +146,7 @@ export const AdminDashboard = () => {
         {phStats ? (
           <div className="mb-8">
             <div className="flex items-center gap-2 mb-4">
-              <BarChart3 className="h-5 w-5 text-islamic-primary-teal" />
+              <BarChart3 className="h-5 w-5 text-primary" />
               <h2 className="text-lg font-semibold text-islamic-dark">{tr({ en: "PostHog Analytics", fr: "Analytiques PostHog" })}</h2>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -246,7 +249,7 @@ export const AdminDashboard = () => {
               <div className="text-sm text-islamic-dark/60">{tr({ en: "No recent activity", fr: "Aucune activité récente" })}</div>
             ) : (
               <div className="space-y-4">
-                {stats.recentActivity.map((activity: any) => (
+                {stats.recentActivity.map((activity: Doc<"userActivity">) => (
                   <div key={activity._id} className="flex items-center justify-between py-2 border-b border-islamic-gold/20 last:border-0">
                     <div>
                       <p className="text-sm font-medium text-islamic-dark">{activity.activityType}</p>

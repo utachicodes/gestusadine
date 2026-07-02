@@ -427,6 +427,70 @@ const schema = defineSchema({
     timezone: v.optional(v.string()),
     calculationMethod: v.optional(v.string()),
   }).index("userId", ["userId"]),
+
+  // ── Du'a & Azkar ────────────────────────────────────────────────────────
+  duaCategories: defineTable({
+    name: v.object({ en: v.string(), fr: v.string() }),
+    description: v.object({ en: v.string(), fr: v.string() }),
+    icon: v.string(),
+    sortOrder: v.number(),
+  }).index("sortOrder", ["sortOrder"]),
+
+  duas: defineTable({
+    categoryId: v.id("duaCategories"),
+    title: v.object({ en: v.string(), fr: v.string() }),
+    arabicText: v.string(),
+    transliteration: v.optional(v.string()),
+    translation: v.object({ en: v.string(), fr: v.string() }),
+    source: v.optional(v.string()),
+    occasions: v.array(v.string()),
+    isFavorite: v.optional(v.boolean()),
+  })
+    .index("categoryId", ["categoryId"])
+    .searchIndex("search_title", {
+      searchField: "transliteration",
+      filterFields: ["categoryId"],
+    }),
+
+  azkarCategories: defineTable({
+    name: v.object({ en: v.string(), fr: v.string() }),
+    description: v.object({ en: v.string(), fr: v.string() }),
+    type: v.union(
+      v.literal("morning"),
+      v.literal("evening"),
+      v.literal("sleep"),
+      v.literal("generic"),
+    ),
+    sortOrder: v.number(),
+  }).index("sortOrder", ["sortOrder"]),
+
+  azkar: defineTable({
+    categoryId: v.id("azkarCategories"),
+    arabicText: v.string(),
+    transliteration: v.optional(v.string()),
+    translation: v.object({ en: v.string(), fr: v.string() }),
+    repeatCount: v.number(),
+    source: v.optional(v.string()),
+    reward: v.optional(v.string()),
+  }).index("categoryId", ["categoryId"]),
+
+  userDuaFavorites: defineTable({
+    userId: v.id("users"),
+    duaId: v.id("duas"),
+  })
+    .index("userId", ["userId"])
+    .index("duaId", ["duaId"])
+    .index("userId_duaId", ["userId", "duaId"]),
+
+  userAzkarProgress: defineTable({
+    userId: v.id("users"),
+    azkarId: v.id("azkar"),
+    date: v.number(),
+    count: v.number(),
+  })
+    .index("userId", ["userId"])
+    .index("azkarId", ["azkarId"])
+    .index("userId_date", ["userId", "date"]),
 });
 
 export default schema;

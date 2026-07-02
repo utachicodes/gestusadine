@@ -13,6 +13,8 @@ import {
   MessageSquare,
   UserCircle,
   BookOpen,
+  BookOpenText,
+  BookMarked,
   Video,
   Calendar,
   GraduationCap,
@@ -58,6 +60,9 @@ const ROUTE_META: Record<string, RouteMeta> = {
   '/admin/daily': { icon: Sparkles, title: { en: 'Manage Daily', fr: 'Gérer le quotidien' }, section: { en: 'Administration', fr: 'Administration' } },
   '/admin/library': { icon: BookOpen, title: { en: 'Manage Library', fr: 'Gérer la bibliothèque' }, section: { en: 'Administration', fr: 'Administration' } },
   '/admin/rag': { icon: FileText, title: { en: 'Islamic References', fr: 'Références islamiques' }, section: { en: 'Administration', fr: 'Administration' } },
+
+  '/duas': { icon: BookOpenText, title: { en: 'Du\'as', fr: 'Du\'as' }, section: { en: 'Tools', fr: 'Outils' }, keywords: 'supplication dua prayer' },
+  '/azkar': { icon: BookMarked, title: { en: 'Adhkar', fr: 'Adhkar' }, section: { en: 'Tools', fr: 'Outils' }, keywords: 'remembrance dhikr azkar' },
 
   '/language': { icon: Settings, title: { en: 'Language', fr: 'Langue' }, section: { en: 'Account', fr: 'Compte' } },
 };

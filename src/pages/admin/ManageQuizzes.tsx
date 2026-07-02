@@ -8,6 +8,7 @@ import { useTr } from "@/lib/i18n";
 import { getErrorMessage } from "@/types/errors";
 import { api } from "../../../convex/_generated/api";
 import { useQuery, useMutation } from "convex/react";
+import type { Doc, Id } from "../../../convex/_generated/dataModel";
 
 const EMPTY = {
   date: "",
@@ -50,7 +51,7 @@ export default function ManageQuizzes() {
       };
 
       if (editingId) {
-        await updateQuiz({ id: editingId as any, ...payload });
+        await updateQuiz({ id: editingId as Id<"dailyQuizzes">, ...payload });
         toast.success(tr({ en: "Quiz updated", fr: "Quiz mis à jour" }));
         setEditingId(null);
       } else {
@@ -64,7 +65,7 @@ export default function ManageQuizzes() {
     }
   };
 
-  const handleEdit = (quiz: any) => {
+  const handleEdit = (quiz: Doc<"dailyQuizzes">) => {
     setEditingId(quiz._id);
     setFormData({
       date: new Date(quiz.date).toISOString().split("T")[0],
@@ -81,7 +82,7 @@ export default function ManageQuizzes() {
   const handleDelete = async (id: string) => {
     if (!confirm(tr({ en: "Delete this quiz?", fr: "Supprimer ce quiz ?" }))) return;
     try {
-      await removeQuiz({ id: id as any });
+      await removeQuiz({ id: id as Id<"dailyQuizzes"> });
       toast.success(tr({ en: "Quiz deleted", fr: "Quiz supprimé" }));
     } catch (error: any) {
       toast.error(getErrorMessage(error));
@@ -140,7 +141,7 @@ export default function ManageQuizzes() {
               <div className="flex gap-4">
                 <div className="flex-1">
                   <label className="text-sm font-medium">{tr({ en: "Difficulty", fr: "Difficulté" })}</label>
-                  <select className="w-full rounded-md border p-2" value={formData.difficulty} onChange={(e) => setFormData({ ...formData, difficulty: e.target.value as any })}>
+                  <select className="w-full rounded-md border p-2" value={formData.difficulty} onChange={(e) => setFormData({ ...formData, difficulty: e.target.value as "easy" | "medium" | "hard" })}>
                     <option value="easy">Easy</option>
                     <option value="medium">Medium</option>
                     <option value="hard">Hard</option>

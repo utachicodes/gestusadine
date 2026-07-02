@@ -32,7 +32,7 @@ const RANK_COLORS: Record<Rank, string> = {
   Faqih: 'text-amber-500',
 };
 
-export const RankDisplay: React.FC<RankDisplayProps> = ({ currentRank, currentPoints, streak }) => {
+export const RankDisplay: React.FC<RankDisplayProps> = React.memo(({ currentRank, currentPoints, streak }) => {
   const rankInfo = RANKS[currentRank];
   const rankKeys = Object.keys(RANKS) as Rank[];
   const nextRankIndex = rankKeys.indexOf(currentRank) + 1;
@@ -143,4 +143,4 @@ export const RankDisplay: React.FC<RankDisplayProps> = ({ currentRank, currentPo
       )}
     </div>
   );
-};
+});

@@ -16,6 +16,7 @@ import {
   PanelLeftOpen,
   BookMarked,
   Heart,
+  HandHeart,
   type LucideIcon,
 } from 'lucide-react';
 import { useAuth } from '@/auth/AuthContext';
@@ -65,6 +66,8 @@ const ALL_SECTIONS: NavSection[] = [
       { icon: Clock, label: { en: 'Prayer Times', fr: 'Horaires de prière' }, path: '/prayer-times', tourId: 'nav-prayer' },
       { icon: CalendarDays, label: { en: 'Calendar', fr: 'Calendrier' }, path: '/calendar' },
       { icon: Calculator, label: { en: 'Zakat', fr: 'Zakât' }, path: '/zakat' },
+      { icon: BookOpenText, label: { en: 'Du\'as', fr: 'Du\'as' }, path: '/duas' },
+      { icon: HandHeart, label: { en: 'Adhkar', fr: 'Adhkar' }, path: '/azkar' },
     ],
   },
   {
