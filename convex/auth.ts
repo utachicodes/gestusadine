@@ -21,10 +21,6 @@ export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
       const existingUser = await ctx.runQuery(api.users.checkEmailExists, { email });
 
       if (existingUser) {
-        if (authProvider !== "credentials") {
-          const userId = await ctx.runQuery(api.users.getUserIdByEmail, { email });
-          return { userId };
-        }
         // Existing user — verify password
         const userId = await ctx.runMutation(api.users.verifyUserPassword, {
           email,

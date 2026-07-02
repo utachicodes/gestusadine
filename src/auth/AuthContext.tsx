@@ -14,6 +14,7 @@ function userMessage(err: unknown, fallback: string): string {
 }
 
 export type Gender = 'male' | 'female';
+export type AuthProvider = 'google' | 'facebook' | 'instagram';
 
 export type UserProfile = {
   id: string;
@@ -38,8 +39,7 @@ type AuthState = {
   profile: UserProfile | null;
   isAdmin: boolean;
   loading: boolean;
-  signIn: (email: string, password: string, name?: string, gender?: Gender) => Promise<void>;
-  signInWithProvider: (provider: "google" | "facebook" | "instagram") => Promise<void>;
+  signIn: (email: string, password: string, provider: AuthProvider, name?: string) => Promise<void>;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
 };
@@ -90,27 +90,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const isAdmin = React.useMemo(() => profile?.role === 'admin' || profile?.role === 'system', [profile]);
 
-  const signInFn = React.useCallback(async (email: string, password: string, name?: string, gender?: Gender) => {
+  const signInFn = React.useCallback(async (email: string, password: string, provider: AuthProvider, name?: string) => {
     const trimmedEmail = email.toLowerCase().trim();
     try {
       await convexSignIn("credentials", {
         email: trimmedEmail,
         password,
         name: name || trimmedEmail.split("@")[0],
-        gender,
-      } as any);
-    } catch (err) {
-      throw new Error(userMessage(err, "Sign in failed. Please try again."));
-    }
-  }, [convexSignIn]);
-
-  const signInWithProviderFn = React.useCallback(async (provider: "google" | "facebook" | "instagram") => {
-    const email = `demo.${provider}.user@example.com`;
-    try {
-      await convexSignIn("credentials", {
-        email,
-        password: `demo-${provider}-oauth`,
-        name: `Demo ${provider[0].toUpperCase()}${provider.slice(1)} User`,
         authProvider: provider,
       } as any);
     } catch (err) {
@@ -133,11 +119,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       isAdmin,
       loading,
       signIn: signInFn,
-      signInWithProvider: signInWithProviderFn,
       signOut: signOutFn,
       refreshProfile,
     }),
-    [user, profile, isAdmin, loading, signInFn, signInWithProviderFn, signOutFn, refreshProfile]
+    [user, profile, isAdmin, loading, signInFn, signOutFn, refreshProfile]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
