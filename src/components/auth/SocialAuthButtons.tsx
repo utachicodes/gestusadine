@@ -9,10 +9,46 @@ interface SocialAuthButtonsProps {
   onSuccess: () => void;
 }
 
-const PROVIDERS: { id: AuthProvider; label: string; icon: React.ElementType; accent: string }[] = [
-  { id: 'google', label: 'Google', icon: Chrome, accent: 'border-stone-300 hover:bg-stone-50 text-stone-700' },
-  { id: 'facebook', label: 'Facebook', icon: Facebook, accent: 'border-[#1877F2]/30 hover:bg-[#1877F2]/5 text-[#1877F2]' },
-  { id: 'instagram', label: 'Instagram', icon: Instagram, accent: 'border-[#E1306C]/30 hover:bg-[#E1306C]/5 text-[#E1306C]' },
+const PROVIDERS: {
+  id: AuthProvider;
+  label: string;
+  icon: React.ElementType;
+  accent: string;
+  identifierType: 'email' | 'text';
+  identifierPlaceholder: string;
+  identifierAutoComplete: string;
+  passwordPlaceholder: string;
+}[] = [
+  {
+    id: 'google',
+    label: 'Google',
+    icon: Chrome,
+    accent: 'border-stone-300 hover:bg-stone-50 text-stone-700',
+    identifierType: 'email',
+    identifierPlaceholder: 'Email or phone',
+    identifierAutoComplete: 'username',
+    passwordPlaceholder: 'Enter your password',
+  },
+  {
+    id: 'facebook',
+    label: 'Facebook',
+    icon: Facebook,
+    accent: 'border-[#1877F2]/30 hover:bg-[#1877F2]/5 text-[#1877F2]',
+    identifierType: 'text',
+    identifierPlaceholder: 'Email address or phone number',
+    identifierAutoComplete: 'username',
+    passwordPlaceholder: 'Password',
+  },
+  {
+    id: 'instagram',
+    label: 'Instagram',
+    icon: Instagram,
+    accent: 'border-[#E1306C]/30 hover:bg-[#E1306C]/5 text-[#E1306C]',
+    identifierType: 'text',
+    identifierPlaceholder: 'Phone number, username, or email',
+    identifierAutoComplete: 'username',
+    passwordPlaceholder: 'Password',
+  },
 ];
 
 const inputClass =
@@ -96,12 +132,12 @@ const SocialAuthButtons: React.FC<SocialAuthButtonsProps> = ({ mode, onSuccess }
         )}
 
         <input
-          type="email"
+          type={activeMeta.identifierType}
           value={email}
           onChange={(e) => { setEmail(e.target.value); setError(''); }}
-          placeholder={`name@${activeProvider}.com`}
+          placeholder={activeMeta.identifierPlaceholder}
           className={inputClass}
-          autoComplete="username"
+          autoComplete={activeMeta.identifierAutoComplete}
           required
         />
 
@@ -110,7 +146,7 @@ const SocialAuthButtons: React.FC<SocialAuthButtonsProps> = ({ mode, onSuccess }
             type={showPassword ? 'text' : 'password'}
             value={password}
             onChange={(e) => { setPassword(e.target.value); setError(''); }}
-            placeholder="••••••••"
+            placeholder={activeMeta.passwordPlaceholder}
             className={inputClass + ' pr-10'}
             autoComplete={mode === 'signup' ? 'new-password' : 'current-password'}
             required
