@@ -1,6 +1,7 @@
 import { action } from "./_generated/server";
 import { internal } from "./_generated/api";
 import { v } from "convex/values";
+import { requireAdmin } from "./authz";
 
 const ALL_SURAHS = [
   {num:1,name:"Al-Fatihah",arabic:"الفاتحة",ayahs:7,type:"Makki",theme:"The Opening — prayer for guidance, praise of Allah, the straight path. Essence of the Quran."},
@@ -1537,6 +1538,8 @@ The Prophet (ﷺ) said: "If the son of Adam had a valley full of gold, he would 
 
 export const seed = action({
   handler: async (ctx) => {
+    await requireAdmin(ctx as any);
+
     let inserted = 0;
     let errors = 0;
 
@@ -1566,6 +1569,8 @@ export const upsertDoc = action({
     category: v.string(),
   },
   handler: async (ctx, args: any) => {
+    await requireAdmin(ctx as any);
+
     const docId = await ctx.runMutation(internal.ragInternal.insertDocument, {
       title: args.title,
       content: args.content,

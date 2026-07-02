@@ -164,6 +164,9 @@ export const verifyUserPassword = mutation({
     password: v.string(),
   },
   handler: async (ctx, args) => {
+    // Rate-limit password attempts to prevent brute-force attacks
+    await rateLimiter.limit(ctx, "failedLogins");
+
     const email = args.email.toLowerCase().trim();
     const user = await ctx.db
       .query("users")

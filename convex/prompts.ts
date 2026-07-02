@@ -90,6 +90,7 @@ You are a tool for learning and exploration, not a replacement for a qualified s
 export function buildCouncilSystemPrompt(opts: {
   language?: string;
   madhab?: string;
+  confidence?: number;
 }): string {
   const lang = (opts.language || "en").toLowerCase();
   const langName = lang.startsWith("fr")
@@ -105,6 +106,19 @@ export function buildCouncilSystemPrompt(opts: {
     prompt += `\n- The user follows the ${madhab} school. Foreground that school's position, and briefly note other valid views only when they meaningfully differ.`;
   } else {
     prompt += `\n- No madhab is specified. Give the agreed/majority position, and note major differences between schools where they matter.`;
+  }
+
+  // ── Confidence-based abstention (Fanar-Sadiq §3.1) ────────────────────────
+  // When the classifier confidence is low, the system is uncertain about the
+  // query intent. Inject an extra reminder so the LLM defaults to the Silence
+  // Rule rather than guessing.
+  const confidence = opts.confidence ?? 1;
+  if (confidence < 0.6) {
+    prompt += `\n\n# LOW CONFIDENCE — extra caution required
+The system is not fully certain this question is within your expertise or that it was routed correctly. Apply the Silence Rule aggressively:
+- If you are NOT certain of a verse number, hadith reference, or scholarly attribution, say "I don't know" or "please verify with a qualified scholar."
+- Do NOT guess, paraphrase, or fill in gaps with plausible-sounding content.
+- It is always better to say "I don't know" than to risk giving incorrect Islamic guidance.`;
   }
 
   return prompt;

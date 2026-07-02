@@ -63,7 +63,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
-    "convex": "^1.40.0",
+    "convex": "^1.41.0",
     "convex-helpers": "^0.1.118",
     "cors": "^2.8.5",
     "date-fns": "^3.6.0",
@@ -118,6 +118,7 @@
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.9",
     "globals": "^15.9.0",
+    "googleapis": "^173.0.0",
     "husky": "^9.1.7",
     "jsdom": "^28.0.0",
     "ts-node": "^10.9.2",
@@ -125,7 +126,8 @@
     "vitest": "^4.0.18"
   },
   "overrides": {
-    "nodemailer": "6.10.1"
+    "nodemailer": "6.10.1",
+    "ws": "8.21.0"
   },
   "optionalDependencies": {
     "@rollup/rollup-linux-x64-gnu": "*"

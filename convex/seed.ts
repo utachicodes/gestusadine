@@ -1,12 +1,15 @@
 import { mutation } from "./_generated/server";
 import { v, ConvexError } from "convex/values";
 import { api } from "./_generated/api";
+import { requireAdmin } from "./authz";
 
 // One-time fix: reset a specific user's XP to a correct value.
 // Run via: npx convex run seed:resetXp --email "you@example.com" --xp 0
 export const resetXp = mutation({
   args: { email: v.string(), xp: v.number() },
   handler: async (ctx, args) => {
+    await requireAdmin(ctx);
+
     const user = await ctx.db
       .query("users")
       .withIndex("email", (q) => q.eq("email", args.email.toLowerCase()))
