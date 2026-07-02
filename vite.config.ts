@@ -8,11 +8,8 @@ export default defineConfig(({ mode }) => ({
     rollupOptions: {
       output: {
         manualChunks: {
-          // Convex runtime — rarely changes, long cache life
-          "vendor-convex": ["convex"],
-          // React ecosystem
+          "vendor-convex": ["convex", "convex-helpers"],
           "vendor-react": ["react", "react-dom", "react-router-dom"],
-          // Radix UI / Shadcn component primitives
           "vendor-radix": [
             "@radix-ui/react-dialog",
             "@radix-ui/react-dropdown-menu",
@@ -25,9 +22,29 @@ export default defineConfig(({ mode }) => ({
             "@radix-ui/react-slot",
             "@radix-ui/react-label",
             "@radix-ui/react-switch",
+            "@radix-ui/react-accordion",
+            "@radix-ui/react-alert-dialog",
+            "@radix-ui/react-aspect-ratio",
+            "@radix-ui/react-avatar",
+            "@radix-ui/react-checkbox",
+            "@radix-ui/react-collapsible",
+            "@radix-ui/react-context-menu",
+            "@radix-ui/react-hover-card",
+            "@radix-ui/react-menubar",
+            "@radix-ui/react-navigation-menu",
+            "@radix-ui/react-progress",
+            "@radix-ui/react-radio-group",
+            "@radix-ui/react-slider",
+            "@radix-ui/react-toast",
+            "@radix-ui/react-toggle",
+            "@radix-ui/react-toggle-group",
           ],
-          // Heavy utilities
-          "vendor-utils": ["date-fns", "lucide-react", "clsx", "tailwind-merge"],
+          "vendor-utils": ["date-fns", "lucide-react", "clsx", "tailwind-merge", "class-variance-authority", "cmdk"],
+          "vendor-charts": ["recharts"],
+          "vendor-animation": ["framer-motion", "gsap", "@gsap/react", "lenis"],
+          "vendor-markdown": ["react-markdown", "remark-gfm"],
+          "vendor-forms": ["react-hook-form", "@hookform/resolvers", "zod"],
+          "vendor-analytics": ["posthog-js"],
         },
       },
     },

@@ -19,10 +19,11 @@ GëstuSaDine combines an AI Islamic-knowledge assistant ("the Council") with edu
 ## Highlights
 
 - **Server-authoritative AI** — methodology enforced server-side, not in prompts the user can override
+- **Hybrid intent classifier** — Two-tier classifier (Abbas et al., 2026): LLM primary + embedding fallback, with keyword fast-path for greetings. 100% accuracy on 70-query benchmark across 9 intent types.
 - **Zero backend server** — every query, mutation, action, and webhook is a Convex function
 - **Chat memory** — persistent conversations per user, stored in Convex DB
 - **Rate limiting** — server-side quotas (5/hour, 20/day) with jailbreak detection
-- **185 tests** — Vitest suite covering output filtering, citations, Hijri calendar, prompts, and utilities
+- **202 tests** — Vitest suite covering intent classification, output filtering, citations, Hijri calendar, prompts, and utilities
 - **Clean CI** — lint, test, and build pass on every PR
 
 ## Features
@@ -42,6 +43,55 @@ GëstuSaDine combines an AI Islamic-knowledge assistant ("the Council") with edu
 | **Journal** | Personal journal with mood tracking, gratitude, and reflection templates |
 | **Period Tracker** | Cycle tracking with qadaa fasting scheduler *(available to female users)* |
 | **Tools** | Hijri calendar, Zakat calculator |
+
+## Intent Classifier Architecture
+
+The Council uses a **hybrid query classifier** based on Fanar-Sadiq (Abbas et al., 2026) to route Islamic queries to specialized handlers.
+
+### How it works
+
+```
+User query
+  │
+  ├─ Tier 0: Keyword fast-path (0ms)
+  │   └─ Greetings → instant reply, no quota
+  │
+  ├─ Tier 1: LLM primary classifier (Fanar API, temp=0)
+  │   ├─ confidence ≥ 0.5 → use result
+  │   └─ confidence < 0.5 → fall through to Tier 2
+  │
+  └─ Tier 2: Embedding fallback (bag-of-words cosine similarity)
+      └─ 56 prototypes across 9 intents × 2 languages
+```
+
+### Intent types
+
+| Intent | Handler | Retrieval | Quota |
+|--------|---------|-----------|-------|
+| `greeting` | Direct response | No | No |
+| `prayer_times` | Direct response | No | No |
+| `islamic_calendar` | Direct response | No | No |
+| `zakat_calculation` | Direct response (link to calculator) | No | No |
+| `inheritance_calculation` | Direct response (guidance) | No | No |
+| `fiqh_ruling` | RAG-grounded LLM with citation tags | Yes | Yes |
+| `quran_retrieval` | RAG-grounded LLM with citation tags | Yes | Yes |
+| `dua_lookup` | Database search → LLM fallback | Yes | Yes |
+| `general_islamic` | RAG-grounded LLM with citation tags | Yes | Yes |
+
+### Safety features
+
+- **Confidence-based abstention** — low classifier confidence triggers aggressive Silence Rule ("I don't know")
+- **Post-generation grounding check** — fiqh/quran/general responses without `[CITE:N]` tags are intercepted and replaced with "consult a scholar"
+- **Output filter** — identity leak, harmful content, anti-aqeedah, radicalization, off-topic, and fabrication detection
+
+### Benchmark results
+
+| Test | Accuracy |
+|------|----------|
+| Overall (70 queries, 9 intents, EN+AR) | **100%** |
+| Greetings (keyword fast-path) | **100%** |
+| Calculation intents (zakat + inheritance) | **100%** |
+| Retrieval intents (fiqh + quran + general) | **100%** |
 
 ## Architecture
 
@@ -70,7 +120,7 @@ graph TD
 | Frontend | React 18, TypeScript, Vite, Tailwind CSS, shadcn/ui, Lucide icons |
 | Backend | **Convex** — auth, database, serverless functions, file storage, HTTP routes |
 | Auth | Convex Auth (`@convex-dev/auth`), Password provider |
-| AI | Fanar API (OpenAI-compatible) + keyword/synonym RAG over uploaded sources |
+| AI | Fanar API (OpenAI-compatible) + hybrid intent classifier (LLM + embedding fallback) + RAG over uploaded sources |
 | i18n | French / English / Arabic |
 | Hosting | Vercel (frontend) + Convex (backend) |
 
@@ -115,7 +165,7 @@ npm run dev:full
 npm run dev:full      # Frontend + Convex together
 npm run build         # Production build
 npm run lint          # ESLint (0 errors, 0 warnings)
-npm test              # Vitest (185 tests)
+npm test              # Vitest (202 tests)
 ```
 
 ## Rate Limits

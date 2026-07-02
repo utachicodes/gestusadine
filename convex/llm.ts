@@ -171,13 +171,20 @@ export const generate = action({
         : "I'm here for Islamic questions only.";
     }
 
-    // ── Intent classification ─────────────────────────────────────────────────
-    const classification = classifyIntent(userText);
-    const toolResponse = dispatchTool(classification.intent, args.language, args.madhab);
+    // ── Intent classification (hybrid: LLM primary + embedding fallback) ──────
+    const apiKey = process.env.FANAR_API_KEY;
+    const classification = await classifyIntent(userText, apiKey);
+    const toolResponse = dispatchTool(
+      classification.intent,
+      args.language,
+      args.madhab,
+      classification.confidence,
+    );
 
     console.log("[council] intent classified", {
       intent: classification.intent,
       confidence: classification.confidence,
+      tier: classification.tier,
       requiresRetrieval: classification.requiresRetrieval,
     });
 
@@ -196,7 +203,6 @@ export const generate = action({
     // ── Quota enforcement ─────────────────────────────────────────────────────
     await ctx.runQuery(internal.subscription.checkCouncilQuota);
 
-    const apiKey = process.env.FANAR_API_KEY;
     if (!apiKey) {
       console.error("[fanar] FANAR_API_KEY not configured");
       throw new ConvexError("The assistant is temporarily unavailable. Please try again later.");
@@ -242,6 +248,31 @@ export const generate = action({
     if (!filterResult.safe) {
       console.warn("[council] output filtered", { category: filterResult.category });
       return filterResult.fallback ?? "I wasn't able to generate a proper response. Please try again.";
+    }
+
+    // ── Post-generation grounding check (Fanar-Sadiq §3.4–3.5) ──────────────
+    // For fiqh rulings and general Islamic knowledge, the response must contain
+    // at least one citation tag. A response without citations for these intents
+    // likely means the model fabricated a ruling — return a safe fallback.
+    const GROUNDED_INTENTS = new Set(["fiqh_ruling", "general_islamic", "quran_retrieval"]);
+    if (
+      GROUNDED_INTENTS.has(classification.intent) &&
+      classification.requiresRetrieval &&
+      !/\[CITE:\d+\]/.test(content)
+    ) {
+      console.warn("[council] ungrounded response for grounded intent", {
+        intent: classification.intent,
+        confidence: classification.confidence,
+      });
+
+      const lang = (args.language || "en").toLowerCase();
+      if (lang.startsWith("fr")) {
+        return "Je ne suis pas certain de la réponse à cette question. Veuillez consulter un savant qualifié ou un imam de confiance pour obtenir une réponse fiable avec les références appropriées.";
+      }
+      if (lang.startsWith("ar")) {
+        return "لست متأكداً من الإجابة على هذا السؤال. يرجى الاستشارة عند عالم مؤهل أو إمام موثوق للحصول على إجابة موثوقة مع المراجع المناسبة.";
+      }
+      return "I'm not confident enough in my answer to this question. Please consult a qualified scholar or trusted imam for a reliable response with proper references.";
     }
 
     // ── Append citations if present ───────────────────────────────────────────

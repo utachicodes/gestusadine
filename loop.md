@@ -19,7 +19,7 @@ Post midday report at 2 PM. Post final daily report at 2 AM.
 
 If anything fails → fix it, commit, push, merge, deploy.
 
-### 2. GitHub Triage
+### 2. GitHub Triage + PR Notifications
 
 - [ ] `gh issue list --state open` — check new issues
 - [ ] `gh pr list --state open` — check open PRs
@@ -27,6 +27,18 @@ If anything fails → fix it, commit, push, merge, deploy.
 - [ ] Respond to any new issues (acknowledge, label, or close)
 - [ ] Review and merge any ready PRs (lint+build+tests pass)
 - [ ] If CI failed on main → investigate and fix
+
+**PR email notification** — after triage, send a summary of open PRs:
+
+```bash
+PR_LIST=$(gh pr list --state open --json number,title,author,createdAt,labels --jq '.[] | "#\(.number) \(.title) — by \(.author.login) (\(.createdAt[:10]))"')
+
+if [ -n "$PR_LIST" ]; then
+  echo -e "OPEN PULL REQUESTS\n\n$PR_LIST" > /tmp/pr-digest.md
+  node scripts/report-helpers.mjs send-email "$REPORT_EMAIL" "GëstuSaDine PR Digest — $(date +%Y-%m-%d)" /tmp/pr-digest.md
+  rm /tmp/pr-digest.md
+fi
+```
 
 ### 3. Bug Sweep
 
