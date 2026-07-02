@@ -95,18 +95,6 @@ export const checkEmailExists = query({
   },
 });
 
-export const getUserIdByEmail = query({
-  args: { email: v.string() },
-  handler: async (ctx, args) => {
-    const email = args.email.toLowerCase().trim();
-    const user = await ctx.db
-      .query("users")
-      .withIndex("email", (q) => q.eq("email", email))
-      .first();
-    return user?._id ?? null;
-  },
-});
-
 export const prepareSignup = mutation({
   args: { email: v.string() },
   handler: async (ctx, args) => {
