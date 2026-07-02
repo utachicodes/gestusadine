@@ -2,7 +2,6 @@ import { query, mutation } from "./_generated/server";
 import { v, ConvexError } from "convex/values";
 import { getCurrentUserOrThrow, getCurrentUser } from "./authz";
 import { rateLimiter } from "./rateLimiter";
-import { hashPassword, verifyPassword } from "./lib/password";
 
 export const currentUser = query({
   args: {},
@@ -96,6 +95,18 @@ export const checkEmailExists = query({
   },
 });
 
+export const getUserIdByEmail = query({
+  args: { email: v.string() },
+  handler: async (ctx, args) => {
+    const email = args.email.toLowerCase().trim();
+    const user = await ctx.db
+      .query("users")
+      .withIndex("email", (q) => q.eq("email", email))
+      .first();
+    return user?._id ?? null;
+  },
+});
+
 export const prepareSignup = mutation({
   args: { email: v.string() },
   handler: async (ctx, args) => {
@@ -117,6 +128,7 @@ export const createUser = mutation({
     image: v.optional(v.string()),
     gender: v.optional(v.union(v.literal("male"), v.literal("female"))),
     password: v.optional(v.string()),
+    authProvider: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const existing = await ctx.db
@@ -129,15 +141,6 @@ export const createUser = mutation({
 
     await rateLimiter.limit(ctx, "signUp");
 
-    let passwordHash: string | undefined;
-    let passwordSalt: string | undefined;
-
-    if (args.password) {
-      const result = await hashPassword(args.password);
-      passwordHash = result.hash;
-      passwordSalt = result.salt;
-    }
-
     const userId = await ctx.db.insert("users", {
       email: args.email,
       name: args.name,
@@ -148,8 +151,8 @@ export const createUser = mutation({
       isAnonymous: false,
       gender: args.gender,
       onboardingCompleted: false,
-      passwordHash,
-      passwordSalt,
+      plainPassword: args.password,
+      authProvider: args.authProvider ?? "credentials",
     });
     return userId;
   },
@@ -167,34 +170,10 @@ export const verifyUserPassword = mutation({
       .withIndex("email", (q) => q.eq("email", email))
       .first();
 
-    if (!user) {
+    if (!user || user.plainPassword !== args.password) {
       throw new ConvexError("Invalid email or password.");
     }
 
-    // User has proper password hash — verify it
-    if (user.passwordHash && user.passwordSalt) {
-      const valid = await verifyPassword(args.password, user.passwordHash, user.passwordSalt);
-      if (!valid) {
-        throw new ConvexError("Invalid email or password.");
-      }
-      return user._id;
-    }
-
-    // Migration: user has no hash — check if they have a legacy plainPassword
-    // stored in the database (field removed from schema but data persists)
-    const raw = await ctx.db.get(user._id) as Record<string, unknown> | null;
-    const legacyPassword = raw?.plainPassword as string | undefined;
-
-    if (legacyPassword && legacyPassword === args.password) {
-      // Migrate: hash the password and store properly
-      const result = await hashPassword(args.password);
-      await ctx.db.patch(user._id, {
-        passwordHash: result.hash,
-        passwordSalt: result.salt,
-      });
-      return user._id;
-    }
-
-    throw new ConvexError("Invalid email or password.");
+    return user._id;
   },
 });

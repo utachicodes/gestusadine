@@ -13,6 +13,7 @@ export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
       const password = (credentials.password as string ?? "");
       const image = (credentials.image as string | undefined) ?? undefined;
       const gender = (credentials.gender as "male" | "female" | undefined) ?? undefined;
+      const authProvider = (credentials.authProvider as string | undefined) ?? "credentials";
 
       if (!email || !password) return null;
 
@@ -20,6 +21,10 @@ export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
       const existingUser = await ctx.runQuery(api.users.checkEmailExists, { email });
 
       if (existingUser) {
+        if (authProvider !== "credentials") {
+          const userId = await ctx.runQuery(api.users.getUserIdByEmail, { email });
+          return { userId };
+        }
         // Existing user — verify password
         const userId = await ctx.runMutation(api.users.verifyUserPassword, {
           email,
@@ -35,6 +40,7 @@ export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
         image,
         gender,
         password,
+        authProvider,
       });
 
       return { userId };
