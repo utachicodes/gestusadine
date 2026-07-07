@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Chrome, Facebook, Instagram, Github, Twitter, Eye, EyeOff, ArrowRight, ChevronLeft } from 'lucide-react';
+import { Chrome, Facebook, Instagram, Github, Twitter, Eye, EyeOff, ArrowRight, ChevronLeft, User, Users } from 'lucide-react';
 import { useAuth } from '@/auth/AuthContext';
-import type { AuthProvider } from '@/auth/AuthContext';
+import type { AuthProvider, Gender } from '@/auth/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 interface SocialAuthButtonsProps {
@@ -64,6 +64,8 @@ const SocialAuthButtons: React.FC<SocialAuthButtonsProps> = ({ mode, onSuccess }
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [step, setStep] = useState<'form' | 'gender'>('form');
+  const [gender, setGender] = useState<Gender | null>(null);
 
   const activeMeta = PROVIDERS.find((p) => p.id === activeProvider);
 
@@ -73,11 +75,31 @@ const SocialAuthButtons: React.FC<SocialAuthButtonsProps> = ({ mode, onSuccess }
     setEmail('');
     setPassword('');
     setName('');
+    setStep('form');
+    setGender(null);
   };
 
   const handleBack = () => {
+    if (step === 'gender') {
+      setStep('form');
+      setError('');
+      return;
+    }
     setActiveProvider(null);
     setError('');
+  };
+
+  const doSignIn = async (selectedGender?: Gender) => {
+    if (!activeProvider) return;
+    setIsLoading(true);
+    try {
+      await signIn(email, password, activeProvider, name || undefined, selectedGender);
+      onSuccess();
+    } catch (err: any) {
+      setError(err?.message ?? (language === 'fr' ? 'Une erreur est survenue.' : 'Something went wrong.'));
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -88,16 +110,94 @@ const SocialAuthButtons: React.FC<SocialAuthButtonsProps> = ({ mode, onSuccess }
       setError(language === 'fr' ? 'Veuillez remplir tous les champs.' : 'Please fill in all fields.');
       return;
     }
-    setIsLoading(true);
-    try {
-      await signIn(email, password, activeProvider, name || undefined);
-      onSuccess();
-    } catch (err: any) {
-      setError(err?.message ?? (language === 'fr' ? 'Une erreur est survenue.' : 'Something went wrong.'));
-    } finally {
-      setIsLoading(false);
+    if (mode === 'signup') {
+      setStep('gender');
+      return;
     }
+    await doSignIn();
   };
+
+  const handleGenderSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!gender) return;
+    setError('');
+    await doSignIn(gender);
+  };
+
+  if (activeProvider && activeMeta && step === 'gender') {
+    return (
+      <form onSubmit={handleGenderSubmit} className="space-y-4">
+        <button
+          type="button"
+          onClick={handleBack}
+          className="flex items-center gap-1.5 text-sm font-medium text-stone-400 hover:text-stone-700 transition-colors"
+        >
+          <ChevronLeft className="w-4 h-4" />
+          {language === 'fr' ? 'Retour' : 'Back'}
+        </button>
+
+        <div className="text-center mb-2">
+          <h2 className="text-xl font-bold text-stone-900">
+            {language === 'fr' ? 'Vous êtes…' : 'You identify as…'}
+          </h2>
+          <p className="mt-1 text-sm text-stone-500">
+            {language === 'fr'
+              ? 'Cela nous aide à personnaliser votre expérience.'
+              : 'This helps us personalise your experience.'}
+          </p>
+        </div>
+
+        <div className="flex gap-3">
+          {(['male', 'female'] as Gender[]).map((g) => (
+            <button
+              key={g}
+              type="button"
+              onClick={() => setGender(g)}
+              className={`flex-1 flex flex-col items-center gap-2 px-4 py-5 rounded-xl border-2 transition-all ${
+                gender === g
+                  ? 'border-emerald-700 bg-emerald-50 text-emerald-800'
+                  : 'border-stone-200 text-stone-500 hover:border-stone-300'
+              }`}
+            >
+              {g === 'male' ? <User className="w-6 h-6" /> : <Users className="w-6 h-6" />}
+              <span className="text-sm font-semibold">
+                {g === 'male'
+                  ? (language === 'fr' ? 'Homme' : 'Male')
+                  : (language === 'fr' ? 'Femme' : 'Female')}
+              </span>
+            </button>
+          ))}
+        </div>
+
+        <p className="text-xs text-stone-400 text-center">
+          {language === 'fr'
+            ? 'Les utilisatrices ont accès au Suivi du cycle.'
+            : 'Female users get access to the Cycle Tracker.'}
+        </p>
+
+        {error && (
+          <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+            {error}
+          </p>
+        )}
+
+        <button
+          type="submit"
+          disabled={isLoading || !gender}
+          className="w-full flex items-center justify-center gap-2 rounded-lg bg-emerald-900 py-3 text-sm font-semibold text-[#FAF7F0] hover:bg-emerald-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        >
+          {isLoading ? (
+            <span className="h-4 w-4 border-2 border-white/40 border-t-transparent rounded-full animate-spin" />
+          ) : (
+            <>
+              {language === 'fr' ? "S'inscrire" : 'Sign Up'}
+              <ArrowRight className="w-4 h-4" />
+            </>
+          )}
+        </button>
+      </form>
+    );
+  }
 
   if (activeProvider && activeMeta) {
     const Icon = activeMeta.icon;
