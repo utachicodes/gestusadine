@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronRight, ChevronLeft, Sparkles, BookOpen, MessageSquare, BookOpenText, Clock, BookMarked, Heart } from 'lucide-react';
 import { useAuth } from '@/auth/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface Step {
   title: string;
@@ -111,15 +112,9 @@ export function OnboardingTutorial() {
   const [active, setActive] = useState(false);
   const [stepIndex, setStepIndex] = useState(0);
   const [spotlight, setSpotlight] = useState<DOMRect | null>(null);
-  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
+  const isMobile = useIsMobile();
   const highlightRef = useRef<Element | null>(null);
   const resizeObserverRef = useRef<ResizeObserver | null>(null);
-
-  useEffect(() => {
-    const handler = () => setIsMobile(window.innerWidth < 768);
-    window.addEventListener('resize', handler);
-    return () => window.removeEventListener('resize', handler);
-  }, []);
 
   // Determine steps based on user gender
   const steps = React.useMemo(() => {

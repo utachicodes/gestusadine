@@ -2,6 +2,7 @@ import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { DashboardTopbar } from './DashboardTopbar';
+import { MobileBottomNav } from './MobileBottomNav';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -71,8 +72,11 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
       {/* Main column */}
       <div className="relative z-10 flex-1 flex flex-col min-w-0 overflow-hidden">
         <DashboardTopbar onOpenMobileSidebar={() => setMobileOpen(true)} />
-        <main className="flex-1 overflow-y-auto overscroll-contain custom-scrollbar pb-safe">{children}</main>
+        <main className="flex-1 overflow-y-auto overscroll-contain custom-scrollbar pb-safe md:pb-safe pb-20">{children}</main>
       </div>
+
+      {/* Mobile bottom nav */}
+      <MobileBottomNav />
     </div>
   );
 };

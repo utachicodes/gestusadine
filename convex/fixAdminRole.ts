@@ -1,11 +1,13 @@
 import { mutation } from "./_generated/server";
-import { v } from "convex/values";
+import { v, ConvexError } from "convex/values";
+import { requireAdmin } from "./authz";
 
 export const fix = mutation({
   args: {
     email: v.string(),
   },
   handler: async (ctx, args) => {
+    await requireAdmin(ctx);
     const user = await ctx.db
       .query("users")
       .withIndex("email", (q) => q.eq("email", args.email))

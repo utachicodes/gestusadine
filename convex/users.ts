@@ -2,11 +2,26 @@ import { query, mutation } from "./_generated/server";
 import { v, ConvexError } from "convex/values";
 import { getCurrentUserOrThrow, getCurrentUser } from "./authz";
 import { rateLimiter } from "./rateLimiter";
+import { hashPassword, verifyPassword } from "./lib/password";
 
 export const currentUser = query({
   args: {},
   handler: async (ctx) => {
-    return getCurrentUser(ctx);
+    const user = await getCurrentUser(ctx);
+    if (!user) return null;
+    return {
+      _id: user._id,
+      _creationTime: user._creationTime,
+      name: user.name,
+      fullName: user.fullName,
+      email: user.email,
+      image: user.image,
+      avatarUrl: user.avatarUrl,
+      role: user.role,
+      gender: user.gender,
+      onboardingCompleted: user.onboardingCompleted,
+      subscriptionTier: user.subscriptionTier,
+    };
   },
 });
 
@@ -129,6 +144,15 @@ export const createUser = mutation({
 
     await rateLimiter.limit(ctx, "signUp");
 
+    let passwordHash: string | undefined;
+    let passwordSalt: string | undefined;
+
+    if (args.password) {
+      const { hash, salt } = await hashPassword(args.password);
+      passwordHash = hash;
+      passwordSalt = salt;
+    }
+
     const userId = await ctx.db.insert("users", {
       email: args.email,
       name: args.name,
@@ -139,7 +163,8 @@ export const createUser = mutation({
       isAnonymous: false,
       gender: args.gender,
       onboardingCompleted: false,
-      plainPassword: args.password,
+      passwordHash,
+      passwordSalt,
       authProvider: args.authProvider ?? "credentials",
     });
     return userId;
@@ -161,7 +186,28 @@ export const verifyUserPassword = mutation({
       .withIndex("email", (q) => q.eq("email", email))
       .first();
 
-    if (!user || user.plainPassword !== args.password) {
+    if (!user) {
+      throw new ConvexError("Invalid email or password.");
+    }
+
+    // Support both hashed and legacy plaintext passwords
+    if (user.passwordHash && user.passwordSalt) {
+      const valid = await verifyPassword(args.password, user.passwordHash, user.passwordSalt);
+      if (!valid) {
+        throw new ConvexError("Invalid email or password.");
+      }
+    } else if ((user as any).plainPassword) {
+      // Legacy plaintext comparison — migrate on next login
+      if ((user as any).plainPassword !== args.password) {
+        throw new ConvexError("Invalid email or password.");
+      }
+      // Migrate: hash the plaintext password and store properly
+      const { hash, salt } = await hashPassword(args.password);
+      await ctx.db.patch(user._id, {
+        passwordHash: hash,
+        passwordSalt: salt,
+      });
+    } else {
       throw new ConvexError("Invalid email or password.");
     }
 
