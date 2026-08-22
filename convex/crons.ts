@@ -32,4 +32,11 @@ crons.daily(
   internal.notifications.scheduleReminders,
 );
 
+// Schedule dua reminders throughout the day (per-user preferred times)
+crons.daily(
+  "schedule dua reminders",
+  { hourUTC: 0, minuteUTC: 20 },
+  internal.notifications.scheduleDuaReminders,
+);
+
 export default crons;

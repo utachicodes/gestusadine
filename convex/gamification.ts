@@ -136,3 +136,33 @@ export const recordDailyActivity = mutation({
     });
   },
 });
+
+// Award XP for dua interactions (favoriting, reading)
+export const awardDuaXp = mutation({
+  args: {
+    action: v.union(v.literal("favorite"), v.literal("read"), v.literal("daily_dua_notification_open")),
+  },
+  handler: async (ctx, args) => {
+    const user = await getCurrentUserOrThrow(ctx);
+
+    const XP_MAP = {
+      favorite: 5,
+      read: 2,
+      daily_dua_notification_open: 10,
+    };
+
+    const amount = XP_MAP[args.action];
+
+    // Rate limit: max 10 dua XP awards per hour
+    await rateLimiter.limit(ctx, "xpAward", { key: user._id, throws: true });
+
+    const currentXp = user.xp ?? 0;
+    await ctx.db.patch(user._id, { xp: currentXp + amount });
+    await ctx.db.insert("userActivity", {
+      userId: user._id,
+      activityType: "dua_xp",
+      metadata: { action: args.action, amount, totalXp: currentXp + amount },
+      createdAt: Date.now(),
+    });
+  },
+});
