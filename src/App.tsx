@@ -14,6 +14,7 @@ import { PostHogProvider } from "@/components/layout/PostHogProvider";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { AccessGuard } from "./components/auth/AccessGuard";
 import { OnboardingTutorial } from "./components/onboarding/OnboardingTutorial";
+import { InstallPrompt } from "./components/pwa/InstallPrompt";
 import { lazy, Suspense } from "react";
 import AppShell from "./components/layout/AppShell";
 
@@ -42,6 +43,7 @@ const SurahView       = lazy(() => import("./pages/quran/SurahView"));
 const PrayerTimes     = lazy(() => import("./pages/tools/PrayerTimes"));
 const HijriCalendar   = lazy(() => import("./pages/tools/HijriCalendar"));
 const ZakatCalculator = lazy(() => import("./pages/tools/ZakatCalculator"));
+const QiblaFinder    = lazy(() => import("./pages/tools/QiblaFinder"));
 const EventsPage      = lazy(() => import("./pages/knowledge/EventsPage"));
 const Library         = lazy(() => import("./pages/knowledge/Library"));
 const Classes         = lazy(() => import("./pages/knowledge/Classes"));
@@ -84,6 +86,7 @@ const App = () => {
                 <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
                   <PostHogProvider>
                     <OnboardingTutorial />
+                    <InstallPrompt />
                     <Suspense fallback={<PageShell />}>
                       <Routes>
                         {/* ── Public ── */}
@@ -109,6 +112,7 @@ const App = () => {
                         <Route path="/prayer-times" element={<ProtectedRoute><DashboardLayout><PrayerTimes /></DashboardLayout></ProtectedRoute>} />
                         <Route path="/calendar"     element={<ProtectedRoute><DashboardLayout><HijriCalendar /></DashboardLayout></ProtectedRoute>} />
                         <Route path="/zakat"        element={<ProtectedRoute><DashboardLayout><ZakatCalculator /></DashboardLayout></ProtectedRoute>} />
+                        <Route path="/qibla"        element={<ProtectedRoute><DashboardLayout><QiblaFinder /></DashboardLayout></ProtectedRoute>} />
                         <Route path="/events"       element={<ProtectedRoute><DashboardLayout><EventsPage /></DashboardLayout></ProtectedRoute>} />
                         <Route path="/library"      element={<ProtectedRoute><DashboardLayout><Library /></DashboardLayout></ProtectedRoute>} />
                         <Route path="/journal"      element={<ProtectedRoute><DashboardLayout><Journal /></DashboardLayout></ProtectedRoute>} />

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Offline — GëstuSaDine</title>
+    <meta name="theme-color" content="#065f46" />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        font-family: system-ui, -apple-system, sans-serif;
+        background: #faf7f0;
+        color: #1c1917;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+      }
+      .card {
+        max-width: 380px;
+        text-align: center;
+      }
+      .mark {
+        width: 64px; height: 64px;
+        margin: 0 auto 24px;
+        border-radius: 18px;
+        background: #065f46;
+        display: flex; align-items: center; justify-content: center;
+        color: #faf7f0; font-size: 30px; font-weight: 700;
+      }
+      h1 { font-size: 22px; font-weight: 600; margin-bottom: 8px; }
+      p { font-size: 15px; line-height: 1.6; color: #57534e; margin-bottom: 4px; }
+      .arabic { font-size: 20px; color: #065f46; margin-top: 20px; direction: rtl; }
+      button {
+        margin-top: 28px;
+        padding: 12px 32px;
+        border: none;
+        border-radius: 999px;
+        background: #065f46;
+        color: #fff;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      button:hover { background: #047857; }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <div class="mark">G</div>
+      <h1>You're offline</h1>
+      <p>No internet right now — that's okay.</p>
+      <p>Your streak is safe. Come back when you have a connection.</p>
+      <div class="arabic">إِنَّ مَعَ الْعُسْرِ يُسْرًا</div>
+      <button onclick="location.href='/'">Try again</button>
+    </div>
+  </body>
+</html>

@@ -1,19 +1,66 @@
 {
+  "id": "/",
   "name": "GëstuSaDine",
-  "short_name": "GëstuSaDine",
-  "description": "Islamic knowledge and wellness platform",
-  "start_url": "/",
+  "short_name": "Gëstu",
+  "description": "A calm Islamic companion — Quran, prayer times, duas and honest answers, without the overwhelm.",
+  "start_url": "/dashboard?source=pwa",
   "scope": "/",
   "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
   "background_color": "#faf7f0",
   "theme_color": "#065f46",
   "orientation": "portrait-primary",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["education", "lifestyle", "books"],
   "icons": [
     {
-      "src": "/app-icon.png",
-      "sizes": "any",
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Prayer Times",
+      "short_name": "Prayer",
+      "description": "Today's prayer times and tracker",
+      "url": "/prayer-times?source=shortcut",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Quran",
+      "short_name": "Quran",
+      "description": "Continue reading the Quran",
+      "url": "/quran?source=shortcut",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Duas",
+      "short_name": "Duas",
+      "description": "Duas and azkar for every moment",
+      "url": "/duas?source=shortcut",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Journal",
+      "short_name": "Journal",
+      "description": "Reflect and track your mood",
+      "url": "/journal?source=shortcut",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
     }
   ]
 }

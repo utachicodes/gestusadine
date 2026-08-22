@@ -1,4 +1,5 @@
-const CACHE = 'gsd-v3';
+const CACHE = 'gsd-v4';
+const OFFLINE_URL = '/offline.html';
 
 // Only cache immutable static assets (hashed filenames from the Vite build).
 const STATIC_EXTENSIONS = ['.js', '.css', '.woff2', '.woff', '.ttf', '.png', '.svg', '.ico'];
@@ -8,22 +9,36 @@ function isStaticAsset(url) {
   return STATIC_EXTENSIONS.some((ext) => path.endsWith(ext));
 }
 
+// ── Install: precache the offline fallback ──────────────────────────────────
+
+self.addEventListener('install', (event) => {
+  event.waitUntil(
+    caches.open(CACHE).then((cache) => cache.add(OFFLINE_URL)).then(() => self.skipWaiting())
+  );
+});
+
 // ── Push notifications ───────────────────────────────────────────────────────
 
 self.addEventListener('push', (event) => {
   let data = {};
   try { data = event.data ? event.data.json() : {}; } catch {}
 
-  const title = data.title || 'GëStuSaDine';
+  const title = data.title || 'GëstuSaDine';
   const options = {
     body: data.body || '',
-    icon: data.icon || '/app-icon.png',
-    badge: '/app-icon.png',
+    icon: data.icon || '/icons/icon-192.png',
+    badge: '/icons/icon-192.png',
     tag: data.tag || 'default',
     data: { url: data.url || '/dashboard' },
     dir: 'ltr',
+    vibrate: [80, 40, 80],
     requireInteraction: false,
   };
+
+  // Prayer notifications get a single calm "Open" action.
+  if ((data.tag || '').startsWith('prayer-')) {
+    options.actions = [{ action: 'open', title: 'Open app' }];
+  }
 
   event.waitUntil(self.registration.showNotification(title, options));
 });
@@ -44,9 +59,18 @@ self.addEventListener('notificationclick', (event) => {
   );
 });
 
-// ── Install / activate / fetch ───────────────────────────────────────────────
+// Re-subscribe after the browser rotates push subscriptions (e.g. long-lived
+// Chrome subscriptions). The next visit to Notification Settings will persist
+// the new subscription server-side.
+self.addEventListener('pushsubscriptionchange', (event) => {
+  event.waitUntil(
+    self.registration.pushManager
+      .subscribe(event.oldSubscription.options)
+      .catch(() => {})
+  );
+});
 
-self.addEventListener('install', () => self.skipWaiting());
+// ── Activate: clean old caches ───────────────────────────────────────────────
 
 self.addEventListener('activate', (e) => {
   e.waitUntil(
@@ -56,6 +80,8 @@ self.addEventListener('activate', (e) => {
   );
 });
 
+// ── Fetch: static assets cache-first, navigations network-first w/ fallback ──
+
 self.addEventListener('fetch', (e) => {
   const { request } = e;
   if (request.method !== 'GET') return;
@@ -64,6 +90,17 @@ self.addEventListener('fetch', (e) => {
 
   // Never intercept requests to Convex or any external origin.
   if (url.origin !== location.origin) return;
+
+  // Navigation requests: try network, fall back to the offline page so the
+  // installed app never shows the browser's dinosaur.
+  if (request.mode === 'navigate') {
+    e.respondWith(
+      fetch(request).catch(() =>
+        caches.match(OFFLINE_URL).then((cached) => cached || Response.error())
+      )
+    );
+    return;
+  }
 
   // Only cache static assets — never cache HTML, API responses, or
   // anything that could contain authenticated user data.
