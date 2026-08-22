@@ -22,6 +22,8 @@ import {
   HelpCircle,
   Loader2,
   Navigation,
+  Heart,
+  Moon,
 } from "lucide-react";
 
 // ─── types ────────────────────────────────────────────────────────────────────
@@ -47,6 +49,9 @@ interface NotificationSettingsState {
   quranReminderTime: string;
   dailyContentEnabled: boolean;
   dailyContentTime: string;
+  duaReminderEnabled: boolean;
+  duaReminderTimes: string[];
+  quietHoursEnabled: boolean;
 }
 
 // ─── constants ────────────────────────────────────────────────────────────────
@@ -81,7 +86,10 @@ const DEFAULT_SETTINGS: NotificationSettingsState = {
   quranReminderEnabled: true,
   quranReminderTime: "10:00",
   dailyContentEnabled: true,
-  dailyContentTime: "22:00",
+  dailyContentTime: "20:00",
+  duaReminderEnabled: false,
+  duaReminderTimes: ["09:00", "14:00", "20:00"],
+  quietHoursEnabled: true,
 };
 
 // ─── helpers ──────────────────────────────────────────────────────────────────
@@ -148,6 +156,9 @@ const NotificationSettings: React.FC = () => {
       quranReminderTime:    typeof s.quranTime === "string" ? s.quranTime : "10:00",
       dailyContentEnabled:  s.dailyContentEnabled !== false,
       dailyContentTime:     typeof s.dailyContentTime === "string" ? s.dailyContentTime : "22:00",
+      duaReminderEnabled:   s.duaReminderEnabled === true,
+      duaReminderTimes:     Array.isArray(s.duaReminderTimes) ? s.duaReminderTimes : ["09:00", "14:00", "20:00"],
+      quietHoursEnabled:    s.quietHoursEnabled !== false,
     });
   }, [savedSettings]);
 
@@ -245,6 +256,10 @@ const NotificationSettings: React.FC = () => {
         quranTime:          settings.quranReminderTime,
         dailyContentEnabled: settings.dailyContentEnabled,
         dailyContentTime:   settings.dailyContentTime,
+        duaReminderEnabled: settings.duaReminderEnabled,
+        duaReminderTimes:   settings.duaReminderTimes,
+        quietHoursEnabled:  settings.quietHoursEnabled,
+        language:           language === "fr" ? "fr" : "en",
       });
       // Immediately schedule any remaining notifications for today so the user
       // doesn't have to wait until the 00:10 UTC cron.
@@ -318,6 +333,15 @@ const NotificationSettings: React.FC = () => {
     "notifications.testError":      { en: "Failed to send test notification.", fr: "Impossible d'envoyer la notification test." },
     "notifications.noSubscription": { en: "Enable push notifications first.", fr: "Activez d'abord les notifications push." },
     "notifications.testBtn":        { en: "Send test notification", fr: "Envoyer une notification test" },
+    "dua.title":                { en: "Dua Reminders",               fr: "Rappels de dua" },
+    "dua.desc":                 { en: "Receive random dua reminders throughout the day to stay connected with Allah.", fr: "Recevez des rappels de dua aléatoires tout au long de la journée." },
+    "dua.enable":               { en: "Enable dua reminders",        fr: "Activer les rappels de dua" },
+    "dua.times":                { en: "Reminder times",              fr: "Heures des rappels" },
+    "dua.addTime":              { en: "Add time",                    fr: "Ajouter une heure" },
+    "dua.removeTime":           { en: "Remove",                      fr: "Supprimer" },
+    "quiet.title":              { en: "Focus & Rest",                fr: "Focus et repos" },
+    "quiet.desc":               { en: "Between 22:00 and 07:00, we hold every reminder except prayer times — sleep comes first.", fr: "Entre 22h00 et 7h00, tous les rappels sont mis en attente sauf les prières — le sommeil d'abord." },
+    "quiet.enable":             { en: "Quiet hours",                 fr: "Heures calmes" },
   };
 
   function tr(key: string): string {
@@ -617,6 +641,106 @@ const NotificationSettings: React.FC = () => {
             />
           </div>
         )}
+      </Card>
+
+      {/* ── Dua reminders ── */}
+      <Card className="p-6 space-y-4">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-lg bg-emerald-50 flex items-center justify-center">
+            <Heart className="w-5 h-5 text-emerald-600" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <h2 className="font-semibold text-foreground">{tr("dua.title")}</h2>
+                <p className="text-sm text-muted-foreground">{tr("dua.desc")}</p>
+              </div>
+              <Switch
+                checked={settings.duaReminderEnabled}
+                onCheckedChange={(checked) =>
+                  setSettings((prev) => ({ ...prev, duaReminderEnabled: checked }))
+                }
+              />
+            </div>
+          </div>
+        </div>
+
+        {settings.duaReminderEnabled && (
+          <div className="space-y-3 pt-1">
+            <Label className="text-sm font-medium">{tr("dua.times")}</Label>
+            <div className="space-y-2">
+              {settings.duaReminderTimes.map((time, idx) => (
+                <div key={idx} className="flex items-center gap-2">
+                  <input
+                    type="time"
+                    value={time}
+                    onChange={(e) => {
+                      const newTimes = [...settings.duaReminderTimes];
+                      newTimes[idx] = e.target.value;
+                      setSettings((prev) => ({ ...prev, duaReminderTimes: newTimes }));
+                    }}
+                    className="h-9 rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-emerald-500"
+                  />
+                  {settings.duaReminderTimes.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const newTimes = settings.duaReminderTimes.filter((_, i) => i !== idx);
+                        setSettings((prev) => ({ ...prev, duaReminderTimes: newTimes }));
+                      }}
+                      className="text-xs text-destructive hover:text-destructive/80 px-2 py-1"
+                    >
+                      {tr("dua.removeTime")}
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+            {settings.duaReminderTimes.length < 5 && (
+              <button
+                type="button"
+                onClick={() => {
+                  const newTimes = [...settings.duaReminderTimes, "12:00"];
+                  setSettings((prev) => ({ ...prev, duaReminderTimes: newTimes }));
+                }}
+                className="text-xs text-emerald-600 hover:text-emerald-700 font-medium"
+              >
+                + {tr("dua.addTime")}
+              </button>
+            )}
+          </div>
+        )}
+      </Card>
+
+      {/* ── Focus & Rest (quiet hours) ── */}
+      <Card className="p-6 space-y-4">
+        <div className="flex items-start gap-3">
+          <div className="w-9 h-9 rounded-lg bg-emerald-50 flex items-center justify-center shrink-0">
+            <Moon className="w-5 h-5 text-emerald-600" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <h2 className="font-semibold text-foreground">{tr("quiet.title")}</h2>
+                <p className="text-sm text-muted-foreground">{tr("quiet.desc")}</p>
+              </div>
+              <Switch
+                checked={settings.quietHoursEnabled}
+                onCheckedChange={(checked) =>
+                  setSettings((prev) => ({ ...prev, quietHoursEnabled: checked }))
+                }
+              />
+            </div>
+            {settings.quietHoursEnabled && (
+              <div className="mt-3 flex items-center gap-2 text-xs text-emerald-700 bg-emerald-50 border border-emerald-100 rounded-lg px-3 py-2">
+                <CheckCircle2 className="w-4 h-4 shrink-0" />
+                {language === "fr"
+                  ? "Préserver ton sommeil, c'est aussi un acte d'adoration."
+                  : "Protecting your sleep is part of taking care of the amanah of your body."}
+              </div>
+            )}
+          </div>
+        </div>
       </Card>
 
       {/* ── Save button ── */}

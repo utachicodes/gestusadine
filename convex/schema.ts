@@ -422,10 +422,14 @@ const schema = defineSchema({
     quranTime: v.optional(v.string()),
     dailyContentEnabled: v.optional(v.boolean()),
     dailyContentTime: v.optional(v.string()),
+    duaReminderEnabled: v.optional(v.boolean()),
+    duaReminderTimes: v.optional(v.array(v.string())),
     latitude: v.optional(v.number()),
     longitude: v.optional(v.number()),
     timezone: v.optional(v.string()),
     calculationMethod: v.optional(v.string()),
+    quietHoursEnabled: v.optional(v.boolean()),
+    language: v.optional(v.string()),
   }).index("userId", ["userId"]),
 
   // ── Du'a & Azkar ────────────────────────────────────────────────────────

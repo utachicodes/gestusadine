@@ -103,6 +103,61 @@ function getReminderTimeTodayUtc(
   return utcMs > now.getTime() ? utcMs : null;
 }
 
+/** Quiet hours protect sleep: non-prayer reminders scheduled between 22:00 and
+ *  07:00 local time are moved to 07:00 local. Prayers are never shifted. */
+function adjustForQuietHours(utcMs: number, timezone: string): number {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: timezone,
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+    hour: "numeric",
+    hour12: false,
+  }).formatToParts(new Date(utcMs));
+  const get = (t: string) => parseInt(parts.find((p) => p.type === t)?.value ?? "0");
+  let h = get("hour");
+  if (h === 24) h = 0;
+  if (h < 22 && h >= 7) return utcMs;
+
+  const offset = getUtcOffsetMs(timezone);
+  // Move to 07:00 local on the same calendar day the reminder would fire.
+  let target = Date.UTC(get("year"), get("month") - 1, get("day"), 7, 0, 0) - offset;
+  if (target <= utcMs) target += 24 * 60 * 60 * 1000;
+  return target;
+}
+
+// ─── Notification copy (EN + FR, calm & short for teens) ─────────────────────
+
+type Lang = "en" | "fr";
+
+const COPY = {
+  prayer: {
+    en: (label: string) => `Time for ${label}. Take a breath — this moment is yours.`,
+    fr: (label: string) => `C'est l'heure de ${label}. Une pause, juste pour toi et Allah.`,
+  },
+  quran: {
+    title: { en: "Quran time", fr: "Temps pour le Coran" },
+    body: {
+      en: "Even one ayah counts today. Your streak is waiting.",
+      fr: "Même un verset compte aujourd'hui. Ta série t'attend.",
+    },
+  },
+  daily: {
+    title: { en: "Your daily reset", fr: "Ta pause quotidienne" },
+    body: {
+      en: "One small reminder of iman is ready — under 2 minutes.",
+      fr: "Un petit rappel d'iman t'attend — moins de 2 minutes.",
+    },
+  },
+  dua: {
+    title: { en: "A moment with Allah", fr: "Un moment avec Allah" },
+  },
+} as const;
+
+function lang(settings: { language?: string } | null): Lang {
+  return settings?.language === "fr" ? "fr" : "en";
+}
+
 // ─── Subscription Management ─────────────────────────────────────────────────
 
 export const saveSubscription = mutation({
@@ -215,6 +270,8 @@ export const saveSettings = mutation({
     quranTime: v.optional(v.string()),
     dailyContentEnabled: v.optional(v.boolean()),
     dailyContentTime: v.optional(v.string()),
+    duaReminderEnabled: v.optional(v.boolean()),
+    duaReminderTimes: v.optional(v.array(v.string())),
     latitude: v.optional(v.number()),
     longitude: v.optional(v.number()),
     timezone: v.optional(v.string()),
@@ -281,12 +338,16 @@ export const scheduleForToday = action({
     }
 
     const tz = settings.timezone ?? "Africa/Dakar";
+    const quiet = settings.quietHoursEnabled !== false;
 
     // Quran reminder — on by default unless explicitly disabled
     if (settings.quranEnabled !== false) {
       const t = getReminderTimeTodayUtc(settings.quranTime ?? "10:00", tz);
       if (t !== null) {
-        await ctx.scheduler.runAt(t, internal.notifications.deliverQuranReminder, { userId });
+        await ctx.scheduler.runAt(
+          quiet ? adjustForQuietHours(t, tz) : t,
+          internal.notifications.deliverQuranReminder, { userId }
+        );
       }
     }
 
@@ -294,7 +355,24 @@ export const scheduleForToday = action({
     if (settings.dailyContentEnabled !== false) {
       const t = getReminderTimeTodayUtc(settings.dailyContentTime ?? "22:00", tz);
       if (t !== null) {
-        await ctx.scheduler.runAt(t, internal.notifications.deliverDailyContentReminder, { userId });
+        await ctx.scheduler.runAt(
+          quiet ? adjustForQuietHours(t, tz) : t,
+          internal.notifications.deliverDailyContentReminder, { userId }
+        );
+      }
+    }
+
+    // Dua reminders — strictly opt-in so new users are never overwhelmed
+    if (settings.duaReminderEnabled === true) {
+      const times = settings.duaReminderTimes ?? ["09:00", "14:00", "20:00"];
+      for (const timeStr of times) {
+        const t = getReminderTimeTodayUtc(timeStr, tz);
+        if (t !== null) {
+          await ctx.scheduler.runAt(
+            quiet ? adjustForQuietHours(t, tz) : t,
+            internal.notifications.deliverDuaReminder, { userId }
+          );
+        }
       }
     }
   },
@@ -319,7 +397,7 @@ export const sendTestNotification = action({
         auth: sub.auth,
         title: "GëstuSaDine — Test",
         body: "Push notifications are working correctly.",
-        icon: "/app-icon.png",
+        icon: "/icons/icon-192.png",
         tag: "test",
         url: "/settings",
       });
@@ -413,6 +491,7 @@ export const deliverPrayerPush = internalAction({
     );
     if (!settings?.prayerEnabled) return;
 
+    const l = lang(settings);
     const subs = await ctx.runQuery(
       internal.notifications._getSubscriptionsForUser,
       { userId }
@@ -424,8 +503,8 @@ export const deliverPrayerPush = internalAction({
         p256dh: sub.p256dh,
         auth: sub.auth,
         title: `${prayerLabel} — وقت الصلاة`,
-        body: `It's time for ${prayerLabel} prayer. May Allah accept your worship.`,
-        icon: "/app-icon.png",
+        body: COPY.prayer[l](prayerLabel),
+        icon: "/icons/icon-192.png",
         tag: `prayer-${prayerName}`,
         url: "/prayer-times",
       });
@@ -444,6 +523,7 @@ export const deliverQuranReminder = internalAction({
     );
     if (settings?.quranEnabled === false) return;
 
+    const l = lang(settings);
     const subs = await ctx.runQuery(
       internal.notifications._getSubscriptionsForUser,
       { userId }
@@ -454,9 +534,9 @@ export const deliverQuranReminder = internalAction({
         endpoint: sub.endpoint,
         p256dh: sub.p256dh,
         auth: sub.auth,
-        title: "Quran Reading — تلاوة القرآن",
-        body: "Time for your daily Quran reading. Even a few verses bring great reward.",
-        icon: "/app-icon.png",
+        title: COPY.quran.title[l],
+        body: COPY.quran.body[l],
+        icon: "/icons/icon-192.png",
         tag: "quran-reminder",
         url: "/quran",
       });
@@ -475,6 +555,7 @@ export const deliverDailyContentReminder = internalAction({
     );
     if (settings?.dailyContentEnabled === false) return;
 
+    const l = lang(settings);
     const subs = await ctx.runQuery(
       internal.notifications._getSubscriptionsForUser,
       { userId }
@@ -485,9 +566,9 @@ export const deliverDailyContentReminder = internalAction({
         endpoint: sub.endpoint,
         p256dh: sub.p256dh,
         auth: sub.auth,
-        title: "Daily Islamic Content — المحتوى اليومي",
-        body: "Your daily reminder of wisdom, knowledge and reflection is ready.",
-        icon: "/app-icon.png",
+        title: COPY.daily.title[l],
+        body: COPY.daily.body[l],
+        icon: "/icons/icon-192.png",
         tag: "daily-content",
         url: "/dashboard",
       });
@@ -506,12 +587,13 @@ export const scheduleReminders = internalAction({
 
     for (const s of allSettings) {
       const tz = s.timezone ?? "Africa/Dakar";
+      const quiet = s.quietHoursEnabled !== false;
 
       if (s.quranEnabled !== false) {
         const t = getReminderTimeTodayUtc(s.quranTime ?? "10:00", tz);
         if (t !== null) {
           await ctx.scheduler.runAt(
-            t,
+            quiet ? adjustForQuietHours(t, tz) : t,
             internal.notifications.deliverQuranReminder,
             { userId: s.userId }
           );
@@ -522,7 +604,7 @@ export const scheduleReminders = internalAction({
         const t = getReminderTimeTodayUtc(s.dailyContentTime ?? "22:00", tz);
         if (t !== null) {
           await ctx.scheduler.runAt(
-            t,
+            quiet ? adjustForQuietHours(t, tz) : t,
             internal.notifications.deliverDailyContentReminder,
             { userId: s.userId }
           );
@@ -570,5 +652,91 @@ export const _getSubscriptionsForUser = internalQuery({
       .query("pushSubscriptions")
       .withIndex("userId", (q) => q.eq("userId", userId))
       .collect();
+  },
+});
+
+// ─── Dua Reminder System ──────────────────────────────────────────────────
+
+// Random dua reminder messages in English and French
+const DUA_REMINDER_MESSAGES = [
+  { en: "Time for a dua! Say: Rabbana atina fid-dunya hasanah", fr: "C'est l'heure d'une dua ! Dites : Rabbana atina fid-dunya hasanah" },
+  { en: "Remember Allah with a dua right now", fr: "Souvenez-vous d'Allah avec une dua maintenant" },
+  { en: "A moment of reflection — make a dua for someone you love", fr: "Un moment de réflexion — faites une dua pour quelqu'un que vous aimez" },
+  { en: "The Prophet ﷺ said: The dua of a Muslim for his brother in his absence is answered", fr: "Le Prophète ﷺ a dit : La dua d'un musulman pour son frère en son absence est exaucée" },
+  { en: "Make a dua for the Ummah right now", fr: "Faites une dua pour l'Ummah maintenant" },
+  { en: "Pause and say: Hasbiyallahu la ilaha illa hu", fr: "Arrêtez-vous et dites : Hasbiyallahu la ilaha illa hu" },
+  { en: "Send blessings upon the Prophet ﷺ — Allah will send blessings upon you", fr: "Envoyez des bénédictions sur le Prophète ﷺ — Allah vous en enverra" },
+  { en: "A dua from the heart is never rejected", fr: "Une dua du cœur n'est jamais rejetée" },
+  { en: "Say: La ilaha illa anta subhanaka inni kuntu min adh-dhalimin", fr: "Dites : La ilaha illa anta subhanaka inni kuntu min adh-dhalimin" },
+  { en: "Remember: Allah is close to the broken-hearted", fr: "Souvenez-vous : Allah est proche des cœurs brisés" },
+  { en: "Take a moment to make shukr (gratitude) to Allah", fr: "Prenez un moment pour faire le shukr (remerciement) à Allah" },
+  { en: "This is a blessed moment — make a dua now", fr: "C'est un moment béni — faites une dua maintenant" },
+];
+
+// Pick a random dua message (deterministic per invocation)
+function pickRandomDua(): { en: string; fr: string } {
+  const idx = Math.floor(Math.random() * DUA_REMINDER_MESSAGES.length);
+  return DUA_REMINDER_MESSAGES[idx];
+}
+
+export const deliverDuaReminder = internalAction({
+  args: {
+    userId: v.id("users"),
+  },
+  handler: async (ctx, { userId }) => {
+    const settings = await ctx.runQuery(
+      internal.notifications._getSettingsForUser,
+      { userId }
+    );
+    if (settings?.duaReminderEnabled !== true) return;
+
+    const subs = await ctx.runQuery(
+      internal.notifications._getSubscriptionsForUser,
+      { userId }
+    );
+
+    const msg = pickRandomDua();
+
+    for (const sub of subs) {
+      await ctx.runAction(internal.webPush.sendPush, {
+        endpoint: sub.endpoint,
+        p256dh: sub.p256dh,
+        auth: sub.auth,
+        title: COPY.dua.title[lang(settings)],
+        body: lang(settings) === "fr" ? msg.fr : msg.en,
+        icon: "/icons/icon-192.png",
+        tag: "dua-reminder",
+        url: "/duas",
+      });
+    }
+  },
+});
+
+// Schedule dua reminders for all opted-in users (called by cron).
+// Dua reminders are strictly opt-in — users must explicitly enable them.
+export const scheduleDuaReminders = internalAction({
+  args: {},
+  handler: async (ctx) => {
+    const allSettings = await ctx.runQuery(
+      internal.notifications._getAllReminderSettings
+    );
+
+    for (const s of allSettings) {
+      if (s.duaReminderEnabled !== true) continue;
+
+      const tz = s.timezone ?? "Africa/Dakar";
+      const times = s.duaReminderTimes ?? ["09:00", "14:00", "20:00"];
+
+      for (const timeStr of times) {
+        const t = getReminderTimeTodayUtc(timeStr, tz);
+        if (t !== null) {
+          await ctx.scheduler.runAt(
+            s.quietHoursEnabled !== false ? adjustForQuietHours(t, tz) : t,
+            internal.notifications.deliverDuaReminder,
+            { userId: s.userId }
+          );
+        }
+      }
+    }
   },
 });
