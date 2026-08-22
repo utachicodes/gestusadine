@@ -1,4 +1,4 @@
-import { query, mutation } from "./_generated/server";
+import { query, mutation, internalQuery, internalMutation } from "./_generated/server";
 import { v, ConvexError } from "convex/values";
 import { getCurrentUserOrThrow, getCurrentUser } from "./authz";
 import { rateLimiter } from "./rateLimiter";
@@ -97,7 +97,9 @@ export const setRole = mutation({
   },
 });
 
-export const checkEmailExists = query({
+// Internal-only: exposes account existence, so it must never be callable
+// directly by clients (email enumeration).
+export const checkEmailExists = internalQuery({
   args: { email: v.string() },
   handler: async (ctx, args) => {
     const email = args.email.toLowerCase().trim();
@@ -110,21 +112,9 @@ export const checkEmailExists = query({
   },
 });
 
-export const prepareSignup = mutation({
-  args: { email: v.string() },
-  handler: async (ctx, args) => {
-    const email = args.email.toLowerCase().trim();
-    const existing = await ctx.db
-      .query("users")
-      .withIndex("email", (q) => q.eq("email", email))
-      .first();
-    if (existing) {
-      throw new ConvexError("An account with this email already exists.");
-    }
-  },
-});
-
-export const createUser = mutation({
+// Internal-only: account creation happens exclusively inside the credentials
+// provider, so clients must never be able to invoke this directly.
+export const createUser = internalMutation({
   args: {
     email: v.string(),
     name: v.string(),
@@ -171,7 +161,9 @@ export const createUser = mutation({
   },
 });
 
-export const verifyUserPassword = mutation({
+// Internal-only: verifies credentials, so it must never be callable directly
+// by clients (would enable brute-force attacks against any account).
+export const verifyUserPassword = internalMutation({
   args: {
     email: v.string(),
     password: v.string(),

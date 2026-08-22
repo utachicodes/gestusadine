@@ -14,7 +14,7 @@ function userMessage(err: unknown, fallback: string): string {
 }
 
 export type Gender = 'male' | 'female';
-export type AuthProvider = 'google' | 'facebook' | 'instagram';
+export type SubscriptionTier = 'free' | 'student' | 'pro';
 
 export type UserProfile = {
   id: string;
@@ -25,6 +25,7 @@ export type UserProfile = {
   created_at: number;
   gender?: Gender;
   onboarding_completed?: boolean;
+  subscriptionTier?: SubscriptionTier;
 };
 
 export type User = {
@@ -39,7 +40,7 @@ type AuthState = {
   profile: UserProfile | null;
   isAdmin: boolean;
   loading: boolean;
-  signIn: (email: string, password: string, provider: AuthProvider, name?: string, gender?: Gender) => Promise<void>;
+  signIn: (email: string, password: string, name?: string, gender?: Gender) => Promise<void>;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
 };
@@ -57,6 +58,7 @@ function toUserProfile(doc: Doc<"users"> | null): UserProfile | null {
     created_at: doc._creationTime,
     gender: doc.gender as Gender | undefined,
     onboarding_completed: doc.onboardingCompleted ?? false,
+    subscriptionTier: (doc.subscriptionTier ?? 'free') as SubscriptionTier,
   };
 }
 
@@ -90,14 +92,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const isAdmin = React.useMemo(() => profile?.role === 'admin' || profile?.role === 'system', [profile]);
 
-  const signInFn = React.useCallback(async (email: string, password: string, provider: AuthProvider, name?: string, gender?: Gender) => {
+  const signInFn = React.useCallback(async (email: string, password: string, name?: string, gender?: Gender) => {
     const trimmedEmail = email.toLowerCase().trim();
     try {
       await convexSignIn("credentials", {
         email: trimmedEmail,
         password,
         name: name || trimmedEmail.split("@")[0],
-        authProvider: provider,
         ...(gender ? { gender } : {}),
       } as any);
     } catch (err) {

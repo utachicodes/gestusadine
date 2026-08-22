@@ -1,4 +1,4 @@
-import { query, mutation } from "./_generated/server";
+import { query, mutation, internalMutation } from "./_generated/server";
 import { v, ConvexError } from "convex/values";
 import { getCurrentUser, getCurrentUserOrThrow } from "./authz";
 import { rateLimiter } from "./rateLimiter";
@@ -83,7 +83,9 @@ export const leaderboard = query({
   },
 });
 
-export const awardXp = mutation({
+// Internal-only: XP must be awarded by trusted server logic, never directly
+// by the client (would let users grant themselves arbitrary XP).
+export const awardXp = internalMutation({
   args: {
     amount: v.number(),
     reason: v.string(),

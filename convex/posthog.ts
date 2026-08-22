@@ -1,10 +1,18 @@
 import { action } from "./_generated/server";
+import { ConvexError } from "convex/values";
+import { api } from "./_generated/api";
 
 const POSTHOG_API = "https://us.posthog.com";
 
 export const fetchPostHogStats = action({
   args: {},
-  handler: async () => {
+  handler: async (ctx) => {
+    // Admin-only: this action queries project analytics via an API token.
+    const me = await ctx.runQuery(api.users.currentUser);
+    if (!me || (me.role !== "admin" && me.role !== "system")) {
+      throw new ConvexError("Not authorized.");
+    }
+
     const apiKey = process.env.POSTHOG_PERSONAL_API_KEY;
     const projectId = process.env.POSTHOG_PROJECT_ID;
 

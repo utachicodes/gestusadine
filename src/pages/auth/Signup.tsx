@@ -4,7 +4,7 @@ import { useAuth } from '@/auth/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { motion } from 'framer-motion';
 import { ChevronLeft } from 'lucide-react';
-import SocialAuthButtons from '@/components/auth/SocialAuthButtons';
+import AuthForm from '@/components/auth/AuthForm';
 
 const Signup = () => {
   const [pendingRedirect, setPendingRedirect] = useState<string | null>(null);
@@ -61,7 +61,7 @@ const Signup = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.1 }}
         >
-          <SocialAuthButtons
+          <AuthForm
             mode="signup"
             onSuccess={() => setPendingRedirect(upgradeTier ? `/dashboard?upgrade=${upgradeTier}` : from)}
           />

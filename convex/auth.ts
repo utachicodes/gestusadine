@@ -1,6 +1,6 @@
 import { convexAuth } from "@convex-dev/auth/server";
 import { ConvexCredentials } from "@convex-dev/auth/providers/ConvexCredentials";
-import { api } from "./_generated/api";
+import { internal } from "./_generated/api";
 
 const SESSION_TOTAL_DURATION_MS = 1000 * 60 * 60 * 24 * 7;
 const SESSION_INACTIVE_DURATION_MS = 1000 * 60 * 60 * 24 * 7;
@@ -18,11 +18,11 @@ export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
       if (!email || !password) return null;
 
       // Check if user already exists
-      const existingUser = await ctx.runQuery(api.users.checkEmailExists, { email });
+      const existingUser = await ctx.runQuery(internal.users.checkEmailExists, { email });
 
       if (existingUser) {
         // Existing user — verify password
-        const userId = await ctx.runMutation(api.users.verifyUserPassword, {
+        const userId = await ctx.runMutation(internal.users.verifyUserPassword, {
           email,
           password,
         });
@@ -30,7 +30,7 @@ export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
       }
 
       // New user — create account
-      const userId = await ctx.runMutation(api.users.createUser, {
+      const userId = await ctx.runMutation(internal.users.createUser, {
         email,
         name: name || email.split("@")[0],
         image,

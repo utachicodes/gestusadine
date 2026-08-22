@@ -347,6 +347,32 @@ export const deleteAbusiveAccount = internalMutation({
   handler: async (ctx, args) => {
     const id = args.userId as Id<"users">;
 
+    // Messages are keyed by conversation (no userId index), so delete them
+    // through the user's conversations.
+    const conversations = await ctx.db
+      .query("conversations")
+      .withIndex("userId", (q) => q.eq("userId", id))
+      .collect();
+    for (const conv of conversations) {
+      const msgs = await ctx.db
+        .query("messages")
+        .withIndex("conversationId", (q) => q.eq("conversationId", conv._id))
+        .collect();
+      for (const msg of msgs) {
+        await ctx.db.delete(msg._id);
+      }
+      await ctx.db.delete(conv._id);
+    }
+
+    // Circle posts track authorId but are only indexed by circle — scan & filter.
+    const posts = await ctx.db
+      .query("circlePosts")
+      .filter((q) => q.eq(q.field("authorId"), id))
+      .collect();
+    for (const post of posts) {
+      await ctx.db.delete(post._id);
+    }
+
     const tables = [
       "journalEntries",
       "periodLogs",
@@ -356,13 +382,10 @@ export const deleteAbusiveAccount = internalMutation({
       "quizAttempts",
       "subscriptionUsage",
       "userActivity",
-      "conversations",
-      "messages",
       "prayerLogs",
       "quranProgress",
       "userThemes",
       "circleMembers",
-      "circlePosts",
       "userPoints",
       "pushSubscriptions",
       "notificationSettings",

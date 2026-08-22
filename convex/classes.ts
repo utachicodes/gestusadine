@@ -90,9 +90,19 @@ export const remove = mutation({
 export const enroll = mutation({
   args: { classId: v.id("classes") },
   handler: async (ctx, args) => {
-    await getCurrentUserOrThrow(ctx);
+    const user = await getCurrentUserOrThrow(ctx);
     const cls = await ctx.db.get(args.classId);
     if (!cls) throw new ConvexError("Class not found");
+
+    // Server-side tier enforcement — the client-side AccessGuard is not a
+    // security boundary. Staff may preview; everyone else needs a paid plan.
+    const role = user.role ?? "user";
+    const isStaff = role === "admin" || role === "system" || role === "moderator";
+    const tier = user.subscriptionTier ?? "free";
+    if (!isStaff && tier !== "student" && tier !== "pro") {
+      throw new ConvexError("Classes are available on the Student plan and above.");
+    }
+
     await ctx.db.patch(args.classId, { enrolled: (cls.enrolled ?? 0) + 1 });
   },
 });

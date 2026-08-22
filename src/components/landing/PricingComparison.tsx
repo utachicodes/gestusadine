@@ -1,12 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Check, Loader2, AlertCircle } from 'lucide-react';
+import { Check, AlertCircle } from 'lucide-react';
 import { useTr, type Loc } from '@/lib/i18n';
-import { useAction } from 'convex/react';
-import { api } from '../../../convex/_generated/api';
 import { useAuth } from '@/auth/AuthContext';
-import { toast } from 'sonner';
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -71,16 +68,14 @@ const PricingComparison = () => {
   const navigate = useNavigate();
   const tr = useTr();
   const { user, profile } = useAuth();
-  const createCheckout = useAction(api.naboopay.createCheckoutSession);
-  const [loading, setLoading] = useState(false);
-  const [showMaintenanceModal, setShowMaintenanceModal] = useState(false);
+  const [showMaintenanceModal, setShowMaintenanceModal] = React.useState(false);
 
   const handleSubscribe = async () => {
     if (!user) {
       navigate('/login');
       return;
     }
-    if (profile?.subscription_tier === 'pro') {
+    if (profile?.subscriptionTier === 'pro') {
       navigate('/dashboard');
       return;
     }
@@ -145,8 +140,7 @@ const PricingComparison = () => {
               </ul>
 
               {tier.popular ? (
-                <button onClick={handleSubscribe} disabled={loading} className="btn-push mt-8 w-full inline-flex items-center justify-center gap-2">
-                  {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+                <button onClick={handleSubscribe} className="btn-push mt-8 w-full inline-flex items-center justify-center gap-2">
                   {tr(tier.cta)}
                 </button>
               ) : (

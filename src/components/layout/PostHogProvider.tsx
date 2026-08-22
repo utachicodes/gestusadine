@@ -10,7 +10,8 @@ declare global {
 }
 
 export function PostHogProvider({ children }: { children: ReactNode }) {
-  const { user, isAuthenticated } = useAuth();
+  const { profile } = useAuth();
+  const isAuthenticated = !!profile;
   const location = useLocation();
 
   useEffect(() => {
@@ -18,17 +19,17 @@ export function PostHogProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    if (isAuthenticated && user?.id) {
-      identifyUser(user.id, {
-        email: user.email,
-        name: user.name,
-        role: user.role,
-        subscription_tier: user.subscription_tier,
+    if (isAuthenticated && profile?.id) {
+      identifyUser(profile.id, {
+        email: profile.email,
+        name: profile.full_name,
+        role: profile.role,
+        subscriptionTier: profile.subscriptionTier,
       });
     } else if (isAuthenticated === false) {
       resetUser();
     }
-  }, [isAuthenticated, user?.id, user?.email, user?.name, user?.role, user?.subscription_tier]);
+  }, [isAuthenticated, profile?.id, profile?.email, profile?.full_name, profile?.role, profile?.subscriptionTier]);
 
   useEffect(() => {
     capturePageView();

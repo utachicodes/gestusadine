@@ -1,6 +1,6 @@
 import { mutation } from "./_generated/server";
 import { v, ConvexError } from "convex/values";
-import { api } from "./_generated/api";
+import { internal } from "./_generated/api";
 import { requireAdmin } from "./authz";
 
 // One-time fix: reset a specific user's XP to a correct value.
@@ -62,7 +62,7 @@ export const createAdmin = mutation({
     }
 
     // Create user with hashed password
-    const userId = await ctx.runMutation(api.users.createUser, {
+    const userId = await ctx.runMutation(internal.users.createUser, {
       email: args.email,
       name: args.name ?? args.email.split("@")[0],
       password: args.password,
