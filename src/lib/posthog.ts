@@ -7,6 +7,8 @@ export function initPostHog() {
   if (typeof window === 'undefined') return;
   if (posthog.__loaded) return;
 
+  const hasSecureContext = window.isSecureContext || location.hostname === 'localhost';
+
   posthog.init(POSTHOG_KEY, {
     api_host: POSTHOG_HOST,
     capture_pageview: false,
@@ -21,6 +23,11 @@ export function initPostHog() {
       ph.register({ app: 'gestusadine' });
     },
   });
+
+  if (!hasSecureContext) {
+    posthog.opt_out_capturing();
+    console.warn('[PostHog] Disabled: session recording requires a secure context (HTTPS).');
+  }
 }
 
 export function capturePageView() {
