@@ -12,7 +12,6 @@ import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { CookieConsent } from "@/components/layout/CookieConsent";
 import { PostHogProvider } from "@/components/layout/PostHogProvider";
 import { ThemeProvider } from "@/contexts/ThemeContext";
-import { AccessGuard } from "./components/auth/AccessGuard";
 import { OnboardingTutorial } from "./components/onboarding/OnboardingTutorial";
 import { InstallPrompt } from "./components/pwa/InstallPrompt";
 import { lazy, Suspense } from "react";
@@ -119,7 +118,7 @@ const App = () => {
                         <Route path="/period-tracker" element={<ProtectedRoute><DashboardLayout><PeriodTracker /></DashboardLayout></ProtectedRoute>} />
                         <Route path="/duas"        element={<ProtectedRoute><DashboardLayout><Duas /></DashboardLayout></ProtectedRoute>} />
                         <Route path="/azkar"       element={<ProtectedRoute><DashboardLayout><Azkar /></DashboardLayout></ProtectedRoute>} />
-                        <Route path="/classes"      element={<ProtectedRoute><AccessGuard requiredTier="student"><DashboardLayout><Classes /></DashboardLayout></AccessGuard></ProtectedRoute>} />
+                        <Route path="/classes"      element={<ProtectedRoute><DashboardLayout><Classes /></DashboardLayout></ProtectedRoute>} />
 
                         {/* ── Admin ── */}
                         <Route path="/admin"              element={<ProtectedRoute adminOnly><DashboardLayout><AdminDashboard /></DashboardLayout></ProtectedRoute>} />
