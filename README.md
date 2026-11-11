@@ -14,7 +14,7 @@
 
 GëstuSaDine combines an AI Islamic-knowledge assistant ("the Council") with education, community, and daily spiritual tools. Built with **React + Convex** — auth, database, serverless functions, file storage, and retrieval all run on one platform. The AI is powered by the **[Fanar](https://fanar.qa) API** and follows a strict scholarly methodology (see [METHODOLOGY.md](./METHODOLOGY.md)).
 
-> **Note:** The Council AI is temporarily offline while qualified scholars verify its responses for Islamic authenticity. The multi-agent routing architecture is in place and will be activated once verification is complete.
+> **Status:** The Council AI is **live**. Every question is classified and routed through the multi-agent architecture, with RAG grounding, citation verification, confidence-based abstention, and output filtering. Answers remain educational guidance and should be verified with a qualified scholar for formal rulings.
 
 ## Highlights
 
@@ -30,7 +30,7 @@ GëstuSaDine combines an AI Islamic-knowledge assistant ("the Council") with edu
 
 | Feature | Description |
 |---------|-------------|
-| **The Council** | Islamic Q&A with multi-agent intent routing, hierarchy of evidence (Quran → Hadith → scholarly consensus), four-madhhab respect, citation verification, and a strict "I don't know" rule *(currently under scholarly review)* |
+| **The Council** | Islamic Q&A with multi-agent intent routing, hierarchy of evidence (Quran → Hadith → scholarly consensus), four-madhhab respect, citation verification, and a strict "I don't know" rule |
 | **Quran** | Full surah reader with multiple translations, bookmarks, reading progress, and streaks |
 | **Prayer Times** | Accurate daily times by location with five-prayer tracker, streaks, and push notifications |
 | **Chat Memory** | Persistent conversations — create, switch, and delete past chats |
