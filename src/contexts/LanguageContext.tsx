@@ -12,6 +12,7 @@ interface LanguageContextType {
 }
 
 const translations = { en, fr };
+const STORAGE_KEY = 'GëstuSaDine-language';
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
@@ -29,8 +30,12 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const readStored = (): Language => {
     if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('GëstuSaDine-language') as Language;
+      const saved = localStorage.getItem(STORAGE_KEY) as Language | null;
       if (saved && ['en', 'fr'].includes(saved)) return saved;
+
+      // No saved preference — follow the browser so French visitors land in French.
+      const browserLanguage = navigator.language?.toLowerCase() ?? '';
+      if (browserLanguage.startsWith('fr')) return 'fr';
     }
     return 'en';
   };
@@ -40,7 +45,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   useEffect(() => {
     document.documentElement.lang = language;
     if (typeof window !== 'undefined') {
-      localStorage.setItem('GëstuSaDine-language', language);
+      localStorage.setItem(STORAGE_KEY, language);
     }
   }, [language]);
 
