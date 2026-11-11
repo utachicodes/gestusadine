@@ -99,8 +99,8 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <div className="w-full lg:h-full">
-      <section className="container flex flex-col gap-3 py-3 md:py-4 lg:h-full lg:min-h-0">
+    <div className="w-full">
+      <section className="container flex flex-col gap-3 py-3 md:py-4">
         <AnimatePresence>
           {showBetaBanner && (
             <motion.div
@@ -114,15 +114,15 @@ const Dashboard: React.FC = () => {
                 <FlaskConical className="w-4 h-4 flex-shrink-0" />
                 <span>
                   {language === 'fr'
-                    ? 'GëstuSaDine est en version bêta  certains bugs peuvent survenir.'
-                    : 'GëstuSaDine is in beta  some bugs may occur.'}
+                    ? 'GëstuSaDine est en version bêta — certains bugs peuvent survenir.'
+                    : 'GëstuSaDine is in beta — some bugs may occur.'}
                 </span>
               </div>
               <button
                 type="button"
                 onClick={dismissBeta}
                 className="flex-shrink-0 rounded-lg p-1 hover:bg-amber-100 transition-colors"
-                aria-label="Dismiss"
+                aria-label={language === 'fr' ? 'Fermer' : 'Dismiss'}
               >
                 <X className="w-4 h-4" />
               </button>
@@ -167,8 +167,8 @@ const Dashboard: React.FC = () => {
           ))}
         </div>
 
-        {/* Main content — single 4x2 grid fills viewport */}
-        <div className="grid gap-3 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 lg:grid-rows-2 lg:flex-1 lg:min-h-0 auto-rows-fr">
+        {/* Main content — auto-height grid so cards never overlap on short screens */}
+        <div className="grid gap-3 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
           {/* Ayah / reminder — spans 2 cols x 2 rows */}
           <div className="islamic-card md:col-span-2 lg:row-span-2 relative overflow-hidden group flex flex-col">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-secondary/5 to-accent/10 opacity-80 group-hover:opacity-100 transition-opacity" />
