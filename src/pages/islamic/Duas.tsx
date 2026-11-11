@@ -1,25 +1,44 @@
 import { useState, useMemo } from 'react';
 import { useQuery, useMutation } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
-import { useTr, type Loc } from '@/lib/i18n';
+import { useTr } from '@/lib/i18n';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { Search, Heart, ArrowLeft, BookOpen, Star } from 'lucide-react';
+import {
+  Search,
+  Heart,
+  ArrowLeft,
+  BookOpen,
+  Loader2,
+  Sun,
+  Clock,
+  Plane,
+  Utensils,
+  Home,
+  HeartHandshake,
+  Sparkles,
+  Shield,
+  Users,
+  Baby,
+  GraduationCap,
+  Activity,
+  type LucideIcon,
+} from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import type { Id } from '../../../convex/_generated/dataModel';
 
-const ICON_MAP: Record<string, string> = {
-  Sun: '\u2600\uFE0F',
-  Clock: '\u23F0',
-  Plane: '\u2708\uFE0F',
-  Utensils: '\u{1F37D}\uFE0F',
-  Home: '\u{1F3E0}',
-  HeartHandshake: '\u{1F91D}',
-  Sparkles: '\u2728',
-  Shield: '\u{1F6E1}\uFE0F',
-  Users: '\u{1F465}',
-  Baby: '\u{1F476}',
-  GraduationCap: '\u{1F393}',
-  Activity: '\u{1F3AF}',
+const ICON_MAP: Record<string, LucideIcon> = {
+  Sun,
+  Clock,
+  Plane,
+  Utensils,
+  Home,
+  HeartHandshake,
+  Sparkles,
+  Shield,
+  Users,
+  Baby,
+  GraduationCap,
+  Activity,
 };
 
 export default function Duas() {
@@ -133,16 +152,20 @@ export default function Duas() {
   return (
     <div className="max-w-5xl mx-auto space-y-6">
       {/* Header */}
-      <div className="space-y-2">
-        <h1 className="text-2xl md:text-3xl font-bold text-foreground flex items-center gap-3">
-          <span className="text-3xl">{'\uD83D\uDD4A\uFE0F'}</span>
-          {language === 'fr' ? 'Du\'as' : 'Du\'as'}
-        </h1>
-        <p className="text-muted-foreground">
-          {language === 'fr'
-            ? 'Suppliques authentiques du Coran et de la Sunna'
-            : 'Authentic supplications from the Quran and Sunnah'}
-        </p>
+      <div className="flex items-start gap-3">
+        <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+          <BookOpen className="h-5 w-5" />
+        </div>
+        <div className="space-y-1">
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground">
+            {language === 'fr' ? 'Du\'as' : 'Du\'as'}
+          </h1>
+          <p className="text-muted-foreground">
+            {language === 'fr'
+              ? 'Suppliques authentiques du Coran et de la Sunna'
+              : 'Authentic supplications from the Quran and Sunnah'}
+          </p>
+        </div>
       </div>
 
       {/* Search & Filter */}
@@ -181,22 +204,27 @@ export default function Duas() {
       {/* Category grid */}
       {!selectedCat && !showFavorites && search.length < 2 && categories && (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-          {categories.map((cat) => (
-            <button
-              key={cat._id}
-              type="button"
-              onClick={() => setSelectedCat(cat._id)}
-              className="islamic-card p-4 md:p-5 text-left transition-all duration-200 hover:shadow-md hover:border-primary/30 group"
-            >
-              <span className="text-2xl mb-2 block">{ICON_MAP[cat.icon] ?? '\u{1F54A}\uFE0F'}</span>
-              <h3 className="font-semibold text-sm text-foreground group-hover:text-primary transition-colors">
-                {tr(cat.name)}
-              </h3>
-              <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
-                {tr(cat.description)}
-              </p>
-            </button>
-          ))}
+          {categories.map((cat) => {
+            const Icon = ICON_MAP[cat.icon] ?? BookOpen;
+            return (
+              <button
+                key={cat._id}
+                type="button"
+                onClick={() => setSelectedCat(cat._id)}
+                className="islamic-card p-4 md:p-5 text-left transition-all duration-200 hover:shadow-md hover:border-primary/30 group"
+              >
+                <span className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                  <Icon className="h-5 w-5" />
+                </span>
+                <h3 className="font-semibold text-sm text-foreground group-hover:text-primary transition-colors">
+                  {tr(cat.name)}
+                </h3>
+                <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                  {tr(cat.description)}
+                </p>
+              </button>
+            );
+          })}
         </div>
       )}
 
@@ -280,7 +308,7 @@ export default function Duas() {
 
         {displayDuas.length === 0 && !categories && (
           <div className="islamic-card p-12 text-center">
-            <div className="text-4xl mb-3">{'\u{1F54A}\uFE0F'}</div>
+            <Loader2 className="mx-auto mb-3 h-8 w-8 animate-spin text-primary" aria-hidden="true" />
             <p className="text-muted-foreground">
               {language === 'fr' ? 'Chargement des du\'as...' : 'Loading duas...'}
             </p>
@@ -289,8 +317,12 @@ export default function Duas() {
 
         {displayDuas.length === 0 && categories && (
           <div className="islamic-card p-12 text-center">
-            <div className="text-4xl mb-3">
-              {showFavorites ? '\u2764\uFE0F' : '\u{1F50D}'}
+            <div className="mb-3 flex justify-center">
+              {showFavorites ? (
+                <Heart className="h-8 w-8 text-muted-foreground/50" aria-hidden="true" />
+              ) : (
+                <Search className="h-8 w-8 text-muted-foreground/50" aria-hidden="true" />
+              )}
             </div>
             <p className="text-muted-foreground">
               {showFavorites
