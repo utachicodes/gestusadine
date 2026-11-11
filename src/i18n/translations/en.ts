@@ -8,7 +8,7 @@ const en: Record<string, string> = {
     'chat.placeholder': 'Ask GëstuSaDine AI anything about Islam...',
     'chat.welcome': 'Asalamu alaikum, I am your GëstuSaDine Companion',
     'chat.welcome_logo_alt': 'GëstuSaDine AI',
-    'chat.welcome.subtitle': 'Islam become truly accessible when it is spoken in the language of the heart.',
+    'chat.welcome.subtitle': 'Islam becomes truly accessible when it is spoken in the language of the heart.',
     'chat.thinking': 'Consulting the Council...',
     
     // Media / Education
