@@ -2,7 +2,7 @@ const fr: Record<string, string> = {
     // Brand
     'brand.name': 'GëstuSaDine',
     'brand.mission': 'Rendre l\'Islam accessible, engageant et beau.',
-    'brand.tagline': 'GëstuSaDine : La Vision : Un écosystème de vie islamique complet',
+    'brand.tagline': 'La vision de GëstuSaDine : un écosystème complet de vie islamique',
 
     // Chat / AI Companion
     'chat.placeholder': 'Posez n\'importe quelle question sur l\'Islam à GëstuSaDine AI...',
@@ -18,7 +18,7 @@ const fr: Record<string, string> = {
     
     // Community
     'events.title': 'Événements',
-    'events.subtitle': 'Connexion communautaire et réelle',
+    'events.subtitle': 'Communauté et liens réels',
     'events.intro': 'Organisation de conférences, de cercles de femmes et de programmes pour les jeunes à travers le Sénégal.',
 
     // Auth / Login (PERMANENT FIX)
@@ -33,11 +33,11 @@ const fr: Record<string, string> = {
     'login.full_name_required': 'Le nom complet est requis',
     'login.success_signed_up': 'Compte créé avec succès.',
     'login.success_signed_in': 'Connecté avec succès.',
-    'login.full_name': 'Nom Complet',
+    'login.full_name': 'Nom complet',
     'login.email': 'E-mail',
     'login.password': 'Mot de passe',
     'login.forgot_password': 'Mot de passe oublié ?',
-    'login.sign_in': 'Se Connecter',
+    'login.sign_in': 'Se connecter',
     'login.sign_up': "S'inscrire",
     'login.send_reset_link': 'Envoyer le lien de réinitialisation',
     'login.no_account': "Vous n'avez pas de compte ?",
@@ -69,15 +69,15 @@ const fr: Record<string, string> = {
 
     // Pillars / Feature Grid
     'pillar.education.title': 'Studio de contenu éducatif',
-    'pillar.education.desc': 'vidéos animées pour enfants, adolescents et adultes enseignant les valeurs islamiques.',
+    'pillar.education.desc': 'Des vidéos animées pour les enfants, les adolescents et les adultes, qui enseignent les valeurs islamiques par le récit.',
     'pillar.ai.title': 'Apprentissage interactif',
     'pillar.ai.desc': 'Un compagnon islamique personnel qui répond aux questions et guide votre apprentissage.',
     'pillar.community.title': 'Connexion communautaire',
-    'pillar.community.desc': 'Cercles de femmes, programmes pour les jeunes et événements familiaux.',
+    'pillar.community.desc': 'Cercles de femmes, programmes pour les jeunes et événements familiaux qui renforcent les liens communautaires.',
     'pillar.fashion.title': 'Streetwear Islamique',
     'pillar.fashion.desc': 'Portez votre foi avec fierté. Des designs modernes finançant la mission éducative.',
     'pillar.podcasts.title': 'Réseau de podcasts',
-    'pillar.podcasts.desc': 'Des conversations sur la vie de foi dans le monde moderne.',
+    'pillar.podcasts.desc': 'Des conversations accessibles sur la vie de foi dans le monde moderne.',
 
     // Dashboard
     'dashboard.sectionLabel': 'Tableau de bord',
