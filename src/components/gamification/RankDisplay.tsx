@@ -1,5 +1,6 @@
 import React from 'react';
 import { Trophy, Star, Flame, Zap, BookOpen, Compass, Search, GraduationCap, Crown, Award } from 'lucide-react';
+import { useTr } from '@/lib/i18n';
 import { RANKS, Rank } from '@/types/gamification';
 
 interface RankDisplayProps {
@@ -33,6 +34,7 @@ const RANK_COLORS: Record<Rank, string> = {
 };
 
 export const RankDisplay: React.FC<RankDisplayProps> = React.memo(({ currentRank, currentPoints, streak }) => {
+  const tr = useTr();
   const rankInfo = RANKS[currentRank];
   const rankKeys = Object.keys(RANKS) as Rank[];
   const nextRankIndex = rankKeys.indexOf(currentRank) + 1;
@@ -108,7 +110,9 @@ export const RankDisplay: React.FC<RankDisplayProps> = React.memo(({ currentRank
               )}
             </div>
             <span className="font-mono font-bold text-sm text-orange-500">{streak}</span>
-            <span className="text-[9px] text-muted-foreground uppercase tracking-wider">streak</span>
+            <span className="text-[9px] text-muted-foreground uppercase tracking-wider">
+              {tr({ en: 'streak', fr: 'série' })}
+            </span>
           </div>
         )}
       </div>
@@ -129,7 +133,11 @@ export const RankDisplay: React.FC<RankDisplayProps> = React.memo(({ currentRank
           </div>
           <p className="text-[10px] text-center text-muted-foreground">
             <Zap className="inline w-3 h-3 text-primary mr-0.5" />
-            {nextRank.threshold - currentPoints} XP to <span className="font-medium text-foreground">{nextRank.label}</span>
+            {tr({
+              en: `${nextRank.threshold - currentPoints} XP to`,
+              fr: `${nextRank.threshold - currentPoints} XP pour atteindre`,
+            })}{' '}
+            <span className="font-medium text-foreground">{nextRank.label}</span>
           </p>
         </div>
       )}
@@ -137,7 +145,9 @@ export const RankDisplay: React.FC<RankDisplayProps> = React.memo(({ currentRank
       {!nextRank && (
         <div className="text-center py-1 flex items-center justify-center gap-2">
           <Award className="w-5 h-5 text-amber-500" />
-          <p className="text-sm font-semibold text-amber-500">Max Rank Achieved!</p>
+          <p className="text-sm font-semibold text-amber-500">
+            {tr({ en: 'Max Rank Achieved!', fr: 'Rang maximal atteint !' })}
+          </p>
           <Award className="w-5 h-5 text-amber-500" />
         </div>
       )}
