@@ -3,14 +3,28 @@ import { useQuery, useMutation } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import { useTr } from '@/lib/i18n';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { ArrowLeft, RotateCcw, Sun, Moon, Bed, BookOpen, Trophy, ChevronRight } from 'lucide-react';
+import {
+  ArrowLeft,
+  RotateCcw,
+  Sun,
+  Moon,
+  Bed,
+  BookOpen,
+  Trophy,
+  ChevronRight,
+  HandHeart,
+  Sparkles,
+  Plus,
+  Check,
+  type LucideIcon,
+} from 'lucide-react';
 import type { Id } from '../../../convex/_generated/dataModel';
 
-const TYPE_ICONS: Record<string, string> = {
-  morning: '\u2600\uFE0F',
-  evening: '\u{1F319}',
-  sleep: '\u{1F31B}',
-  generic: '\u2728',
+const TYPE_ICONS: Record<string, LucideIcon> = {
+  morning: Sun,
+  evening: Moon,
+  sleep: Bed,
+  generic: Sparkles,
 };
 
 const TYPE_TABS = [
@@ -204,7 +218,11 @@ export default function Azkar() {
                             : language === 'fr' ? 'Compter' : 'Count'
                         }
                       >
-                        {completed ? '\u2713' : '+'}
+                        {completed ? (
+                          <Check className="h-5 w-5" aria-hidden="true" />
+                        ) : (
+                          <Plus className="h-5 w-5" aria-hidden="true" />
+                        )}
                       </button>
                     </div>
                   </div>
@@ -215,7 +233,9 @@ export default function Azkar() {
 
           {azkarList.length === 0 && (
             <div className="islamic-card p-12 text-center">
-              <div className="text-4xl mb-3">{'\u2728'}</div>
+              <div className="mb-3 flex justify-center">
+                <Sparkles className="h-8 w-8 text-muted-foreground/50" aria-hidden="true" />
+              </div>
               <p className="text-muted-foreground">
                 {language === 'fr'
                   ? 'Aucun dhikr dans cette catégorie.'
@@ -232,16 +252,20 @@ export default function Azkar() {
   return (
     <div className="max-w-5xl mx-auto space-y-6">
       {/* Header */}
-      <div className="space-y-2">
-        <h1 className="text-2xl md:text-3xl font-bold text-foreground flex items-center gap-3">
-          <span className="text-3xl">{'\u{1F54C}'}</span>
-          {language === 'fr' ? 'Adhkar' : 'Adhkar'}
-        </h1>
-        <p className="text-muted-foreground">
-          {language === 'fr'
-            ? 'Souvenirs quotidiens pour protéger votre foi et votre paix'
-            : 'Daily remembrance to protect your faith and peace'}
-        </p>
+      <div className="flex items-start gap-3">
+        <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+          <HandHeart className="h-5 w-5" />
+        </div>
+        <div className="space-y-1">
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground">
+            {language === 'fr' ? 'Adhkar' : 'Adhkar'}
+          </h1>
+          <p className="text-muted-foreground">
+            {language === 'fr'
+              ? 'Souvenirs quotidiens pour protéger votre foi et votre paix'
+              : 'Daily remembrance to protect your faith and peace'}
+          </p>
+        </div>
       </div>
 
       {/* Stats */}
@@ -261,52 +285,60 @@ export default function Azkar() {
 
       {/* Type tabs */}
       <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-hide">
-        {TYPE_TABS.map((tab) => (
-          <button
-            key={tab.key}
-            type="button"
-            onClick={() => setActiveTab(tab.key)}
-            className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all ${
-              activeTab === tab.key
-                ? 'bg-primary text-primary-foreground shadow-sm'
-                : 'bg-secondary text-muted-foreground hover:text-foreground'
-            }`}
-          >
-            {tab.key !== 'all' && <span>{TYPE_ICONS[tab.key]}</span>}
-            {tab[language as 'en' | 'fr']}
-          </button>
-        ))}
+        {TYPE_TABS.map((tab) => {
+          const TabIcon = TYPE_ICONS[tab.key];
+          return (
+            <button
+              key={tab.key}
+              type="button"
+              onClick={() => setActiveTab(tab.key)}
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all ${
+                activeTab === tab.key
+                  ? 'bg-primary text-primary-foreground shadow-sm'
+                  : 'bg-secondary text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              {TabIcon && <TabIcon className="h-4 w-4" aria-hidden="true" />}
+              {tab[language as 'en' | 'fr']}
+            </button>
+          );
+        })}
       </div>
 
       {/* Category grid */}
       <div className="space-y-3">
-        {filteredCategories?.map((cat) => (
-          <button
-            key={cat._id}
-            type="button"
-            onClick={() => setSelectedCat(cat._id)}
-            className="islamic-card w-full p-4 md:p-5 text-left transition-all duration-200 hover:shadow-md hover:border-primary/30 group"
-          >
-            <div className="flex items-center gap-4">
-              <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-primary/10 text-2xl flex-shrink-0">
-                {TYPE_ICONS[cat.type] ?? '\u2728'}
+        {filteredCategories?.map((cat) => {
+          const Icon = TYPE_ICONS[cat.type] ?? Sparkles;
+          return (
+            <button
+              key={cat._id}
+              type="button"
+              onClick={() => setSelectedCat(cat._id)}
+              className="islamic-card w-full p-4 md:p-5 text-left transition-all duration-200 hover:shadow-md hover:border-primary/30 group"
+            >
+              <div className="flex items-center gap-4">
+                <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-primary/10 text-primary flex-shrink-0">
+                  <Icon className="h-5 w-5" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">
+                    {tr(cat.name)}
+                  </h3>
+                  <p className="text-sm text-muted-foreground mt-0.5">
+                    {tr(cat.description)}
+                  </p>
+                </div>
+                <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
               </div>
-              <div className="flex-1 min-w-0">
-                <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">
-                  {tr(cat.name)}
-                </h3>
-                <p className="text-sm text-muted-foreground mt-0.5">
-                  {tr(cat.description)}
-                </p>
-              </div>
-              <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
-            </div>
-          </button>
-        ))}
+            </button>
+          );
+        })}
 
         {filteredCategories?.length === 0 && (
           <div className="islamic-card p-12 text-center">
-            <div className="text-4xl mb-3">{'\u2728'}</div>
+            <div className="mb-3 flex justify-center">
+              <Sparkles className="h-8 w-8 text-muted-foreground/50" aria-hidden="true" />
+            </div>
             <p className="text-muted-foreground">
               {language === 'fr'
                 ? 'Aucune catégorie trouvée.'
