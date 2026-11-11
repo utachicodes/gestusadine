@@ -55,7 +55,7 @@ const BENEFITS: { title: Loc; desc: Loc }[] = [
   },
   {
     title: { en: 'Made for the region', fr: 'Pensé pour la région' },
-    desc: { en: 'Français and English, priced for West Africa, ready for mobile-money payments.', fr: `Français et anglais, des tarifs adaptés à l'Afrique de l'Ouest, prêt pour le mobile money.` },
+    desc: { en: 'French and English, priced for West Africa, ready for mobile-money payments.', fr: `Français et anglais, des tarifs adaptés à l'Afrique de l'Ouest, prêts pour le mobile money.` },
   },
   {
     title: { en: 'Quietly rigorous', fr: 'Rigoureux, sans bruit' },
